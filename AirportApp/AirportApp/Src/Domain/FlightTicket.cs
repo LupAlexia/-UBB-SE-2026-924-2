@@ -1,0 +1,50 @@
+using System.Collections.Generic;
+
+namespace AirportApp.Src.Domain
+{
+    public class FlightTicket
+    {
+        public int TicketId { get; set; }
+        public User2? User { get; set; }
+        public Flight? Flight { get; set; }
+        public string? Seat { get; set; }
+        public float Price { get; set; }
+        public string? Status { get; set; }
+        public string? PassengerFirstName { get; set; }
+        public string? PassengerLastName { get; set; }
+        public string? PassengerEmail { get; set; }
+        public string? PassengerPhone { get; set; }
+        public List<AddOn> SelectedAddOns { get; set; } = new List<AddOn>();
+
+        public FlightTicket()
+        {
+        }
+
+        public FlightTicket(User2 user, Flight flight, string seat, float price, string status, string passengerFirstName, string passengerLastName, string passengerEmail, string passengerPhone)
+        {
+            User = user;
+            Flight = flight;
+            Seat = seat;
+            Price = price;
+            Status = status;
+            PassengerFirstName = passengerFirstName;
+            PassengerLastName = passengerLastName;
+            PassengerEmail = passengerEmail;
+            PassengerPhone = passengerPhone;
+        }
+
+        public FlightTicket(int ticketId, User2 user, Flight flight, string seat, float price, string status, string passengerFirstName, string passengerLastName, string passengerEmail, string passengerPhone)
+        {
+            TicketId = ticketId;
+            User = user;
+            Flight = flight;
+            Seat = seat;
+            Price = price;
+            Status = status;
+            PassengerFirstName = passengerFirstName;
+            PassengerLastName = passengerLastName;
+            PassengerEmail = passengerEmail;
+            PassengerPhone = passengerPhone;
+        }
+    }
+}

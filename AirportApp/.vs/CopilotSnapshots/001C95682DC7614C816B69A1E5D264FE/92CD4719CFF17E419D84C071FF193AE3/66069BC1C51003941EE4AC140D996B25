@@ -1,0 +1,170 @@
+﻿using System;
+using System.Linq;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Navigation;
+using AirportApp.Src.Domain;
+using AirportApp.Src.Service;
+
+namespace AirportApp
+{
+    public sealed partial class MainWindow : Window
+    {
+        private const string AccountNavTag = "Account";
+        private readonly IAuthService authService;
+
+        public MainWindow()
+        {
+            this.InitializeComponent();
+
+            authService = App.AuthService;
+
+            App.NavigationService.Initialize(ContentFrame);
+
+            ContentFrame.Navigated += ContentFrame_Navigated;
+
+            NavigateToSearch();
+            UpdateNavigationAvailability();
+            TopNav.SelectedItem = null;
+        }
+
+        private void UpdateNavigationAvailability()
+        {
+            bool isAuthenticated = UserSession.CurrentUser != null;
+
+            foreach (var navigationMenuItem in TopNav.MenuItems.OfType<NavigationViewItem>())
+            {
+                string tag = navigationMenuItem.Tag?.ToString() ?? string.Empty;
+                bool isSearchItem = tag.EndsWith("FlightSearchPage", StringComparison.OrdinalIgnoreCase);
+                navigationMenuItem.IsEnabled = isAuthenticated || isSearchItem;
+            }
+
+            if (AccountMenuItem != null)
+            {
+                AccountMenuItem.IsEnabled = true;
+            }
+        }
+
+        public void NavigateTo(Type pageType)
+        {
+            if (ContentFrame.CurrentSourcePageType != pageType)
+            {
+                ContentFrame.Navigate(pageType);
+            }
+        }
+
+        public void NavigateToAuth()
+        {
+            NavigateTo(typeof(Src.View.AuthPage));
+        }
+
+        public void NavigateToSearch()
+        {
+            NavigateTo(typeof(Src.View.FlightSearchPage));
+        }
+
+        public void NavigateToDashboard()
+        {
+        }
+
+        public void NavigateToMemberships()
+        {
+        }
+
+        private void ContentFrame_Navigated(object sender, NavigationEventArgs eventArgs)
+        {
+            if (TopNav == null || TopNav.MenuItems == null)
+            {
+                return;
+            }
+
+            UpdateNavigationAvailability();
+
+            bool itemFound = false;
+            string pageName = eventArgs.SourcePageType.Name;
+
+            foreach (NavigationViewItem navigationMenuItem in TopNav.MenuItems)
+            {
+                if (navigationMenuItem.Tag?.ToString()?.EndsWith(pageName, StringComparison.OrdinalIgnoreCase) == true)
+                {
+                    TopNav.SelectedItem = navigationMenuItem;
+                    itemFound = true;
+                    break;
+                }
+            }
+
+            if (!itemFound || pageName == "AuthPage")
+            {
+                TopNav.SelectedItem = null;
+            }
+        }
+
+        private async void TopNav_ItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs eventArgs)
+        {
+            UpdateNavigationAvailability();
+
+            var navItemTag = eventArgs.InvokedItemContainer?.Tag?.ToString();
+            if (navItemTag == AccountNavTag)
+            {
+                var currentUser = UserSession.CurrentUser;
+                if (currentUser == null)
+                {
+                    NavigateToAuth();
+                    return;
+                }
+
+                string membershipTier = string.IsNullOrWhiteSpace(currentUser.Membership?.Name)
+                    ? "None"
+                    : currentUser.Membership.Name;
+
+                var dialog = new ContentDialog
+                {
+                    Title = "Account",
+                    Content = $"Email: {currentUser.Email}\nUsername: {currentUser.Username}\nMembership tier: {membershipTier}",
+                    PrimaryButtonText = "Sign out",
+                    CloseButtonText = "Close",
+                    XamlRoot = ContentFrame.XamlRoot
+                };
+
+                var dialogResult = await dialog.ShowAsync();
+                if (dialogResult == ContentDialogResult.Primary)
+                {
+                    authService.Logout();
+                    UpdateNavigationAvailability();
+                    NavigateToSearch();
+                }
+
+                return;
+            }
+
+            if (!string.IsNullOrEmpty(navItemTag))
+            {
+                Type? pageType = Type.GetType(navItemTag);
+                if (pageType != null)
+                {
+                    if (pageType != typeof(Src.View.FlightSearchPage) && UserSession.CurrentUser == null)
+                    {
+                        NavigateToAuth();
+                        return;
+                    }
+
+                    NavigateTo(pageType);
+                }
+            }
+        }
+
+        private void TopNav_BackRequested(NavigationView sender, NavigationViewBackRequestedEventArgs eventArgs)
+        {
+            if (ContentFrame.CanGoBack)
+            {
+                ContentFrame.GoBack();
+            }
+        }
+    }
+}
+
+
+
+
+
+

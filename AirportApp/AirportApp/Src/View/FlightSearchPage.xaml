@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="AirportApp.Src.View.FlightSearchPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:AirportApp.Src.View"
+    xmlns:domain="using:AirportApp.Src.ViewModel"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid Padding="24" Background="Transparent">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0" Spacing="20" Margin="0,0,0,30">
+            <TextBlock Text="Find your next flight" FontSize="28" FontWeight="Bold" Foreground="#2bb8c0"/>
+
+            <StackPanel Orientation="Horizontal" Spacing="12" VerticalAlignment="Bottom">
+
+                <TextBox x:Name="locationInput" Header="Location" PlaceholderText="e.g. Barcelona..." Width="180" 
+                         Text="{x:Bind ViewModel.Location, Mode=TwoWay}" />
+
+                <StackPanel>
+                    <TextBlock Text="Flight Type" Margin="0,0,0,6"/>
+                    <StackPanel Orientation="Horizontal" Spacing="10">
+                        <RadioButton x:Name="flightTypeDeparture" Content="Departure" IsChecked="{x:Bind ViewModel.IsDeparture, Mode=TwoWay}" />
+                        <RadioButton x:Name="flightTypeArrival" Content="Arrival" />
+                    </StackPanel>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" Spacing="4" VerticalAlignment="Bottom">
+                    <CalendarDatePicker x:Name="datePicker" Header="Date" PlaceholderText="Select date" Width="150" 
+                                        Date="{x:Bind ViewModel.FlightDate, Mode=TwoWay}" 
+                                        CalendarViewDayItemChanging="DatePicker_CalendarViewDayItemChanging" />
+
+                    <Button Content="✕" Background="Transparent" Foreground="Gray" BorderThickness="0" 
+                            VerticalAlignment="Bottom" Height="32" ToolTipService.ToolTip="Clear Date"
+                            Click="ClearDateButton_Click"/>
+                </StackPanel>
+
+                <TextBox x:Name="passengersInput" Header="Passengers" PlaceholderText="Nr" Width="80" 
+                         Text="{x:Bind ViewModel.Passengers, Mode=TwoWay}" 
+                         InputScope="Number" 
+                         BeforeTextChanging="PassengersInput_BeforeTextChanging"/>
+
+                <Button x:Name="searchButton" Content="SEARCH" 
+                        Command="{x:Bind ViewModel.SearchCommand}" 
+                        Background="#2bb8c0" 
+                        Foreground="White" 
+                        FontWeight="Bold" 
+                        Height="32" 
+                        VerticalAlignment="Bottom" 
+                        Margin="0,0,0,1"/>
+
+            </StackPanel>
+        </StackPanel>
+
+        <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <TextBlock Grid.Row="0" Text="Available Flights" FontSize="20" FontWeight="SemiBold" Margin="0,0,0,10"/>
+
+            <TextBlock Grid.Row="1" Text="{x:Bind ViewModel.SearchResultMessage, Mode=OneWay}" Foreground="Gray" Margin="0,0,0,10"/>
+
+            <ListView x:Name="flightsGrid" ItemsSource="{x:Bind ViewModel.AvailableFlights, Mode=OneWay}" 
+                      Grid.Row="2" BorderBrush="#2bb8c0" BorderThickness="1" CornerRadius="8" SelectionMode="Single">
+
+                <ListView.HeaderTemplate>
+                    <DataTemplate>
+                        <Grid Background="Transparent" Padding="12" BorderBrush="#2bb8c0" BorderThickness="0,0,0,1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="100"/>
+                                <ColumnDefinition Width="200"/>
+                                <ColumnDefinition Width="150"/>
+                                <ColumnDefinition Width="140"/>
+                                <ColumnDefinition Width="110"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="Flight Nr" FontWeight="Bold" />
+                            <TextBlock Grid.Column="1" Text="Route" FontWeight="Bold" />
+                            <TextBlock Grid.Column="2" Text="Date &amp; Time" FontWeight="Bold" />
+                            <TextBlock Grid.Column="3" Text="Base Price / person" FontWeight="Bold" />
+                            <TextBlock Grid.Column="4" Text="Action" FontWeight="Bold" />
+                        </Grid>
+                    </DataTemplate>
+                </ListView.HeaderTemplate>
+
+                <ListView.ItemTemplate>
+                    <DataTemplate x:DataType="domain:FlightDisplayModel">
+                        <Grid Padding="12" BorderBrush="#2bb8c0" BorderThickness="0,0,0,1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="100"/>
+                                <ColumnDefinition Width="200"/>
+                                <ColumnDefinition Width="150"/>
+                                <ColumnDefinition Width="140"/>
+                                <ColumnDefinition Width="110"/>
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Grid.Column="0" Text="{x:Bind FlightNumber}" VerticalAlignment="Center" />
+                            <TextBlock Grid.Column="1" Text="{x:Bind RouteCity}" VerticalAlignment="Center" />
+                            <TextBlock Grid.Column="2" Text="{x:Bind DisplayDate}" VerticalAlignment="Center" />
+                            <TextBlock Grid.Column="3" Text="{x:Bind DisplayPrice}" VerticalAlignment="Center" />
+
+                            <Button Grid.Column="4" Content="Book" Background="#2bb8c0" Foreground="White" CornerRadius="4" Height="30" HorizontalAlignment="Right" Margin="8,0,0,0" 
+                                    Command="{Binding DataContext.BookFlightCommand, ElementName=flightsGrid}" CommandParameter="{x:Bind}" />
+                        </Grid>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </Grid>
+    </Grid>
+</Page>

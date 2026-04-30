@@ -1,0 +1,124 @@
+<Page
+    x:Name="RootPage"
+    x:Class="AirportApp.Src.View.DashboardPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:local="using:AirportApp.Src.View"
+    xmlns:viewmodel="using:AirportApp.Src.ViewModel"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid Padding="30">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <TextBlock Grid.Row="0" 
+                   Text="{Binding WelcomeMessage}" 
+                   FontSize="32" 
+                   FontWeight="SemiBold" 
+                   Margin="0,0,0,20"/>
+
+        <!-- Dashboard Content -->
+        <!-- Acum Grid-ul are o singură coloană care ocupă tot spațiul -->
+        <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0" Margin="0,0,0,15">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0" Text="My Tickets" FontSize="24" FontWeight="SemiBold"/>
+
+                <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                    <TextBlock Text="Show:" VerticalAlignment="Center"/>
+                    <ComboBox Width="150"
+                              ItemsSource="{Binding TicketFilters}"
+                              SelectedItem="{Binding SelectedTicketFilter, Mode=TwoWay}"/>
+                </StackPanel>
+            </Grid>
+
+            <!-- Lista de bilete extinsă pe tot ecranul -->
+            <ListView Grid.Row="1" 
+                      ItemsSource="{Binding MyTickets}" 
+                      SelectionMode="None"
+                      Background="{ThemeResource SystemControlBackgroundChromeMediumLowBrush}"
+                      CornerRadius="8"
+                      Padding="10">
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem">
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                        <Setter Property="Margin" Value="0,0,0,10"/>
+                    </Style>
+                </ListView.ItemContainerStyle>
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <Border Background="{ThemeResource SystemControlBackgroundAltHighBrush}" 
+                                CornerRadius="6"
+                                BorderBrush="{ThemeResource SystemControlForegroundBaseLowBrush}"
+                                BorderThickness="1"
+                                Padding="15">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+
+                                <!-- Informatii Bilet -->
+                                <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                    <!-- Nr zbor si Data -->
+                                    <StackPanel Orientation="Horizontal" Spacing="10">
+                                        <TextBlock Text="Flight:" FontWeight="SemiBold"/>
+                                        <TextBlock Text="{Binding Flight.FlightNumber}" FontWeight="Bold" FontSize="16"/>
+                                        <TextBlock Text="•"/>
+                                        <TextBlock Text="{Binding Flight.Date}" Foreground="Gray"/>
+                                    </StackPanel>
+
+                                    <!-- Scaun, Pret, Status -->
+                                    <StackPanel Orientation="Horizontal" Spacing="15" Margin="0,5,0,0">
+                                        <TextBlock Text="Seat:" Foreground="Gray"/>
+                                        <TextBlock Text="{Binding Seat, TargetNullValue='No Seat Assigned'}" FontWeight="SemiBold"/>
+                                        <TextBlock Text="•" Foreground="Gray"/>
+                                        <TextBlock Text="{Binding Price}" FontWeight="SemiBold"/>
+                                        <TextBlock Text="EUR" Foreground="Gray"/>
+                                        <TextBlock Text="•" Foreground="Gray"/>
+                                        <!-- Statusul -->
+                                        <TextBlock Text="{Binding Status}" FontWeight="SemiBold" Foreground="#0078D7"/>
+                                    </StackPanel>
+                                </StackPanel>
+
+                                <!-- Butoane Actiune -->
+                                <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="10">
+                                    <!-- Buton Download PDF -->
+                                    <Button Content="Download PDF" 
+                                            Background="{ThemeResource SystemControlBackgroundAccentBrush}" 
+                                            Foreground="White"
+                                            Command="{Binding ElementName=RootPage, Path=DataContext.DownloadPdfCommand}"
+                                            CommandParameter="{Binding}" 
+                                            HorizontalAlignment="Stretch" />
+
+                                    <!-- Buton Cancel -->
+                                    <Button Content="Cancel" 
+                                            Background="#FF4444" 
+                                            Foreground="White"
+                                            Command="{Binding ElementName=RootPage, Path=DataContext.CancelTicketCommand}"
+                                            CommandParameter="{Binding}"
+                                            HorizontalAlignment="Stretch" />
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </Grid>
+    </Grid>
+</Page>

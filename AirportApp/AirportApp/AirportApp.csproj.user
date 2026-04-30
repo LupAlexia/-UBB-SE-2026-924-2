@@ -1,0 +1,78 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup />
+  <ItemGroup />
+  <ItemGroup>
+    <None Update="MainWindow.xaml">
+      <SubType>Designer</SubType>
+    </None>
+    <None Update="MainWindow2.xaml">
+      <SubType>Designer</SubType>
+    </None>
+    <None Update="Package.appxmanifest">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Src\View\AuthPage.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Src\View\BookingPage.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Src\View\chat\ChatPage.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Src\View\DashboardPage.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Src\View\faq\FAQAddEditPage.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Src\View\faq\FAQView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Src\View\FlightSearchPage.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Src\View\general\ChoosingPage.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Src\View\general\EnterYourId.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Src\View\general\LandingPage.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Src\View\general\MaiBoule.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Src\View\general\ThemeResource.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Src\View\general\UpperBar.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Src\View\general\YouSure.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Src\View\MembershipsPage.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Src\View\message\MessageView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Src\View\review\EmployeeSeeReviews.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Src\View\review\ReviewPage.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Src\View\ticket\TicketEmployeeView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Src\View\ticket\TicketsView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+</Project>

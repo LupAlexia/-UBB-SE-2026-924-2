@@ -1,0 +1,805 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\Facultate\\An_II\\Sem4\\ISS\\Assignment4\\AirportApp\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{1C01F3C3-2073-487B-9273-CB8E5A6D67E8}|AirportApp\\AirportApp.csproj|d:\\facultate\\an_ii\\sem4\\iss\\assignment4\\airportapp\\airportapp\\airportapp.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{1C01F3C3-2073-487B-9273-CB8E5A6D67E8}|AirportApp\\AirportApp.csproj|solutionrelative:airportapp\\airportapp.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1C01F3C3-2073-487B-9273-CB8E5A6D67E8}|AirportApp\\AirportApp.csproj|d:\\facultate\\an_ii\\sem4\\iss\\assignment4\\airportapp\\airportapp\\src\\view\\faq\\faqview.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1C01F3C3-2073-487B-9273-CB8E5A6D67E8}|AirportApp\\AirportApp.csproj|solutionrelative:airportapp\\src\\view\\faq\\faqview.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1C01F3C3-2073-487B-9273-CB8E5A6D67E8}|AirportApp\\AirportApp.csproj|d:\\facultate\\an_ii\\sem4\\iss\\assignment4\\airportapp\\airportapp\\src\\view\\faq\\faqaddeditpage.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1C01F3C3-2073-487B-9273-CB8E5A6D67E8}|AirportApp\\AirportApp.csproj|solutionrelative:airportapp\\src\\view\\faq\\faqaddeditpage.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1C01F3C3-2073-487B-9273-CB8E5A6D67E8}|AirportApp\\AirportApp.csproj|d:\\facultate\\an_ii\\sem4\\iss\\assignment4\\airportapp\\airportapp\\mainwindow2.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1C01F3C3-2073-487B-9273-CB8E5A6D67E8}|AirportApp\\AirportApp.csproj|solutionrelative:airportapp\\mainwindow2.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1C01F3C3-2073-487B-9273-CB8E5A6D67E8}|AirportApp\\AirportApp.csproj|d:\\facultate\\an_ii\\sem4\\iss\\assignment4\\airportapp\\airportapp\\src\\view\\ticket\\ticketemployeeview.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1C01F3C3-2073-487B-9273-CB8E5A6D67E8}|AirportApp\\AirportApp.csproj|solutionrelative:airportapp\\src\\view\\ticket\\ticketemployeeview.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1C01F3C3-2073-487B-9273-CB8E5A6D67E8}|AirportApp\\AirportApp.csproj|d:\\facultate\\an_ii\\sem4\\iss\\assignment4\\airportapp\\airportapp\\src\\view\\general\\yousure.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1C01F3C3-2073-487B-9273-CB8E5A6D67E8}|AirportApp\\AirportApp.csproj|solutionrelative:airportapp\\src\\view\\general\\yousure.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1C01F3C3-2073-487B-9273-CB8E5A6D67E8}|AirportApp\\AirportApp.csproj|d:\\facultate\\an_ii\\sem4\\iss\\assignment4\\airportapp\\airportapp\\mainwindow2.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{1C01F3C3-2073-487B-9273-CB8E5A6D67E8}|AirportApp\\AirportApp.csproj|solutionrelative:airportapp\\mainwindow2.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1C01F3C3-2073-487B-9273-CB8E5A6D67E8}|AirportApp\\AirportApp.csproj|d:\\facultate\\an_ii\\sem4\\iss\\assignment4\\airportapp\\airportapp\\src\\view\\bookingpage.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1C01F3C3-2073-487B-9273-CB8E5A6D67E8}|AirportApp\\AirportApp.csproj|solutionrelative:airportapp\\src\\view\\bookingpage.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1C01F3C3-2073-487B-9273-CB8E5A6D67E8}|AirportApp\\AirportApp.csproj|d:\\facultate\\an_ii\\sem4\\iss\\assignment4\\airportapp\\airportapp\\src\\view\\dashboardpage.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1C01F3C3-2073-487B-9273-CB8E5A6D67E8}|AirportApp\\AirportApp.csproj|solutionrelative:airportapp\\src\\view\\dashboardpage.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1C01F3C3-2073-487B-9273-CB8E5A6D67E8}|AirportApp\\AirportApp.csproj|d:\\facultate\\an_ii\\sem4\\iss\\assignment4\\airportapp\\airportapp\\src\\service\\faqservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1C01F3C3-2073-487B-9273-CB8E5A6D67E8}|AirportApp\\AirportApp.csproj|solutionrelative:airportapp\\src\\service\\faqservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1C01F3C3-2073-487B-9273-CB8E5A6D67E8}|AirportApp\\AirportApp.csproj|d:\\facultate\\an_ii\\sem4\\iss\\assignment4\\airportapp\\airportapp\\src\\repository\\databaseconnectionhandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1C01F3C3-2073-487B-9273-CB8E5A6D67E8}|AirportApp\\AirportApp.csproj|solutionrelative:airportapp\\src\\repository\\databaseconnectionhandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1C01F3C3-2073-487B-9273-CB8E5A6D67E8}|AirportApp\\AirportApp.csproj|d:\\facultate\\an_ii\\sem4\\iss\\assignment4\\airportapp\\airportapp\\src\\dto\\mappingprofiles\\faqentrymappingprofile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1C01F3C3-2073-487B-9273-CB8E5A6D67E8}|AirportApp\\AirportApp.csproj|solutionrelative:airportapp\\src\\dto\\mappingprofiles\\faqentrymappingprofile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1C01F3C3-2073-487B-9273-CB8E5A6D67E8}|AirportApp\\AirportApp.csproj|d:\\facultate\\an_ii\\sem4\\iss\\assignment4\\airportapp\\airportapp\\src\\dto\\mappingprofiles\\employeemappingprofile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1C01F3C3-2073-487B-9273-CB8E5A6D67E8}|AirportApp\\AirportApp.csproj|solutionrelative:airportapp\\src\\dto\\mappingprofiles\\employeemappingprofile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1C01F3C3-2073-487B-9273-CB8E5A6D67E8}|AirportApp\\AirportApp.csproj|d:\\facultate\\an_ii\\sem4\\iss\\assignment4\\airportapp\\airportapp\\src\\viewmodel\\faq\\faqviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1C01F3C3-2073-487B-9273-CB8E5A6D67E8}|AirportApp\\AirportApp.csproj|solutionrelative:airportapp\\src\\viewmodel\\faq\\faqviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1C01F3C3-2073-487B-9273-CB8E5A6D67E8}|AirportApp\\AirportApp.csproj|d:\\facultate\\an_ii\\sem4\\iss\\assignment4\\airportapp\\airportapp\\src\\viewmodel\\review\\addreviewviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1C01F3C3-2073-487B-9273-CB8E5A6D67E8}|AirportApp\\AirportApp.csproj|solutionrelative:airportapp\\src\\viewmodel\\review\\addreviewviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1C01F3C3-2073-487B-9273-CB8E5A6D67E8}|AirportApp\\AirportApp.csproj|d:\\facultate\\an_ii\\sem4\\iss\\assignment4\\airportapp\\airportapp\\src\\viewmodel\\chat\\chatviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1C01F3C3-2073-487B-9273-CB8E5A6D67E8}|AirportApp\\AirportApp.csproj|solutionrelative:airportapp\\src\\viewmodel\\chat\\chatviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1C01F3C3-2073-487B-9273-CB8E5A6D67E8}|AirportApp\\AirportApp.csproj|d:\\facultate\\an_ii\\sem4\\iss\\assignment4\\airportapp\\airportapp\\src\\domain\\faq\\bot\\faqnode.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1C01F3C3-2073-487B-9273-CB8E5A6D67E8}|AirportApp\\AirportApp.csproj|solutionrelative:airportapp\\src\\domain\\faq\\bot\\faqnode.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1C01F3C3-2073-487B-9273-CB8E5A6D67E8}|AirportApp\\AirportApp.csproj|d:\\facultate\\an_ii\\sem4\\iss\\assignment4\\airportapp\\airportapp\\src\\repository\\user2repository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1C01F3C3-2073-487B-9273-CB8E5A6D67E8}|AirportApp\\AirportApp.csproj|solutionrelative:airportapp\\src\\repository\\user2repository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\Downloads\\UBB-SE-2026-CloudSpritzers-main\\UBB-SE-2026-CloudSpritzers-main\\CloudSpritzers1\\src\\model\\User.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\Downloads\\UBB-SE-2026-CloudSpritzers-main\\UBB-SE-2026-CloudSpritzers-main\\CloudSpritzers1\\src\\model\\ticket\\TicketUrgencyLevelEnum.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\Downloads\\UBB-SE-2026-CloudSpritzers-main\\UBB-SE-2026-CloudSpritzers-main\\CloudSpritzers1\\src\\model\\ticket\\TicketSubcategory.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\Downloads\\UBB-SE-2026-CloudSpritzers-main\\UBB-SE-2026-CloudSpritzers-main\\CloudSpritzers1\\src\\model\\ticket\\TicketStatusEnum.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\Downloads\\UBB-SE-2026-CloudSpritzers-main\\UBB-SE-2026-CloudSpritzers-main\\CloudSpritzers1\\src\\model\\ticket\\TicketCategory.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\Downloads\\UBB-SE-2026-CloudSpritzers-main\\UBB-SE-2026-CloudSpritzers-main\\CloudSpritzers1\\src\\model\\ticket\\Ticket.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\Downloads\\UBB-SE-2026-CloudSpritzers-main\\UBB-SE-2026-CloudSpritzers-main\\CloudSpritzers1\\src\\model\\review\\Review.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\Downloads\\UBB-SE-2026-CloudSpritzers-main\\UBB-SE-2026-CloudSpritzers-main\\CloudSpritzers1\\src\\model\\message\\Message.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\Downloads\\UBB-SE-2026-CloudSpritzers-main\\UBB-SE-2026-CloudSpritzers-main\\CloudSpritzers1\\src\\model\\message\\ISender.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\Downloads\\UBB-SE-2026-CloudSpritzers-main\\UBB-SE-2026-CloudSpritzers-main\\CloudSpritzers1\\src\\model\\message\\IMessage.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\Downloads\\UBB-SE-2026-CloudSpritzers-main\\UBB-SE-2026-CloudSpritzers-main\\CloudSpritzers1\\src\\model\\message\\BotMessage.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\Downloads\\UBB-SE-2026-CloudSpritzers-main\\UBB-SE-2026-CloudSpritzers-main\\CloudSpritzers1\\src\\model\\faq\\FAQEntry.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\Downloads\\UBB-SE-2026-CloudSpritzers-main\\UBB-SE-2026-CloudSpritzers-main\\CloudSpritzers1\\src\\model\\faq\\FAQCategoryEnum.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\Downloads\\UBB-SE-2026-CloudSpritzers-main\\UBB-SE-2026-CloudSpritzers-main\\CloudSpritzers1\\src\\model\\employee\\EmployeeDepartment.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\Downloads\\UBB-SE-2026-CloudSpritzers-main\\UBB-SE-2026-CloudSpritzers-main\\CloudSpritzers1\\src\\model\\employee\\Employee.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\Downloads\\UBB-SE-2026-CloudSpritzers-main\\UBB-SE-2026-CloudSpritzers-main\\CloudSpritzers1\\src\\model\\chat\\ChatStatusEnum.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\Downloads\\UBB-SE-2026-CloudSpritzers-main\\UBB-SE-2026-CloudSpritzers-main\\CloudSpritzers1\\src\\model\\chat\\Chat.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1C01F3C3-2073-487B-9273-CB8E5A6D67E8}|AirportApp\\AirportApp.csproj|d:\\facultate\\an_ii\\sem4\\iss\\assignment4\\airportapp\\airportapp\\src\\service\\dashboardservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1C01F3C3-2073-487B-9273-CB8E5A6D67E8}|AirportApp\\AirportApp.csproj|solutionrelative:airportapp\\src\\service\\dashboardservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1C01F3C3-2073-487B-9273-CB8E5A6D67E8}|AirportApp\\AirportApp.csproj|d:\\facultate\\an_ii\\sem4\\iss\\assignment4\\airportapp\\airportapp\\src\\view\\flightsearchpage.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{1C01F3C3-2073-487B-9273-CB8E5A6D67E8}|AirportApp\\AirportApp.csproj|solutionrelative:airportapp\\src\\view\\flightsearchpage.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1C01F3C3-2073-487B-9273-CB8E5A6D67E8}|AirportApp\\AirportApp.csproj|d:\\facultate\\an_ii\\sem4\\iss\\assignment4\\airportapp\\airportapp\\src\\repository\\databaseconnectionfactory.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1C01F3C3-2073-487B-9273-CB8E5A6D67E8}|AirportApp\\AirportApp.csproj|solutionrelative:airportapp\\src\\repository\\databaseconnectionfactory.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1C01F3C3-2073-487B-9273-CB8E5A6D67E8}|AirportApp\\AirportApp.csproj|d:\\facultate\\an_ii\\sem4\\iss\\assignment4\\airportapp\\airportapp\\src\\service\\authservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1C01F3C3-2073-487B-9273-CB8E5A6D67E8}|AirportApp\\AirportApp.csproj|solutionrelative:airportapp\\src\\service\\authservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1C01F3C3-2073-487B-9273-CB8E5A6D67E8}|AirportApp\\AirportApp.csproj|d:\\facultate\\an_ii\\sem4\\iss\\assignment4\\airportapp\\airportapp\\src\\view\\bookingpage.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{1C01F3C3-2073-487B-9273-CB8E5A6D67E8}|AirportApp\\AirportApp.csproj|solutionrelative:airportapp\\src\\view\\bookingpage.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1C01F3C3-2073-487B-9273-CB8E5A6D67E8}|AirportApp\\AirportApp.csproj|d:\\facultate\\an_ii\\sem4\\iss\\assignment4\\airportapp\\airportapp\\src\\view\\membershipspage.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{1C01F3C3-2073-487B-9273-CB8E5A6D67E8}|AirportApp\\AirportApp.csproj|solutionrelative:airportapp\\src\\view\\membershipspage.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1C01F3C3-2073-487B-9273-CB8E5A6D67E8}|AirportApp\\AirportApp.csproj|d:\\facultate\\an_ii\\sem4\\iss\\assignment4\\airportapp\\airportapp\\src\\service\\ipricingservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1C01F3C3-2073-487B-9273-CB8E5A6D67E8}|AirportApp\\AirportApp.csproj|solutionrelative:airportapp\\src\\service\\ipricingservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1C01F3C3-2073-487B-9273-CB8E5A6D67E8}|AirportApp\\AirportApp.csproj|d:\\facultate\\an_ii\\sem4\\iss\\assignment4\\airportapp\\airportapp\\src\\view\\dashboardpage.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{1C01F3C3-2073-487B-9273-CB8E5A6D67E8}|AirportApp\\AirportApp.csproj|solutionrelative:airportapp\\src\\view\\dashboardpage.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1C01F3C3-2073-487B-9273-CB8E5A6D67E8}|AirportApp\\AirportApp.csproj|d:\\facultate\\an_ii\\sem4\\iss\\assignment4\\airportapp\\airportapp\\src\\view\\authpage.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{1C01F3C3-2073-487B-9273-CB8E5A6D67E8}|AirportApp\\AirportApp.csproj|solutionrelative:airportapp\\src\\view\\authpage.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1C01F3C3-2073-487B-9273-CB8E5A6D67E8}|AirportApp\\AirportApp.csproj|d:\\facultate\\an_ii\\sem4\\iss\\assignment4\\airportapp\\airportapp\\src\\viewmodel\\dashboardviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1C01F3C3-2073-487B-9273-CB8E5A6D67E8}|AirportApp\\AirportApp.csproj|solutionrelative:airportapp\\src\\viewmodel\\dashboardviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1C01F3C3-2073-487B-9273-CB8E5A6D67E8}|AirportApp\\AirportApp.csproj|d:\\facultate\\an_ii\\sem4\\iss\\assignment4\\airportapp\\airportapp\\src\\repository\\addonrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1C01F3C3-2073-487B-9273-CB8E5A6D67E8}|AirportApp\\AirportApp.csproj|solutionrelative:airportapp\\src\\repository\\addonrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 3,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "MainWindow2.xaml.cs",
+              "DocumentMoniker": "D:\\Facultate\\An_II\\Sem4\\ISS\\Assignment4\\AirportApp\\AirportApp\\MainWindow2.xaml.cs",
+              "RelativeDocumentMoniker": "AirportApp\\MainWindow2.xaml.cs",
+              "ToolTip": "D:\\Facultate\\An_II\\Sem4\\ISS\\Assignment4\\AirportApp\\AirportApp\\MainWindow2.xaml.cs",
+              "RelativeToolTip": "AirportApp\\MainWindow2.xaml.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAH8AAAAfAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-30T18:11:41.588Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "FAQAddEditPage.xaml.cs",
+              "DocumentMoniker": "D:\\Facultate\\An_II\\Sem4\\ISS\\Assignment4\\AirportApp\\AirportApp\\Src\\View\\faq\\FAQAddEditPage.xaml.cs",
+              "RelativeDocumentMoniker": "AirportApp\\Src\\View\\faq\\FAQAddEditPage.xaml.cs",
+              "ToolTip": "D:\\Facultate\\An_II\\Sem4\\ISS\\Assignment4\\AirportApp\\AirportApp\\Src\\View\\faq\\FAQAddEditPage.xaml.cs",
+              "RelativeToolTip": "AirportApp\\Src\\View\\faq\\FAQAddEditPage.xaml.cs",
+              "ViewState": "AgIAACsAAAAAAAAAAAAQwKoAAAAUAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-30T18:11:16.02Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "FAQView.xaml.cs",
+              "DocumentMoniker": "D:\\Facultate\\An_II\\Sem4\\ISS\\Assignment4\\AirportApp\\AirportApp\\Src\\View\\faq\\FAQView.xaml.cs",
+              "RelativeDocumentMoniker": "AirportApp\\Src\\View\\faq\\FAQView.xaml.cs",
+              "ToolTip": "D:\\Facultate\\An_II\\Sem4\\ISS\\Assignment4\\AirportApp\\AirportApp\\Src\\View\\faq\\FAQView.xaml.cs",
+              "RelativeToolTip": "AirportApp\\Src\\View\\faq\\FAQView.xaml.cs",
+              "ViewState": "AgIAAFIAAAAAAAAAAAASwFoAAAAaAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-30T18:06:23.364Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "AirportApp",
+              "DocumentMoniker": "D:\\Facultate\\An_II\\Sem4\\ISS\\Assignment4\\AirportApp\\AirportApp\\AirportApp.csproj",
+              "RelativeDocumentMoniker": "AirportApp\\AirportApp.csproj",
+              "ToolTip": "D:\\Facultate\\An_II\\Sem4\\ISS\\Assignment4\\AirportApp\\AirportApp\\AirportApp.csproj",
+              "RelativeToolTip": "AirportApp\\AirportApp.csproj",
+              "ViewState": "AgIAAAwAAAAAAAAAAAAmwEQAAAAPAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2026-04-30T18:02:50.223Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "TicketEmployeeView.xaml.cs",
+              "DocumentMoniker": "D:\\Facultate\\An_II\\Sem4\\ISS\\Assignment4\\AirportApp\\AirportApp\\Src\\View\\ticket\\TicketEmployeeView.xaml.cs",
+              "RelativeDocumentMoniker": "AirportApp\\Src\\View\\ticket\\TicketEmployeeView.xaml.cs",
+              "ToolTip": "D:\\Facultate\\An_II\\Sem4\\ISS\\Assignment4\\AirportApp\\AirportApp\\Src\\View\\ticket\\TicketEmployeeView.xaml.cs",
+              "RelativeToolTip": "AirportApp\\Src\\View\\ticket\\TicketEmployeeView.xaml.cs",
+              "ViewState": "AgIAAB0AAAAAAAAAAIAzwCIAAAAZAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-30T18:11:06.101Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "YouSure.xaml.cs",
+              "DocumentMoniker": "D:\\Facultate\\An_II\\Sem4\\ISS\\Assignment4\\AirportApp\\AirportApp\\Src\\View\\general\\YouSure.xaml.cs",
+              "RelativeDocumentMoniker": "AirportApp\\Src\\View\\general\\YouSure.xaml.cs",
+              "ToolTip": "D:\\Facultate\\An_II\\Sem4\\ISS\\Assignment4\\AirportApp\\AirportApp\\Src\\View\\general\\YouSure.xaml.cs",
+              "RelativeToolTip": "AirportApp\\Src\\View\\general\\YouSure.xaml.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAcAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-30T18:05:34.349Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "MainWindow2.xaml",
+              "DocumentMoniker": "D:\\Facultate\\An_II\\Sem4\\ISS\\Assignment4\\AirportApp\\AirportApp\\MainWindow2.xaml",
+              "RelativeDocumentMoniker": "AirportApp\\MainWindow2.xaml",
+              "ToolTip": "D:\\Facultate\\An_II\\Sem4\\ISS\\Assignment4\\AirportApp\\AirportApp\\MainWindow2.xaml",
+              "RelativeToolTip": "AirportApp\\MainWindow2.xaml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAAAjAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2026-04-30T18:05:18.399Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{40ea2e6b-2121-4bb8-a43e-c83c04b51041}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{3ae79031-e1bc-11d0-8f78-00a0c9110057}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:1:0:{fabf9319-47eb-497e-b8f6-d9f73fba5f55}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:2:0:{fabf9319-47eb-497e-b8f6-d9f73fba5f55}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "DashboardPage.xaml.cs",
+              "DocumentMoniker": "D:\\Facultate\\An_II\\Sem4\\ISS\\Assignment4\\AirportApp\\AirportApp\\Src\\View\\DashboardPage.xaml.cs",
+              "RelativeDocumentMoniker": "AirportApp\\Src\\View\\DashboardPage.xaml.cs",
+              "ToolTip": "D:\\Facultate\\An_II\\Sem4\\ISS\\Assignment4\\AirportApp\\AirportApp\\Src\\View\\DashboardPage.xaml.cs",
+              "RelativeToolTip": "AirportApp\\Src\\View\\DashboardPage.xaml.cs",
+              "ViewState": "AgIAAE0AAAAAAAAAAAAEwBEAAABkAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-30T12:48:12.843Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "BookingPage.xaml.cs",
+              "DocumentMoniker": "D:\\Facultate\\An_II\\Sem4\\ISS\\Assignment4\\AirportApp\\AirportApp\\Src\\View\\BookingPage.xaml.cs",
+              "RelativeDocumentMoniker": "AirportApp\\Src\\View\\BookingPage.xaml.cs",
+              "ToolTip": "D:\\Facultate\\An_II\\Sem4\\ISS\\Assignment4\\AirportApp\\AirportApp\\Src\\View\\BookingPage.xaml.cs",
+              "RelativeToolTip": "AirportApp\\Src\\View\\BookingPage.xaml.cs",
+              "ViewState": "AgIAAEwAAAAAAAAAAAAEwEAAAAAQAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-30T12:48:19.803Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "FAQService.cs",
+              "DocumentMoniker": "D:\\Facultate\\An_II\\Sem4\\ISS\\Assignment4\\AirportApp\\AirportApp\\Src\\Service\\FAQService.cs",
+              "RelativeDocumentMoniker": "AirportApp\\Src\\Service\\FAQService.cs",
+              "ToolTip": "D:\\Facultate\\An_II\\Sem4\\ISS\\Assignment4\\AirportApp\\AirportApp\\Src\\Service\\FAQService.cs",
+              "RelativeToolTip": "AirportApp\\Src\\Service\\FAQService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-30T17:55:32.301Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "DatabaseConnectionHandler.cs",
+              "DocumentMoniker": "D:\\Facultate\\An_II\\Sem4\\ISS\\Assignment4\\AirportApp\\AirportApp\\Src\\Repository\\DatabaseConnectionHandler.cs",
+              "RelativeDocumentMoniker": "AirportApp\\Src\\Repository\\DatabaseConnectionHandler.cs",
+              "ToolTip": "D:\\Facultate\\An_II\\Sem4\\ISS\\Assignment4\\AirportApp\\AirportApp\\Src\\Repository\\DatabaseConnectionHandler.cs",
+              "RelativeToolTip": "AirportApp\\Src\\Repository\\DatabaseConnectionHandler.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAAPAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-30T17:52:32.06Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "FAQEntryMappingProfile.cs",
+              "DocumentMoniker": "D:\\Facultate\\An_II\\Sem4\\ISS\\Assignment4\\AirportApp\\AirportApp\\Src\\Dto\\mappingProfiles\\FAQEntryMappingProfile.cs",
+              "RelativeDocumentMoniker": "AirportApp\\Src\\Dto\\mappingProfiles\\FAQEntryMappingProfile.cs",
+              "ToolTip": "D:\\Facultate\\An_II\\Sem4\\ISS\\Assignment4\\AirportApp\\AirportApp\\Src\\Dto\\mappingProfiles\\FAQEntryMappingProfile.cs",
+              "RelativeToolTip": "AirportApp\\Src\\Dto\\mappingProfiles\\FAQEntryMappingProfile.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAGAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-30T17:52:45.142Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "EmployeeMappingProfile.cs",
+              "DocumentMoniker": "D:\\Facultate\\An_II\\Sem4\\ISS\\Assignment4\\AirportApp\\AirportApp\\Src\\Dto\\mappingProfiles\\EmployeeMappingProfile.cs",
+              "RelativeDocumentMoniker": "AirportApp\\Src\\Dto\\mappingProfiles\\EmployeeMappingProfile.cs",
+              "ToolTip": "D:\\Facultate\\An_II\\Sem4\\ISS\\Assignment4\\AirportApp\\AirportApp\\Src\\Dto\\mappingProfiles\\EmployeeMappingProfile.cs",
+              "RelativeToolTip": "AirportApp\\Src\\Dto\\mappingProfiles\\EmployeeMappingProfile.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAGAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-30T17:52:40.897Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "FAQViewModel.cs",
+              "DocumentMoniker": "D:\\Facultate\\An_II\\Sem4\\ISS\\Assignment4\\AirportApp\\AirportApp\\Src\\ViewModel\\faq\\FAQViewModel.cs",
+              "RelativeDocumentMoniker": "AirportApp\\Src\\ViewModel\\faq\\FAQViewModel.cs",
+              "ToolTip": "D:\\Facultate\\An_II\\Sem4\\ISS\\Assignment4\\AirportApp\\AirportApp\\Src\\ViewModel\\faq\\FAQViewModel.cs",
+              "RelativeToolTip": "AirportApp\\Src\\ViewModel\\faq\\FAQViewModel.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAARAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-30T17:50:36.811Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "ChatViewModel.cs",
+              "DocumentMoniker": "D:\\Facultate\\An_II\\Sem4\\ISS\\Assignment4\\AirportApp\\AirportApp\\Src\\ViewModel\\chat\\ChatViewModel.cs",
+              "RelativeDocumentMoniker": "AirportApp\\Src\\ViewModel\\chat\\ChatViewModel.cs",
+              "ToolTip": "D:\\Facultate\\An_II\\Sem4\\ISS\\Assignment4\\AirportApp\\AirportApp\\Src\\ViewModel\\chat\\ChatViewModel.cs",
+              "RelativeToolTip": "AirportApp\\Src\\ViewModel\\chat\\ChatViewModel.cs",
+              "ViewState": "AgIAAAQAAAAAAAAAAAAlwA0AAAAGAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-30T17:49:37.854Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "AddReviewViewModel.cs",
+              "DocumentMoniker": "D:\\Facultate\\An_II\\Sem4\\ISS\\Assignment4\\AirportApp\\AirportApp\\Src\\ViewModel\\review\\AddReviewViewModel.cs",
+              "RelativeDocumentMoniker": "AirportApp\\Src\\ViewModel\\review\\AddReviewViewModel.cs",
+              "ToolTip": "D:\\Facultate\\An_II\\Sem4\\ISS\\Assignment4\\AirportApp\\AirportApp\\Src\\ViewModel\\review\\AddReviewViewModel.cs",
+              "RelativeToolTip": "AirportApp\\Src\\ViewModel\\review\\AddReviewViewModel.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAGAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-30T17:48:33.5Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "FAQNode.cs",
+              "DocumentMoniker": "D:\\Facultate\\An_II\\Sem4\\ISS\\Assignment4\\AirportApp\\AirportApp\\Src\\Domain\\faq\\bot\\FAQNode.cs",
+              "RelativeDocumentMoniker": "AirportApp\\Src\\Domain\\faq\\bot\\FAQNode.cs",
+              "ToolTip": "D:\\Facultate\\An_II\\Sem4\\ISS\\Assignment4\\AirportApp\\AirportApp\\Src\\Domain\\faq\\bot\\FAQNode.cs",
+              "RelativeToolTip": "AirportApp\\Src\\Domain\\faq\\bot\\FAQNode.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAQAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-30T17:41:20.271Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 18,
+              "Title": "User.cs",
+              "DocumentMoniker": "D:\\Downloads\\UBB-SE-2026-CloudSpritzers-main\\UBB-SE-2026-CloudSpritzers-main\\CloudSpritzers1\\src\\model\\User.cs",
+              "RelativeDocumentMoniker": "..\\..\\..\\..\\..\\..\\Downloads\\UBB-SE-2026-CloudSpritzers-main\\UBB-SE-2026-CloudSpritzers-main\\CloudSpritzers1\\src\\model\\User.cs",
+              "ToolTip": "D:\\Downloads\\UBB-SE-2026-CloudSpritzers-main\\UBB-SE-2026-CloudSpritzers-main\\CloudSpritzers1\\src\\model\\User.cs",
+              "RelativeToolTip": "..\\..\\..\\..\\..\\..\\Downloads\\UBB-SE-2026-CloudSpritzers-main\\UBB-SE-2026-CloudSpritzers-main\\CloudSpritzers1\\src\\model\\User.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-30T17:39:45.584Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 20,
+              "Title": "TicketSubcategory.cs",
+              "DocumentMoniker": "D:\\Downloads\\UBB-SE-2026-CloudSpritzers-main\\UBB-SE-2026-CloudSpritzers-main\\CloudSpritzers1\\src\\model\\ticket\\TicketSubcategory.cs",
+              "RelativeDocumentMoniker": "..\\..\\..\\..\\..\\..\\Downloads\\UBB-SE-2026-CloudSpritzers-main\\UBB-SE-2026-CloudSpritzers-main\\CloudSpritzers1\\src\\model\\ticket\\TicketSubcategory.cs",
+              "ToolTip": "D:\\Downloads\\UBB-SE-2026-CloudSpritzers-main\\UBB-SE-2026-CloudSpritzers-main\\CloudSpritzers1\\src\\model\\ticket\\TicketSubcategory.cs",
+              "RelativeToolTip": "..\\..\\..\\..\\..\\..\\Downloads\\UBB-SE-2026-CloudSpritzers-main\\UBB-SE-2026-CloudSpritzers-main\\CloudSpritzers1\\src\\model\\ticket\\TicketSubcategory.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-30T17:39:45.235Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 17,
+              "Title": "User2Repository.cs",
+              "DocumentMoniker": "D:\\Facultate\\An_II\\Sem4\\ISS\\Assignment4\\AirportApp\\AirportApp\\Src\\Repository\\User2Repository.cs",
+              "RelativeDocumentMoniker": "AirportApp\\Src\\Repository\\User2Repository.cs",
+              "ToolTip": "D:\\Facultate\\An_II\\Sem4\\ISS\\Assignment4\\AirportApp\\AirportApp\\Src\\Repository\\User2Repository.cs",
+              "RelativeToolTip": "AirportApp\\Src\\Repository\\User2Repository.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAAAeAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-30T12:54:19.909Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 19,
+              "Title": "TicketUrgencyLevelEnum.cs",
+              "DocumentMoniker": "D:\\Downloads\\UBB-SE-2026-CloudSpritzers-main\\UBB-SE-2026-CloudSpritzers-main\\CloudSpritzers1\\src\\model\\ticket\\TicketUrgencyLevelEnum.cs",
+              "RelativeDocumentMoniker": "..\\..\\..\\..\\..\\..\\Downloads\\UBB-SE-2026-CloudSpritzers-main\\UBB-SE-2026-CloudSpritzers-main\\CloudSpritzers1\\src\\model\\ticket\\TicketUrgencyLevelEnum.cs",
+              "ToolTip": "D:\\Downloads\\UBB-SE-2026-CloudSpritzers-main\\UBB-SE-2026-CloudSpritzers-main\\CloudSpritzers1\\src\\model\\ticket\\TicketUrgencyLevelEnum.cs",
+              "RelativeToolTip": "..\\..\\..\\..\\..\\..\\Downloads\\UBB-SE-2026-CloudSpritzers-main\\UBB-SE-2026-CloudSpritzers-main\\CloudSpritzers1\\src\\model\\ticket\\TicketUrgencyLevelEnum.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-30T17:39:45.412Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 21,
+              "Title": "TicketStatusEnum.cs",
+              "DocumentMoniker": "D:\\Downloads\\UBB-SE-2026-CloudSpritzers-main\\UBB-SE-2026-CloudSpritzers-main\\CloudSpritzers1\\src\\model\\ticket\\TicketStatusEnum.cs",
+              "RelativeDocumentMoniker": "..\\..\\..\\..\\..\\..\\Downloads\\UBB-SE-2026-CloudSpritzers-main\\UBB-SE-2026-CloudSpritzers-main\\CloudSpritzers1\\src\\model\\ticket\\TicketStatusEnum.cs",
+              "ToolTip": "D:\\Downloads\\UBB-SE-2026-CloudSpritzers-main\\UBB-SE-2026-CloudSpritzers-main\\CloudSpritzers1\\src\\model\\ticket\\TicketStatusEnum.cs",
+              "RelativeToolTip": "..\\..\\..\\..\\..\\..\\Downloads\\UBB-SE-2026-CloudSpritzers-main\\UBB-SE-2026-CloudSpritzers-main\\CloudSpritzers1\\src\\model\\ticket\\TicketStatusEnum.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-30T17:39:45.078Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 22,
+              "Title": "TicketCategory.cs",
+              "DocumentMoniker": "D:\\Downloads\\UBB-SE-2026-CloudSpritzers-main\\UBB-SE-2026-CloudSpritzers-main\\CloudSpritzers1\\src\\model\\ticket\\TicketCategory.cs",
+              "RelativeDocumentMoniker": "..\\..\\..\\..\\..\\..\\Downloads\\UBB-SE-2026-CloudSpritzers-main\\UBB-SE-2026-CloudSpritzers-main\\CloudSpritzers1\\src\\model\\ticket\\TicketCategory.cs",
+              "ToolTip": "D:\\Downloads\\UBB-SE-2026-CloudSpritzers-main\\UBB-SE-2026-CloudSpritzers-main\\CloudSpritzers1\\src\\model\\ticket\\TicketCategory.cs",
+              "RelativeToolTip": "..\\..\\..\\..\\..\\..\\Downloads\\UBB-SE-2026-CloudSpritzers-main\\UBB-SE-2026-CloudSpritzers-main\\CloudSpritzers1\\src\\model\\ticket\\TicketCategory.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-30T17:39:44.89Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 23,
+              "Title": "Ticket.cs",
+              "DocumentMoniker": "D:\\Downloads\\UBB-SE-2026-CloudSpritzers-main\\UBB-SE-2026-CloudSpritzers-main\\CloudSpritzers1\\src\\model\\ticket\\Ticket.cs",
+              "RelativeDocumentMoniker": "..\\..\\..\\..\\..\\..\\Downloads\\UBB-SE-2026-CloudSpritzers-main\\UBB-SE-2026-CloudSpritzers-main\\CloudSpritzers1\\src\\model\\ticket\\Ticket.cs",
+              "ToolTip": "D:\\Downloads\\UBB-SE-2026-CloudSpritzers-main\\UBB-SE-2026-CloudSpritzers-main\\CloudSpritzers1\\src\\model\\ticket\\Ticket.cs",
+              "RelativeToolTip": "..\\..\\..\\..\\..\\..\\Downloads\\UBB-SE-2026-CloudSpritzers-main\\UBB-SE-2026-CloudSpritzers-main\\CloudSpritzers1\\src\\model\\ticket\\Ticket.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-30T17:39:44.694Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 24,
+              "Title": "Review.cs",
+              "DocumentMoniker": "D:\\Downloads\\UBB-SE-2026-CloudSpritzers-main\\UBB-SE-2026-CloudSpritzers-main\\CloudSpritzers1\\src\\model\\review\\Review.cs",
+              "RelativeDocumentMoniker": "..\\..\\..\\..\\..\\..\\Downloads\\UBB-SE-2026-CloudSpritzers-main\\UBB-SE-2026-CloudSpritzers-main\\CloudSpritzers1\\src\\model\\review\\Review.cs",
+              "ToolTip": "D:\\Downloads\\UBB-SE-2026-CloudSpritzers-main\\UBB-SE-2026-CloudSpritzers-main\\CloudSpritzers1\\src\\model\\review\\Review.cs",
+              "RelativeToolTip": "..\\..\\..\\..\\..\\..\\Downloads\\UBB-SE-2026-CloudSpritzers-main\\UBB-SE-2026-CloudSpritzers-main\\CloudSpritzers1\\src\\model\\review\\Review.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-30T17:39:44.532Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 25,
+              "Title": "Message.cs",
+              "DocumentMoniker": "D:\\Downloads\\UBB-SE-2026-CloudSpritzers-main\\UBB-SE-2026-CloudSpritzers-main\\CloudSpritzers1\\src\\model\\message\\Message.cs",
+              "RelativeDocumentMoniker": "..\\..\\..\\..\\..\\..\\Downloads\\UBB-SE-2026-CloudSpritzers-main\\UBB-SE-2026-CloudSpritzers-main\\CloudSpritzers1\\src\\model\\message\\Message.cs",
+              "ToolTip": "D:\\Downloads\\UBB-SE-2026-CloudSpritzers-main\\UBB-SE-2026-CloudSpritzers-main\\CloudSpritzers1\\src\\model\\message\\Message.cs",
+              "RelativeToolTip": "..\\..\\..\\..\\..\\..\\Downloads\\UBB-SE-2026-CloudSpritzers-main\\UBB-SE-2026-CloudSpritzers-main\\CloudSpritzers1\\src\\model\\message\\Message.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-30T17:39:44.323Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 26,
+              "Title": "ISender.cs",
+              "DocumentMoniker": "D:\\Downloads\\UBB-SE-2026-CloudSpritzers-main\\UBB-SE-2026-CloudSpritzers-main\\CloudSpritzers1\\src\\model\\message\\ISender.cs",
+              "RelativeDocumentMoniker": "..\\..\\..\\..\\..\\..\\Downloads\\UBB-SE-2026-CloudSpritzers-main\\UBB-SE-2026-CloudSpritzers-main\\CloudSpritzers1\\src\\model\\message\\ISender.cs",
+              "ToolTip": "D:\\Downloads\\UBB-SE-2026-CloudSpritzers-main\\UBB-SE-2026-CloudSpritzers-main\\CloudSpritzers1\\src\\model\\message\\ISender.cs",
+              "RelativeToolTip": "..\\..\\..\\..\\..\\..\\Downloads\\UBB-SE-2026-CloudSpritzers-main\\UBB-SE-2026-CloudSpritzers-main\\CloudSpritzers1\\src\\model\\message\\ISender.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-30T17:39:44.148Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 27,
+              "Title": "IMessage.cs",
+              "DocumentMoniker": "D:\\Downloads\\UBB-SE-2026-CloudSpritzers-main\\UBB-SE-2026-CloudSpritzers-main\\CloudSpritzers1\\src\\model\\message\\IMessage.cs",
+              "RelativeDocumentMoniker": "..\\..\\..\\..\\..\\..\\Downloads\\UBB-SE-2026-CloudSpritzers-main\\UBB-SE-2026-CloudSpritzers-main\\CloudSpritzers1\\src\\model\\message\\IMessage.cs",
+              "ToolTip": "D:\\Downloads\\UBB-SE-2026-CloudSpritzers-main\\UBB-SE-2026-CloudSpritzers-main\\CloudSpritzers1\\src\\model\\message\\IMessage.cs",
+              "RelativeToolTip": "..\\..\\..\\..\\..\\..\\Downloads\\UBB-SE-2026-CloudSpritzers-main\\UBB-SE-2026-CloudSpritzers-main\\CloudSpritzers1\\src\\model\\message\\IMessage.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-30T17:39:43.974Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 28,
+              "Title": "BotMessage.cs",
+              "DocumentMoniker": "D:\\Downloads\\UBB-SE-2026-CloudSpritzers-main\\UBB-SE-2026-CloudSpritzers-main\\CloudSpritzers1\\src\\model\\message\\BotMessage.cs",
+              "RelativeDocumentMoniker": "..\\..\\..\\..\\..\\..\\Downloads\\UBB-SE-2026-CloudSpritzers-main\\UBB-SE-2026-CloudSpritzers-main\\CloudSpritzers1\\src\\model\\message\\BotMessage.cs",
+              "ToolTip": "D:\\Downloads\\UBB-SE-2026-CloudSpritzers-main\\UBB-SE-2026-CloudSpritzers-main\\CloudSpritzers1\\src\\model\\message\\BotMessage.cs",
+              "RelativeToolTip": "..\\..\\..\\..\\..\\..\\Downloads\\UBB-SE-2026-CloudSpritzers-main\\UBB-SE-2026-CloudSpritzers-main\\CloudSpritzers1\\src\\model\\message\\BotMessage.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-30T17:39:43.799Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 29,
+              "Title": "FAQEntry.cs",
+              "DocumentMoniker": "D:\\Downloads\\UBB-SE-2026-CloudSpritzers-main\\UBB-SE-2026-CloudSpritzers-main\\CloudSpritzers1\\src\\model\\faq\\FAQEntry.cs",
+              "RelativeDocumentMoniker": "..\\..\\..\\..\\..\\..\\Downloads\\UBB-SE-2026-CloudSpritzers-main\\UBB-SE-2026-CloudSpritzers-main\\CloudSpritzers1\\src\\model\\faq\\FAQEntry.cs",
+              "ToolTip": "D:\\Downloads\\UBB-SE-2026-CloudSpritzers-main\\UBB-SE-2026-CloudSpritzers-main\\CloudSpritzers1\\src\\model\\faq\\FAQEntry.cs",
+              "RelativeToolTip": "..\\..\\..\\..\\..\\..\\Downloads\\UBB-SE-2026-CloudSpritzers-main\\UBB-SE-2026-CloudSpritzers-main\\CloudSpritzers1\\src\\model\\faq\\FAQEntry.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-30T17:39:43.615Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 30,
+              "Title": "FAQCategoryEnum.cs",
+              "DocumentMoniker": "D:\\Downloads\\UBB-SE-2026-CloudSpritzers-main\\UBB-SE-2026-CloudSpritzers-main\\CloudSpritzers1\\src\\model\\faq\\FAQCategoryEnum.cs",
+              "RelativeDocumentMoniker": "..\\..\\..\\..\\..\\..\\Downloads\\UBB-SE-2026-CloudSpritzers-main\\UBB-SE-2026-CloudSpritzers-main\\CloudSpritzers1\\src\\model\\faq\\FAQCategoryEnum.cs",
+              "ToolTip": "D:\\Downloads\\UBB-SE-2026-CloudSpritzers-main\\UBB-SE-2026-CloudSpritzers-main\\CloudSpritzers1\\src\\model\\faq\\FAQCategoryEnum.cs",
+              "RelativeToolTip": "..\\..\\..\\..\\..\\..\\Downloads\\UBB-SE-2026-CloudSpritzers-main\\UBB-SE-2026-CloudSpritzers-main\\CloudSpritzers1\\src\\model\\faq\\FAQCategoryEnum.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-30T17:39:43.446Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 31,
+              "Title": "EmployeeDepartment.cs",
+              "DocumentMoniker": "D:\\Downloads\\UBB-SE-2026-CloudSpritzers-main\\UBB-SE-2026-CloudSpritzers-main\\CloudSpritzers1\\src\\model\\employee\\EmployeeDepartment.cs",
+              "RelativeDocumentMoniker": "..\\..\\..\\..\\..\\..\\Downloads\\UBB-SE-2026-CloudSpritzers-main\\UBB-SE-2026-CloudSpritzers-main\\CloudSpritzers1\\src\\model\\employee\\EmployeeDepartment.cs",
+              "ToolTip": "D:\\Downloads\\UBB-SE-2026-CloudSpritzers-main\\UBB-SE-2026-CloudSpritzers-main\\CloudSpritzers1\\src\\model\\employee\\EmployeeDepartment.cs",
+              "RelativeToolTip": "..\\..\\..\\..\\..\\..\\Downloads\\UBB-SE-2026-CloudSpritzers-main\\UBB-SE-2026-CloudSpritzers-main\\CloudSpritzers1\\src\\model\\employee\\EmployeeDepartment.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-30T17:39:43.279Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 32,
+              "Title": "Employee.cs",
+              "DocumentMoniker": "D:\\Downloads\\UBB-SE-2026-CloudSpritzers-main\\UBB-SE-2026-CloudSpritzers-main\\CloudSpritzers1\\src\\model\\employee\\Employee.cs",
+              "RelativeDocumentMoniker": "..\\..\\..\\..\\..\\..\\Downloads\\UBB-SE-2026-CloudSpritzers-main\\UBB-SE-2026-CloudSpritzers-main\\CloudSpritzers1\\src\\model\\employee\\Employee.cs",
+              "ToolTip": "D:\\Downloads\\UBB-SE-2026-CloudSpritzers-main\\UBB-SE-2026-CloudSpritzers-main\\CloudSpritzers1\\src\\model\\employee\\Employee.cs",
+              "RelativeToolTip": "..\\..\\..\\..\\..\\..\\Downloads\\UBB-SE-2026-CloudSpritzers-main\\UBB-SE-2026-CloudSpritzers-main\\CloudSpritzers1\\src\\model\\employee\\Employee.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-30T17:39:43.08Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 33,
+              "Title": "ChatStatusEnum.cs",
+              "DocumentMoniker": "D:\\Downloads\\UBB-SE-2026-CloudSpritzers-main\\UBB-SE-2026-CloudSpritzers-main\\CloudSpritzers1\\src\\model\\chat\\ChatStatusEnum.cs",
+              "RelativeDocumentMoniker": "..\\..\\..\\..\\..\\..\\Downloads\\UBB-SE-2026-CloudSpritzers-main\\UBB-SE-2026-CloudSpritzers-main\\CloudSpritzers1\\src\\model\\chat\\ChatStatusEnum.cs",
+              "ToolTip": "D:\\Downloads\\UBB-SE-2026-CloudSpritzers-main\\UBB-SE-2026-CloudSpritzers-main\\CloudSpritzers1\\src\\model\\chat\\ChatStatusEnum.cs",
+              "RelativeToolTip": "..\\..\\..\\..\\..\\..\\Downloads\\UBB-SE-2026-CloudSpritzers-main\\UBB-SE-2026-CloudSpritzers-main\\CloudSpritzers1\\src\\model\\chat\\ChatStatusEnum.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-30T17:39:42.87Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 34,
+              "Title": "Chat.cs",
+              "DocumentMoniker": "D:\\Downloads\\UBB-SE-2026-CloudSpritzers-main\\UBB-SE-2026-CloudSpritzers-main\\CloudSpritzers1\\src\\model\\chat\\Chat.cs",
+              "RelativeDocumentMoniker": "..\\..\\..\\..\\..\\..\\Downloads\\UBB-SE-2026-CloudSpritzers-main\\UBB-SE-2026-CloudSpritzers-main\\CloudSpritzers1\\src\\model\\chat\\Chat.cs",
+              "ToolTip": "D:\\Downloads\\UBB-SE-2026-CloudSpritzers-main\\UBB-SE-2026-CloudSpritzers-main\\CloudSpritzers1\\src\\model\\chat\\Chat.cs",
+              "RelativeToolTip": "..\\..\\..\\..\\..\\..\\Downloads\\UBB-SE-2026-CloudSpritzers-main\\UBB-SE-2026-CloudSpritzers-main\\CloudSpritzers1\\src\\model\\chat\\Chat.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-30T17:39:42.602Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 40,
+              "Title": "MembershipsPage.xaml",
+              "DocumentMoniker": "D:\\Facultate\\An_II\\Sem4\\ISS\\Assignment4\\AirportApp\\AirportApp\\Src\\View\\MembershipsPage.xaml",
+              "RelativeDocumentMoniker": "AirportApp\\Src\\View\\MembershipsPage.xaml",
+              "ToolTip": "D:\\Facultate\\An_II\\Sem4\\ISS\\Assignment4\\AirportApp\\AirportApp\\Src\\View\\MembershipsPage.xaml",
+              "RelativeToolTip": "AirportApp\\Src\\View\\MembershipsPage.xaml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAoAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2026-04-30T13:00:50.513Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 37,
+              "Title": "DatabaseConnectionFactory.cs",
+              "DocumentMoniker": "D:\\Facultate\\An_II\\Sem4\\ISS\\Assignment4\\AirportApp\\AirportApp\\Src\\Repository\\DatabaseConnectionFactory.cs",
+              "RelativeDocumentMoniker": "AirportApp\\Src\\Repository\\DatabaseConnectionFactory.cs",
+              "ToolTip": "D:\\Facultate\\An_II\\Sem4\\ISS\\Assignment4\\AirportApp\\AirportApp\\Src\\Repository\\DatabaseConnectionFactory.cs",
+              "RelativeToolTip": "AirportApp\\Src\\Repository\\DatabaseConnectionFactory.cs",
+              "ViewState": "AgIAAAIAAAAAAAAAAAAgwBAAAAAMAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-30T13:03:46.053Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 35,
+              "Title": "DashboardService.cs",
+              "DocumentMoniker": "D:\\Facultate\\An_II\\Sem4\\ISS\\Assignment4\\AirportApp\\AirportApp\\Src\\Service\\DashboardService.cs",
+              "RelativeDocumentMoniker": "AirportApp\\Src\\Service\\DashboardService.cs",
+              "ToolTip": "D:\\Facultate\\An_II\\Sem4\\ISS\\Assignment4\\AirportApp\\AirportApp\\Src\\Service\\DashboardService.cs",
+              "RelativeToolTip": "AirportApp\\Src\\Service\\DashboardService.cs",
+              "ViewState": "AgIAAAsAAAAAAAAAAADwvxYAAAA3AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-30T12:51:13.296Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 36,
+              "Title": "FlightSearchPage.xaml",
+              "DocumentMoniker": "D:\\Facultate\\An_II\\Sem4\\ISS\\Assignment4\\AirportApp\\AirportApp\\Src\\View\\FlightSearchPage.xaml",
+              "RelativeDocumentMoniker": "AirportApp\\Src\\View\\FlightSearchPage.xaml",
+              "ToolTip": "D:\\Facultate\\An_II\\Sem4\\ISS\\Assignment4\\AirportApp\\AirportApp\\Src\\View\\FlightSearchPage.xaml",
+              "RelativeToolTip": "AirportApp\\Src\\View\\FlightSearchPage.xaml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAEAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2026-04-30T13:00:37.561Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 38,
+              "Title": "AuthService.cs",
+              "DocumentMoniker": "D:\\Facultate\\An_II\\Sem4\\ISS\\Assignment4\\AirportApp\\AirportApp\\Src\\Service\\AuthService.cs",
+              "RelativeDocumentMoniker": "AirportApp\\Src\\Service\\AuthService.cs",
+              "ToolTip": "D:\\Facultate\\An_II\\Sem4\\ISS\\Assignment4\\AirportApp\\AirportApp\\Src\\Service\\AuthService.cs",
+              "RelativeToolTip": "AirportApp\\Src\\Service\\AuthService.cs",
+              "ViewState": "AgIAAB4AAAAAAAAAAAAYwC0AAAAuAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-30T13:01:37.538Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 41,
+              "Title": "IPricingService.cs",
+              "DocumentMoniker": "D:\\Facultate\\An_II\\Sem4\\ISS\\Assignment4\\AirportApp\\AirportApp\\Src\\Service\\IPricingService.cs",
+              "RelativeDocumentMoniker": "AirportApp\\Src\\Service\\IPricingService.cs",
+              "ToolTip": "D:\\Facultate\\An_II\\Sem4\\ISS\\Assignment4\\AirportApp\\AirportApp\\Src\\Service\\IPricingService.cs",
+              "RelativeToolTip": "AirportApp\\Src\\Service\\IPricingService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-30T13:06:54.569Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 42,
+              "Title": "DashboardPage.xaml",
+              "DocumentMoniker": "D:\\Facultate\\An_II\\Sem4\\ISS\\Assignment4\\AirportApp\\AirportApp\\Src\\View\\DashboardPage.xaml",
+              "RelativeDocumentMoniker": "AirportApp\\Src\\View\\DashboardPage.xaml",
+              "ToolTip": "D:\\Facultate\\An_II\\Sem4\\ISS\\Assignment4\\AirportApp\\AirportApp\\Src\\View\\DashboardPage.xaml",
+              "RelativeToolTip": "AirportApp\\Src\\View\\DashboardPage.xaml",
+              "ViewState": "AgIAABsAAAAAAAAAAAAWwCcAAAA6AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2026-04-30T12:58:54.821Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 39,
+              "Title": "BookingPage.xaml",
+              "DocumentMoniker": "D:\\Facultate\\An_II\\Sem4\\ISS\\Assignment4\\AirportApp\\AirportApp\\Src\\View\\BookingPage.xaml",
+              "RelativeDocumentMoniker": "AirportApp\\Src\\View\\BookingPage.xaml",
+              "ToolTip": "D:\\Facultate\\An_II\\Sem4\\ISS\\Assignment4\\AirportApp\\AirportApp\\Src\\View\\BookingPage.xaml",
+              "RelativeToolTip": "AirportApp\\Src\\View\\BookingPage.xaml",
+              "ViewState": "AgIAAHsAAAAAAAAAAAAYwIoAAAAuAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2026-04-30T12:58:09.39Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 43,
+              "Title": "AuthPage.xaml",
+              "DocumentMoniker": "D:\\Facultate\\An_II\\Sem4\\ISS\\Assignment4\\AirportApp\\AirportApp\\Src\\View\\AuthPage.xaml",
+              "RelativeDocumentMoniker": "AirportApp\\Src\\View\\AuthPage.xaml",
+              "ToolTip": "D:\\Facultate\\An_II\\Sem4\\ISS\\Assignment4\\AirportApp\\AirportApp\\Src\\View\\AuthPage.xaml",
+              "RelativeToolTip": "AirportApp\\Src\\View\\AuthPage.xaml",
+              "ViewState": "AgIAAAAAAAAAAAAAAABBwAUAAAAmAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2026-04-30T12:58:52.253Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 44,
+              "Title": "DashboardViewModel.cs",
+              "DocumentMoniker": "D:\\Facultate\\An_II\\Sem4\\ISS\\Assignment4\\AirportApp\\AirportApp\\Src\\ViewModel\\DashboardViewModel.cs",
+              "RelativeDocumentMoniker": "AirportApp\\Src\\ViewModel\\DashboardViewModel.cs",
+              "ToolTip": "D:\\Facultate\\An_II\\Sem4\\ISS\\Assignment4\\AirportApp\\AirportApp\\Src\\ViewModel\\DashboardViewModel.cs",
+              "RelativeToolTip": "AirportApp\\Src\\ViewModel\\DashboardViewModel.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAEoAAABwAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-30T12:51:01.016Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 45,
+              "Title": "AddOnRepository.cs",
+              "DocumentMoniker": "D:\\Facultate\\An_II\\Sem4\\ISS\\Assignment4\\AirportApp\\AirportApp\\Src\\Repository\\AddOnRepository.cs",
+              "RelativeDocumentMoniker": "AirportApp\\Src\\Repository\\AddOnRepository.cs",
+              "ToolTip": "D:\\Facultate\\An_II\\Sem4\\ISS\\Assignment4\\AirportApp\\AirportApp\\Src\\Repository\\AddOnRepository.cs",
+              "RelativeToolTip": "AirportApp\\Src\\Repository\\AddOnRepository.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAAQAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-30T12:46:50.896Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

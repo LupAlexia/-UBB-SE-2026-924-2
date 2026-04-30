@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="AirportApp.Src.View.MembershipsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:vm="using:AirportApp.Src.ViewModel"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid Background="Transparent" Padding="40">
+        <StackPanel Spacing="20" HorizontalAlignment="Center">
+
+            <TextBlock Text="Choose Your Membership" FontSize="32" FontWeight="Bold" Foreground="#2bb8c0" HorizontalAlignment="Center"/>
+            <TextBlock Text="Unlock exclusive flight discounts and premium perks." FontSize="16" Foreground="Gray" HorizontalAlignment="Center"/>
+
+            <GridView x:Name="membershipGridView" ItemsSource="{x:Bind ViewModel.Memberships, Mode=OneWay}" SelectionMode="None" HorizontalAlignment="Center" Margin="0,30,0,0">
+                <GridView.ItemTemplate>
+                    <DataTemplate x:DataType="vm:MembershipDisplayModel">
+
+                        <Border Width="260" Height="320" Margin="15" CornerRadius="16" BorderBrush="{x:Bind CardColor}" BorderThickness="2" Background="White">
+                            <Grid Padding="24">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+
+                                <TextBlock Grid.Row="0" Text="{x:Bind Name}" FontSize="32" FontWeight="Bold" Foreground="{x:Bind CardColor}" HorizontalAlignment="Center"/>
+
+                                <StackPanel Grid.Row="1" VerticalAlignment="Center" Spacing="12">
+                                    <TextBlock Text="{x:Bind DiscountText}" FontSize="18" FontWeight="SemiBold" HorizontalAlignment="Center"/>
+
+                                    <ItemsControl ItemsSource="{x:Bind AddonBenefits}">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding}" FontSize="14" Foreground="Gray" HorizontalAlignment="Center" Margin="0,3,0,3"/>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </StackPanel>
+
+                                <Button Grid.Row="2" Content="Purchase" 
+                                        Command="{Binding DataContext.PurchaseCommand, ElementName=membershipGridView}" CommandParameter="{x:Bind MembershipId}"
+                                        Background="{x:Bind CardColor}" Foreground="White" FontWeight="Bold" 
+                                        Width="200" Height="40" CornerRadius="8" HorizontalAlignment="Center"/>
+                            </Grid>
+                        </Border>
+
+                    </DataTemplate>
+                </GridView.ItemTemplate>
+            </GridView>
+
+        </StackPanel>
+    </Grid>
+</Page>

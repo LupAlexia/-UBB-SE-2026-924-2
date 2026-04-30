@@ -1,0 +1,51 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Window
+    x:Class="AirportApp.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:AirportApp"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Title="AirportApp">
+
+    <Window.SystemBackdrop>
+        <MicaBackdrop />
+    </Window.SystemBackdrop>
+
+    <Grid Background="Transparent" RequestedTheme="Light">
+
+        <NavigationView x:Name="TopNav"
+						PaneDisplayMode="Top"
+                       IsSettingsVisible="False"
+						IsBackButtonVisible="Visible"
+						ItemInvoked="TopNav_ItemInvoked"
+						BackRequested="TopNav_BackRequested">
+
+            <NavigationView.Resources>
+                <SolidColorBrush x:Key="NavigationViewItemForegroundSelected" Color="#2bb8c0" />
+                <SolidColorBrush x:Key="NavigationViewItemForegroundSelectedPointerOver" Color="#2bb8c0" />
+                <SolidColorBrush x:Key="NavigationViewItemForegroundSelectedPressed" Color="#2bb8c0" />
+                <SolidColorBrush x:Key="NavigationViewSelectionIndicatorForeground" Color="#2bb8c0" />
+            </NavigationView.Resources>
+
+            <NavigationView.MenuItems>
+                <NavigationViewItem Content="Search" Tag="AirportApp.View.FlightSearchPage" />
+                <NavigationViewItem Content="Dashboard" Tag="AirportApp.View.DashboardPage" />
+                <NavigationViewItem Content="Memberships" Tag="AirportApp.View.MembershipsPage" />
+            </NavigationView.MenuItems>
+
+            <NavigationView.FooterMenuItems>
+                <NavigationViewItem x:Name="AccountMenuItem" Content="Account" Tag="Account">
+                    <NavigationViewItem.Icon>
+                        <SymbolIcon Symbol="Contact" />
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+            </NavigationView.FooterMenuItems>
+
+            <Frame x:Name="ContentFrame" />
+
+        </NavigationView>
+
+    </Grid>
+</Window>

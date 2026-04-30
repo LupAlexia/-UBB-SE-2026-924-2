@@ -1,0 +1,102 @@
+<Page
+    x:Class="CloudSpritzers1.Src.View.General.LandingPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:general="using:CloudSpritzers1.Src.View.General"
+    xmlns:dto="using:CloudSpritzers1.Src.Dto"
+    Background="{ThemeResource CardBackgroundBrush}">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <general:UpperBar Grid.Row="0" />
+
+        <Grid Grid.Row="1">
+            <ScrollViewer>
+                <StackPanel Spacing="50">
+
+                    <Grid Height="500">
+                        <FlipView x:Name="SupportCarousel" Background="{ThemeResource InputBackgroundBrush}"
+                          IsHitTestVisible="False"
+                          UseTouchAnimationsForAllNavigation="False">
+                            <FlipViewItem>
+                                <Grid>
+                                    <Image Source="/Assets/Airport2.jpg" Stretch="UniformToFill" Opacity="0.7"/>
+                                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                                        <TextBlock Text="Premium Customer Support" FontSize="48" FontWeight="Bold" Foreground="White" TextAlignment="Center"/>
+                                    </StackPanel>
+                                </Grid>
+                            </FlipViewItem>
+
+                            <FlipViewItem>
+                                <Grid>
+                                    <Image Source="/Assets/Bags.jpg" Stretch="UniformToFill" Opacity="0.7"/>
+                                    <TextBlock Text="Seamless Airport Assistance" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="48" FontWeight="Bold" Foreground="White"/>
+                                </Grid>
+                            </FlipViewItem>
+
+                            <FlipViewItem>
+                                <Grid>
+                                    <Image Source="/Assets/Travel3.jpeg" Stretch="UniformToFill" Opacity="0.7"/>
+                                    <TextBlock Text="Global Coverage" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="48" FontWeight="Bold" Foreground="White"/>
+                                </Grid>
+                            </FlipViewItem>
+                        </FlipView>
+                    </Grid>
+
+                    <StackPanel Spacing="30" Margin="40,0,40,60">
+                        <TextBlock Text="What Our Customers Say" FontSize="36" FontWeight="Bold" Foreground="{ThemeResource PrimaryTextBrush}" HorizontalAlignment="Center"/>
+                        <Rectangle Height="3" Width="50" Fill="{ThemeResource PrimaryBrush}" HorizontalAlignment="Center" Margin="0,-15,0,10"/>
+
+                        <ItemsControl ItemsSource="{x:Bind ViewModel.Reviews}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <VariableSizedWrapGrid Orientation="Horizontal" HorizontalAlignment="Center" ItemWidth="420" MaximumRowsOrColumns="2"/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate x:DataType="dto:ReviewDTO">
+                                    <Border Background="{ThemeResource CardBackgroundBrush}" 
+                                    Margin="12" Padding="25" CornerRadius="8" 
+                                    BorderThickness="1" BorderBrush="{ThemeResource BorderBrush}">
+                                        <StackPanel Spacing="15">
+
+                                            <Viewbox Height="20" HorizontalAlignment="Left">
+                                                <RatingControl Value="{x:Bind overallRating}" 
+                                                       IsReadOnly="True" 
+                                                       MaxRating="5" 
+                                                       Foreground="{ThemeResource PrimaryBrush}"/>
+                                            </Viewbox>
+
+                                            <TextBlock Text="{x:Bind message}" 
+                                               TextWrapping="Wrap" 
+                                               FontSize="16" 
+                                               LineHeight="24"
+                                               Foreground="{ThemeResource PrimaryTextBrush}" 
+                                               FontStyle="Italic"
+                                               MinHeight="70"/>
+
+                                            <StackPanel>
+                                                <TextBlock Text="{x:Bind userName}" 
+                                                   FontWeight="Bold" 
+                                                   FontSize="16" 
+                                                   Foreground="{ThemeResource PrimaryBrush}"/>
+                                                <TextBlock Text="Verified Traveler" 
+                                                   FontSize="12" 
+                                                   Foreground="{ThemeResource SecondaryTextBrush}"/>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+                </StackPanel>
+            </ScrollViewer>
+        </Grid>
+    </Grid>
+</Page>

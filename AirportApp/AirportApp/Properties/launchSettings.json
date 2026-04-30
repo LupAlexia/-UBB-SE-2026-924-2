@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "AirportApp (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "AirportApp (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}

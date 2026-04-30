@@ -1,0 +1,54 @@
+<Page
+    x:Class="CloudSpritzers1.Src.View.General.ChoosingPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource PrimaryBrush}">
+
+    <Grid>
+        <StackPanel VerticalAlignment="Center" Spacing="30">
+            <StackPanel HorizontalAlignment="Center" Margin="0,0,0,20">
+                <TextBlock Text="Welcome to CloudSpritzers!" 
+                           FontSize="42" FontWeight="Bold" Foreground="White" HorizontalAlignment="Center"/>
+                <TextBlock Text="How can we assist you today?" 
+                           FontSize="18" Foreground="White" Opacity="0.8" HorizontalAlignment="Center"/>
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="40">
+
+                <Button Tag="Customer" Click="SelectUserRole_Click" Width="350" Height="400" CornerRadius="12" Background="{ThemeResource CardBackgroundBrush}" Padding="30">
+                    <Button.Resources>
+                        <SolidColorBrush x:Key="ButtonBackground" Color="{StaticResource CardBackgroundColor}"/>
+                        <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="{StaticResource PrimaryMutedColor}"/>
+                        <SolidColorBrush x:Key="ButtonBackgroundPressed" Color="{StaticResource PrimaryMutedColor}"/>
+                        <SolidColorBrush x:Key="ButtonBackgroundFocused" Color="{StaticResource CardBackgroundColor}"/>
+                    </Button.Resources>
+                    <StackPanel Spacing="15" VerticalAlignment="Center">
+                        <FontIcon Glyph="&#xE77B;" FontSize="60" Foreground="{ThemeResource PrimaryBrush}"/>
+                        <TextBlock Text="I'm a Customer" FontSize="24" FontWeight="SemiBold" HorizontalAlignment="Center" Foreground="{ThemeResource PrimaryTextBrush}"/>
+                        <TextBlock Text="Access customer support, submit tickets, and chat with our team." 
+                                   TextWrapping="Wrap" TextAlignment="Center" Foreground="{ThemeResource SecondaryTextBrush}"/>
+                    </StackPanel>
+                </Button>
+
+                <Button Tag="Employee" Click="SelectUserRole_Click" Width="350" Height="400" CornerRadius="12" Background="{ThemeResource CardBackgroundBrush}" Padding="30">
+                    <Button.Resources>
+                        <SolidColorBrush x:Key="ButtonBackground" Color="{StaticResource CardBackgroundColor}"/>
+                        <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="{StaticResource PrimaryMutedColor}"/>
+                        <SolidColorBrush x:Key="ButtonBackgroundPressed" Color="{StaticResource PrimaryMutedColor}"/>
+                        <SolidColorBrush x:Key="ButtonBackgroundFocused" Color="{StaticResource CardBackgroundColor}"/>
+                    </Button.Resources>
+                    <StackPanel Spacing="15" VerticalAlignment="Center">
+                        <FontIcon Glyph="&#xE7EE;" FontSize="60" Foreground="{ThemeResource PrimaryBrush}"/>
+                        <TextBlock Text="I'm an Employee" FontSize="24" FontWeight="SemiBold" HorizontalAlignment="Center" Foreground="{ThemeResource PrimaryTextBrush}"/>
+                        <TextBlock Text="Access employee portal, manage tickets, and internal resources." 
+                                   TextWrapping="Wrap" TextAlignment="Center" Foreground="{ThemeResource SecondaryTextBrush}"/>
+                    </StackPanel>
+                </Button>
+
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</Page>
