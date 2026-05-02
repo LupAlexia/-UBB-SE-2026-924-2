@@ -56,9 +56,9 @@ namespace AirportApp
             catch (Exception ex)
             {
                 System.IO.File.WriteAllText(
-                    @"C:\crash.txt",
-                    ex.ToString()
-                );
+                System.IO.Path.Combine(AppContext.BaseDirectory, "crash.txt"),
+                ex.ToString()
+            );
                 throw;
             }
 

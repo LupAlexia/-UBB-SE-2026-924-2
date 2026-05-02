@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AirportApp.Src.Domain;
+using AirportApp.Src.Model;
 using AirportApp.Src.Repository;
 
 namespace AirportApp.Src.Service
@@ -29,7 +30,7 @@ namespace AirportApp.Src.Service
             this.addOnRepository = addOnRepository ?? throw new ArgumentNullException(nameof(addOnRepository));
         }
 
-        public List<FlightTicket> CreateTickets(Flight flight, User2 user, List<PassengerData> passengers, float basePrice)
+        public List<FlightTicket> CreateTickets(Flight flight, User user, List<PassengerData> passengers, float basePrice)
         {
             var tickets = new List<FlightTicket>();
 
@@ -147,7 +148,7 @@ namespace AirportApp.Src.Service
         public BookingParametersResult ParseBookingParameters(object parameter)
         {
             Flight? selectedFlight = null;
-            User2? user = null;
+            User? user = null;
             int requestedPassengers = 0;
 
             if (parameter is object[] arguments && arguments.Length > 0)
@@ -156,7 +157,7 @@ namespace AirportApp.Src.Service
 
                 if (arguments.Length >= FlightAndUserAndCountArgumentLength)
                 {
-                    user = arguments[SecondArgumentIndex] as User2;
+                    user = arguments[SecondArgumentIndex] as User;
                     if (arguments[PassengerCountArgumentIndex] is int count)
                     {
                         requestedPassengers = count;
@@ -170,12 +171,12 @@ namespace AirportApp.Src.Service
                     }
                     else
                     {
-                        user = arguments[SecondArgumentIndex] as User2;
+                        user = arguments[SecondArgumentIndex] as User;
                     }
                 }
             }
 
-            user ??= UserSession.CurrentUser;
+            //user ??= UserSession.CurrentUser;
 
             return new BookingParametersResult
             {

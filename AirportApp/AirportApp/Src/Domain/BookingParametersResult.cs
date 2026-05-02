@@ -1,3 +1,4 @@
+using AirportApp.Src.Model;
 namespace AirportApp.Src.Domain
 {
     /// <summary>
@@ -8,7 +9,7 @@ namespace AirportApp.Src.Domain
     public class BookingParametersResult
     {
         public Flight? Flight { get; set; }
-        public User2? User { get; set; }
+        public User? User { get; set; }
         public int RequestedPassengers { get; set; }
     }
 }

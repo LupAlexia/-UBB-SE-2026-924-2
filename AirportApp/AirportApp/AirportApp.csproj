@@ -15,9 +15,7 @@
 
 	<ItemGroup>
 		<!-- Elimina App2 si MainWindow2 din build -->
-		<Page Remove="App2.xaml" />
 		<Compile Remove="App2.xaml.cs" />
-		<Page Remove="MainWindow2.xaml" />
 		<Compile Remove="MainWindow2.xaml.cs" />
 
 		<!-- Previne duplicarea App.xaml -->

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Data.SqlClient;
 using AirportApp.Src.Domain;
+using AirportApp.Src.Model;
 
 namespace AirportApp.Src.Repository
 {
@@ -47,7 +48,8 @@ namespace AirportApp.Src.Repository
                     {
                         while (reader.Read())
                         {
-                            var user = new User2 { UserId = reader.GetInt32(reader.GetOrdinal("user_id")) };
+                            int userIdFromDb = reader.GetInt32(reader.GetOrdinal("user_id"));
+                            var user = new User(userIdFromDb, "N/A", "N/A", null);
 
                             var airport = new Airport
                             {

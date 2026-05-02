@@ -10,5 +10,9 @@ namespace AirportApp.Src.Repository.Interfaces
         IEnumerable<User> GetAll();
         User GetById(int identificationNumber);
         void UpdateById(int identificationNumber, User userEntity);
+        void UpdateUserMembership(int userId, int newMembershipId);
+        void AddUserWithMembership(User user);
+        User? GetByIdWithMembership(int id);
+        IEnumerable<User> GetAllMemberships();
     }
 }

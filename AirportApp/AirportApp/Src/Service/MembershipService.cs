@@ -3,15 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using AirportApp.Src.Domain;
 using AirportApp.Src.Repository;
+using AirportApp.Src.Repository.Interfaces;
+
 
 namespace AirportApp.Src.Service
 {
     public class MembershipService : IMembershipService
     {
-        private readonly IUser2Repository userRepository;
+        private readonly IUserRepository userRepository;
         private readonly IMembershipRepository membershipRepository;
 
-        public MembershipService(IUser2Repository userRepository, IMembershipRepository membershipRepository)
+        public MembershipService(IUserRepository userRepository, IMembershipRepository membershipRepository)
         {
             this.userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
             this.membershipRepository = membershipRepository ?? throw new ArgumentNullException(nameof(membershipRepository));
