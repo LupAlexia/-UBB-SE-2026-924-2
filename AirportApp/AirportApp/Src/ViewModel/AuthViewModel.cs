@@ -20,8 +20,8 @@ namespace AirportApp.Src.ViewModel
         private bool isAuthenticated;
         private Customer? authenticatedUser;
 
-        private string titleText = "Welcome to WizzErr";
-        private string subtitleText = "Please sign in to manage your tickets";
+        private string titleText = "Flight Security Access";
+        private string subtitleText = "To protect your flight details and personal data, please complete this quick security verification.";
         private string actionButtonLabel = "Sign In";
         private string togglePromptLabel = "Don't have an account?";
         private string toggleButtonLabel = "Create one";
