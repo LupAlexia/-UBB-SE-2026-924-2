@@ -6,3 +6,7 @@ obj/
 appsettings.json 
 App2.xaml.cs 
 MainWindow2.xaml.cs 
+AirportApp/.env 
+AirportApp/appsettings.json 
+AirportApp/App2.xaml.cs 
+AirportApp/MainWindow2.xaml.cs 
