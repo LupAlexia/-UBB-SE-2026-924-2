@@ -64,13 +64,14 @@ namespace AirportApp.Src.View.General
                 {
                     if (ViewModel.TryAuthenticate(out _))
                     {
-                        // MODIFICARE AICI: 
-                        // În loc de LandingPage, navigãm cãtre pagina de alegere (UserHomePage)
-                        this.Frame.Navigate(typeof(UserHomePage));
-                    }
-                    else
-                    {
-                        DisplayErrorMessage("The ID entered does not exist.", "ERROR");
+                        if ((Application.Current as App).IsEmployee)
+                        {
+                            this.Frame.Navigate(typeof(LandingPage));
+                        }
+                        else
+                        {
+                            this.Frame.Navigate(typeof(UserHomePage));
+                        }
                     }
                 }
             }
