@@ -8,7 +8,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Grid Background="Transparent" Padding="40">
+    <Grid Background="White" Padding="40">
         <StackPanel Spacing="20" HorizontalAlignment="Center">
 
             <TextBlock Text="Choose Your Membership" FontSize="32" FontWeight="Bold" Foreground="#2bb8c0" HorizontalAlignment="Center"/>

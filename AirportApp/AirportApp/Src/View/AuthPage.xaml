@@ -8,7 +8,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Grid Background="Transparent">
+    <Grid Background="White">
         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="20">
 
             <!-- Title and subtitle bound to ViewModel (previously set in code-behind) -->

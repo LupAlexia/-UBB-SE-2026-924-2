@@ -7,11 +7,12 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
-    <Grid Background="Transparent" RequestedTheme="Light">
+    <Grid Background="White" RequestedTheme="Light">
         <NavigationView x:Name="TopNav"
                         PaneDisplayMode="Top"
                         IsSettingsVisible="False"
                         IsBackButtonVisible="Visible"
+                        Background="White"
                         ItemInvoked="TopNav_ItemInvoked"
                         BackRequested="TopNav_BackRequested">
             <NavigationView.Resources>
