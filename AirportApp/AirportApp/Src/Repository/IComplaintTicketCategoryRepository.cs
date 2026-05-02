@@ -7,10 +7,10 @@ using AirportApp.Src.Model.Ticket;
 
 namespace AirportApp.Src.Repository.Interfaces
 {
-    public interface ITicketCategoryRepository
+    public interface IComplaintTicketCategoryRepository
     {
-        IEnumerable<TicketCategory> GetAll();
+        IEnumerable<ComplaintTicketCategory> GetAll();
 
-        TicketCategory GetById(int categoryId);
+        ComplaintTicketCategory GetById(int categoryId);
     }
 }

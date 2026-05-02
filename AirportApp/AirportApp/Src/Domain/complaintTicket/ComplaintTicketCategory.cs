@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 
 namespace AirportApp.Src.Model.Ticket
 {
-    public class TicketCategory
+    public class ComplaintTicketCategory
     {
         public int CategoryId { get; }
         public string CategoryName { get; }
 
-        public TicketUrgencyLevelEnum CategoryUrgencyLevel { get; }
+        public ComplaintTicketUrgencyLevelEnum CategoryUrgencyLevel { get; }
 
-        public TicketCategory(int categoryId, string categoryName, TicketUrgencyLevelEnum categoryUrgencyLevel)
+        public ComplaintTicketCategory(int categoryId, string categoryName, ComplaintTicketUrgencyLevelEnum categoryUrgencyLevel)
         {
             CategoryId = categoryId;
             CategoryName = categoryName;

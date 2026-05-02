@@ -29,10 +29,10 @@ namespace AirportApp.Src.View.Ticket
     /// </summary>
     public sealed partial class TicketEmployeeView : Page
     {
-        public TicketsViewModel ViewModel { get; }
+        public ComplaintTicketViewModel ViewModel { get; }
         public TicketEmployeeView()
         {
-            ViewModel = (App.Current as App).Services.GetService<TicketsViewModel>();
+            ViewModel = (App.Current as App).Services.GetService<ComplaintTicketViewModel>();
             this.InitializeComponent();
             this.DataContext = ViewModel;
         }
@@ -83,7 +83,7 @@ namespace AirportApp.Src.View.Ticket
                 };
 
                 // Add enum items as strings
-                foreach (var status in Enum.GetValues(typeof(TicketStatusEnum)).Cast<TicketStatusEnum>())
+                foreach (var status in Enum.GetValues(typeof(ComplaintTicketStatusEnum)).Cast<ComplaintTicketStatusEnum>())
                 {
                     combo.Items.Add(status.ToString());
                 }
@@ -96,7 +96,7 @@ namespace AirportApp.Src.View.Ticket
                 var result = await dialog.ShowAsync();
                 if (result == ContentDialogResult.Primary && combo.SelectedItem is string selectedStr)
                 {
-                    if (Enum.TryParse<TicketStatusEnum>(selectedStr, out var newStatus))
+                    if (Enum.TryParse<ComplaintTicketStatusEnum>(selectedStr, out var newStatus))
                     {
                         ViewModel.UpdateStatus(ticket.ticketId, newStatus);
                     }

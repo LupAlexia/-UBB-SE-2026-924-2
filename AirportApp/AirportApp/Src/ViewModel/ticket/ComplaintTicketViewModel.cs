@@ -21,12 +21,12 @@ using AutoMapper;
 
 namespace AirportApp.Src.ViewModel
 {
-    public class TicketsViewModel
+    public class ComplaintTicketViewModel
     {
-        private readonly ITicketService ticketService;
+        private readonly IComplaintTicketService ticketService;
         private readonly IMapper mapper;
-        private readonly ITicketCategoryService categoryService;
-        private readonly ITicketSubcategoryService subcategoryService;
+        private readonly IComplaintTicketCategoryService categoryService;
+        private readonly IComplaintTicketSubcategoryService subcategoryService;
         private readonly IUserService userService;
 
         public ObservableCollection<TicketDTO> AllTickets { get; } = new ();
@@ -36,10 +36,10 @@ namespace AirportApp.Src.ViewModel
 
         private TicketFilterStatusEnum selectedFilter = TicketFilterStatusEnum.ALL;
 
-        public ObservableCollection<TicketCategory> Categories { get; } = new ();
-        public ObservableCollection<TicketSubcategory> Subcategories { get; } = new ();
+        public ObservableCollection<ComplaintTicketCategory> Categories { get; } = new ();
+        public ObservableCollection<ComplaintTicketSubcategory> Subcategories { get; } = new ();
 
-        public TicketsViewModel(ITicketService ticketService, ITicketCategoryService categoryService, ITicketSubcategoryService subcategoryService, IUserService userService, IMapper mapper)
+        public ComplaintTicketViewModel(IComplaintTicketService ticketService, IComplaintTicketCategoryService categoryService, IComplaintTicketSubcategoryService subcategoryService, IUserService userService, IMapper mapper)
         {
             this.ticketService = ticketService;
             this.categoryService = categoryService;
@@ -127,7 +127,7 @@ namespace AirportApp.Src.ViewModel
         // =================================
         // UPDATE STATUS
         // =================================
-        public void UpdateStatus(int ticketId, TicketStatusEnum newStatus)
+        public void UpdateStatus(int ticketId, ComplaintTicketStatusEnum newStatus)
         {
             ticketService.UpdateStatus(ticketId, newStatus);
             LoadTickets();
@@ -136,7 +136,7 @@ namespace AirportApp.Src.ViewModel
         // =================================
         // UPDATE URGENCY
         // =================================
-        public void UpdateUrgencyLevel(int ticketId, TicketUrgencyLevelEnum newUrgencyLevel)
+        public void UpdateUrgencyLevel(int ticketId, ComplaintTicketUrgencyLevelEnum newUrgencyLevel)
         {
             ticketService.UpdateUrgencyLevel(ticketId, newUrgencyLevel);
             LoadTickets();
@@ -152,7 +152,7 @@ namespace AirportApp.Src.ViewModel
             var category = categoryService.GetCategoryById(ticketDataTransferObject.categoryId);
             var subcategory = subcategoryService.GetSubcategoryById(ticketDataTransferObject.subcategoryId);
 
-            var ticket = new Ticket(
+            var ticket = new ComplaintTicket(
                 ticketDataTransferObject.ticketId,
                 creator,
                 ticketDataTransferObject.currentStatus,

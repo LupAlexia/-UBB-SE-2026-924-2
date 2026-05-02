@@ -11,16 +11,16 @@ using Microsoft.Data.SqlClient;
 
 using AirportApp.Src.Repository;
 
-public class TicketCategoryRepository : DatabaseRepository<int, TicketCategory>, ITicketCategoryRepository
+public class ComplaintTicketCategoryRepository : DatabaseRepository<int, ComplaintTicketCategory>, IComplaintTicketCategoryRepository
 {
-    public IEnumerable<TicketCategory> GetAll()
+    public IEnumerable<ComplaintTicketCategory> GetAll()
     {
         string selectQuery = "SELECT * FROM TicketCategory";
         SqlCommand selectCommand = new SqlCommand(selectQuery);
         return GetAll(selectCommand);
     }
 
-    public TicketCategory GetById(int categoryId)
+    public ComplaintTicketCategory GetById(int categoryId)
     {
         string selectQuery = "SELECT * FROM TicketCategory WHERE category_id = @id";
         SqlCommand selectCommand = new SqlCommand(selectQuery);
@@ -28,18 +28,18 @@ public class TicketCategoryRepository : DatabaseRepository<int, TicketCategory>,
         return GetById(categoryId, selectCommand);
     }
 
-    protected override TicketCategory MapRowToEntity(SqlDataReader reader)
+    protected override ComplaintTicketCategory MapRowToEntity(SqlDataReader reader)
     {
         int categoryId = reader.GetInt32(reader.GetOrdinal("category_id"));
         string categoryName = reader.GetString(reader.GetOrdinal("name"));
         string urgencyLevelString = reader.GetString(reader.GetOrdinal("urgency_level"));
 
-        if (!Enum.TryParse<TicketUrgencyLevelEnum>(urgencyLevelString, true, out var urgencyLevel))
+        if (!Enum.TryParse<ComplaintTicketUrgencyLevelEnum>(urgencyLevelString, true, out var urgencyLevel))
         {
-            urgencyLevel = TicketUrgencyLevelEnum.LOW;
+            urgencyLevel = ComplaintTicketUrgencyLevelEnum.LOW;
         }
-        return new TicketCategory(categoryId, categoryName, urgencyLevel);
+        return new ComplaintTicketCategory(categoryId, categoryName, urgencyLevel);
     }
 
-    protected override int GetEntityId(TicketCategory categoryEntity) => categoryEntity.CategoryId;
+    protected override int GetEntityId(ComplaintTicketCategory categoryEntity) => categoryEntity.CategoryId;
 }

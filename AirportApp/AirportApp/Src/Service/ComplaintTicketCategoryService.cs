@@ -8,20 +8,20 @@ using AirportApp.Src.Repository;
 using AirportApp.Src.Repository.Interfaces;
 using AirportApp.Src.Service.Interfaces;
 
-public class TicketCategoryService : ITicketCategoryService
+public class ComplaintTicketCategoryService : IComplaintTicketCategoryService
 {
-    private readonly ITicketCategoryRepository categoryRepository;
+    private readonly IComplaintTicketCategoryRepository categoryRepository;
 
-    public TicketCategoryService(ITicketCategoryRepository categoryRepository)
+    public ComplaintTicketCategoryService(IComplaintTicketCategoryRepository categoryRepository)
     {
         this.categoryRepository = categoryRepository;
     }
 
-    public TicketCategory GetCategoryById(int categoryId)
+    public ComplaintTicketCategory GetCategoryById(int categoryId)
     {
         return categoryRepository.GetById(categoryId);
     }
-    public IEnumerable<TicketCategory> GetAllCategories()
+    public IEnumerable<ComplaintTicketCategory> GetAllCategories()
     {
         return categoryRepository.GetAll();
     }

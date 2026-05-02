@@ -17,11 +17,11 @@ namespace AirportApp.Src.View.Ticket
         private const int DEFAULT_GUEST_IDENTIFIER = 1;
         private const string DEFAULT_SYSTEM_EMAIL = "email@email.com";
 
-        public TicketsViewModel ViewModel { get; }
+        public ComplaintTicketViewModel ViewModel { get; }
 
         public TicketsView()
         {
-            ViewModel = (App.Current as App).Services.GetService<TicketsViewModel>();
+            ViewModel = (App.Current as App).Services.GetService<ComplaintTicketViewModel>();
             this.InitializeComponent();
             this.DataContext = ViewModel;
         }
@@ -68,8 +68,8 @@ namespace AirportApp.Src.View.Ticket
                     ticketId: ViewModel.GetTotalTicketCount() + 1,
                     creatorAccountId: DEFAULT_GUEST_IDENTIFIER,
                     creatorEmailAddress: DEFAULT_SYSTEM_EMAIL,
-                    urgencyLevel: TicketUrgencyLevelEnum.LOW,
-                    currentStatus: TicketStatusEnum.OPEN,
+                    urgencyLevel: ComplaintTicketUrgencyLevelEnum.LOW,
+                    currentStatus: ComplaintTicketStatusEnum.OPEN,
                     categoryId: selectedCategory?.CategoryId ?? 1,
                     categoryName: selectedCategory?.CategoryName ?? "General",
                     subcategoryId: selectedSubcategory?.SubcategoryId ?? 1,

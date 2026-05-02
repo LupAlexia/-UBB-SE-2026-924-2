@@ -9,23 +9,23 @@ using AirportApp.Src.Repository.Database;
 
 namespace AirportApp.Src.Repository
 {
-    public class TicketRepository : DatabaseRepository<int, Ticket>, ITicketRepository
+    public class ComplaintTicketRepository : DatabaseRepository<int, ComplaintTicket>, IComplaintTicketRepository
     {
         private IUserRepository userRepository = new UserRepository();
 
-        private ITicketCategoryRepository categoryRepository = new TicketCategoryRepository();
-        private ITicketSubcategoryRepository subcategoryRepository = new TicketSubcategoryRepository();
-        public TicketRepository()
+        private IComplaintTicketCategoryRepository categoryRepository = new ComplaintTicketCategoryRepository();
+        private IComplaintTicketSubcategoryRepository subcategoryRepository = new ComplaintTicketSubcategoryRepository();
+        public ComplaintTicketRepository()
         {
         }
 
-        public Ticket GetById(int identificationNumber)
+        public ComplaintTicket GetById(int identificationNumber)
         {
             string selectQuery = "SELECT * FROM Ticket WHERE ticket_id = @TicketId";
             SqlCommand selectCommand = new SqlCommand(selectQuery);
             selectCommand.Parameters.AddWithValue("@TicketId", identificationNumber);
 
-            Ticket ticket = GetById(identificationNumber, selectCommand);
+            ComplaintTicket ticket = GetById(identificationNumber, selectCommand);
 
             if (ticket == null)
             {
@@ -35,14 +35,14 @@ namespace AirportApp.Src.Repository
             return ticket;
         }
 
-        public IEnumerable<Ticket> GetAll()
+        public IEnumerable<ComplaintTicket> GetAll()
         {
             string selectQuery = "SELECT * FROM Ticket";
             SqlCommand selectCommand = new SqlCommand(selectQuery);
             return GetAll(selectCommand);
         }
 
-        public int CreateNewEntity(Ticket ticketEntity)
+        public int CreateNewEntity(ComplaintTicket ticketEntity)
         {
             if (ticketEntity == null)
             {
@@ -69,7 +69,7 @@ namespace AirportApp.Src.Repository
             return identificationNumber;
         }
 
-        public void UpdateById(int ticketId, Ticket ticketEntity)
+        public void UpdateById(int ticketId, ComplaintTicket ticketEntity)
         {
             if (ticketEntity == null)
             {
@@ -110,26 +110,26 @@ namespace AirportApp.Src.Repository
             DeleteById(ticketId, deleteCommand);
         }
 
-        protected override Ticket MapRowToEntity(SqlDataReader reader)
+        protected override ComplaintTicket MapRowToEntity(SqlDataReader reader)
         {
             int ticketId = reader.GetInt32(reader.GetOrdinal("ticket_id"));
             int userId = reader.GetInt32(reader.GetOrdinal("user_id"));
-            TicketStatusEnum status = Enum.Parse<TicketStatusEnum>(reader.GetString(reader.GetOrdinal("status")), ignoreCase: true);
+            ComplaintTicketStatusEnum status = Enum.Parse<ComplaintTicketStatusEnum>(reader.GetString(reader.GetOrdinal("status")), ignoreCase: true);
             int categoryId = reader.GetInt32(reader.GetOrdinal("category_id"));
             int subcategoryId = reader.GetInt32(reader.GetOrdinal("subcategory_id"));
             string subject = reader.GetString(reader.GetOrdinal("subject"));
             string description = reader.GetString(reader.GetOrdinal("description"));
             DateTime creationTimestamp = reader.GetDateTime(reader.GetOrdinal("created_at"));
-            TicketUrgencyLevelEnum urgency = Enum.Parse<TicketUrgencyLevelEnum>(reader.GetString(reader.GetOrdinal("urgency_level")), ignoreCase: true);
+            ComplaintTicketUrgencyLevelEnum urgency = Enum.Parse<ComplaintTicketUrgencyLevelEnum>(reader.GetString(reader.GetOrdinal("urgency_level")), ignoreCase: true);
 
-            TicketCategory category = categoryRepository.GetById(categoryId);
-            TicketSubcategory subcategory = subcategoryRepository.GetById(subcategoryId);
+            ComplaintTicketCategory category = categoryRepository.GetById(categoryId);
+            ComplaintTicketSubcategory subcategory = subcategoryRepository.GetById(subcategoryId);
             User creator = userRepository.GetById(userId);
 
-            return new Ticket(ticketId, creator, status, category, subcategory, subject, description, creationTimestamp, urgency);
+            return new ComplaintTicket(ticketId, creator, status, category, subcategory, subject, description, creationTimestamp, urgency);
         }
 
-        protected override int GetEntityId(Ticket ticketEntity)
+        protected override int GetEntityId(ComplaintTicket ticketEntity)
         {
             return ticketEntity.TicketId;
         }

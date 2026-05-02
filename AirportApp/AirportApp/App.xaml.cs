@@ -139,13 +139,13 @@ namespace AirportApp
             services.AddTransient<ChatViewModel>();
             services.AddTransient<UpperBarViewModel>();
 
-            services.AddSingleton<ITicketRepository, TicketRepository>();
-            services.AddSingleton<ITicketCategoryRepository, TicketCategoryRepository>();
-            services.AddSingleton<ITicketSubcategoryRepository, TicketSubcategoryRepository>();
-            services.AddSingleton<ITicketService, TicketService>();
-            services.AddSingleton<ITicketCategoryService, TicketCategoryService>();
-            services.AddSingleton<ITicketSubcategoryService, TicketSubcategoryService>();
-            services.AddTransient<TicketsViewModel>();
+            services.AddSingleton<IComplaintTicketRepository, ComplaintTicketRepository>();
+            services.AddSingleton<IComplaintTicketCategoryRepository, ComplaintTicketCategoryRepository>();
+            services.AddSingleton<IComplaintTicketSubcategoryRepository, ComplaintTicketSubcategoryRepository>();
+            services.AddSingleton<IComplaintTicketService, ComplaintTicketService>();
+            services.AddSingleton<IComplaintTicketCategoryService, ComplaintTicketCategoryService>();
+            services.AddSingleton<IComplaintTicketSubcategoryService, ComplaintTicketSubcategoryService>();
+            services.AddTransient<ComplaintTicketViewModel>();
 
             services.AddSingleton<IFAQRepository, FAQRepository>();
             services.AddSingleton<IFAQService, FAQService>();

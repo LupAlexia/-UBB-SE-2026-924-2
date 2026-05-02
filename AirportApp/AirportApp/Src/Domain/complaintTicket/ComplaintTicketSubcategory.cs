@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 
 namespace AirportApp.Src.Model.Ticket
 {
-    public class TicketSubcategory
+    public class ComplaintTicketSubcategory
     {
         public int SubcategoryId { get; }
         public string SubcategoryName { get; }
         public int SubcategoryExternalReferenceId { get; }
-        public TicketCategory ParentCategory { get; }
+        public ComplaintTicketCategory ParentCategory { get; }
 
-        public TicketSubcategory(int subcategoryId, string subcategoryName, int externalId, TicketCategory parentCategory)
+        public ComplaintTicketSubcategory(int subcategoryId, string subcategoryName, int externalId, ComplaintTicketCategory parentCategory)
         {
             SubcategoryId = subcategoryId;
             SubcategoryName = subcategoryName;

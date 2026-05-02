@@ -15,24 +15,24 @@ using User = AirportApp.Src.Model.User;
 
 namespace AirportApp.Src.Service
 {
-    public class TicketService : ITicketService
+    public class ComplaintTicketService : IComplaintTicketService
     {
-        private readonly ITicketRepository ticketRepository;
+        private readonly IComplaintTicketRepository ticketRepository;
 
-        public TicketService(ITicketRepository ticketRepository)
+        public ComplaintTicketService(IComplaintTicketRepository ticketRepository)
         {
             this.ticketRepository = ticketRepository;
         }
 
-        public void CreateTicket(int ticketId, User ticketCreator, TicketStatusEnum initialStatus, TicketCategory category, TicketSubcategory subcategory, string subject, string description, DateTime creationTimestamp, TicketUrgencyLevelEnum? initialUrgencyLevel = null)
+        public void CreateTicket(int ticketId, User ticketCreator, ComplaintTicketStatusEnum initialStatus, ComplaintTicketCategory category, ComplaintTicketSubcategory subcategory, string subject, string description, DateTime creationTimestamp, ComplaintTicketUrgencyLevelEnum? initialUrgencyLevel = null)
         {
-            Ticket newTicket = new Ticket(ticketId, ticketCreator, initialStatus, category, subcategory, subject, description, creationTimestamp, initialUrgencyLevel);
+            ComplaintTicket newTicket = new ComplaintTicket(ticketId, ticketCreator, initialStatus, category, subcategory, subject, description, creationTimestamp, initialUrgencyLevel);
 
             ValidateTicket(newTicket);
             AddTicket(newTicket);
         }
 
-        public void AddTicket(Ticket ticketEntity)
+        public void AddTicket(ComplaintTicket ticketEntity)
         {
             ticketRepository.CreateNewEntity(ticketEntity);
         }
@@ -40,20 +40,20 @@ namespace AirportApp.Src.Service
         {
             ticketRepository.DeleteById(ticketId);
         }
-        public Ticket GetTicketById(int ticketId)
+        public ComplaintTicket GetTicketById(int ticketId)
         {
             return ticketRepository.GetById(ticketId);
         }
 
-        public IEnumerable<Ticket> GetAllTickets()
+        public IEnumerable<ComplaintTicket> GetAllTickets()
         {
             return ticketRepository.GetAll();
         }
-        public void UpdateTicketById(int identificationNumber, Ticket ticket)
+        public void UpdateTicketById(int identificationNumber, ComplaintTicket ticket)
         {
             ticketRepository.UpdateById(identificationNumber, ticket);
         }
-        public void ValidateTicket(Ticket ticket)
+        public void ValidateTicket(ComplaintTicket ticket)
         {
             if (ticket == null)
             {
@@ -85,16 +85,16 @@ namespace AirportApp.Src.Service
             }
         }
 
-        public void UpdateUrgencyLevel(int ticketId, TicketUrgencyLevelEnum newUrgencyLevel)
+        public void UpdateUrgencyLevel(int ticketId, ComplaintTicketUrgencyLevelEnum newUrgencyLevel)
         {
-            Ticket targetTicket = ticketRepository.GetById(ticketId);
+            ComplaintTicket targetTicket = ticketRepository.GetById(ticketId);
             targetTicket.UpdateUrgencyLevel(newUrgencyLevel);
             ticketRepository.UpdateById(ticketId, targetTicket);
         }
 
-        public void UpdateStatus(int ticketId, TicketStatusEnum newStatus)
+        public void UpdateStatus(int ticketId, ComplaintTicketStatusEnum newStatus)
         {
-            Ticket targetTicket = ticketRepository.GetById(ticketId);
+            ComplaintTicket targetTicket = ticketRepository.GetById(ticketId);
             targetTicket.UpdateStatus(newStatus);
             ticketRepository.UpdateById(ticketId, targetTicket);
         }
@@ -113,8 +113,8 @@ namespace AirportApp.Src.Service
                     return tickets;
             }
         }
-        private bool IsStatusOpen(TicketDTO ticket) => ticket.currentStatus == TicketStatusEnum.OPEN;
-        private bool IsStatusInProgress(TicketDTO ticket) => ticket.currentStatus == TicketStatusEnum.IN_PROGRESS;
-        private bool IsStatusResolved(TicketDTO ticket) => ticket.currentStatus == TicketStatusEnum.RESOLVED;
+        private bool IsStatusOpen(TicketDTO ticket) => ticket.currentStatus == ComplaintTicketStatusEnum.OPEN;
+        private bool IsStatusInProgress(TicketDTO ticket) => ticket.currentStatus == ComplaintTicketStatusEnum.IN_PROGRESS;
+        private bool IsStatusResolved(TicketDTO ticket) => ticket.currentStatus == ComplaintTicketStatusEnum.RESOLVED;
     }
 }

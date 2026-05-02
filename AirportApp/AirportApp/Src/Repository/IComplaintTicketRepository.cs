@@ -7,7 +7,7 @@ using AirportApp.Src.Model.Ticket;
 
 namespace AirportApp.Src.Repository
 {
-    public interface ITicketRepository : IRepository<int, Ticket>
+    public interface IComplaintTicketRepository : IRepository<int, ComplaintTicket>
     {
     }
 }

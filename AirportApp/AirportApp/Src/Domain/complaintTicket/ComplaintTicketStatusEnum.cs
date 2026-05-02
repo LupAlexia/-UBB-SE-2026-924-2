@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace AirportApp.Src.Model.Ticket
 {
-    public enum TicketUrgencyLevelEnum
+    public enum ComplaintTicketStatusEnum
     {
-        LOW,
-        MEDIUM,
-        HIGH
+        OPEN,
+        IN_PROGRESS,
+        RESOLVED
     }
 }

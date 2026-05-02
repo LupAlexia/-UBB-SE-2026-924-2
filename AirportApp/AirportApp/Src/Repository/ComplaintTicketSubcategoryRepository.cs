@@ -8,16 +8,16 @@ using AirportApp.Src.Repository;
 using AirportApp.Src.Repository.Database;
 using Microsoft.Data.SqlClient;
 
-public class TicketSubcategoryRepository : DatabaseRepository<int, TicketSubcategory>, ITicketSubcategoryRepository
+public class ComplaintTicketSubcategoryRepository : DatabaseRepository<int, ComplaintTicketSubcategory>, IComplaintTicketSubcategoryRepository
 {
-    public IEnumerable<TicketSubcategory> GetAll()
+    public IEnumerable<ComplaintTicketSubcategory> GetAll()
     {
         string selectQuery = "SELECT * FROM TicketSubcategory";
         SqlCommand selectCommand = new SqlCommand(selectQuery);
         return GetAll(selectCommand);
     }
 
-    public TicketSubcategory GetById(int subcategoryId)
+    public ComplaintTicketSubcategory GetById(int subcategoryId)
     {
         string getByIdQuery = "SELECT * FROM TicketSubcategory WHERE subcategory_id = @id";
         SqlCommand getByIdCommand = new SqlCommand(getByIdQuery);
@@ -26,7 +26,7 @@ public class TicketSubcategoryRepository : DatabaseRepository<int, TicketSubcate
         return GetAll(getByIdCommand).FirstOrDefault()
                ?? throw new KeyNotFoundException($"Subcategory with id {subcategoryId} not found.");
     }
-    public IEnumerable<TicketSubcategory> GetByCategoryId(int categoryId)
+    public IEnumerable<ComplaintTicketSubcategory> GetByCategoryId(int categoryId)
     {
         string selectQuery = "SELECT * FROM TicketSubcategory WHERE category_id = @categoryId";
         SqlCommand selectCommand = new SqlCommand(selectQuery);
@@ -35,18 +35,18 @@ public class TicketSubcategoryRepository : DatabaseRepository<int, TicketSubcate
         return GetAll(selectCommand);
     }
 
-    protected override TicketSubcategory MapRowToEntity(SqlDataReader reader)
+    protected override ComplaintTicketSubcategory MapRowToEntity(SqlDataReader reader)
     {
         int subcategoryId = reader.GetInt32(reader.GetOrdinal("subcategory_id"));
         string subcategoryName = reader.GetString(reader.GetOrdinal("name"));
         int externalReferenceId = reader.GetInt32(reader.GetOrdinal("external_id"));
 
         int parentCategoryId = reader.GetInt32(reader.GetOrdinal("category_id"));
-        var categoryRepository = new TicketCategoryRepository();
-        TicketCategory parentCategory = categoryRepository.GetById(parentCategoryId);
+        var categoryRepository = new ComplaintTicketCategoryRepository();
+        ComplaintTicketCategory parentCategory = categoryRepository.GetById(parentCategoryId);
 
-        return new TicketSubcategory(subcategoryId, subcategoryName, externalReferenceId, parentCategory);
+        return new ComplaintTicketSubcategory(subcategoryId, subcategoryName, externalReferenceId, parentCategory);
     }
 
-    protected override int GetEntityId(TicketSubcategory subcategoryEntity) => subcategoryEntity.SubcategoryId;
+    protected override int GetEntityId(ComplaintTicketSubcategory subcategoryEntity) => subcategoryEntity.SubcategoryId;
 }
