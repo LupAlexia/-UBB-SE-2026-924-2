@@ -1,10 +1,10 @@
 <Page
-    x:Class="CloudSpritzers1.Src.View.Ticket.TicketsView"
+    x:Class="AirportApp.Src.View.Ticket.TicketsView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:Microsoft.UI.Xaml.Controls"
-    xmlns:dto="using:CloudSpritzers1.Src.Dto"
-    xmlns:general="using:CloudSpritzers1.Src.View.General"
+    xmlns:dto="using:AirportApp.Src.Dto"
+    xmlns:general="using:AirportApp.Src.View.General"
     RequestedTheme="Light"
     Background="{ThemeResource PageBackgroundBrush}">
 

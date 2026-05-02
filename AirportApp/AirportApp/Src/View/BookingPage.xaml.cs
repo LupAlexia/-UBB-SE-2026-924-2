@@ -44,7 +44,7 @@ namespace AirportApp.Src.View
         {
             this.InitializeComponent();
 
-            ViewModel = new BookingViewModel(App2.BookingService, App2.PricingService, App2.NavigationService);
+            ViewModel = new BookingViewModel(App.BookingService, App.PricingService, App.NavigationService);
             ViewModel.Passengers.CollectionChanged += Passengers_CollectionChanged;
             ViewModel.BookingConfirmed += ViewModel_BookingConfirmed;
 
@@ -62,7 +62,7 @@ namespace AirportApp.Src.View
             };
 
             await dialog.ShowAsync();
-            App2.NavigationService.NavigateTo(typeof(FlightSearchPage));
+            App.NavigationService.NavigateTo(typeof(FlightSearchPage));
         }
 
         protected override async void OnNavigatedTo(NavigationEventArgs eventArguments)

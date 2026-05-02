@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="AirportApp.Src.View.General.UserHomePage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    RequestedTheme="Light">
+
+    <Page.Resources>
+        <Style x:Key="HomeCardStyle" TargetType="Button">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderBrush" Value="#E5E7EB"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="16"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+            <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+            <Setter Property="Width" Value="320"/>
+            <Setter Property="Height" Value="240"/>
+        </Style>
+    </Page.Resources>
+
+    <Grid Background="#F0F4F8">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <Border Grid.Row="0"
+                Background="White"
+                BorderBrush="#E5E7EB"
+                BorderThickness="0,0,0,1"
+                Padding="40,20">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Orientation="Horizontal" Spacing="12" VerticalAlignment="Center">
+                    <Border Width="36" Height="36" CornerRadius="8" Background="#2BB8C0">
+                        <FontIcon Glyph="&#xE709;" FontSize="18" Foreground="White"/>
+                    </Border>
+                    <TextBlock Text="AirportApp"
+                               FontSize="20"
+                               FontWeight="SemiBold"
+                               Foreground="#111827"
+                               VerticalAlignment="Center"/>
+                </StackPanel>
+
+                <Button Grid.Column="1"
+                        x:Name="SwitchToEmployeeButton"
+                        Click="SwitchToEmployeeButton_Click"
+                        Background="Transparent"
+                        BorderBrush="#E5E7EB"
+                        BorderThickness="1"
+                        CornerRadius="8"
+                        Padding="16,8">
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <FontIcon Glyph="&#xE716;" FontSize="14" Foreground="#6B7280"/>
+                        <TextBlock Text="Switch to Employee"
+                                   FontSize="13"
+                                   Foreground="#6B7280"/>
+                    </StackPanel>
+                </Button>
+            </Grid>
+        </Border>
+
+        <!-- Main Content -->
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+            <StackPanel HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Spacing="48"
+                        Padding="40,60">
+
+                <!-- Welcome Text -->
+                <StackPanel Spacing="8" HorizontalAlignment="Center">
+                    <TextBlock Text="Welcome back"
+                               FontSize="14"
+                               Foreground="#6B7280"
+                               HorizontalAlignment="Center"/>
+                    <TextBlock Text="What would you like to do today?"
+                               FontSize="32"
+                               FontWeight="Bold"
+                               Foreground="#111827"
+                               HorizontalAlignment="Center"/>
+                    <TextBlock Text="Choose a service to get started"
+                               FontSize="15"
+                               Foreground="#9CA3AF"
+                               HorizontalAlignment="Center"/>
+                </StackPanel>
+
+                <!-- Cards -->
+                <StackPanel Orientation="Horizontal"
+                            Spacing="32"
+                            HorizontalAlignment="Center">
+
+                    <!-- Customer Support Card -->
+                    <Button x:Name="CustomerSupportButton"
+                            Style="{StaticResource HomeCardStyle}"
+                            Click="CustomerSupportButton_Click">
+                        <Grid>
+                            <!-- Top accent bar -->
+                            <Border VerticalAlignment="Top"
+                                    Height="6"
+                                    CornerRadius="16,16,0,0"
+                                    Background="#2BB8C0"/>
+
+                            <StackPanel Spacing="20"
+                                        Padding="32,40,32,32"
+                                        VerticalAlignment="Center">
+
+                                <!-- Icon -->
+                                <Border Width="64"
+                                        Height="64"
+                                        CornerRadius="16"
+                                        Background="#F0FAFA"
+                                        HorizontalAlignment="Left">
+                                    <FontIcon Glyph="&#xE8BD;"
+                                              FontSize="28"
+                                              Foreground="#2BB8C0"
+                                              HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"/>
+                                </Border>
+
+                                <StackPanel Spacing="6">
+                                    <TextBlock Text="Customer Support"
+                                               FontSize="20"
+                                               FontWeight="SemiBold"
+                                               Foreground="#111827"/>
+                                    <TextBlock Text="Chat, FAQ, support tickets and reviews"
+                                               FontSize="13"
+                                               Foreground="#6B7280"
+                                               TextWrapping="Wrap"/>
+                                </StackPanel>
+
+                                <!-- Feature tags -->
+                                <StackPanel Orientation="Horizontal" Spacing="6">
+                                    <Border Background="#F0FAFA" CornerRadius="6" Padding="8,4">
+                                        <TextBlock Text="Chat Bot" FontSize="11" Foreground="#2BB8C0"/>
+                                    </Border>
+                                    <Border Background="#F0FAFA" CornerRadius="6" Padding="8,4">
+                                        <TextBlock Text="FAQ" FontSize="11" Foreground="#2BB8C0"/>
+                                    </Border>
+                                    <Border Background="#F0FAFA" CornerRadius="6" Padding="8,4">
+                                        <TextBlock Text="Reviews" FontSize="11" Foreground="#2BB8C0"/>
+                                    </Border>
+                                </StackPanel>
+                            </StackPanel>
+                        </Grid>
+                    </Button>
+
+                    <!-- Manage Travel Tickets Card -->
+                    <Button x:Name="ManageTicketsButton"
+                            Style="{StaticResource HomeCardStyle}"
+                            Click="ManageTicketsButton_Click">
+                        <Grid>
+                            <!-- Top accent bar -->
+                            <Border VerticalAlignment="Top"
+                                    Height="6"
+                                    CornerRadius="16,16,0,0"
+                                    Background="#6366F1"/>
+
+                            <StackPanel Spacing="20"
+                                        Padding="32,40,32,32"
+                                        VerticalAlignment="Center">
+
+                                <!-- Icon -->
+                                <Border Width="64"
+                                        Height="64"
+                                        CornerRadius="16"
+                                        Background="#F5F3FF"
+                                        HorizontalAlignment="Left">
+                                    <FontIcon Glyph="&#xE709;"
+                                              FontSize="28"
+                                              Foreground="#6366F1"
+                                              HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"/>
+                                </Border>
+
+                                <StackPanel Spacing="6">
+                                    <TextBlock Text="Manage Travel Tickets"
+                                               FontSize="20"
+                                               FontWeight="SemiBold"
+                                               Foreground="#111827"/>
+                                    <TextBlock Text="Search flights, dashboard and memberships"
+                                               FontSize="13"
+                                               Foreground="#6B7280"
+                                               TextWrapping="Wrap"/>
+                                </StackPanel>
+
+                                <!-- Feature tags -->
+                                <StackPanel Orientation="Horizontal" Spacing="6">
+                                    <Border Background="#F5F3FF" CornerRadius="6" Padding="8,4">
+                                        <TextBlock Text="Flights" FontSize="11" Foreground="#6366F1"/>
+                                    </Border>
+                                    <Border Background="#F5F3FF" CornerRadius="6" Padding="8,4">
+                                        <TextBlock Text="Dashboard" FontSize="11" Foreground="#6366F1"/>
+                                    </Border>
+                                    <Border Background="#F5F3FF" CornerRadius="6" Padding="8,4">
+                                        <TextBlock Text="Members" FontSize="11" Foreground="#6366F1"/>
+                                    </Border>
+                                </StackPanel>
+                            </StackPanel>
+                        </Grid>
+                    </Button>
+
+                </StackPanel>
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- Footer -->
+        <Border Grid.Row="2"
+                Background="White"
+                BorderBrush="#E5E7EB"
+                BorderThickness="0,1,0,0"
+                Padding="40,16">
+            <TextBlock Text="AirportApp © 2026 — UBB SE"
+                       FontSize="12"
+                       Foreground="#9CA3AF"
+                       HorizontalAlignment="Center"/>
+        </Border>
+    </Grid>
+</Page>

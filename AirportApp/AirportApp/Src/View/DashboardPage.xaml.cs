@@ -15,7 +15,7 @@ namespace AirportApp.Src.View
         {
             this.InitializeComponent();
 
-            viewModel = new DashboardViewModel(App2.DashboardService, App2.CancellationService, App2.NavigationService);
+            viewModel = new DashboardViewModel(App.DashboardService, App.CancellationService, App.NavigationService);
             this.DataContext = viewModel;
 
             viewModel.PropertyChanged += ViewModel_PropertyChanged;
