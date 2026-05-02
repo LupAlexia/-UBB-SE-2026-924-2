@@ -11,12 +11,18 @@ namespace AirportApp.Src.Repository
 {
     public class TicketRepository : DatabaseRepository<int, Ticket>, ITicketRepository
     {
-        private IUserRepository userRepository = new UserRepository();
+        private readonly IUserRepository userRepository;
+        private readonly ITicketCategoryRepository categoryRepository;
+        private readonly ITicketSubcategoryRepository subcategoryRepository;
 
-        private ITicketCategoryRepository categoryRepository = new TicketCategoryRepository();
-        private ITicketSubcategoryRepository subcategoryRepository = new TicketSubcategoryRepository();
-        public TicketRepository()
+        public TicketRepository(
+            IUserRepository userRepository,
+            ITicketCategoryRepository categoryRepository,
+            ITicketSubcategoryRepository subcategoryRepository)
         {
+            this.userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
+            this.categoryRepository = categoryRepository ?? throw new ArgumentNullException(nameof(categoryRepository));
+            this.subcategoryRepository = subcategoryRepository ?? throw new ArgumentNullException(nameof(subcategoryRepository));
         }
 
         public Ticket GetById(int identificationNumber)

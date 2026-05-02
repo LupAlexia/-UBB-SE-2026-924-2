@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using AirportApp.Src.Domain;
+using AirportApp.Src.Model;
 
 namespace AirportApp.Src.Service
 {
@@ -64,7 +65,7 @@ namespace AirportApp.Src.Service
             return finalTotal;
         }
 
-        public PriceBreakdown CalculatePriceBreakdown(Flight flight, User2 user, List<FlightTicket> tickets)
+        public PriceBreakdown CalculatePriceBreakdown(Flight flight, Customer user, List<FlightTicket> tickets)
         {
             if (flight == null || tickets == null || tickets.Count == 0)
             {

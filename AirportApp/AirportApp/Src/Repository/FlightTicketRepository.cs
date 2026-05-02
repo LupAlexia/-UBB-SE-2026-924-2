@@ -47,7 +47,7 @@ namespace AirportApp.Src.Repository
                     {
                         while (reader.Read())
                         {
-                            var user = new User2 { UserId = reader.GetInt32(reader.GetOrdinal("user_id")) };
+                            var user = new Customer { UserId = reader.GetInt32(reader.GetOrdinal("user_id")) };
 
                             var airport = new Airport
                             {
@@ -168,7 +168,7 @@ namespace AirportApp.Src.Repository
                     insertTicketCommand.Parameters.AddWithValue("@PassengerEmail", ticket.PassengerEmail ?? (object)DBNull.Value);
                     insertTicketCommand.Parameters.AddWithValue("@PassengerPhone", ticket.PassengerPhone ?? (object)DBNull.Value);
 
-                    ticket.TicketId = (int)insertTicketCommand.ExecuteScalar() !;
+                    ticket.TicketId = (int)insertTicketCommand.ExecuteScalar()!;
                 }
             }
         }
@@ -326,6 +326,5 @@ namespace AirportApp.Src.Repository
         }
     }
 }
-
 
 

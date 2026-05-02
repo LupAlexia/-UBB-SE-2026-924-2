@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using AirportApp.Src.Domain;
+using AirportApp.Src.Model;
 
 namespace AirportApp.Src.Service
 {
@@ -7,6 +8,6 @@ namespace AirportApp.Src.Service
     {
         float CalculateBasePrice(Flight flight);
         float CalculateTotalPrice(FlightTicket FlightTicket);
-        PriceBreakdown CalculatePriceBreakdown(Flight flight, User2 user, List<FlightTicket> tickets);
+        PriceBreakdown CalculatePriceBreakdown(Flight flight, Customer user, List<FlightTicket> tickets);
     }
 }

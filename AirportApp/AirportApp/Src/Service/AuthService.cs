@@ -12,16 +12,16 @@ namespace AirportApp.Src.Service
         private const int MinimumUsernameLength = 3;
         private const int MinimumPasswordLength = 6;
 
-        private readonly IUser2Repository userRepository;
-        private readonly PasswordHasher<User2> passwordHasher;
+        private readonly ICustomerRepository userRepository;
+        private readonly PasswordHasher<Customer> passwordHasher;
 
-        public AuthService(IUser2Repository userRepository)
+        public AuthService(ICustomerRepository userRepository)
         {
             this.userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
-            this.passwordHasher = new PasswordHasher<User2>();
+            this.passwordHasher = new PasswordHasher<Customer>();
         }
 
-        public User2 Login(string email, string password)
+        public Customer Login(string email, string password)
         {
             if (string.IsNullOrWhiteSpace(email))
             {
@@ -33,7 +33,7 @@ namespace AirportApp.Src.Service
                 throw new ArgumentException("Password is required.");
             }
 
-            User2? existingUser = this.userRepository.GetByEmail(email.Trim());
+            Customer? existingUser = this.userRepository.GetByEmail(email.Trim());
 
             if (existingUser == null)
             {
@@ -59,13 +59,13 @@ namespace AirportApp.Src.Service
 
             this.ValidateRegistrationData(normalizedEmail, normalizedPhone, normalizedUsername, password);
 
-            User2? existingUser = this.userRepository.GetByEmail(normalizedEmail!);
+            Customer? existingUser = this.userRepository.GetByEmail(normalizedEmail!);
             if (existingUser != null)
             {
                 throw new InvalidOperationException("An account with this email already exists.");
             }
 
-            User2 newUser = new User2
+            Customer newUser = new Customer
             {
                 Email = normalizedEmail!,
                 Phone = normalizedPhone,

@@ -31,8 +31,8 @@ namespace AirportApp.Src.ViewModel
             }
         }
 
-        private User2 currentUser = null!;
-        public User2 CurrentUser
+        private Customer currentUser = null!;
+        public Customer CurrentUser
         {
             get => currentUser;
             set
@@ -198,11 +198,11 @@ namespace AirportApp.Src.ViewModel
             {
                 if (parameter is object[] arr && arr.Length > 0 && arr[0] is Flight fallbackFlight)
                 {
-                    User2? fallbackUser = null;
+                    Customer? fallbackUser = null;
                     int requested = 0;
                     foreach (var item in arr)
                     {
-                        if (fallbackUser == null && item is User2 u)
+                        if (fallbackUser == null && item is Customer u)
                         {
                             fallbackUser = u;
                         }
@@ -246,7 +246,7 @@ namespace AirportApp.Src.ViewModel
             return true;
         }
 
-        public async Task InitializeAsync(Flight flight, User2 user, int requestedPassengerCount = 0)
+        public async Task InitializeAsync(Flight flight, Customer user, int requestedPassengerCount = 0)
         {
             CurrentFlight = flight;
             CurrentUser = user;

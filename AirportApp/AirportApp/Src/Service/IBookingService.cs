@@ -6,7 +6,7 @@ namespace AirportApp.Src.Service
 {
     public interface IBookingService
     {
-        List<FlightTicket> CreateTickets(Flight flight, User2 user, List<PassengerData> passengers, float basePrice);
+        List<FlightTicket> CreateTickets(Flight flight, Customer user, List<PassengerData> passengers, float basePrice);
         Task<bool> SaveTicketsAsync(List<FlightTicket> tickets);
         Task<List<AddOn>> GetAvailableAddOnsAsync();
         Task<List<string>> GetOccupiedSeatsAsync(int flightId);

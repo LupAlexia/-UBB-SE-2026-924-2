@@ -4,6 +4,7 @@ using System.Data.Common;
 using System.Linq;
 using DotNetEnv;
 using Microsoft.Data.SqlClient;
+
 namespace AirportApp.Src.Repository.Database
 {
     public class DatabaseConnectionHandler
@@ -12,9 +13,9 @@ namespace AirportApp.Src.Repository.Database
         public static DatabaseConnectionHandler Instance => DatabaseInstance;
 
         private readonly string connectionString;
-        // https://learn.microsoft.com/en-us/dotnet/framework/data/adonet/sql-server-connection-pooling
-        // Seems like ado.net pools connections by default, sorry Maria
+
         public SqlConnection CreateConnection() => new SqlConnection(connectionString);
+
         private DatabaseConnectionHandler()
         {
             connectionString = InitializeConnectionString();
@@ -22,30 +23,40 @@ namespace AirportApp.Src.Repository.Database
 
         private string InitializeConnectionString()
         {
-            string serverAddress = Env.GetString("DB_SERVER");
-            if (serverAddress == null)
+            // Încarcă variabilele din fișierul .env
+            Env.Load();
+
+            string serverAddress = Env.GetString("DB_SERVER"); // Ex: localhost\SQLEXPRESS
+            string databaseName = Env.GetString("DB_NAME");   // Ex: CloudSpritzers
+            string userName = Env.GetString("DB_USER");       // Ex: Iulia
+            string userPassword = Env.GetString("DB_PASS");   // Ex: none
+
+            if (string.IsNullOrEmpty(serverAddress) || string.IsNullOrEmpty(databaseName))
             {
-                throw new DatabaseConnectionException("DB_SERVER environment variable is not set.");
+                throw new Exception("Configurația bazei de date (Server/Name) lipsește din .env");
             }
 
-            string databaseName = Env.GetString("DB_NAME");
-            if (databaseName == null)
+            SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
+
+            builder.DataSource = serverAddress;
+            builder.InitialCatalog = databaseName;
+            builder.TrustServerCertificate = true; // Necesar pentru instanțe locale SQLEXPRESS
+
+            // Verificăm dacă folosim Windows Authentication sau SQL Authentication
+            if (userPassword.Equals("none", StringComparison.OrdinalIgnoreCase) || string.IsNullOrEmpty(userPassword))
             {
-                throw new DatabaseConnectionException("DB_NAME environment variable is not set.");
+                // Windows Authentication (nu e nevoie de user/pass)
+                builder.IntegratedSecurity = true;
             }
-            string userName = Env.GetString("DB_USER");
-            if (userName == null)
+            else
             {
-                throw new DatabaseConnectionException("DB_USER environment variable is not set.");
-            }
-            string userPassword = Env.GetString("DB_PASS");
-            if (userPassword == null)
-            {
-                throw new DatabaseConnectionException("DB_PASS environment variable is not set.");
+                // SQL Server Authentication
+                builder.UserID = userName;
+                builder.Password = userPassword;
+                builder.IntegratedSecurity = false;
             }
 
-            string connectionString = $"Server={serverAddress};Database={databaseName};User Id={userName};Password={userPassword};TrustServerCertificate=True;";
-            return connectionString;
+            return builder.ConnectionString;
         }
     }
 }

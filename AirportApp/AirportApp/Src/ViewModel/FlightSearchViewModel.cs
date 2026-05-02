@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.Windows.Input;
 using AirportApp.Src.Domain;
 using AirportApp.Src.Service;
+using AirportApp.Src.Model;
 
 namespace AirportApp.Src.ViewModel
 {
@@ -85,9 +86,9 @@ namespace AirportApp.Src.ViewModel
 
         public void OnNavigatedTo(object parameter)
         {
-            if (parameter is User2 user)
+            if (parameter is User user)
             {
-                UserSession.CurrentUser = user;
+                //UserSession.CurrentUser = user;
             }
         }
 
