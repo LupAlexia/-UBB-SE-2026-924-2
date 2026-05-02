@@ -55,7 +55,6 @@ namespace AirportApp.Src.View.General
         /// <param name="eventArguments">Event data for the click event. </param>
         private async void LoginButton_Click(object sender, RoutedEventArgs eventArguments)
         {
-            // The View handles UI Flow, the ViewModel handles the Data
             if (int.TryParse(ViewModel.UserIdentification, out int parsedId))
             {
                 var confirmationDialog = new YouSure($"Are you certain you are ID {parsedId}?", "Confirmation");
@@ -65,7 +64,9 @@ namespace AirportApp.Src.View.General
                 {
                     if (ViewModel.TryAuthenticate(out _))
                     {
-                        this.Frame.Navigate(typeof(LandingPage));
+                        // MODIFICARE AICI: 
+                        // În loc de LandingPage, navigãm cãtre pagina de alegere (UserHomePage)
+                        this.Frame.Navigate(typeof(UserHomePage));
                     }
                     else
                     {
