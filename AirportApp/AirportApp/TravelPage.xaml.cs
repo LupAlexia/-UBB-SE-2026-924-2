@@ -20,7 +20,17 @@ namespace AirportApp.Src.View
             authService = App.AuthService;
             App.NavigationService.Initialize(ContentFrame);
             ContentFrame.Navigated += ContentFrame_Navigated;
-            NavigateToSearch();
+
+            // Enforce authentication when entering the Flights section
+            if (UserSession.CurrentUser == null)
+            {
+                NavigateTo(typeof(AuthPage));
+            }
+            else
+            {
+                NavigateToSearch();
+            }
+
             UpdateNavigationAvailability();
             TopNav.SelectedItem = null;
         }
@@ -33,7 +43,9 @@ namespace AirportApp.Src.View
                 string tag = item.Tag?.ToString() ?? string.Empty;
                 bool isSearchItem = tag.EndsWith("FlightSearchPage", StringComparison.OrdinalIgnoreCase);
                 bool isHomeItem = tag == HomeNavTag;
-                item.IsEnabled = isAuthenticated || isSearchItem || isHomeItem;
+                
+                // Allow home or search items, and only enable other options if authenticated
+                item.IsEnabled = isAuthenticated || isHomeItem;
             }
             if (AccountMenuItem != null)
                 AccountMenuItem.IsEnabled = true;
@@ -63,6 +75,7 @@ namespace AirportApp.Src.View
                     break;
                 }
             }
+            // If they are on AuthPage, don't select any menu items
             if (!itemFound || pageName == "AuthPage")
                 TopNav.SelectedItem = null;
         }
@@ -72,11 +85,10 @@ namespace AirportApp.Src.View
             UpdateNavigationAvailability();
             var tag = e.InvokedItemContainer?.Tag?.ToString();
 
-            // Buton Home -> înapoi la UserHomePage
+            // Home Button -> back to UserHomePage hub
             if (tag == HomeNavTag)
             {
                 var rootFrame = (Frame)((MainWindow)((App)Application.Current).window).Content;
-                // Navigheazã la UserHomePage în frame-ul principal
                 rootFrame.Navigate(typeof(General.UserHomePage));
                 return;
             }
@@ -108,7 +120,7 @@ namespace AirportApp.Src.View
                 {
                     authService.Logout();
                     UpdateNavigationAvailability();
-                    NavigateToSearch();
+                    NavigateTo(typeof(AuthPage));
                 }
                 return;
             }
@@ -118,7 +130,7 @@ namespace AirportApp.Src.View
                 Type? pageType = Type.GetType(tag);
                 if (pageType != null)
                 {
-                    if (pageType != typeof(FlightSearchPage) && UserSession.CurrentUser == null)
+                    if (UserSession.CurrentUser == null && pageType != typeof(AuthPage))
                     {
                         NavigateTo(typeof(AuthPage));
                         return;

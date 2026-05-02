@@ -7,7 +7,6 @@ using AirportApp.Src.Model;
 using AirportApp.Src.Repository;
 using AirportApp.Src.Service.Interfaces;
 using AirportApp.Src.Repository.Interfaces;
-using AirportApp.Src.Domain;
 
 namespace AirportApp.Src.Service
 {
@@ -45,9 +44,9 @@ namespace AirportApp.Src.Service
             return userRepository.GetAll().ToList();
         }
 
-        public void CreateNewUser(int identificationNumber, string fullName, string emailAddress, Membership? membership)
+        public void CreateNewUser(int identificationNumber, string fullName, string emailAddress)
         {
-            User user = new User(identificationNumber, fullName, emailAddress, membership);
+            User user = new User(identificationNumber, fullName, emailAddress);
             ValidateUserIntegrity(user);
             AddUser(user);
         }

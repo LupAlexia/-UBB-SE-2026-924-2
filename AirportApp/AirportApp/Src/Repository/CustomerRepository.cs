@@ -5,27 +5,27 @@ using AirportApp.Src.Domain;
 
 namespace AirportApp.Src.Repository
 {
-    public class User2Repository : IUser2Repository
+    public class CustomerRepository : ICustomerRepository
     {
         private readonly IDatabaseConnectionFactory databaseConnectionFactory;
         private readonly IMembershipRepository membershipRepository;
 
-        public User2Repository(IDatabaseConnectionFactory databaseConnectionFactory, IMembershipRepository membershipRepository)
+        public CustomerRepository(IDatabaseConnectionFactory databaseConnectionFactory, IMembershipRepository membershipRepository)
         {
             this.databaseConnectionFactory = databaseConnectionFactory ?? throw new ArgumentNullException(nameof(databaseConnectionFactory));
             this.membershipRepository = membershipRepository ?? throw new ArgumentNullException(nameof(membershipRepository));
         }
 
-        public User2? GetById(int id)
+        public Customer? GetById(int id)
         {
-            User2? user = null;
+            Customer? user = null;
             using (var connection = this.databaseConnectionFactory.GetConnection())
             {
                 connection.Open();
                 string query = @"
                     SELECT u.user_id, u.email, u.phone, u.username, u.password_hash, 
                            u.membership_id, m.name as membership_name, m.flight_discount_percentage
-                    FROM Users u
+                    FROM Customers u
                     LEFT JOIN Memberships m ON u.membership_id = m.membership_id
                     WHERE u.user_id = @UserId";
 
@@ -45,16 +45,16 @@ namespace AirportApp.Src.Repository
             return user;
         }
 
-        public User2? GetByEmail(string email)
+        public Customer? GetByEmail(string email)
         {
-            User2? user = null;
+            Customer? user = null;
             using (var connection = this.databaseConnectionFactory.GetConnection())
             {
                 connection.Open();
                 string query = @"
                     SELECT u.user_id, u.email, u.phone, u.username, u.password_hash, 
                            u.membership_id, m.name as membership_name, m.flight_discount_percentage
-                    FROM Users u
+                    FROM Customers u
                     LEFT JOIN Memberships m ON u.membership_id = m.membership_id
                     WHERE u.email = @Email";
 
@@ -74,13 +74,13 @@ namespace AirportApp.Src.Repository
             return user;
         }
 
-        public void AddUser(User2 user)
+        public void AddUser(Customer user)
         {
             using (var connection = this.databaseConnectionFactory.GetConnection())
             {
                 connection.Open();
                 string query = @"
-                    INSERT INTO Users (email, phone, username, password_hash, membership_id) 
+                    INSERT INTO Customers (email, phone, username, password_hash, membership_id) 
                     VALUES (@Email, @Phone, @Username, @PasswordHash, @MembershipId)";
 
                 using (var insertUserCommand = new SqlCommand(query, connection))
@@ -101,7 +101,7 @@ namespace AirportApp.Src.Repository
             {
                 connection.Open();
                 string query = @"
-                    UPDATE Users 
+                    UPDATE Customers
                     SET membership_id = @MembershipId
                     WHERE user_id = @UserId";
 
@@ -114,7 +114,7 @@ namespace AirportApp.Src.Repository
             }
         }
 
-        private User2 MapUser(SqlDataReader reader)
+        private Customer MapUser(SqlDataReader reader)
         {
             int membershipIdOrdinal = reader.GetOrdinal("membership_id");
             Membership? membership = null;
@@ -131,7 +131,7 @@ namespace AirportApp.Src.Repository
                 membership.AddonDiscounts = this.membershipRepository.GetAddonDiscounts(membership.MembershipId).ToList();
             }
 
-            return new User2(
+            return new Customer(
                 reader.GetInt32(reader.GetOrdinal("user_id")),
                 reader.GetString(reader.GetOrdinal("email")),
                 reader.IsDBNull(reader.GetOrdinal("phone")) ? null : reader.GetString(reader.GetOrdinal("phone")),

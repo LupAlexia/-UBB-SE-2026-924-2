@@ -1,19 +1,18 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using AirportApp.Src.Domain;
 using AirportApp.Src.Repository;
 using AirportApp.Src.Repository.Interfaces;
-
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace AirportApp.Src.Service
 {
     public class MembershipService : IMembershipService
     {
-        private readonly IUserRepository userRepository;
+        private readonly ICustomerRepository userRepository;
         private readonly IMembershipRepository membershipRepository;
 
-        public MembershipService(IUserRepository userRepository, IMembershipRepository membershipRepository)
+        public MembershipService(ICustomerRepository userRepository, IMembershipRepository membershipRepository)
         {
             this.userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
             this.membershipRepository = membershipRepository ?? throw new ArgumentNullException(nameof(membershipRepository));

@@ -18,7 +18,7 @@ namespace AirportApp.Src.ViewModel
         private string successMessage = string.Empty;
         private bool isLoginMode = true;
         private bool isAuthenticated;
-        private User2? authenticatedUser;
+        private Customer? authenticatedUser;
 
         private string titleText = "Welcome to WizzErr";
         private string subtitleText = "Please sign in to manage your tickets";
@@ -120,7 +120,7 @@ namespace AirportApp.Src.ViewModel
             }
         }
 
-        public User2? AuthenticatedUser
+        public Customer? AuthenticatedUser
         {
             get => authenticatedUser;
             set
@@ -289,7 +289,7 @@ namespace AirportApp.Src.ViewModel
                 ErrorMessage = string.Empty;
                 SuccessMessage = string.Empty;
 
-                User2 user = authService.Login(EmailText, PasswordText);
+                Customer user = authService.Login(EmailText, PasswordText);
 
                 AuthenticatedUser = user;
                 IsAuthenticated = true;

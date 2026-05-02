@@ -9,7 +9,7 @@ namespace AirportApp.Src.Domain
     public class BookingParametersResult
     {
         public Flight? Flight { get; set; }
-        public User? User { get; set; }
+        public Customer? User { get; set; }
         public int RequestedPassengers { get; set; }
     }
 }

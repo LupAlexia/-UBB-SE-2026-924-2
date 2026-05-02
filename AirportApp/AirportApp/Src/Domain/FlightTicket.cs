@@ -1,12 +1,11 @@
 using System.Collections.Generic;
-using AirportApp.Src.Model;
 
 namespace AirportApp.Src.Domain
 {
     public class FlightTicket
     {
         public int TicketId { get; set; }
-        public User? User { get; set; }
+        public Customer? User { get; set; }
         public Flight? Flight { get; set; }
         public string? Seat { get; set; }
         public float Price { get; set; }
@@ -21,7 +20,7 @@ namespace AirportApp.Src.Domain
         {
         }
 
-        public FlightTicket(User user, Flight flight, string seat, float price, string status, string passengerFirstName, string passengerLastName, string passengerEmail, string passengerPhone)
+        public FlightTicket(Customer user, Flight flight, string seat, float price, string status, string passengerFirstName, string passengerLastName, string passengerEmail, string passengerPhone)
         {
             User = user;
             Flight = flight;
@@ -34,7 +33,7 @@ namespace AirportApp.Src.Domain
             PassengerPhone = passengerPhone;
         }
 
-        public FlightTicket(int ticketId, User user, Flight flight, string seat, float price, string status, string passengerFirstName, string passengerLastName, string passengerEmail, string passengerPhone)
+        public FlightTicket(int ticketId, Customer user, Flight flight, string seat, float price, string status, string passengerFirstName, string passengerLastName, string passengerEmail, string passengerPhone)
         {
             TicketId = ticketId;
             User = user;

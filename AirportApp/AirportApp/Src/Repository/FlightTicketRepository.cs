@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Data.SqlClient;
 using AirportApp.Src.Domain;
-using AirportApp.Src.Model;
 
 namespace AirportApp.Src.Repository
 {
@@ -48,8 +47,7 @@ namespace AirportApp.Src.Repository
                     {
                         while (reader.Read())
                         {
-                            int userIdFromDb = reader.GetInt32(reader.GetOrdinal("user_id"));
-                            var user = new User(userIdFromDb, "N/A", "N/A", null);
+                            var user = new Customer { UserId = reader.GetInt32(reader.GetOrdinal("user_id")) };
 
                             var airport = new Airport
                             {
@@ -170,7 +168,7 @@ namespace AirportApp.Src.Repository
                     insertTicketCommand.Parameters.AddWithValue("@PassengerEmail", ticket.PassengerEmail ?? (object)DBNull.Value);
                     insertTicketCommand.Parameters.AddWithValue("@PassengerPhone", ticket.PassengerPhone ?? (object)DBNull.Value);
 
-                    ticket.TicketId = (int)insertTicketCommand.ExecuteScalar() !;
+                    ticket.TicketId = (int)insertTicketCommand.ExecuteScalar()!;
                 }
             }
         }
@@ -328,6 +326,5 @@ namespace AirportApp.Src.Repository
         }
     }
 }
-
 
 

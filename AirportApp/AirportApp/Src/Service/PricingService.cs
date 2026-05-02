@@ -65,7 +65,7 @@ namespace AirportApp.Src.Service
             return finalTotal;
         }
 
-        public PriceBreakdown CalculatePriceBreakdown(Flight flight, User user, List<FlightTicket> tickets)
+        public PriceBreakdown CalculatePriceBreakdown(Flight flight, Customer user, List<FlightTicket> tickets)
         {
             if (flight == null || tickets == null || tickets.Count == 0)
             {

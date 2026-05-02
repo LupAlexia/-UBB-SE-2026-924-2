@@ -1,6 +1,6 @@
 namespace AirportApp.Src.Domain
 {
-    public class User2
+    public class Customer
     {
         public int UserId { get; set; }
         public string Email { get; set; } = string.Empty;
@@ -9,11 +9,11 @@ namespace AirportApp.Src.Domain
         public string PasswordHash { get; set; } = string.Empty;
         public Membership? Membership { get; set; }
 
-        public User2()
+        public Customer()
         {
         }
 
-        public User2(string email, string? phone, string username, string passwordHash, Membership? membership)
+        public Customer(string email, string? phone, string username, string passwordHash, Membership? membership)
         {
             Email = email;
             Phone = phone;
@@ -22,7 +22,7 @@ namespace AirportApp.Src.Domain
             Membership = membership;
         }
 
-        public User2(int userId, string email, string? phone, string username, string passwordHash, Membership? membership)
+        public Customer(int userId, string email, string? phone, string username, string passwordHash, Membership? membership)
         {
             UserId = userId;
             Email = email;

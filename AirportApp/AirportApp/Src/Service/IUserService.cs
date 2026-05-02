@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using AirportApp.Src.Model;
-using AirportApp.Src.Domain;
 
 namespace AirportApp.Src.Service.Interfaces
 {
@@ -11,7 +10,7 @@ namespace AirportApp.Src.Service.Interfaces
         void UpdateUserById(int identificationNumber, User userEntity);
         void DeleteUserById(int identificationNumber);
         List<User> GetAllUsers();
-        void CreateNewUser(int identificationNumber, string fullName, string emailAddress, Membership? membership);
+        void CreateNewUser(int identificationNumber, string fullName, string emailAddress);
         void ValidateUserIntegrity(User userEntity);
     }
 }

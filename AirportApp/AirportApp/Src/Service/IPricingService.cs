@@ -8,6 +8,6 @@ namespace AirportApp.Src.Service
     {
         float CalculateBasePrice(Flight flight);
         float CalculateTotalPrice(FlightTicket FlightTicket);
-        PriceBreakdown CalculatePriceBreakdown(Flight flight, User user, List<FlightTicket> tickets);
+        PriceBreakdown CalculatePriceBreakdown(Flight flight, Customer user, List<FlightTicket> tickets);
     }
 }

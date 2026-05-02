@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using AirportApp.Src.Domain;
 using AirportApp.Src.Service;
-using AirportApp.Src.Model;
 
 namespace AirportApp.Src.ViewModel
 {
@@ -32,8 +31,8 @@ namespace AirportApp.Src.ViewModel
             }
         }
 
-        private User currentUser = null!;
-        public User CurrentUser
+        private Customer currentUser = null!;
+        public Customer CurrentUser
         {
             get => currentUser;
             set
@@ -199,11 +198,11 @@ namespace AirportApp.Src.ViewModel
             {
                 if (parameter is object[] arr && arr.Length > 0 && arr[0] is Flight fallbackFlight)
                 {
-                    User? fallbackUser = null;
+                    Customer? fallbackUser = null;
                     int requested = 0;
                     foreach (var item in arr)
                     {
-                        if (fallbackUser == null && item is User u)
+                        if (fallbackUser == null && item is Customer u)
                         {
                             fallbackUser = u;
                         }
@@ -225,7 +224,7 @@ namespace AirportApp.Src.ViewModel
                     parsed = new BookingParametersResult
                     {
                         Flight = singleFlight,
-                       // User = UserSession.CurrentUser,
+                        User = UserSession.CurrentUser,
                         RequestedPassengers = 0
                     };
                 }
@@ -247,7 +246,7 @@ namespace AirportApp.Src.ViewModel
             return true;
         }
 
-        public async Task InitializeAsync(Flight flight, User user, int requestedPassengerCount = 0)
+        public async Task InitializeAsync(Flight flight, Customer user, int requestedPassengerCount = 0)
         {
             CurrentFlight = flight;
             CurrentUser = user;
