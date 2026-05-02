@@ -2,3 +2,7 @@
 bin/ 
 obj/ 
 *.user 
+.env 
+appsettings.json 
+App2.xaml.cs 
+MainWindow2.xaml.cs 
