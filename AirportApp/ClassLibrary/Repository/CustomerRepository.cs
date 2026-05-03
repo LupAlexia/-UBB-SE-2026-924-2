@@ -3,116 +3,52 @@ using System.Linq;
 using Microsoft.Data.SqlClient;
 using AirportApp.ClassLibrary.Entity.Domain;
 using AirportApp.ClassLibrary.Repository.Interfaces;
+using AirportApp.ClassLibrary.DataAccess;
+using Microsoft.EntityFrameworkCore;
 
 namespace AirportApp.ClassLibrary.Entity.Domain
 {
     public class CustomerRepository : ICustomerRepository
     {
-        private readonly IDatabaseConnectionFactory databaseConnectionFactory;
+        private readonly AirportDbContext dataBaseContext;
         private readonly IMembershipRepository membershipRepository;
 
-        public CustomerRepository(IDatabaseConnectionFactory databaseConnectionFactory, IMembershipRepository membershipRepository)
+        public CustomerRepository(AirportDbContext dataBaseContext, IMembershipRepository membershipRepository)
         {
-            this.databaseConnectionFactory = databaseConnectionFactory ?? throw new ArgumentNullException(nameof(databaseConnectionFactory));
+            this.dataBaseContext = dataBaseContext;
             this.membershipRepository = membershipRepository ?? throw new ArgumentNullException(nameof(membershipRepository));
         }
 
         public Customer? GetById(int id)
         {
-            Customer? user = null;
-            using (var connection = this.databaseConnectionFactory.GetConnection())
-            {
-                connection.Open();
-                string query = @"
-                    SELECT u.user_id, u.email, u.phone, u.username, u.password_hash, 
-                           u.membership_id, m.name as membership_name, m.flight_discount_percentage
-                    FROM Customers u
-                    LEFT JOIN Memberships m ON u.membership_id = m.membership_id
-                    WHERE u.user_id = @UserId";
-
-                using (var getUserByIdCommand = new SqlCommand(query, connection))
-                {
-                    getUserByIdCommand.Parameters.AddWithValue("@UserId", id);
-                    using (var reader = getUserByIdCommand.ExecuteReader())
-                    {
-                        if (reader.Read())
-                        {
-                            user = this.MapUser(reader);
-                        }
-                    }
-                }
-            }
-
-            return user;
+            return this.dataBaseContext.customers
+                .Include(customer => customer.Membership)
+                .FirstOrDefault(customer => customer.UserId==id);
         }
 
         public Customer? GetByEmail(string email)
         {
-            Customer? user = null;
-            using (var connection = this.databaseConnectionFactory.GetConnection())
-            {
-                connection.Open();
-                string query = @"
-                    SELECT u.user_id, u.email, u.phone, u.username, u.password_hash, 
-                           u.membership_id, m.name as membership_name, m.flight_discount_percentage
-                    FROM Customers u
-                    LEFT JOIN Memberships m ON u.membership_id = m.membership_id
-                    WHERE u.email = @Email";
-
-                using (var getUserByEmailCommand = new SqlCommand(query, connection))
-                {
-                    getUserByEmailCommand.Parameters.AddWithValue("@Email", email);
-                    using (var reader = getUserByEmailCommand.ExecuteReader())
-                    {
-                        if (reader.Read())
-                        {
-                            user = this.MapUser(reader);
-                        }
-                    }
-                }
-            }
-
-            return user;
+            return this.dataBaseContext.customers
+                .Include(customer => customer.Membership)
+                .FirstOrDefault(customer => customer.Email == email);
         }
 
         public void AddUser(Customer user)
         {
-            using (var connection = this.databaseConnectionFactory.GetConnection())
-            {
-                connection.Open();
-                string query = @"
-                    INSERT INTO Customers (email, phone, username, password_hash, membership_id) 
-                    VALUES (@Email, @Phone, @Username, @PasswordHash, @MembershipId)";
-
-                using (var insertUserCommand = new SqlCommand(query, connection))
-                {
-                    insertUserCommand.Parameters.AddWithValue("@Email", user.Email);
-                    insertUserCommand.Parameters.AddWithValue("@Phone", user.Phone ?? (object)DBNull.Value);
-                    insertUserCommand.Parameters.AddWithValue("@Username", user.Username);
-                    insertUserCommand.Parameters.AddWithValue("@PasswordHash", user.PasswordHash);
-                    insertUserCommand.Parameters.AddWithValue("@MembershipId", user.Membership?.Id ?? (object)DBNull.Value);
-                    insertUserCommand.ExecuteNonQuery();
-                }
-            }
+            this.dataBaseContext.Add(user);
+            this.dataBaseContext.SaveChanges();
         }
 
         public void UpdateUserMembership(int userId, int newMembershipId)
         {
-            using (var connection = this.databaseConnectionFactory.GetConnection())
-            {
-                connection.Open();
-                string query = @"
-                    UPDATE Customers
-                    SET membership_id = @MembershipId
-                    WHERE user_id = @UserId";
+            var userToUpdate = this.dataBaseContext.customers
+                .Include(customer => customer.Membership)
+                .FirstOrDefault(customer => customer.UserId == userId);
 
-                using (var updateUserMembershipCommand = new SqlCommand(query, connection))
-                {
-                    updateUserMembershipCommand.Parameters.AddWithValue("@UserId", userId);
-                    updateUserMembershipCommand.Parameters.AddWithValue("@MembershipId", newMembershipId);
-                    updateUserMembershipCommand.ExecuteNonQuery();
-                }
-            }
+            var membership = this.membershipRepository.GetMembershipById(newMembershipId);
+            userToUpdate.Membership = membership;
+            this.dataBaseContext.Entry(userToUpdate).State = EntityState.Modified;
+            dataBaseContext.SaveChanges();
         }
 
         private Customer MapUser(SqlDataReader reader)
