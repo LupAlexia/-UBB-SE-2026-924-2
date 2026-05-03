@@ -10,49 +10,60 @@ namespace AirportApp.ClassLibrary.Entity.Domain.Message
 {
     public class Message : IMessage
     {
-        private int message_id;
-        private ISender sender;
-        private Chat chat;
-        private DateTimeOffset timestamp;
-        private string messageText;
+        // 1. EF Core Auto-Properties
+        public int Id { get; set; }
+        public string Text { get; set; } = string.Empty;
+        public DateTimeOffset Timestamp { get; set; }
 
-        public Message(ISender sender, Chat chat, string messageText)
+
+        // 2. Navigation Properties
+        // This links the Message to a Chat in the database
+        public int ChatId { get; set; }
+        public Chat Chat { get; set; } = null!;
+        public int SenderId { get; set; }
+
+        public Message() { }
+
+        public Message(Chat chat, string text, int senderId)
         {
-            this.sender = sender;
-            this.chat = chat;
-            this.messageText = messageText;
-            this.timestamp = DateTimeOffset.UtcNow;
+            Chat = chat;
+            ChatId = chat.Id;
+            Text = text;
+            SenderId = senderId;
+            Timestamp = DateTimeOffset.UtcNow;
         }
 
         // TODO: This constructor is currently used only for mapping from DB. Without this message_id and timestamp are unsettable.
-        public Message(int id, ISender sender, Chat chat, string messageText, DateTimeOffset timestamp)
+        // Updated Mapping Constructor
+        public Message(int id, int senderId, Chat chat, string text, DateTimeOffset timestamp)
         {
-            this.message_id = id;
-            this.sender = sender;
-            this.chat = chat;
-            this.messageText = messageText;
-            this.timestamp = timestamp;
+            Id = id;           
+            SenderId = senderId;
+            Chat = chat;
+            ChatId = chat.Id;
+            Text = text;        
+            Timestamp = timestamp; 
         }
 
         public Chat GetChat()
         {
-            return this.chat;
+            return this.Chat;
         }
 
         // Interface functionality
         public string GetMessage()
         {
-            return this.messageText;
+            return Text;
         }
 
         public ISender GetSender()
         {
-            return sender;
+            return SenderId;
         }
 
         public int GetId()
         {
-            return this.message_id;
+            return Id;
         }
 
         IEnumerable<FAQOption> IMessage.GetNextOptions()
@@ -62,12 +73,12 @@ namespace AirportApp.ClassLibrary.Entity.Domain.Message
 
         DateTimeOffset IMessage.GetTimeStamp()
         {
-            return timestamp;
+            return Timestamp;
         }
 
         Chat IMessage.GetChat()
         {
-            return this.chat;
+            return Chat;
         }
     }
 }

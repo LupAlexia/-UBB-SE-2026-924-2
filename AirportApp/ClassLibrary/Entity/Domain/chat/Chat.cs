@@ -6,21 +6,39 @@ namespace AirportApp.ClassLibrary.Entity.Domain.Chats
 {
     public class Chat
     {
-        public int ChatId { get; set; }
-        public int UserId { get; set; }
+        // 1. EF Core convention for Primary Key
+        public int Id { get; set; }
+
+        // 2. Navigation Property instead of just int UserId
+        public User User { get; set; } = null!; 
+        public int UserId { get; set; } // foreign key
         public ChatStatus Status { get; set; }
 
-        public List<IMessage> Messages { get; set; }
+        //public List<IMessage> Messages { get; set; }
 
-        public Chat(int chatId, int userId, ChatStatus chatStatus)
+        // 3. ICollection for better EF compatibility
+        public ICollection<Message> Messages { get; set; } = new List<Message>();
+
+        // 4. Parameterless constructor for EF Core
+        public Chat() { }
+
+        //public Chat(int chatId, int userId, ChatStatus chatStatus)
+        //{
+        //    Id = chatId;
+        //    UserId = userId;
+        //    Status = chatStatus;
+        //    Messages = new List<IMessage>();
+        //}
+
+        public Chat(int id, User user, ChatStatus chatStatus)
         {
-            ChatId = chatId;
-            UserId = userId;
+            Id = id;
+            User = user;
+            UserId = user.Id;
             Status = chatStatus;
-            Messages = new List<IMessage>();
         }
 
-        public void AddMessage(IMessage message)
+        public void AddMessage(Message message)
         {
             if (message == null)
             {
