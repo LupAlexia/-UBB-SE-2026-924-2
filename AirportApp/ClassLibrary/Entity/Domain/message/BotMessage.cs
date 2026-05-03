@@ -28,9 +28,20 @@ namespace AirportApp.ClassLibrary.Entity.Domain.Message
         public DateTimeOffset Timestamp { get; set; }
 
         // 2. Navigation Properties
-        
+
+        [Required]
+        [Column("Chat_Id")]
+        public int ChatId { get; set; }
+
+        [ForeignKey(nameof(ChatId))]
+
         public Chat Chat { get; set; } = null!;
 
+        [Required]
+        [Column("Bot_Id")]
+        public int BotId { get; set; }
+
+        [NotMapped]
         public ISender Sender { get; set; } = null!;
 
        
@@ -51,7 +62,9 @@ namespace AirportApp.ClassLibrary.Entity.Domain.Message
         {
             Id = id;
             Sender = sender;
+            BotId = sender.RetrieveUniqueDatabaseIdentifierForBot();
             Chat = chat;
+            ChatId = chat.Id;
             Text = text;
             FAQOptions = options;
             Timestamp = timestamp;

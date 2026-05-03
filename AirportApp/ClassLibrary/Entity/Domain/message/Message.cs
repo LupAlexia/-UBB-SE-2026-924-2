@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using AirportApp.ClassLibrary.Entity.Domain.Chats;
 using AirportApp.ClassLibrary.Entity.Domain.Faq.Bot;
+using EmpNamespace = AirportApp.ClassLibrary.Entity.Domain.Employee;
 
 namespace AirportApp.ClassLibrary.Entity.Domain.Message
 {
@@ -29,17 +30,38 @@ namespace AirportApp.ClassLibrary.Entity.Domain.Message
 
         // 2. Navigation Properties
         // This links the Message to a Chat in the database
-       
+
+        [Required]
+        [Column("Chat_Id")]
+        public int ChatId { get; set; }
+
+        [ForeignKey(nameof(ChatId))]
         public Chat Chat { get; set; } = null!;
-        public ISender Sender { get; set; } = null!;
+
+        // Explicit Sender IDs
+        [Column("Sender_User_Id")]
+        public int? SenderUserId { get; set; }
+
+        [ForeignKey(nameof(SenderUserId))]
+        public User? SenderUser { get; set; }
+
+        [Column("Sender_Employee_Id")]
+        public int? SenderEmployeeId { get; set; }
+
+        [ForeignKey(nameof(SenderEmployeeId))]
+        public EmpNamespace.Employee ? SenderEmployee { get; set; }
+        [NotMapped]
+        public ISender Sender => (ISender?)SenderUser ?? (ISender?)SenderEmployee!;
 
         public Message() { }
 
         public Message(Chat chat, string text, ISender sender)
         {
             Chat = chat;
+            ChatId = chat.Id;
             Text = text;
-            Sender = sender;
+            if (sender is User user) SenderUser = user;
+            else if (sender is EmpNamespace.Employee emp) SenderEmployee = emp;
             Timestamp = DateTimeOffset.UtcNow;
         }
 
@@ -47,9 +69,11 @@ namespace AirportApp.ClassLibrary.Entity.Domain.Message
         // Updated Mapping Constructor
         public Message(int id, ISender sender, Chat chat, string text, DateTimeOffset timestamp)
         {
-            Id = id;           
-            Sender = sender;
+            Id = id;
+            if (sender is User user) SenderUser = user;
+            else if (sender is EmpNamespace.Employee emp) SenderEmployee = emp;
             Chat = chat;
+            ChatId = chat.Id;
             Text = text;        
             Timestamp = timestamp; 
         }
