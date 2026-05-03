@@ -1,11 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using AirportApp.Src.Model.Chats;
-using AirportApp.Src.Model.Faq.Bot;
-using AirportApp.Src.Model.Message;
-using AirportApp.Src.Repository;
-using AirportApp.Src.Service.Bot;
+using AirportApp.ClassLibrary.Entity.Domain.Chats;
+using AirportApp.ClassLibrary.Entity.Domain.Message;
+using AirportApp.ClassLibrary.Entity.Domain.Faq.Bot;
+using AirportApp.ClassLibrary.Repository.Interfaces;
 
 namespace AirportApp.Src.Service
 {

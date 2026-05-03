@@ -1,6 +1,6 @@
 ﻿using System;
-using AirportApp.Src.Domain;
-using AirportApp.Src.Repository;
+using AirportApp.ClassLibrary.Entity.Domain;
+using AirportApp.ClassLibrary.Repository.Interfaces;
 
 namespace AirportApp.Src.Service
 {

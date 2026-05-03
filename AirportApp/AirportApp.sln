@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.14.36603.0 d17.14
+VisualStudioVersion = 17.14.36603.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AirportApp", "AirportApp\AirportApp.csproj", "{1C01F3C3-2073-487B-9273-CB8E5A6D67E8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AirportApp.ClassLibrary", "ClassLibrary\AirportApp.ClassLibrary.csproj", "{06952F8F-CDE9-41A3-B84B-21C1EE3E4077}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,18 @@ Global
 		{1C01F3C3-2073-487B-9273-CB8E5A6D67E8}.Release|x86.ActiveCfg = Release|x86
 		{1C01F3C3-2073-487B-9273-CB8E5A6D67E8}.Release|x86.Build.0 = Release|x86
 		{1C01F3C3-2073-487B-9273-CB8E5A6D67E8}.Release|x86.Deploy.0 = Release|x86
+		{06952F8F-CDE9-41A3-B84B-21C1EE3E4077}.Debug|ARM64.ActiveCfg = Debug|Any CPU
+		{06952F8F-CDE9-41A3-B84B-21C1EE3E4077}.Debug|ARM64.Build.0 = Debug|Any CPU
+		{06952F8F-CDE9-41A3-B84B-21C1EE3E4077}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{06952F8F-CDE9-41A3-B84B-21C1EE3E4077}.Debug|x64.Build.0 = Debug|Any CPU
+		{06952F8F-CDE9-41A3-B84B-21C1EE3E4077}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{06952F8F-CDE9-41A3-B84B-21C1EE3E4077}.Debug|x86.Build.0 = Debug|Any CPU
+		{06952F8F-CDE9-41A3-B84B-21C1EE3E4077}.Release|ARM64.ActiveCfg = Release|Any CPU
+		{06952F8F-CDE9-41A3-B84B-21C1EE3E4077}.Release|ARM64.Build.0 = Release|Any CPU
+		{06952F8F-CDE9-41A3-B84B-21C1EE3E4077}.Release|x64.ActiveCfg = Release|Any CPU
+		{06952F8F-CDE9-41A3-B84B-21C1EE3E4077}.Release|x64.Build.0 = Release|Any CPU
+		{06952F8F-CDE9-41A3-B84B-21C1EE3E4077}.Release|x86.ActiveCfg = Release|Any CPU
+		{06952F8F-CDE9-41A3-B84B-21C1EE3E4077}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

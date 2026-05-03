@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using AirportApp.Src.Model.Message;
+using AirportApp.ClassLibrary.Entity.Domain.Message;
 
 namespace AirportApp.Src.Service.Bot.Strategy
 {

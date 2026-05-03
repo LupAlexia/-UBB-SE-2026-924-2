@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using AirportApp.Src.Model;
-using AirportApp.Src.Model.Review;
-using AirportApp.Src.Repository;
-
+using AirportApp.ClassLibrary.Entity.Domain.Review;
+using AirportApp.ClassLibrary.Entity.Domain;
+using AirportApp.ClassLibrary.Repository.Interfaces;
 namespace AirportApp.Src.Service
 {
     public class ReviewService

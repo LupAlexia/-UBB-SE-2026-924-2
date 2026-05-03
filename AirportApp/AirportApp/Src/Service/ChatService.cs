@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using AirportApp.Src.Repository;
-using AirportApp.Src.Repository.Database;
-using AirportApp.Src.Model.Chats;
+using AirportApp.ClassLibrary.Entity.Domain.Chats;
+using AirportApp.ClassLibrary.Repository.Interfaces;
 
 namespace AirportApp.Src.Service
 {

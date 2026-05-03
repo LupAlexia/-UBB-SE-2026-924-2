@@ -2,8 +2,8 @@ using System;
 using System.Linq;
 using System.Net.Mail;
 using Microsoft.AspNetCore.Identity;
-using AirportApp.Src.Domain;
-using AirportApp.Src.Repository;
+using AirportApp.ClassLibrary.Entity.Domain;
+using AirportApp.ClassLibrary.Repository.Interfaces;
 
 namespace AirportApp.Src.Service
 {

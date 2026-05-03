@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using AirportApp.Src.Dto;
-using AirportApp.Src.Model;
-using AirportApp.Src.Model.Ticket;
+using AirportApp.ClassLibrary.Entity.Dto;
+using AirportApp.ClassLibrary.Entity.Domain.Ticket;
+using AirportApp.ClassLibrary.Entity.Domain;
 using AirportApp.Src.ViewModel;
 
 namespace AirportApp.Src.Service.Interfaces

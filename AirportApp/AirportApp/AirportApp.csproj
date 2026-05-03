@@ -66,6 +66,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <ProjectReference Include="..\ClassLibrary\AirportApp.ClassLibrary.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
 	  <None Update=".env">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </None>

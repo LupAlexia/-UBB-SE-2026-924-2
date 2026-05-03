@@ -6,8 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using AirportApp.Src.Model.Faq.Bot;
 using AirportApp.Src.Model.Message;
-using AirportApp.Src.Repository;
-using AirportApp.Src.Repository.Database;
+using AirportApp.ClassLibrary.Repository.Interfaces;
 
 namespace AirportApp.Src.Service.Bot.Strategy
 {
