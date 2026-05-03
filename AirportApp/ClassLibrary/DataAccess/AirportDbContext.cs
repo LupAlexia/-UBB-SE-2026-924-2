@@ -37,5 +37,31 @@ namespace AirportApp.ClassLibrary.DataAccess
         public DbSet<Company> companies { get; set; }
         public DbSet<Gate> gates { get; set; }
         public DbSet<Route> routes { get; set; }
+            public DbSet<AirportApp.ClassLibrary.Entity.Domain.Faq.Bot.FAQNodeEntity> faqNodes { get; set; }
+            public DbSet<AirportApp.ClassLibrary.Entity.Domain.Faq.Bot.FAQOptionEntity> faqOptions { get; set; }
+
+            protected override void OnModelCreating(ModelBuilder modelBuilder)
+            {
+                base.OnModelCreating(modelBuilder);
+
+                modelBuilder.Entity<AirportApp.ClassLibrary.Entity.Domain.Faq.Bot.FAQNodeEntity>(b =>
+                {
+                    b.ToTable("FAQNode");
+                    b.HasKey(e => e.NodeId);
+                    b.Property(e => e.NodeId).HasColumnName("node_id");
+                    b.Property(e => e.QuestionText).HasColumnName("question_text");
+                    b.Property(e => e.IsFinalAnswer).HasColumnName("is_final_answer");
+                    b.HasMany(e => e.Options).WithOne().HasForeignKey(o => o.NodeId);
+                });
+
+                modelBuilder.Entity<AirportApp.ClassLibrary.Entity.Domain.Faq.Bot.FAQOptionEntity>(b =>
+                {
+                    b.ToTable("FAQOption");
+                    b.HasKey(e => new { e.NodeId, e.Label });
+                    b.Property(e => e.NodeId).HasColumnName("node_id");
+                    b.Property(e => e.Label).HasColumnName("label");
+                    b.Property(e => e.NextOptionId).HasColumnName("next_option_id");
+                });
+            }
     }
 }

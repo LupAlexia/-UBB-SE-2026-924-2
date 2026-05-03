@@ -1,161 +1,121 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using AirportApp.ClassLibrary.Entity.Domain.Faq;
-using Microsoft.Data.SqlClient;
-
 using AirportApp.ClassLibrary.Repository.Interfaces;
+using AirportApp.ClassLibrary.DataAccess;
 
 namespace AirportApp.ClassLibrary.Repository
 {
-    public class FAQRepository : DatabaseRepository<int, FAQEntry>, IFAQRepository
+    public class FAQRepository : IFAQRepository
     {
-    public FAQRepository()
+        private readonly AirportDbContext dataBaseContext;
+
+        public FAQRepository(AirportDbContext dataBaseContext)
         {
+            this.dataBaseContext = dataBaseContext ?? throw new ArgumentNullException(nameof(dataBaseContext));
         }
 
-    public FAQEntry GetById(int askedQuestionId)
+        public FAQEntry GetById(int askedQuestionId)
         {
-            SqlCommand selectByIdCommand = new SqlCommand("SELECT * FROM FAQEntry WHERE FAQentry_id = @id");
-            selectByIdCommand.Parameters.AddWithValue("@id", askedQuestionId);
-
-            FAQEntry frequentlyAskedQuestion = GetById(askedQuestionId, selectByIdCommand);
-
-            if (frequentlyAskedQuestion == null)
+            var faqEntry = this.dataBaseContext.faqs.FirstOrDefault(f => f.Id == askedQuestionId);
+            if (faqEntry == null)
             {
                 throw new KeyNotFoundException($"FAQ with id {askedQuestionId} was not found.");
             }
 
-            return frequentlyAskedQuestion;
+            return faqEntry;
         }
 
-    public int CreateNewEntity(FAQEntry questionEntity)
-    {
+        public int CreateNewEntity(FAQEntry questionEntity)
+        {
             if (questionEntity == null)
             {
                 throw new ArgumentNullException(nameof(questionEntity), "FAQ entry cannot be null.");
             }
 
-            SqlCommand insetEntryCommand = new SqlCommand(
-                "INSERT INTO FAQEntry (question, answer, category) " +
-                "OUTPUT INSERTED.FAQentry_id " +
-                "VALUES (@question, @answer, @category)");
-
-            insetEntryCommand.Parameters.AddWithValue("@question", questionEntity.Question);
-            insetEntryCommand.Parameters.AddWithValue("@answer", questionEntity.Answer);
-            insetEntryCommand.Parameters.AddWithValue("@category", questionEntity.Category.ToString());
-
-            int addedEntityId = Add(insetEntryCommand, questionEntity);
-            InvalidateCacheEntry(addedEntityId);
-            return addedEntityId;
+            this.dataBaseContext.faqs.Add(questionEntity);
+            this.dataBaseContext.SaveChanges();
+            return questionEntity.Id;
         }
 
-    public void UpdateById(int identificationNumber, FAQEntry questionEntity)
-    {
+        public void UpdateById(int identificationNumber, FAQEntry questionEntity)
+        {
             if (questionEntity == null)
             {
                 throw new ArgumentNullException(nameof(questionEntity), "FAQ entry cannot be null.");
             }
 
-        SqlCommand updateByIdCommand = new SqlCommand(
-            "UPDATE FAQEntry " +
-            "SET question = @question, " +
-            "answer = @answer, " +
-            "category = @category, " +
-            "view_count = @viewCount, " +
-            "was_helpful_votes = @wasHelpfulVotes, " +
-            "was_not_helpful_votes = @wasNotHelpfulVotes " +
-            "WHERE FAQentry_id = @id");
+            var faqEntry = this.dataBaseContext.faqs.FirstOrDefault(f => f.Id == identificationNumber);
+            if (faqEntry != null)
+            {
+                faqEntry.Question = questionEntity.Question;
+                faqEntry.Answer = questionEntity.Answer;
+                faqEntry.Category = questionEntity.Category;
+                faqEntry.ViewCount = questionEntity.ViewCount;
+                faqEntry.HelpfulVotesCount = questionEntity.HelpfulVotesCount;
+                faqEntry.NotHelpfulVotesCount = questionEntity.NotHelpfulVotesCount;
+                this.dataBaseContext.SaveChanges();
+            }
+        }
 
-        updateByIdCommand.Parameters.AddWithValue("@id", identificationNumber);
-        updateByIdCommand.Parameters.AddWithValue("@question", questionEntity.Question);
-        updateByIdCommand.Parameters.AddWithValue("@answer", questionEntity.Answer);
-        updateByIdCommand.Parameters.AddWithValue("@category", questionEntity.Category.ToString());
-        updateByIdCommand.Parameters.AddWithValue("@viewCount", questionEntity.ViewCount);
-        updateByIdCommand.Parameters.AddWithValue("@wasHelpfulVotes", questionEntity.HelpfulVotesCount);
-        updateByIdCommand.Parameters.AddWithValue("@wasNotHelpfulVotes", questionEntity.NotHelpfulVotesCount);
+        public void DeleteById(int identificationNumber)
+        {
+            var faqEntry = this.dataBaseContext.faqs.FirstOrDefault(f => f.Id == identificationNumber);
+            if (faqEntry != null)
+            {
+                this.dataBaseContext.faqs.Remove(faqEntry);
+                this.dataBaseContext.SaveChanges();
+            }
+        }
 
-        UpdateById(identificationNumber, updateByIdCommand, questionEntity);
-        InvalidateCacheEntry(identificationNumber);
-    }
+        public IEnumerable<FAQEntry> GetAll()
+        {
+            return this.dataBaseContext.faqs.ToList();
+        }
 
-    public void DeleteById(int identificationNumber)
-    {
-            SqlCommand deleteByIdCommand = new SqlCommand("DELETE FROM FAQEntry WHERE FAQentry_id = @id");
-            deleteByIdCommand.Parameters.AddWithValue("@id", identificationNumber);
-
-            DeleteById(identificationNumber, deleteByIdCommand);
-    }
-
-    public IEnumerable<FAQEntry> GetAll()
-    {
-        SqlCommand getAllCommand = new SqlCommand("SELECT * FROM FAQEntry");
-        return GetAll(getAllCommand);
-    }
-
-    public List<FAQEntry> GetByCategory(FAQCategoryEnum category)
-    {
-            SqlCommand getByCategoryCommand;
-
+        public List<FAQEntry> GetByCategory(FAQCategoryEnum category)
+        {
             if (category == FAQCategoryEnum.All)
             {
-                getByCategoryCommand = new SqlCommand("SELECT * FROM FAQEntry");
-            }
-            else
-            {
-                getByCategoryCommand = new SqlCommand("SELECT * FROM FAQEntry WHERE category = @category");
-                getByCategoryCommand.Parameters.AddWithValue("@category", category.ToString());
+                return this.dataBaseContext.faqs.ToList();
             }
 
-            return GetAll(getByCategoryCommand).ToList();
-    }
-
-    public void IncrementViewCount(int identificationNumber)
-    {
-            SqlCommand updateViewCountCommand = new SqlCommand(
-                "UPDATE FAQEntry SET view_count = view_count + 1 WHERE FAQentry_id = @id");
-            updateViewCountCommand.Parameters.AddWithValue("@id", identificationNumber);
-
-            ExecuteNonQuery(updateViewCountCommand);
-            InvalidateCacheEntry(identificationNumber);
+            return this.dataBaseContext.faqs
+                .Where(f => f.Category == category)
+                .ToList();
         }
 
-    public void IncrementWasHelpfulVotes(int identificationNumber)
-    {
-            SqlCommand updateWasHelpfulVotesCommand = new SqlCommand(
-                "UPDATE FAQEntry SET was_helpful_votes = was_helpful_votes + 1 WHERE FAQentry_id = @id");
-            updateWasHelpfulVotesCommand.Parameters.AddWithValue("@id", identificationNumber);
-
-            ExecuteNonQuery(updateWasHelpfulVotesCommand);
-            InvalidateCacheEntry(identificationNumber);
-        }
-
-    public void IncrementWasNotHelpfulVotes(int identificationNumber)
-    {
-            SqlCommand updateWasNotHelpfulVotesCommand = new SqlCommand(
-                     "UPDATE FAQEntry SET was_not_helpful_votes = was_not_helpful_votes + 1 WHERE FAQentry_id = @id");
-            updateWasNotHelpfulVotesCommand.Parameters.AddWithValue("@id", identificationNumber);
-
-            ExecuteNonQuery(updateWasNotHelpfulVotesCommand);
-            InvalidateCacheEntry(identificationNumber);
-        }
-
-    protected override FAQEntry MapRowToEntity(SqlDataReader reader)
+        public void IncrementViewCount(int identificationNumber)
         {
-            int identificationNumber = (int)reader["FAQentry_id"];
-            string question = reader["question"].ToString();
-            string answer = reader["answer"].ToString();
-            FAQCategoryEnum category = Enum.Parse<FAQCategoryEnum>(reader["category"].ToString());
-            int viewCount = (int)reader["view_count"];
-            int helpfulVotesCount = (int)reader["was_helpful_votes"];
-            int notHelpfulVotesCount = (int)reader["was_not_helpful_votes"];
-
-            return new FAQEntry(identificationNumber, question, answer, category, viewCount, helpfulVotesCount, notHelpfulVotesCount);
+            var faqEntry = this.dataBaseContext.faqs.FirstOrDefault(f => f.Id == identificationNumber);
+            if (faqEntry != null)
+            {
+                faqEntry.ViewCount++;
+                this.dataBaseContext.SaveChanges();
+            }
         }
 
-    protected override int GetEntityId(FAQEntry questionEntity)
-    {
-            return questionEntity.Id;
+        public void IncrementWasHelpfulVotes(int identificationNumber)
+        {
+            var faqEntry = this.dataBaseContext.faqs.FirstOrDefault(f => f.Id == identificationNumber);
+            if (faqEntry != null)
+            {
+                faqEntry.HelpfulVotesCount++;
+                this.dataBaseContext.SaveChanges();
+            }
+        }
+
+        public void IncrementWasNotHelpfulVotes(int identificationNumber)
+        {
+            var faqEntry = this.dataBaseContext.faqs.FirstOrDefault(f => f.Id == identificationNumber);
+            if (faqEntry != null)
+            {
+                faqEntry.NotHelpfulVotesCount++;
+                this.dataBaseContext.SaveChanges();
+            }
+        }
     }
 }
 }

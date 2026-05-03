@@ -25,7 +25,7 @@ namespace AirportApp.ClassLibrary.Repository
                 .Include(flight => flight.Route)
                     .ThenInclude(route => route.Airport)
                 .Include(flight => flight.Gate)
-                .FirstOrDefault(flight => flight.FlightId == id);
+                .FirstOrDefault(flight => flight.Id == id);
         }
 
         public IEnumerable<Flight> GetFlightsByRoute(string location, string routeType, DateTime? date)
@@ -38,16 +38,13 @@ namespace AirportApp.ClassLibrary.Repository
                 .Include(flight => flight.Gate)
                 .AsQueryable();
 
-            // Filter by date if provided
             if (date.HasValue)
             {
                 query = query.Where(flight => flight.Date.Date == date.Value.Date);
             }
 
-            // Filter by route type
             query = query.Where(flight => flight.Route.RouteType == routeType);
 
-            // Filter by location (city or airport code)
             query = query.Where(flight => 
                 flight.Route.Airport.City == location || 
                 flight.Route.Airport.AirportCode == location);
@@ -59,7 +56,7 @@ namespace AirportApp.ClassLibrary.Repository
         {
             return this.dataBaseContext.flightTickets
                 .Where(flightTicket => flightTicket.Status != "canceled" && flightTicket.Status != "Cancelled")
-                .Where(flightTicket => flightTicket.Flight.FlightId == flightId)
+                .Where(flightTicket => flightTicket.Flight.Id == flightId)
                 .Count();
         }
     }

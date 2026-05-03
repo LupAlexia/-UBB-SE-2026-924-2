@@ -13,16 +13,16 @@ namespace AirportApp.ClassLibrary.Repository
         private readonly AirportDbContext dataBaseContext;
         public AddOnRepository(AirportDbContext databaseContext)
         {
-            this.dataBaseContext = dataBaseContext;
+            this.dataBaseContext = dataBaseContext ?? throw new ArgumentNullException(nameof(dataBaseContext));
         }
         public IEnumerable<AddOn> GetAllAddOns()
         {
             return this.dataBaseContext.addOns;
         }
 
-        public IEnumerable<AddOn> GetAddOnsByIds(IEnumerable<int> ids)
+        public IEnumerable<AddOn> GetAddOnsByIds(IEnumerable<int> addOnIds)
         {
-            return this.dataBaseContext.addOns.Where(addOnEntity => ids.Contains(addOnEntity.AddOnId));
+            return this.dataBaseContext.addOns.Where(addOnEntity => addOnIds.Contains(addOnEntity.Id));
         }
     }
 }

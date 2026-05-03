@@ -65,7 +65,7 @@ namespace AirportApp.ClassLibrary.Entity.Domain
         public FlightTicket(Customer user, Flight flight, string seat, float price, string status, string passengerFirstName, string passengerLastName, string passengerEmail, string passengerPhone)
         {
             User = user;
-            UserId = user.Id;
+            UserId = user.UserId;
             Flight = flight;
             FlightId = flight.Id;
             Seat = seat;
@@ -81,7 +81,7 @@ namespace AirportApp.ClassLibrary.Entity.Domain
         {
             Id = ticketId;
             User = user;
-            UserId = user.Id;
+            UserId = user.UserId;
             Flight = flight;
             FlightId = flight.Id;
             Seat = seat;

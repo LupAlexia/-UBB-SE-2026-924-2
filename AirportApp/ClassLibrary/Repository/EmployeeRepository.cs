@@ -1,16 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using AirportApp.ClassLibrary.Entity.Domain.Employee;
 using AirportApp.ClassLibrary.Repository.Interfaces;
-using Microsoft.Data.SqlClient;
+using AirportApp.ClassLibrary.DataAccess;
 
 namespace AirportApp.ClassLibrary.Repository
 {
-    public class EmployeeRepository : DatabaseRepository<int, Employee>, IRepository<int, Employee>, IEmployeeRepository
+    public class EmployeeRepository : IRepository<int, Employee>, IEmployeeRepository
     {
+        private readonly AirportDbContext dataBaseContext;
+
+        public EmployeeRepository(AirportDbContext dataBaseContext)
+        {
+            this.dataBaseContext = dataBaseContext ?? throw new ArgumentNullException(nameof(dataBaseContext));
+        }
+
         public int CreateNewEntity(Employee employeeEntity)
         {
             if (employeeEntity == null)
@@ -18,51 +24,35 @@ namespace AirportApp.ClassLibrary.Repository
                 throw new ArgumentNullException(nameof(employeeEntity), "Employee cannot be null.");
             }
 
-            string insertQuery = "INSERT INTO Employee " +
-                "(name, email, group) " +
-                "OUTPUT INSERTED.Employee_id " +
-                "VALUES (@name, @email, @group)";
-
-            SqlCommand insertCommand = new SqlCommand(insertQuery);
-
-            insertCommand.Parameters.AddWithValue("@name", employeeEntity.RetrieveConfiguredDisplayFullNameForBot());
-            insertCommand.Parameters.AddWithValue("@email", employeeEntity.RetrieveConfiguredEmailAddressForBotContact());
-            insertCommand.Parameters.AddWithValue("@group", employeeEntity.GetDepartmentName());
-
-            int identificationNumber = Add(insertCommand, employeeEntity);
-            return identificationNumber;
+            this.dataBaseContext.employees.Add(employeeEntity);
+            this.dataBaseContext.SaveChanges();
+            return employeeEntity.Id;
         }
 
         public void DeleteById(int identificationNumber)
         {
-            string deleteQuery = "DELETE FROM Employee WHERE employee_id = @id";
-            SqlCommand deleteCommand = new SqlCommand(deleteQuery);
-            deleteCommand.Parameters.AddWithValue("@id", identificationNumber);
-
-            DeleteById(identificationNumber, deleteCommand);
+            var employee = this.dataBaseContext.employees.FirstOrDefault(e => e.Id == identificationNumber);
+            if (employee != null)
+            {
+                this.dataBaseContext.employees.Remove(employee);
+                this.dataBaseContext.SaveChanges();
+            }
         }
 
         public IEnumerable<Employee> GetAll()
         {
-            string selectAllQuery = "SELECT * FROM Employee";
-            SqlCommand selectCommand = new SqlCommand(selectAllQuery);
-            return GetAll(selectCommand);
+            return this.dataBaseContext.employees.ToList();
         }
 
         public Employee GetById(int identificationNumber)
         {
-            string selectByIdQuery = "SELECT * FROM Employee WHERE employee_id = @id";
-            SqlCommand selectByIdCommand = new SqlCommand(selectByIdQuery);
-            selectByIdCommand.Parameters.AddWithValue("@id", identificationNumber);
-
-            Employee foundEmployee = GetById(identificationNumber, selectByIdCommand);
-
-            if (foundEmployee == null)
+            var employee = this.dataBaseContext.employees.FirstOrDefault(e => e.Id == identificationNumber);
+            if (employee == null)
             {
                 throw new KeyNotFoundException($"Employee with id {identificationNumber} was not found.");
             }
 
-            return foundEmployee;
+            return employee;
         }
 
         public void UpdateById(int identificationNumber, Employee employeeEntity)
@@ -72,37 +62,14 @@ namespace AirportApp.ClassLibrary.Repository
                 throw new ArgumentNullException(nameof(employeeEntity), "Employee cannot be null.");
             }
 
-            string updateQuery = "UPDATE Employee SET " +
-                "name = @name, " +
-                "email = @email " +
-                "group = @group " +
-                "WHERE employee_id = @id";
-
-            SqlCommand updateCommand = new SqlCommand(updateQuery);
-
-            updateCommand.Parameters.AddWithValue("@id", identificationNumber);
-            updateCommand.Parameters.AddWithValue("@name", employeeEntity.RetrieveConfiguredDisplayFullNameForBot());
-            updateCommand.Parameters.AddWithValue("@email", employeeEntity.RetrieveConfiguredEmailAddressForBotContact());
-            updateCommand.Parameters.AddWithValue("@group", employeeEntity.GetDepartmentName());
-
-            UpdateById(identificationNumber, updateCommand, employeeEntity);
-        }
-
-        protected override int GetEntityId(Employee employeeEntity)
-        {
-            return employeeEntity.EmployeeId;
-        }
-
-        protected override Employee MapRowToEntity(SqlDataReader dataReader)
-        {
-            int employeeIdentificationNumber = dataReader.GetInt32(dataReader.GetOrdinal("employee_id"));
-            string employeeFullName = dataReader.GetString(dataReader.GetOrdinal("name"));
-            string employeeEmailAddress = dataReader.GetString(dataReader.GetOrdinal("email"));
-            string departmentName = dataReader.GetString(dataReader.GetOrdinal("group"));
-
-            EmployeeDepartment departmentEnum = (EmployeeDepartment)Enum.Parse(typeof(EmployeeDepartment), departmentName);
-
-            return new Employee(employeeIdentificationNumber, employeeFullName, employeeEmailAddress, departmentEnum);
+            var employee = this.dataBaseContext.employees.FirstOrDefault(e => e.Id == identificationNumber);
+            if (employee != null)
+            {
+                employee.FullName = employeeEntity.FullName;
+                employee.EmailAddress = employeeEntity.EmailAddress;
+                employee.AssignedDepartment = employeeEntity.AssignedDepartment;
+                this.dataBaseContext.SaveChanges();
+            }
         }
     }
 }

@@ -12,23 +12,23 @@ namespace AirportApp.ClassLibrary.Entity.Dto.MappingProfiles
             CreateMap<Review, ReviewDTO>()
 
             .ConstructUsing(source => new ReviewDTO(
-                source.GetId(),
-                source.GetUser().UserId,
-                source.GetUser().RetrieveConfiguredDisplayFullNameForBot(),
-                source.GetMessage(),
-                source.GetDutyFreeRating(),
-                source.GetFlightExperienceRating(),
-                source.GetStaffFriendlinessRating(),
-                source.GetCleanlinessRating(),
+                source.Id,
+                source.User.UserId,
+                source.User.RetrieveConfiguredDisplayFullNameForBot(),
+                source.Message,
+                source.DutyFreeRating,
+                source.FlightExperienceRating,
+                source.StaffFriendlinessRating,
+                source.CleanlinessRating,
                 CalculateOverallAverage(source))); // Replaces manual math in loop
         }
 
         private static float CalculateOverallAverage(Review review)
         {
-            float sumOfRatings = review.GetDutyFreeRating() +
-                                 review.GetFlightExperienceRating() +
-                                 review.GetStaffFriendlinessRating() +
-                                 review.GetCleanlinessRating();
+            float sumOfRatings = review.DutyFreeRating +
+                                 review.FlightExperienceRating +
+                                 review.StaffFriendlinessRating +
+                                 review.CleanlinessRating;
 
             return sumOfRatings / 4.0f;
         }

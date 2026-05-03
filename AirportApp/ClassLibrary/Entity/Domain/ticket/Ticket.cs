@@ -75,9 +75,9 @@ namespace AirportApp.ClassLibrary.Entity.Domain.Ticket
             UrgencyLevel = initialUrgencyLevel ?? category.CategoryUrgencyLevel;
             CurrentStatus = initialStatus;
             Category = category;
-            CategoryId = category.Id;
+            CategoryId = category.CategoryId;
             Subcategory = subcategory;
-            SubcategoryId = subcategory.Id;
+            SubcategoryId = subcategory.SubcategoryId;
             Subject = ticketSubject;
             Description = description;
             CreationTimestamp = creationTimestamp;
