@@ -1,14 +1,26 @@
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AirportApp.ClassLibrary.Entity.Domain
 {
+    [Table("Memberships")]
     public class Membership
     {
-        public int MembershipId { get; set; }
-        public string Name { get; set; } = string.Empty;
-        public float FlightDiscountPercentage { get; set; }
-        public List<MembershipAddonDiscount> AddonDiscounts { get; set; } = new List<MembershipAddonDiscount>();
+        [Key]
+        [Column("Membership_Id")]
+        public int Id { get; set; }
 
+        [Required]
+        [MaxLength(100)]
+        [Column("Name")]
+        public string Name { get; set; } = string.Empty;
+
+        [Required]
+        [Range(0, 100)] 
+        [Column("Flight_Discount_Percentage")]
+        public float FlightDiscountPercentage { get; set; }
+        public ICollection<MembershipAddonDiscount> AddonDiscounts { get; set; } = new List<MembershipAddonDiscount>();
         public Membership()
         {
         }
@@ -21,7 +33,7 @@ namespace AirportApp.ClassLibrary.Entity.Domain
 
         public Membership(int membershipId, string name, float flightDiscountPercentage)
         {
-            MembershipId = membershipId;
+            Id = membershipId;
             Name = name;
             FlightDiscountPercentage = flightDiscountPercentage;
         }

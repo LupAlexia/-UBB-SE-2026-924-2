@@ -1,8 +1,18 @@
-﻿namespace AirportApp.ClassLibrary.Entity.Domain
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace AirportApp.ClassLibrary.Entity.Domain
 {
+    [Table("Companies")]
     public class Company
     {
-        public int CompanyId { get; set; }
+        [Key]
+        [Column("Company_Id")]
+        public int Id { get; set; }
+
+        [Required]
+        [MaxLength(100)]
+        [Column("Name")]
         public string Name { get; set; } = string.Empty;
 
         public Company()
@@ -16,7 +26,7 @@
 
         public Company(int companyId, string name)
         {
-            CompanyId = companyId;
+            Id = companyId;
             Name = name;
         }
     }

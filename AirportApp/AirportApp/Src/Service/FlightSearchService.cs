@@ -32,7 +32,7 @@ namespace AirportApp.Src.Service
             {
                 flights = flights.Where(flight =>
                 {
-                    int occupiedSeats = this.flightRepository.GetOccupiedSeatCount(flight.FlightId);
+                    int occupiedSeats = this.flightRepository.GetOccupiedSeatCount(flight.Id);
                     int availableSeats = flight.Route!.Capacity - occupiedSeats;
                     return availableSeats >= passengers.Value;
                 });

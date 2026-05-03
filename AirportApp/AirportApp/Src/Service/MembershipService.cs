@@ -23,7 +23,7 @@ namespace AirportApp.Src.Service
 
             foreach (var membership in memberships)
             {
-                membership.AddonDiscounts = this.membershipRepository.GetAddonDiscounts(membership.MembershipId).ToList();
+                membership.AddonDiscounts = this.membershipRepository.GetAddonDiscounts(membership.Id).ToList();
             }
 
             return memberships;

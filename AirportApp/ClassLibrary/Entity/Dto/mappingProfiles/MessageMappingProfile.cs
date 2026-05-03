@@ -13,7 +13,7 @@ namespace AirportApp.ClassLibrary.Entity.Dto.MappingProfiles
                 .ForMember(destination => destination.Timestamp, option => option.MapFrom(source =>
                     new DateTimeOffset(((IMessage)source).GetTimeStamp().Ticks, TimeSpan.Zero)))
                 .ForMember(destination => destination.FaqOptions, option => option.MapFrom(source => source.GetNextOptions()))
-                .ForMember(destination => destination.ChatId, option => option.MapFrom(source => source.GetChat().ChatId))
+                .ForMember(destination => destination.ChatId, option => option.MapFrom(source => source.GetChat().Id))
                 .ForMember(destination => destination.SenderName, option => option.MapFrom(source => source.GetSender().RetrieveConfiguredDisplayFullNameForBot()))
                 .ForMember(destination => destination.SenderId, option => option.MapFrom(source => source.GetSender().RetrieveUniqueDatabaseIdentifierForBot()))
                 .ForMember(destination => destination.MessageId, option => option.Ignore())

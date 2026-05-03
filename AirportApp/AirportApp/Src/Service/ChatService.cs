@@ -24,7 +24,7 @@ namespace AirportApp.Src.Service
             {
                 Chat newChat = new Chat(UNASSIGNED_CHAT_ID, userId, ChatStatus.Active);
                 int newIdentificationNumber = Convert.ToInt32(chatRepository.CreateNewEntity(newChat));
-                newChat.ChatId = newIdentificationNumber;
+                newChat.Id = newIdentificationNumber;
                 return newChat;
             }
             catch (Exception exceptionThrown)

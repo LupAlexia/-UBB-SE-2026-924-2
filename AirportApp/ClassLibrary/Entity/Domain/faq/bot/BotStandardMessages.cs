@@ -8,6 +8,6 @@ namespace AirportApp.ClassLibrary.Entity.Domain.Faq.Bot
 {
     public enum BotStandardMessages
     {
-        RESTART_CONVERSATION = 1,
+        RestartConversation = 1,
     }
 }

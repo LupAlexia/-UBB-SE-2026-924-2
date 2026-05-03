@@ -1,14 +1,38 @@
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 namespace AirportApp.ClassLibrary.Entity.Domain.Faq
+
 {
+    [Table("FAQs")]
     public class FAQEntry
     {
-        public int Id { get; init; }
-        public string Question { get; set; }
-        public string Answer { get; set; }
+        [Key]
+        [Column("FAQ_Id")]
+        public int Id { get; set; }
+
+        [Required]
+        [MaxLength(500)]
+        [Column("Question_Text")]
+        public string Question { get; set; } = string.Empty;
+
+        [Required]
+        [Column("Answer_Text", TypeName = "NVARCHAR(MAX)")]
+        public string Answer { get; set; } = string.Empty;
+        [Required]
+        [Column("Category")]
         public FAQCategoryEnum Category { get; set; }
+
+        [Column("View_Count")]
         public int ViewCount { get; set; }
+
+        [Column("Helpful_Votes")]
         public int HelpfulVotesCount { get; set; }
+
+        [Column("Not_Helpful_Votes")]
         public int NotHelpfulVotesCount { get; set; }
+
+        // 2. Required Parameterless Constructor
+        public FAQEntry() { }
 
         public FAQEntry(int id, string question, string answer, FAQCategoryEnum category, int viewCount, int wasHelpfulVotes, int wasNotHelpfulVotes)
         {
@@ -48,5 +72,7 @@ namespace AirportApp.ClassLibrary.Entity.Domain.Faq
                    HelpfulVotesCount == entry.HelpfulVotesCount &&
                    NotHelpfulVotesCount == entry.NotHelpfulVotesCount;
         }
+
+        public override int GetHashCode() => Id.GetHashCode();
     }
 }

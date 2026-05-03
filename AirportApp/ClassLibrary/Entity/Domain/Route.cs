@@ -1,19 +1,41 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AirportApp.ClassLibrary.Entity.Domain
 {
+    [Table("Routes")]
     public class Route
     {
-        public int RouteId { get; set; }
+        [Key]
+        [Column("Route_Id")]
+        public int Id { get; set; }
 
-        public Company? Company { get; set; }
+        [ForeignKey(nameof(CompanyId))]
+        public Company Company { get; set; } = null!;
 
-        public Airport? Airport { get; set; }
+        [Required]
+        [Column("Company_Id")]
+        public int CompanyId { get; set; }
 
-        public string? RouteType { get; set; }
+        [ForeignKey(nameof(AirportId))]
+        public Airport Airport { get; set; } = null!;
 
+        [Required]
+        [Column("Airport_Id")]
+        public int AirportId { get; set; }
+
+        [Required]
+        [MaxLength(50)]
+        [Column("Route_Type")]
+        public string RouteType { get; set; } = string.Empty;
+
+        [Required]
+        [Column("Departure_Time")]
         public DateTime DepartureTime { get; set; }
 
+        [Required]
+        [Column("Arrival_Time")]
         public DateTime ArrivalTime { get; set; }
 
         public int Capacity { get; set; }
@@ -25,7 +47,9 @@ namespace AirportApp.ClassLibrary.Entity.Domain
         public Route(Company company, Airport airport, string routeType, DateTime departureTime, DateTime arrivalTime, int capacity)
         {
             Company = company;
+            CompanyId = company.Id;
             Airport = airport;
+            AirportId = airport.Id;
             RouteType = routeType;
             DepartureTime = departureTime;
             ArrivalTime = arrivalTime;
@@ -34,9 +58,11 @@ namespace AirportApp.ClassLibrary.Entity.Domain
 
         public Route(int routeId, Company company, Airport airport, string routeType, DateTime departureTime, DateTime arrivalTime, int capacity)
         {
-            RouteId = routeId;
+            Id = routeId;
             Company = company;
+            CompanyId = company.Id;
             Airport = airport;
+            AirportId = airport.Id;
             RouteType = routeType;
             DepartureTime = departureTime;
             ArrivalTime = arrivalTime;

@@ -15,7 +15,7 @@ namespace AirportApp.ClassLibrary.Entity.Dto.MappingProfiles
         {
             CreateMap<Chat, ChatDTO>()
                 .ConstructUsing(chat => new ChatDTO(
-                    chat.ChatId,
+                    chat.Id,
                     chat.UserId,
                     chat.Status,
                     chat.MessageCount()))
