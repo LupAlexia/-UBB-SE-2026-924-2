@@ -1,15 +1,26 @@
-﻿namespace AirportApp.ClassLibrary.Entity.Domain
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace AirportApp.ClassLibrary.Entity.Domain
 {
+    [Table("Airports")]
     public class Airport
     {
+        [Key]
+        [Column("Airport_Id")]
         public int Id { get; set; }
 
+        [Required]
+        [StringLength(3, MinimumLength = 3)] //codes are strictly 3 characters
+        [Column("Airport_Code")]
         public string AirportCode { get; set; } = string.Empty;
 
+        [Required]
+        [MaxLength(100)]
+        [Column("City")]
         public string City { get; set; } = string.Empty;
 
-        public List<Gate> Gates { get; set; } = new();
-
+        public ICollection<Gate> Gates { get; set; } = new List<Gate>();
         public Airport()
         {
         }

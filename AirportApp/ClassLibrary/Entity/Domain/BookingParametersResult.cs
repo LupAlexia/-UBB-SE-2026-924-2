@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace AirportApp.ClassLibrary.Entity.Domain
 
 {
@@ -6,6 +8,8 @@ namespace AirportApp.ClassLibrary.Entity.Domain
     /// Used by BookingService.ParseBookingParameters to return
     /// a clean, typed result instead of raw object arrays.
     /// </summary>
+    /// 
+    [NotMapped]
     public class BookingParametersResult
     {
         public Flight? Flight { get; set; }

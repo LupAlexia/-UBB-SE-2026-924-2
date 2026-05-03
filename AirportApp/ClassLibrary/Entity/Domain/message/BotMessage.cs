@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using AirportApp.ClassLibrary.Entity.Domain.Chats;
@@ -10,11 +12,19 @@ using AirportApp.ClassLibrary.Entity.Domain.Faq.Bot;
 // At this point it is not a contract of functionality but an identity
 namespace AirportApp.ClassLibrary.Entity.Domain.Message
 {
+    [Table("BotMessages")]
     public class BotMessage : IMessage
     {
         // 1. EF Core Auto-Properties
+        [Key]
+        [Column("Message_Id")]
         public int Id { get; set; }
+        [Required]
+        [Column("Message_Text", TypeName = "NVARCHAR(MAX)")]
         public string Text { get; set; } = string.Empty;
+
+        [Required]
+        [Column("Timestamp")]
         public DateTimeOffset Timestamp { get; set; }
 
         // 2. Navigation Properties

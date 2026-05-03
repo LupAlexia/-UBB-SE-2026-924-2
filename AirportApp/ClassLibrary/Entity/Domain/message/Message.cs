@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,11 +10,20 @@ using AirportApp.ClassLibrary.Entity.Domain.Faq.Bot;
 
 namespace AirportApp.ClassLibrary.Entity.Domain.Message
 {
+    [Table("Messages")]
     public class Message : IMessage
     {
         // 1. EF Core Auto-Properties
+        [Key]
+        [Column("Message_Id")]
         public int Id { get; set; }
+
+        [Required]
+        [Column("Message_Text", TypeName = "NVARCHAR(MAX)")]
         public string Text { get; set; } = string.Empty;
+
+        [Required]
+        [Column("Timestamp")]
         public DateTimeOffset Timestamp { get; set; }
 
 

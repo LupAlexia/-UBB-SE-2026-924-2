@@ -1,6 +1,9 @@
-﻿namespace AirportApp.ClassLibrary.Entity.Domain
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace AirportApp.ClassLibrary.Entity.Domain
 {
 
+    [NotMapped]
     public class PriceBreakdown
     {
         public float BasePricePerPerson { get; set; }

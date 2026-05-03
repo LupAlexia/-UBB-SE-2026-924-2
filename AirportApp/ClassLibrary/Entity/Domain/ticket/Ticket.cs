@@ -1,7 +1,10 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AirportApp.ClassLibrary.Entity.Domain.Ticket
 {
+    [Table("Tickets")]
     public class Ticket
     {
         //public int Id { get; set; }
@@ -15,21 +18,52 @@ namespace AirportApp.ClassLibrary.Entity.Domain.Ticket
         //public DateTime CreationTimestamp { get; set; }
 
         // 1. EF Core Auto-Properties
+        [Key]
+        [Column("Ticket_Id")]
         public int Id { get; set; }
+
+        [Required]
+        [MaxLength(200)]
+        [Column("Subject")]
         public string Subject { get; set; } = string.Empty;
+
+        [Required]
+        [Column("Description", TypeName = "NVARCHAR(MAX)")]
         public string Description { get; set; } = string.Empty;
+
+        [Required]
+        [Column("Creation_Timestamp")]
         public DateTime CreationTimestamp { get; set; }
+
+        [Required]
+        [Column("Urgency_Level")]
         public TicketUrgencyLevelEnum UrgencyLevel { get; set; }
+
+        [Required]
+        [Column("Status")]
         public TicketStatusEnum CurrentStatus { get; set; }
 
         // 2. Navigation Properties & Foreign Keys
+
+        [Required]
+        [Column("Creator_Id")]
         public int CreatorId { get; set; }
+
+        [ForeignKey(nameof(CreatorId))]
         public User Creator { get; set; } = null!;
 
+        [Required]
+        [Column("Category_Id")]
         public int CategoryId { get; set; }
+
+        [ForeignKey(nameof(CategoryId))]
         public TicketCategory Category { get; set; } = null!;
 
+        [Required]
+        [Column("Subcategory_Id")]
         public int SubcategoryId { get; set; }
+
+        [ForeignKey(nameof(SubcategoryId))]
         public TicketSubcategory Subcategory { get; set; } = null!;
 
         public Ticket() { }
@@ -37,10 +71,13 @@ namespace AirportApp.ClassLibrary.Entity.Domain.Ticket
         {
             Id = ticketId;
             Creator = ticketCreator;
+            CreatorId = ticketCreator.UserId;
             UrgencyLevel = initialUrgencyLevel ?? category.CategoryUrgencyLevel;
             CurrentStatus = initialStatus;
             Category = category;
+            CategoryId = category.Id;
             Subcategory = subcategory;
+            SubcategoryId = subcategory.Id;
             Subject = ticketSubject;
             Description = description;
             CreationTimestamp = creationTimestamp;
