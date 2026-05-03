@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AirportApp", "AirportApp\Ai
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AirportApp.ClassLibrary", "ClassLibrary\AirportApp.ClassLibrary.csproj", "{06952F8F-CDE9-41A3-B84B-21C1EE3E4077}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Airport.Web", "Airport.Web\Airport.Web.csproj", "{5ABC3D76-478B-484A-87B3-E7E068A30638}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM64 = Debug|ARM64
@@ -47,6 +49,18 @@ Global
 		{06952F8F-CDE9-41A3-B84B-21C1EE3E4077}.Release|x64.Build.0 = Release|Any CPU
 		{06952F8F-CDE9-41A3-B84B-21C1EE3E4077}.Release|x86.ActiveCfg = Release|Any CPU
 		{06952F8F-CDE9-41A3-B84B-21C1EE3E4077}.Release|x86.Build.0 = Release|Any CPU
+		{5ABC3D76-478B-484A-87B3-E7E068A30638}.Debug|ARM64.ActiveCfg = Debug|Any CPU
+		{5ABC3D76-478B-484A-87B3-E7E068A30638}.Debug|ARM64.Build.0 = Debug|Any CPU
+		{5ABC3D76-478B-484A-87B3-E7E068A30638}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{5ABC3D76-478B-484A-87B3-E7E068A30638}.Debug|x64.Build.0 = Debug|Any CPU
+		{5ABC3D76-478B-484A-87B3-E7E068A30638}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{5ABC3D76-478B-484A-87B3-E7E068A30638}.Debug|x86.Build.0 = Debug|Any CPU
+		{5ABC3D76-478B-484A-87B3-E7E068A30638}.Release|ARM64.ActiveCfg = Release|Any CPU
+		{5ABC3D76-478B-484A-87B3-E7E068A30638}.Release|ARM64.Build.0 = Release|Any CPU
+		{5ABC3D76-478B-484A-87B3-E7E068A30638}.Release|x64.ActiveCfg = Release|Any CPU
+		{5ABC3D76-478B-484A-87B3-E7E068A30638}.Release|x64.Build.0 = Release|Any CPU
+		{5ABC3D76-478B-484A-87B3-E7E068A30638}.Release|x86.ActiveCfg = Release|Any CPU
+		{5ABC3D76-478B-484A-87B3-E7E068A30638}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

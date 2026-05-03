@@ -1,6 +1,6 @@
 using System;
 using System.Windows.Input;
-using AirportApp.Src.Domain;
+using AirportApp.ClassLibrary.Entity.Domain;
 using AirportApp.Src.Service;
 
 namespace AirportApp.Src.ViewModel

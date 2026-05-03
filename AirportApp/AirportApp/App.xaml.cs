@@ -1,18 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using AutoMapper;
-using AirportApp.Src;
-using AirportApp.Src.Dto.MappingProfiles;
-using AirportApp.Src.Model;
-using AirportApp.Src.Model.Chats;
-using AirportApp.Src.Model.Review;
-using AirportApp.Src.Model.Employee;
-using AirportApp.Src.Repository;
-using AirportApp.Src.Repository.Implementation;
-using AirportApp.Src.Repository.Interfaces;
-using AirportApp.Src.Repository.Database;
+using AirportApp.ClassLibrary.Entity.Domain;
+using AirportApp.ClassLibrary.Entity.Domain.Faq.Bot;
+using AirportApp.ClassLibrary.Entity.Domain.Message;
+using AirportApp.ClassLibrary.Entity.Domain.Employee;
+using AirportApp.ClassLibrary.Entity.Domain.Chats;
+using AirportApp.ClassLibrary.Entity.Domain.Review;
+using AirportApp.ClassLibrary.Entity.Dto.MappingProfiles;
+using AirportApp.ClassLibrary.Repository;
+using AirportApp.ClassLibrary.Repository.Interfaces;
+using AirportApp.ClassLibrary.Entity.Repository.Database;
 using AirportApp.Src.Service;
-using AirportApp.Src.Service.Bot;
 using AirportApp.Src.Service.Bot.Strategy;
 using AirportApp.Src.Service.Implementation;
 using AirportApp.Src.Service.Interfaces;
@@ -21,8 +19,6 @@ using AirportApp.Src.ViewModel.Chats;
 using AirportApp.Src.ViewModel.Faq;
 using AirportApp.Src.ViewModel.General;
 using AirportApp.Src.ViewModel.Review;
-using AirportApp.Src.Model.Faq.Bot;
-using AirportApp.Src.Model.Message;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -111,7 +107,7 @@ namespace AirportApp
             services.AddSingleton<DecisionTreeRepository>();
             services.AddSingleton<IRepository<int, FAQNode>>(p => p.GetRequiredService<DecisionTreeRepository>());
             services.AddTransient<IBotStrategy, DecisionTreeStrategy>();
-            services.AddTransient<BotEngine>();
+            services.AddTransient<BotEngineIdentity>();
 
             services.AddSingleton<MessageDatabaseRepository>();
             services.AddSingleton<IRepository<int, Message>>(p => p.GetRequiredService<MessageDatabaseRepository>());
@@ -130,7 +126,7 @@ namespace AirportApp
 
             services.AddSingleton<UserRepository>();
             services.AddSingleton<IUserRepository>(p => p.GetRequiredService<UserRepository>());
-            services.AddSingleton<IRepository<int, User>>(p => p.GetRequiredService<UserRepository>());
+            //services.AddSingleton<IRepository<int, User>>(p => p.GetRequiredService<UserRepository>());
             services.AddSingleton<IUserService, UserService>();
 
             services.AddTransient<LandingViewModel>();
@@ -152,7 +148,7 @@ namespace AirportApp
             services.AddTransient<FAQViewModel>();
 
             // --- Servicii CloudSpritzers (Flight Tickets) ---
-            services.AddSingleton<IDatabaseConnectionFactory, DatabaseConnectionFactory>();
+            //services.AddSingleton<IDatabaseConnectionFactory, DatabaseConnectionFactory>();
             services.AddSingleton<IFlightRepository, FlightRepository>();
             services.AddSingleton<IFlightTicketRepository, FlightTicketRepository>();
             services.AddSingleton<IAddOnRepository, AddOnRepository>();

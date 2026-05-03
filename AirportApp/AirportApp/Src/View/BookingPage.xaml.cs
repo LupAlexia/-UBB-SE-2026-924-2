@@ -7,7 +7,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using AirportApp;
-using AirportApp.Src.Domain;
+using AirportApp.ClassLibrary.Entity.Domain;
 using AirportApp.Src.ViewModel;
 
 namespace AirportApp.Src.View

@@ -1,7 +1,7 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
-using AirportApp.Src.Domain;
+using AirportApp.ClassLibrary.Entity.Domain;
 using AirportApp.Src.Service;
 
 namespace AirportApp.Src.ViewModel
@@ -25,7 +25,7 @@ namespace AirportApp.Src.ViewModel
 
         public MembershipDisplayModel(Membership m)
         {
-            MembershipId = m.MembershipId;
+            MembershipId = m.Id;
             Name = m.Name;
             DiscountText = $"{m.FlightDiscountPercentage}% Off Flights";
 
@@ -117,7 +117,7 @@ namespace AirportApp.Src.ViewModel
                 return;
             }
 
-            var result = this.membershipService.PurchaseMembership(UserSession.CurrentUser.UserId, membershipId);
+            var result = this.membershipService.PurchaseMembership(UserSession.CurrentUser.Id, membershipId);
             this.PurchaseSucceeded = result.Succeeded;
             this.PurchaseResultMessage = result.Message;
         }

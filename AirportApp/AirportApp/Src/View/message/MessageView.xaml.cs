@@ -1,5 +1,4 @@
-﻿using AirportApp.Src.Dto;
-using AirportApp.Src.ViewModel;
+﻿using AirportApp.ClassLibrary.Entity.Dto;
 using Microsoft.UI.Xaml.Controls;
 
 namespace AirportApp.Src.View.Message

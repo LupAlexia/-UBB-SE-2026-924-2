@@ -55,6 +55,15 @@ namespace AirportApp.ClassLibrary.Entity.Domain.Message
 
         public Message() { }
 
+        public Message(ISender sender, Chat chat, string messageText)
+        {
+            if (sender is User user) SenderUser = user;
+            else if (sender is EmpNamespace.Employee emp) SenderEmployee = emp;
+            this.Chat = chat;
+            this.Text = messageText;
+            this.Timestamp = DateTimeOffset.UtcNow;
+        }
+
         public Message(Chat chat, string text, ISender sender)
         {
             Chat = chat;

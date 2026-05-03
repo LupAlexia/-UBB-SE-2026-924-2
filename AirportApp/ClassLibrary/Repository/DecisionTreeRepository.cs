@@ -36,11 +36,11 @@ namespace AirportApp.ClassLibrary.Entity.Repository.Database
         {
             var nodeEntity = new FAQNodeEntity
             {
-                QuestionText = incomingFAQNodeEntityToBeSaved.questionText,
-                IsFinalAnswer = incomingFAQNodeEntityToBeSaved.isFinalAnswer
+                QuestionText = incomingFAQNodeEntityToBeSaved.QuestionText,
+                IsFinalAnswer = incomingFAQNodeEntityToBeSaved.IsFinalAnswer
             };
 
-            foreach (var opt in incomingFAQNodeEntityToBeSaved.options)
+            foreach (var opt in incomingFAQNodeEntityToBeSaved.Options)
             {
                 nodeEntity.Options.Add(new FAQOptionEntity { Label = opt.Label, NextOptionId = opt.NextOptionId });
             }
@@ -71,14 +71,14 @@ namespace AirportApp.ClassLibrary.Entity.Repository.Database
             var node = this.dataBaseContext.faqNodes.Include(n => n.Options).FirstOrDefault(n => n.NodeId == id);
             if (node == null) return;
 
-            node.QuestionText = updatedFAQNodeEntityData.questionText;
-            node.IsFinalAnswer = updatedFAQNodeEntityData.isFinalAnswer;
+            node.QuestionText = updatedFAQNodeEntityData.QuestionText;
+            node.IsFinalAnswer = updatedFAQNodeEntityData.IsFinalAnswer;
 
             // Replace options
             this.dataBaseContext.faqOptions.RemoveRange(node.Options);
             node.Options.Clear();
 
-            foreach (var opt in updatedFAQNodeEntityData.options)
+            foreach (var opt in updatedFAQNodeEntityData.Options)
             {
                 node.Options.Add(new FAQOptionEntity { NodeId = id, Label = opt.Label, NextOptionId = opt.NextOptionId });
             }

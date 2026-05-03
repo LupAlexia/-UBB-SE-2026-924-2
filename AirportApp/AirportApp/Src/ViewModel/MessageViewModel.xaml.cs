@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using AutoMapper;
-using AirportApp.Src.Dto;
-using AirportApp.Src.Model.Faq.Bot;
-using AirportApp.Src.Model.Message;
+using AirportApp.ClassLibrary.Entity.Dto;
 using AirportApp.Src.Service;
-using AirportApp.Src.Service.Bot;
+using AirportApp.ClassLibrary.Entity.Domain.Faq.Bot;
+using AirportApp.ClassLibrary.Entity.Domain.Message;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using AirportApp.Src.Service.Interfaces;
@@ -63,7 +62,7 @@ namespace AirportApp.Src.ViewModel
 
             BotMessage botReply = messageService.SendMessage(chatId, sender, selectedOption);
 
-            Messages.Add(mapper.Map<MessageDTO>(new Message(sender, botReply.GetChat(), selectedOption.label)));
+            Messages.Add(mapper.Map<MessageDTO>(new Message(sender, botReply.GetChat(), selectedOption.Label)));
             Messages.Add(mapper.Map<MessageDTO>(botReply));
         }
     }

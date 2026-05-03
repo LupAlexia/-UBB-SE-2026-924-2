@@ -31,6 +31,7 @@ namespace AirportApp.ClassLibrary.DataAccess
         public DbSet<Flight> flights { get; set; }
         public DbSet<FlightTicket> flightTickets { get; set; }
         public DbSet<Membership> memberships { get; set; }
+        public DbSet<MembershipAddonDiscount> membershipAddonDiscounts { get; set; }
         public DbSet<Message> messages { get; set; }
         public DbSet<TicketCategory> ticketCategories { get; set; }
         public DbSet<TicketSubcategory> ticketSubcategories { get; set; }
@@ -38,43 +39,170 @@ namespace AirportApp.ClassLibrary.DataAccess
         public DbSet<Company> companies { get; set; }
         public DbSet<Gate> gates { get; set; }
         public DbSet<Route> routes { get; set; }
-            public DbSet<AirportApp.ClassLibrary.Entity.Domain.Faq.Bot.FAQNodeEntity> faqNodes { get; set; }
-            public DbSet<AirportApp.ClassLibrary.Entity.Domain.Faq.Bot.FAQOptionEntity> faqOptions { get; set; }
+        public DbSet<FAQNodeEntity> faqNodes { get; set; }
+        public DbSet<FAQOptionEntity> faqOptions { get; set; }
 
-            protected override void OnModelCreating(ModelBuilder modelBuilder)
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<FAQNodeEntity>(b =>
             {
-                base.OnModelCreating(modelBuilder);
+                b.ToTable("FAQNode");
+                b.HasKey(e => e.NodeId);
+                b.Property(e => e.NodeId).HasColumnName("node_id");
+                b.Property(e => e.QuestionText).HasColumnName("question_text");
+                b.Property(e => e.IsFinalAnswer).HasColumnName("is_final_answer");
+                b.HasMany(e => e.Options)
+                    .WithOne()
+                    .HasForeignKey(o => o.NodeId)
+                    .OnDelete(DeleteBehavior.Cascade);
+            });
 
-                modelBuilder.Entity<AirportApp.ClassLibrary.Entity.Domain.Faq.Bot.FAQNodeEntity>(b =>
-                {
-                    b.ToTable("FAQNode");
-                    b.HasKey(e => e.NodeId);
-                    b.Property(e => e.NodeId).HasColumnName("node_id");
-                    b.Property(e => e.QuestionText).HasColumnName("question_text");
-                    b.Property(e => e.IsFinalAnswer).HasColumnName("is_final_answer");
-                    b.HasMany(e => e.Options).WithOne().HasForeignKey(o => o.NodeId);
-                });
+            modelBuilder.Entity<FAQOptionEntity>(b =>
+            {
+                b.ToTable("FAQOption");
+                b.HasKey(e => new { e.NodeId, e.Label });
+                b.Property(e => e.NodeId).HasColumnName("node_id");
+                b.Property(e => e.Label).HasColumnName("label");
+                b.Property(e => e.NextOptionId).HasColumnName("next_option_id");
+            });
 
-                modelBuilder.Entity<AirportApp.ClassLibrary.Entity.Domain.Faq.Bot.FAQOptionEntity>(b =>
-                {
-                    b.ToTable("FAQOption");
-                    b.HasKey(e => new { e.NodeId, e.Label });
-                    b.Property(e => e.NodeId).HasColumnName("node_id");
-                    b.Property(e => e.Label).HasColumnName("label");
-                    b.Property(e => e.NextOptionId).HasColumnName("next_option_id");
-                });
+            modelBuilder.Entity<Airport>()
+                .HasMany<Gate>(a => a.Gates)
+                .WithOne(g => g.Airport)
+                .HasForeignKey(g => g.AirportId)
+                .OnDelete(DeleteBehavior.Cascade);
 
-                // Seed some basic decision-tree data for FAQs
-                modelBuilder.Entity<FAQNodeEntity>().HasData(
-                    new FAQNodeEntity { NodeId = 1, QuestionText = "Welcome! How can I help you today?", IsFinalAnswer = false },
-                    new FAQNodeEntity { NodeId = 2, QuestionText = "Flights information: You can search and book flights.", IsFinalAnswer = true },
-                    new FAQNodeEntity { NodeId = 3, QuestionText = "Membership information: View plans and discounts.", IsFinalAnswer = true }
+            modelBuilder.Entity<Route>()
+                .HasOne(r => r.Company)
+                .WithMany()
+                .HasForeignKey(r => r.CompanyId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Route>()
+                .HasOne(r => r.Airport)
+                .WithMany()
+                .HasForeignKey(r => r.AirportId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Flight>()
+                .HasOne(f => f.Route)
+                .WithMany()
+                .HasForeignKey(f => f.RouteId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Flight>()
+                .HasOne(f => f.Gate)
+                .WithMany()
+                .HasForeignKey(f => f.GateId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Membership>()
+                .HasMany(m => m.AddonDiscounts)
+                .WithOne(d => d.Membership)
+                .HasForeignKey(d => d.MembershipId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<MembershipAddonDiscount>(b =>
+            {
+                b.HasKey(m => new { m.MembershipId, m.AddOnId });
+                b.ToTable("Membership_Addon_Discounts");
+                b.Property(m => m.DiscountPercentage).HasColumnName("Discount_Percentage");
+                b.HasOne(m => m.AddOn)
+                    .WithMany()
+                    .HasForeignKey(m => m.AddOnId)
+                    .OnDelete(DeleteBehavior.Cascade);
+            });
+
+            modelBuilder.Entity<Customer>()
+                .HasOne(c => c.Membership)
+                .WithMany()
+                .HasForeignKey(c => c.MembershipId)
+                .OnDelete(DeleteBehavior.SetNull);
+
+            modelBuilder.Entity<Chat>()
+                .HasOne(c => c.User)
+                .WithMany()
+                .HasForeignKey(c => c.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Message>()
+                .HasOne(m => m.Chat)
+                .WithMany(c => c.Messages)
+                .HasForeignKey(m => m.ChatId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Message>()
+                .Property(m => m.SenderUserId)
+                .HasColumnName("Sender_User_Id");
+
+            modelBuilder.Entity<Message>()
+                .Property(m => m.SenderEmployeeId)
+                .HasColumnName("Sender_Employee_Id");
+
+            modelBuilder.Entity<Message>()
+                .HasOne(m => m.SenderUser)
+                .WithMany()
+                .HasForeignKey(m => m.SenderUserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Message>()
+                .HasOne(m => m.SenderEmployee)
+                .WithMany()
+                .HasForeignKey(m => m.SenderEmployeeId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Review>()
+                .HasOne(r => r.User)
+                .WithMany()
+                .HasForeignKey(r => r.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Ticket>()
+                .HasOne(t => t.Creator)
+                .WithMany()
+                .HasForeignKey(t => t.CreatorId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Ticket>()
+                .HasOne(t => t.Category)
+                .WithMany()
+                .HasForeignKey(t => t.CategoryId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Ticket>()
+                .HasOne(t => t.Subcategory)
+                .WithMany()
+                .HasForeignKey(t => t.SubcategoryId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Configure many-to-many between FlightTicket and AddOn via explicit join table
+            modelBuilder.Entity<FlightTicket>()
+                .HasMany(ft => ft.SelectedAddOns)
+                .WithMany(a => a.Tickets)
+                .UsingEntity<Dictionary<string, object>>(
+                    "FlightTicket_AddOns",
+                    right => right.HasOne<AddOn>().WithMany().HasForeignKey("AddOn_Id").HasConstraintName("FK_FlightTicketAddOns_AddOn"),
+                    left => left.HasOne<FlightTicket>().WithMany().HasForeignKey("Ticket_Id").HasConstraintName("FK_FlightTicketAddOns_FlightTicket"),
+                    je =>
+                    {
+                        je.HasKey("Ticket_Id", "AddOn_Id");
+                        je.ToTable("FlightTicket_AddOns");
+                    }
                 );
 
-                modelBuilder.Entity<FAQOptionEntity>().HasData(
-                    new FAQOptionEntity { NodeId = 1, Label = "Flights", NextOptionId = 2 },
-                    new FAQOptionEntity { NodeId = 1, Label = "Memberships", NextOptionId = 3 }
-                );
+            // Seed some basic decision-tree data for FAQs
+            modelBuilder.Entity<FAQNodeEntity>().HasData(
+                new FAQNodeEntity { NodeId = 1, QuestionText = "Welcome! How can I help you today?", IsFinalAnswer = false },
+                new FAQNodeEntity { NodeId = 2, QuestionText = "Flights information: You can search and book flights.", IsFinalAnswer = true },
+                new FAQNodeEntity { NodeId = 3, QuestionText = "Membership information: View plans and discounts.", IsFinalAnswer = true }
+            );
+
+            modelBuilder.Entity<FAQOptionEntity>().HasData(
+                new FAQOptionEntity { NodeId = 1, Label = "Flights", NextOptionId = 2 },
+                new FAQOptionEntity { NodeId = 1, Label = "Memberships", NextOptionId = 3 }
+            );
 
                 // Seed core domain data used by EF-backed repositories
                 modelBuilder.Entity<Company>().HasData(
@@ -133,8 +261,8 @@ namespace AirportApp.ClassLibrary.DataAccess
                 );
 
                 modelBuilder.Entity<Message>().HasData(
-                    new Message { Id = 1, ChatId = 1, Text = "Hello, I need help finding flights.", Timestamp = DateTimeOffset.UtcNow, SenderUserId = 1 },
-                    new Message { Id = 2, ChatId = 2, Text = "Is there a baggage allowance?", Timestamp = DateTimeOffset.UtcNow, SenderUserId = 2 }
+                    new Message { Id = 1, ChatId = 1, Text = "Hello, I need help finding flights.", Timestamp = new DateTimeOffset(2026, 5, 4, 9, 0, 0, TimeSpan.Zero), SenderUserId = 1 },
+                    new Message { Id = 2, ChatId = 2, Text = "Is there a baggage allowance?", Timestamp = new DateTimeOffset(2026, 5, 4, 9, 5, 0, TimeSpan.Zero), SenderUserId = 2 }
                 );
 
                 // Seed User data

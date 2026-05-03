@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using AirportApp.ClassLibrary.Entity.Domain;
 
 namespace AirportApp.Src.ViewModel
 {
@@ -70,6 +71,6 @@ namespace AirportApp.Src.ViewModel
             }
         }
 
-        public ObservableCollection<Domain.AddOn> SelectedAddOns { get; set; } = new ObservableCollection<Domain.AddOn>();
+        public ObservableCollection<AddOn> SelectedAddOns { get; set; } = new ObservableCollection<AddOn>();
     }
 }

@@ -1,6 +1,6 @@
 ﻿using System;
-using AirportApp.Src.Model;
-using AirportApp.Src.Model.Employee;
+using AirportApp.ClassLibrary.Entity.Domain.Employee;
+using AirportApp.ClassLibrary.Entity.Domain;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml;
 

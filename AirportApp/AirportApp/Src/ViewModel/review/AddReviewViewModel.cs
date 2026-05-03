@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
-using AirportApp.Src.Model;
+using AirportApp.ClassLibrary.Entity.Domain;
 using AirportApp.Src.Service;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;

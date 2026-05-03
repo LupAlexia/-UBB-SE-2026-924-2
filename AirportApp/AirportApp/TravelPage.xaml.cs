@@ -3,7 +3,7 @@ using System.Linq;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
-using AirportApp.Src.Domain;
+using AirportApp.ClassLibrary.Entity.Domain;
 using AirportApp.Src.Service;
 
 namespace AirportApp.Src.View

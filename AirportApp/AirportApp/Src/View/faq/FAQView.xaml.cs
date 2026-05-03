@@ -2,11 +2,9 @@ using System;
 using System.Linq;
 using System.Runtime.Intrinsics.X86;
 using AutoMapper;
-using AirportApp.Src.Dto;
-using AirportApp.Src.Dto.MappingProfiles;
-using AirportApp.Src.Model.Faq;
-using AirportApp.Src.Repository;
-using AirportApp.Src.Repository;
+using AirportApp.ClassLibrary.Entity.Dto;
+using AirportApp.ClassLibrary.Entity.Domain.Faq;
+using AirportApp.ClassLibrary.Repository;
 using AirportApp.Src.Service;
 using AirportApp.Src.ViewModel;
 using AirportApp.Src.ViewModel.Faq;
@@ -23,19 +21,19 @@ namespace AirportApp.Src.View.Faq
 
         private int currentPersonId;
 
-        private bool IsEmployee(int id)
-        {
-            try
-            {
-                var employeeRepository = new EmployeeRepository();
-                var employee = employeeRepository.GetById(id);
-                return employee != null;
-            }
-            catch
-            {
-                return false;
-            }
-        }
+        //private bool IsEmployee(int id)
+        //{
+        //    try
+        //    {
+        //        var employeeRepository = new EmployeeRepository();
+        //        var employee = employeeRepository.GetById(id);
+        //        return employee != null;
+        //    }
+        //    catch
+        //    {
+        //        return false;
+        //    }
+        //}
 
         public FAQView()
         {

@@ -1,14 +1,14 @@
 <Page
     x:Class="AirportApp.Src.View.Chat.ChatPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:msg="using:AirportApp.Src.Model.Message"
+    xmlns:msg="using:AirportApp.ClassLibrary.Entity.Domain.Message"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:view="using:AirportApp.Src.View.Message"
-    xmlns:dto="using:AirportApp.Src.Dto"
+    xmlns:dto="using:AirportApp.ClassLibrary.Entity.Dto"
     xmlns:local="using:AirportApp.Src.View.Chat"
-    xmlns:bot="using:AirportApp.Src.Model.Faq.Bot"
+    xmlns:bot="using:AirportApp.ClassLibrary.Entity.Domain.Faq.Bot"
     x:Name="RootPage"
     mc:Ignorable="d"
     Background="{ThemeResource CardBackgroundBrush}">
@@ -155,7 +155,7 @@
 
                     <ItemsControl.ItemTemplate>
                         <DataTemplate x:DataType="bot:FAQOption">
-                            <Button Content="{x:Bind label}" 
+                            <Button Content="{x:Bind Label}" 
                     Margin="4"
                     HorizontalAlignment="Stretch" 
                     VerticalAlignment="Center"

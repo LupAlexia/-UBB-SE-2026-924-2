@@ -5,7 +5,8 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using AirportApp.Src.Domain;
+using AirportApp.ClassLibrary.Entity.Domain;
+
 using AirportApp.Src.Service;
 
 namespace AirportApp.Src.ViewModel
@@ -258,7 +259,7 @@ namespace AirportApp.Src.ViewModel
                 AvailableAddOns.Add(addOn);
             }
 
-            var seats = await bookingService.GetOccupiedSeatsAsync(flight?.FlightId ?? 0);
+            var seats = await bookingService.GetOccupiedSeatsAsync(flight?.Id ?? 0);
             OccupiedSeats.Clear();
             foreach (var seat in seats)
             {
@@ -373,7 +374,7 @@ namespace AirportApp.Src.ViewModel
                 Email = passenger.Email,
                 Phone = passenger.Phone,
                 SelectedSeat = passenger.SelectedSeat,
-                SelectedAddOns = passenger.SelectedAddOns?.ToList() ?? new List<AddOn>()
+                SelectedAddOns = passenger.SelectedAddOns != null ? passenger.SelectedAddOns.ToList() : new List<AddOn>()
             }).ToList();
         }
 
@@ -470,7 +471,11 @@ namespace AirportApp.Src.ViewModel
 
         public void UpdatePassengerAddOns(PassengerFormViewModel passenger, IEnumerable<AddOn> addedAddOns, IEnumerable<AddOn> removedAddOns)
         {
-            bookingService.ApplyAddOnUpdates(passenger.SelectedAddOns, addedAddOns, removedAddOns);
+            // Convert ObservableCollection<AddOn> to IList<AddOn> before passing to ApplyAddOnUpdates
+            IList<AddOn> currentAddOns = passenger.SelectedAddOns.ToList();
+            bookingService.ApplyAddOnUpdates(currentAddOns, addedAddOns, removedAddOns);
+
+            bookingService.ApplyAddOnUpdates(currentAddOns, addedAddOns, removedAddOns);
         }
     }
 }

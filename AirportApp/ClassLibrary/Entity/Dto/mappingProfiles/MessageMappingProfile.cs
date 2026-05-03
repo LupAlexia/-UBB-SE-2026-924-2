@@ -9,9 +9,9 @@ namespace AirportApp.ClassLibrary.Entity.Dto.MappingProfiles
         public MessageMappingProfile()
         {
             CreateMap<IMessage, MessageDTO>()
-                .ForMember(destination => destination.MessageText, option => option.MapFrom(source => source.GetMessage()))
+                .ForMember(destination => destination.MessageText, option => option.MapFrom(source => source.Text))
                 .ForMember(destination => destination.Timestamp, option => option.MapFrom(source =>
-                    new DateTimeOffset(((IMessage)source).GetTimeStamp().Ticks, TimeSpan.Zero)))
+                    new DateTimeOffset(((IMessage)source).Timestamp.Ticks, TimeSpan.Zero)))
                 .ForMember(destination => destination.FaqOptions, option => option.MapFrom(source => source.GetNextOptions()))
                 .ForMember(destination => destination.ChatId, option => option.MapFrom(source => source.GetChat().Id))
                 .ForMember(destination => destination.SenderName, option => option.MapFrom(source => source.GetSender().RetrieveConfiguredDisplayFullNameForBot()))

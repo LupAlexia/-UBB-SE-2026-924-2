@@ -5,11 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
-using AirportApp.Src.Dto;
-using AirportApp.Src.Model;
-using AirportApp.Src.Model.Chats;
-using AirportApp.Src.Model.Faq.Bot;
-using AirportApp.Src.Model.Message;
+using AirportApp.ClassLibrary.Entity.Domain;
+using AirportApp.ClassLibrary.Entity.Domain.Chats;
+using AirportApp.ClassLibrary.Entity.Domain.Faq.Bot;
+using AirportApp.ClassLibrary.Entity.Domain.Message;
+using AirportApp.ClassLibrary.Entity.Dto;
 using AirportApp.Src.Service;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -58,12 +58,12 @@ namespace AirportApp.Src.ViewModel.Chats
         public string FormatUserId => "User Id: " + user.RetrieveUniqueDatabaseIdentifierForBot().ToString();
         public void CloseChat()
         {
-            chatService.CloseChat(chat.ChatId);
+            chatService.CloseChat(chat.Id);
         }
         private void LoadChatHistory()
         {
             ChatHistory.Clear();
-            var messages = messageService.GetAllMessages(chat.ChatId);
+            var messages = messageService.GetAllMessages(chat.Id);
             var currentUserId = user.RetrieveUniqueDatabaseIdentifierForBot();
             foreach (var message in messages)
             {
@@ -82,8 +82,8 @@ namespace AirportApp.Src.ViewModel.Chats
                 return;
             }
 
-            BotMessage botReply = messageService.SendMessage(chat.ChatId, user, option);
-            System.Diagnostics.Debug.WriteLine($"User selected: {option.label}");
+            BotMessage botReply = messageService.SendMessage(chat.Id, user, option);
+            System.Diagnostics.Debug.WriteLine($"User selected: {option.Label}");
 
             LoadChatHistory();
             UpdateAvailableOptions(botReply);

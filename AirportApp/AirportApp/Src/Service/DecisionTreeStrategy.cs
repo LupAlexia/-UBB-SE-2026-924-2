@@ -27,13 +27,13 @@ namespace AirportApp.Src.Service.Bot.Strategy
 
         public BotMessage ProcessIncomingUserMessageAndDetermineNextDecisionTreeNode(BotEngineIdentity activeBotEngineInstance, IMessage incomingUserMessage)
         {
-            string extractedTextContentFromIncomingUserMessage = incomingUserMessage.GetMessage();
+            string extractedTextContentFromIncomingUserMessage = incomingUserMessage.Text;
 
-            FAQOption? selectedUserOptionMatchingIncomingMessageText = currentlyActiveConversationDecisionTreeNode.options.FirstOrDefault((option) => option.Label.Equals(extractedTextContentFromIncomingUserMessage));
+            FAQOption? selectedUserOptionMatchingIncomingMessageText = currentlyActiveConversationDecisionTreeNode.Options.FirstOrDefault((option) => option.Label.Equals(extractedTextContentFromIncomingUserMessage));
             if (selectedUserOptionMatchingIncomingMessageText == null)
             {
                 return new BotMessage.BotMessageBuilder(activeBotEngineInstance, incomingUserMessage.GetChat(), CONSTANT_VALUE_REPRESENTING_UNASSIGNED_DATABASE_IDENTIFIER,
-                    repositoryForAccessingFrequentlyAskedQuestionsDecisionNodes.GetById((int)BotStandardMessages.RESTART_CONVERSATION)).Build();
+                    repositoryForAccessingFrequentlyAskedQuestionsDecisionNodes.GetById((int)BotStandardMessages.RestartConversation)).Build();
                
             }
 
