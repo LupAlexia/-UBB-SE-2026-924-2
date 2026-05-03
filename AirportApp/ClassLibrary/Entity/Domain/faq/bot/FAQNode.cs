@@ -9,8 +9,8 @@ using AirportApp.ClassLibrary.Entity.Domain.Faq.Bot;
 namespace AirportApp.ClassLibrary.Entity.Domain.Faq.Bot
 {
     public record FAQNode(
-        int faqNodeId,
-        string questionText,
-        ImmutableArray<FAQOption> options,
-        bool isFinalAnswer);
+        int FaqNodeId,
+        string QuestionText,
+        ImmutableArray<FAQOption> Options,
+        bool IsFinalAnswer);
 }

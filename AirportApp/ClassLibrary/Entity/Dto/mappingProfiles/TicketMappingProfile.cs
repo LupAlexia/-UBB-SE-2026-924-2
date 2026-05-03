@@ -14,7 +14,7 @@ namespace AirportApp.ClassLibrary.Entity.Dto.MappingProfiles
         {
             CreateMap<Ticket, TicketDTO>()
                 .ConstructUsing(ticket => new TicketDTO(
-                    ticket.TicketId,
+                    ticket.Id,
                     ticket.Creator.UserId,
                     ticket.Creator.RetrieveConfiguredEmailAddressForBotContact(),
                     ticket.UrgencyLevel,

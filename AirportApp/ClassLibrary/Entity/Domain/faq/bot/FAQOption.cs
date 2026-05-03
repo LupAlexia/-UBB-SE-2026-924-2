@@ -6,5 +6,5 @@ using System.Threading.Tasks;
 
 namespace AirportApp.ClassLibrary.Entity.Domain.Faq.Bot
 {
-    public record FAQOption(string label, int nextOptionId);
+    public record FAQOption(string Label, int NextOptionId);
 }

@@ -4,13 +4,16 @@ namespace AirportApp.ClassLibrary.Entity.Domain
 {
     public class Route
     {
-        public int RouteId { get; set; }
+        public int Id { get; set; }
 
-        public Company? Company { get; set; }
+        public Company Company { get; set; } = null!;
+        public int CompanyId { get; set; }
 
-        public Airport? Airport { get; set; }
 
-        public string? RouteType { get; set; }
+        public Airport? Airport { get; set; } = null!;
+        public int AirportId { get; set; }
+
+        public string RouteType { get; set; } = string.Empty;
 
         public DateTime DepartureTime { get; set; }
 
@@ -34,9 +37,11 @@ namespace AirportApp.ClassLibrary.Entity.Domain
 
         public Route(int routeId, Company company, Airport airport, string routeType, DateTime departureTime, DateTime arrivalTime, int capacity)
         {
-            RouteId = routeId;
+            Id = routeId;
             Company = company;
+            CompanyId = company.Id;
             Airport = airport;
+            AirportId = airport.Id;
             RouteType = routeType;
             DepartureTime = departureTime;
             ArrivalTime = arrivalTime;

@@ -42,7 +42,7 @@ namespace AirportApp.Src.Service
                     {
                         foreach (var discount in ticket.User.Membership.AddonDiscounts)
                         {
-                            if (discount.AddOn != null && discount.AddOn.AddOnId == addon.AddOnId)
+                            if (discount.AddOn != null && discount.AddOn.Id == addon.Id)
                             {
                                 specificAddonDiscount = discount.DiscountPercentage;
                                 break;

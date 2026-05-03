@@ -4,17 +4,21 @@ namespace AirportApp.ClassLibrary.Entity.Domain
 {
     public class FlightTicket
     {
-        public int TicketId { get; set; }
-        public Customer? User { get; set; }
-        public Flight? Flight { get; set; }
-        public string? Seat { get; set; }
+        public int Id { get; set; }
+
+        public int UserId { get; set; }
+        public Customer User { get; set; } = null!;
+
+        public int FlightId { get; set; }
+        public Flight Flight { get; set; } = null!;
+        public string Seat { get; set; } = string.Empty;
         public float Price { get; set; }
-        public string? Status { get; set; }
-        public string? PassengerFirstName { get; set; }
-        public string? PassengerLastName { get; set; }
-        public string? PassengerEmail { get; set; }
-        public string? PassengerPhone { get; set; }
-        public List<AddOn> SelectedAddOns { get; set; } = new List<AddOn>();
+        public string Status { get; set; } = string.Empty;
+        public string PassengerFirstName { get; set; } = string.Empty;
+        public string PassengerLastName { get; set; } = string.Empty;
+        public string PassengerEmail { get; set; } = string.Empty;
+        public string PassengerPhone { get; set; } = string.Empty;
+        public List<AddOn> SelectedAddOns { get; set; } = new();
 
         public FlightTicket()
         {
@@ -35,9 +39,11 @@ namespace AirportApp.ClassLibrary.Entity.Domain
 
         public FlightTicket(int ticketId, Customer user, Flight flight, string seat, float price, string status, string passengerFirstName, string passengerLastName, string passengerEmail, string passengerPhone)
         {
-            TicketId = ticketId;
+            Id = ticketId;
             User = user;
+            UserId = user.Id;
             Flight = flight;
+            FlightId = flight.Id;
             Seat = seat;
             Price = price;
             Status = status;

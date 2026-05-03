@@ -123,7 +123,7 @@ namespace AirportApp.Src.Service
             {
                 if (!string.IsNullOrWhiteSpace(ticket.Seat))
                 {
-                    bool seatAvailable = await this.ticketRepository.IsSeatAvailable(ticket.Flight?.FlightId ?? 0, ticket.Seat);
+                    bool seatAvailable = await this.ticketRepository.IsSeatAvailable(ticket.Flight?.Id ?? 0, ticket.Seat);
                     if (!seatAvailable)
                     {
                         return false;

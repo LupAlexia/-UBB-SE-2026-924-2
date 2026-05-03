@@ -90,7 +90,7 @@ namespace AirportApp.ClassLibrary.Entity.Domain
                     insertUserCommand.Parameters.AddWithValue("@Phone", user.Phone ?? (object)DBNull.Value);
                     insertUserCommand.Parameters.AddWithValue("@Username", user.Username);
                     insertUserCommand.Parameters.AddWithValue("@PasswordHash", user.PasswordHash);
-                    insertUserCommand.Parameters.AddWithValue("@MembershipId", user.Membership?.MembershipId ?? (object)DBNull.Value);
+                    insertUserCommand.Parameters.AddWithValue("@MembershipId", user.Membership?.Id ?? (object)DBNull.Value);
                     insertUserCommand.ExecuteNonQuery();
                 }
             }
@@ -124,12 +124,12 @@ namespace AirportApp.ClassLibrary.Entity.Domain
             {
                 membership = new Membership
                 {
-                    MembershipId = reader.GetInt32(membershipIdOrdinal),
+                    Id = reader.GetInt32(membershipIdOrdinal),
                     Name = reader.GetString(reader.GetOrdinal("membership_name")),
                     FlightDiscountPercentage = (float)reader.GetByte(reader.GetOrdinal("flight_discount_percentage"))
                 };
 
-                membership.AddonDiscounts = this.membershipRepository.GetAddonDiscounts(membership.MembershipId).ToList();
+                membership.AddonDiscounts = this.membershipRepository.GetAddonDiscounts(membership.Id).ToList();
             }
 
             return new Customer(

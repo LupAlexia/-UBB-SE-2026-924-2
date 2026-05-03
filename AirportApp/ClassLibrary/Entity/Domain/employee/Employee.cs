@@ -4,24 +4,33 @@ namespace AirportApp.ClassLibrary.Entity.Domain.Employee
 {
     public class Employee : ISender
     {
-        private int employeeId;
-        private string fullName;
-        private string emailAddress;
-        private EmployeeDepartment assignedDepartment;
+        //private int employeeId;
+        //private string fullName;
+        //private string emailAddress;
+        //private EmployeeDepartment assignedDepartment;
+
+        // 1. EF Core Auto-Properties
+        public int Id { get; set; }
+        public string FullName { get; set; } = string.Empty;
+        public string EmailAddress { get; set; } = string.Empty;
+        public EmployeeDepartment AssignedDepartment { get; set; }
+
+        // 2. Required Parameterless Constructor
+        public Employee() { }
 
         public Employee(int employeeIdentificationNumber, string fullName, string emailAddress, EmployeeDepartment assignedDepartment)
         {
-            employeeId = employeeIdentificationNumber;
-            this.fullName = fullName;
-            this.emailAddress = emailAddress;
-            this.assignedDepartment = assignedDepartment;
+            Id = employeeIdentificationNumber;
+            this.FullName = fullName;
+            this.EmailAddress = emailAddress;
+            this.AssignedDepartment = assignedDepartment;
         }
 
-        public int EmployeeId => employeeId;
-        public string GetDepartmentName() => assignedDepartment.ToString();
+        public int EmployeeId => EmployeeId;
+        public string GetDepartmentName() => AssignedDepartment.ToString();
 
-        public string RetrieveConfiguredDisplayFullNameForBot() => fullName;
-        public string RetrieveConfiguredEmailAddressForBotContact() => emailAddress;
-        public int RetrieveUniqueDatabaseIdentifierForBot() => employeeId;
+        public string RetrieveConfiguredDisplayFullNameForBot() => FullName;
+        public string RetrieveConfiguredEmailAddressForBotContact() => EmailAddress;
+        public int RetrieveUniqueDatabaseIdentifierForBot() => EmployeeId;
     }
 }

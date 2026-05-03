@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using AirportApp.ClassLibrary.Entity.Domain.Message;
+using MessageEntity = AirportApp.ClassLibrary.Entity.Domain.Message.Message;
 namespace AirportApp.ClassLibrary.Entity.Domain.Chats
 {
     public class Chat
@@ -17,28 +17,21 @@ namespace AirportApp.ClassLibrary.Entity.Domain.Chats
         //public List<IMessage> Messages { get; set; }
 
         // 3. ICollection for better EF compatibility
-        public ICollection<Message> Messages { get; set; } = new List<Message>();
+        public ICollection<MessageEntity> Messages { get; set; } = new List<MessageEntity>();
 
         // 4. Parameterless constructor for EF Core
         public Chat() { }
 
-        //public Chat(int chatId, int userId, ChatStatus chatStatus)
-        //{
-        //    Id = chatId;
-        //    UserId = userId;
-        //    Status = chatStatus;
-        //    Messages = new List<IMessage>();
-        //}
 
         public Chat(int id, User user, ChatStatus chatStatus)
         {
             Id = id;
             User = user;
-            UserId = user.Id;
+            UserId = user.UserId;
             Status = chatStatus;
         }
 
-        public void AddMessage(Message message)
+        public void AddMessage(MessageEntity message)
         {
             if (message == null)
             {

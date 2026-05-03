@@ -4,22 +4,23 @@ namespace AirportApp.ClassLibrary.Entity.Domain
 {
     public class User : ISender
     {
-        private int userId;
-        private string fullName;
-        private string emailAddress;
+        public int Id { get; set; }
+        public string FullName { get; set; } = string.Empty;
+        public string EmailAddress { get; set; } = string.Empty;
 
-        public User(int userId, string fullName, string emailAddress)
+        public User() { }
+        public User(int id, string fullName, string emailAddress)
         {
-            this.userId = userId;
-            this.fullName = fullName;
-            this.emailAddress = emailAddress;
+            Id = id;
+            FullName = fullName;
+            EmailAddress = emailAddress;
         }
 
-        public int UserId => userId;
+        public int UserId => Id;
 
-        public string RetrieveConfiguredDisplayFullNameForBot() => fullName;
-        public string RetrieveConfiguredEmailAddressForBotContact() => emailAddress;
+        public string RetrieveConfiguredDisplayFullNameForBot() => FullName;
+        public string RetrieveConfiguredEmailAddressForBotContact() => EmailAddress;
 
-        public int RetrieveUniqueDatabaseIdentifierForBot() => userId;
+        public int RetrieveUniqueDatabaseIdentifierForBot() => Id;
     }
 }

@@ -8,17 +8,22 @@ namespace AirportApp.ClassLibrary.Entity.Domain.Ticket
 {
     public class TicketSubcategory
     {
-        public int SubcategoryId { get; }
-        public string SubcategoryName { get; }
-        public int SubcategoryExternalReferenceId { get; }
-        public TicketCategory ParentCategory { get; }
+        public int Id { get; set; }
+        public string SubcategoryName { get; set; } = string.Empty;
+        public int SubcategoryExternalReferenceId { get; set; }
+
+        public int ParentCategoryId { get; set; }
+        public TicketCategory ParentCategory { get; set; } = null!;
+
+        public TicketSubcategory() { }
 
         public TicketSubcategory(int subcategoryId, string subcategoryName, int externalId, TicketCategory parentCategory)
         {
-            SubcategoryId = subcategoryId;
+            Id = subcategoryId;
             SubcategoryName = subcategoryName;
             SubcategoryExternalReferenceId = externalId;
             ParentCategory = parentCategory;
+            ParentCategoryId = parentCategory.Id;
         }
     }
 }

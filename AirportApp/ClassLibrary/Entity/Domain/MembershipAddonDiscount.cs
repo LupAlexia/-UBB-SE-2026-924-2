@@ -2,8 +2,11 @@
 {
     public class MembershipAddonDiscount
     {
-        public Membership Membership { get; set; } = new Membership();
-        public AddOn AddOn { get; set; } = new AddOn();
+        public int MembershipId { get; set; }
+        public Membership Membership { get; set; } = null!;
+
+        public int AddOnId { get; set; }
+        public AddOn AddOn { get; set; } = null!;
         public float DiscountPercentage { get; set; }
 
         public MembershipAddonDiscount()
@@ -13,7 +16,9 @@
         public MembershipAddonDiscount(Membership membership, AddOn addOn, float discountPercentage)
         {
             Membership = membership;
+            MembershipId = membership.Id;
             AddOn = addOn;
+            AddOnId = addOn.Id;
             DiscountPercentage = discountPercentage;
         }
     }

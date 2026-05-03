@@ -2,9 +2,12 @@
 {
     public class Gate
     {
-        public int GateId { get; set; }
+        public int Id { get; set; }
 
-        public string? GateName { get; set; }
+        public string GateName { get; set; } = string.Empty;
+
+        public int AirportId { get; set; }
+        public Airport Airport { get; set; } = null!;
 
         public Gate()
         {
@@ -17,8 +20,16 @@
 
         public Gate(int gateId, string gateName)
         {
-            this.GateId = gateId;
+            this.Id = gateId;
             this.GateName = gateName;
+        }
+
+        public Gate(int id, string gateName, Airport airport)
+        {
+            Id = id;
+            GateName = gateName;
+            Airport = airport;
+            AirportId = airport.Id;
         }
     }
 }

@@ -2,13 +2,16 @@ namespace AirportApp.ClassLibrary.Entity.Domain.Faq
 {
     public class FAQEntry
     {
-        public int Id { get; init; }
-        public string Question { get; set; }
-        public string Answer { get; set; }
+        public int Id { get; set; }
+        public string Question { get; set; } = string.Empty;
+        public string Answer { get; set; } = string.Empty;
         public FAQCategoryEnum Category { get; set; }
         public int ViewCount { get; set; }
         public int HelpfulVotesCount { get; set; }
         public int NotHelpfulVotesCount { get; set; }
+
+        // 2. Required Parameterless Constructor
+        public FAQEntry() { }
 
         public FAQEntry(int id, string question, string answer, FAQCategoryEnum category, int viewCount, int wasHelpfulVotes, int wasNotHelpfulVotes)
         {
@@ -48,5 +51,7 @@ namespace AirportApp.ClassLibrary.Entity.Domain.Faq
                    HelpfulVotesCount == entry.HelpfulVotesCount &&
                    NotHelpfulVotesCount == entry.NotHelpfulVotesCount;
         }
+
+        public override int GetHashCode() => Id.GetHashCode();
     }
 }

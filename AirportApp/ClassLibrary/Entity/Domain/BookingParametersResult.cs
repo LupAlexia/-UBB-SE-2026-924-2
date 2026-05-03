@@ -1,4 +1,5 @@
 namespace AirportApp.ClassLibrary.Entity.Domain
+
 {
     /// <summary>
     /// Result of parsing booking navigation parameters.

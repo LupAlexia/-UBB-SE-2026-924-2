@@ -31,7 +31,7 @@ namespace AirportApp.ClassLibrary.Repository
                     {
                         addons.Add(new AddOn
                         {
-                            AddOnId = reader.GetInt32(reader.GetOrdinal("addon_id")),
+                            Id = reader.GetInt32(reader.GetOrdinal("addon_id")),
                             Name = reader.GetString(reader.GetOrdinal("name")),
                             BasePrice = (float)reader.GetDecimal(reader.GetOrdinal("base_price"))
                         });
@@ -73,7 +73,7 @@ namespace AirportApp.ClassLibrary.Repository
                         {
                             addons.Add(new AddOn
                             {
-                                AddOnId = reader.GetInt32(reader.GetOrdinal("addon_id")),
+                                Id = reader.GetInt32(reader.GetOrdinal("addon_id")),
                                 Name = reader.GetString(reader.GetOrdinal("name")),
                                 BasePrice = (float)reader.GetDecimal(reader.GetOrdinal("base_price"))
                             });

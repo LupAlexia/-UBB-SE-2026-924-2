@@ -1,3 +1,4 @@
+
 namespace AirportApp.ClassLibrary.Entity.Domain
 {
     /// <summary>

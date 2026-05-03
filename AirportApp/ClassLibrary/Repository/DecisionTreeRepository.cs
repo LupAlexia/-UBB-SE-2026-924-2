@@ -72,7 +72,7 @@ namespace AirportApp.ClassLibrary.Entity.Repository.Database
             }
 
             var immutableArrayOfOptionsForThisNode = RetrieveAllAvailableFAQOptionsAssociatedWithSpecificDecisionNodeFromDatabase(id);
-            return retrievedFAQNodeEntityFromBaseRepository with { options = immutableArrayOfOptionsForThisNode };
+            return retrievedFAQNodeEntityFromBaseRepository with { Options = immutableArrayOfOptionsForThisNode };
         }
 
         public int CreateNewEntity(FAQNode incomingFAQNodeEntityToBeSaved)
@@ -82,20 +82,20 @@ namespace AirportApp.ClassLibrary.Entity.Repository.Database
                 OUTPUT INSERTED.node_id
                 VALUES (@QuestionText, @IsFinalAnswer)");
 
-            sqlCommandForInsertingNewFAQNodeIntoDatabase.Parameters.AddWithValue("@QuestionText", incomingFAQNodeEntityToBeSaved.questionText);
-            sqlCommandForInsertingNewFAQNodeIntoDatabase.Parameters.AddWithValue("@IsFinalAnswer", incomingFAQNodeEntityToBeSaved.isFinalAnswer);
+            sqlCommandForInsertingNewFAQNodeIntoDatabase.Parameters.AddWithValue("@QuestionText", incomingFAQNodeEntityToBeSaved.QuestionText);
+            sqlCommandForInsertingNewFAQNodeIntoDatabase.Parameters.AddWithValue("@IsFinalAnswer", incomingFAQNodeEntityToBeSaved.IsFinalAnswer);
 
             int newlyGeneratedDatabaseIdentifierForCreatedFAQNode = Add(sqlCommandForInsertingNewFAQNodeIntoDatabase, incomingFAQNodeEntityToBeSaved);
 
-            foreach (var currentlyIteratedFAQOptionToInsert in incomingFAQNodeEntityToBeSaved.options)
+            foreach (var currentlyIteratedFAQOptionToInsert in incomingFAQNodeEntityToBeSaved.Options)
             {
                 using var sqlCommandForInsertingNewFAQOptionIntoDatabase = new SqlCommand(@"
                     INSERT INTO FAQOption (node_id, label, next_option_id)
                     VALUES (@NodeId, @Label, @NextOptionId)");
 
                 sqlCommandForInsertingNewFAQOptionIntoDatabase.Parameters.AddWithValue("@NodeId", newlyGeneratedDatabaseIdentifierForCreatedFAQNode);
-                sqlCommandForInsertingNewFAQOptionIntoDatabase.Parameters.AddWithValue("@Label", currentlyIteratedFAQOptionToInsert.label);
-                sqlCommandForInsertingNewFAQOptionIntoDatabase.Parameters.AddWithValue("@NextOptionId", currentlyIteratedFAQOptionToInsert.nextOptionId);
+                sqlCommandForInsertingNewFAQOptionIntoDatabase.Parameters.AddWithValue("@Label", currentlyIteratedFAQOptionToInsert.Label);
+                sqlCommandForInsertingNewFAQOptionIntoDatabase.Parameters.AddWithValue("@NextOptionId", currentlyIteratedFAQOptionToInsert.NextOptionId);
 
                 ExecuteNonQuery(sqlCommandForInsertingNewFAQOptionIntoDatabase);
             }
@@ -125,8 +125,8 @@ namespace AirportApp.ClassLibrary.Entity.Repository.Database
                 WHERE node_id = @Id");
 
             sqlCommandForUpdatingSpecificFAQNodeInDatabase.Parameters.AddWithValue("@Id", identifierForFAQNodeToBeUpdated);
-            sqlCommandForUpdatingSpecificFAQNodeInDatabase.Parameters.AddWithValue("@QuestionText", updatedFAQNodeEntityData.questionText);
-            sqlCommandForUpdatingSpecificFAQNodeInDatabase.Parameters.AddWithValue("@IsFinalAnswer", updatedFAQNodeEntityData.isFinalAnswer);
+            sqlCommandForUpdatingSpecificFAQNodeInDatabase.Parameters.AddWithValue("@QuestionText", updatedFAQNodeEntityData.QuestionText);
+            sqlCommandForUpdatingSpecificFAQNodeInDatabase.Parameters.AddWithValue("@IsFinalAnswer", updatedFAQNodeEntityData.IsFinalAnswer);
 
             UpdateById(identifierForFAQNodeToBeUpdated, sqlCommandForUpdatingSpecificFAQNodeInDatabase, updatedFAQNodeEntityData);
 
@@ -135,15 +135,15 @@ namespace AirportApp.ClassLibrary.Entity.Repository.Database
             sqlCommandForRemovingAllOldFAQOptionsAssociatedWithNode.Parameters.AddWithValue("@Id", identifierForFAQNodeToBeUpdated);
             ExecuteNonQuery(sqlCommandForRemovingAllOldFAQOptionsAssociatedWithNode);
 
-            foreach (var currentlyIteratedFAQOptionToInsertAsReplacement in updatedFAQNodeEntityData.options)
+            foreach (var currentlyIteratedFAQOptionToInsertAsReplacement in updatedFAQNodeEntityData.Options)
             {
                 using var sqlCommandForInsertingReplacementFAQOptionIntoDatabase = new SqlCommand(@"
                     INSERT INTO FAQOption (node_id, label, next_option_id)
                     VALUES (@NodeId, @Label, @NextOptionId)");
 
                 sqlCommandForInsertingReplacementFAQOptionIntoDatabase.Parameters.AddWithValue("@NodeId", identifierForFAQNodeToBeUpdated);
-                sqlCommandForInsertingReplacementFAQOptionIntoDatabase.Parameters.AddWithValue("@Label", currentlyIteratedFAQOptionToInsertAsReplacement.label);
-                sqlCommandForInsertingReplacementFAQOptionIntoDatabase.Parameters.AddWithValue("@NextOptionId", currentlyIteratedFAQOptionToInsertAsReplacement.nextOptionId);
+                sqlCommandForInsertingReplacementFAQOptionIntoDatabase.Parameters.AddWithValue("@Label", currentlyIteratedFAQOptionToInsertAsReplacement.Label);
+                sqlCommandForInsertingReplacementFAQOptionIntoDatabase.Parameters.AddWithValue("@NextOptionId", currentlyIteratedFAQOptionToInsertAsReplacement.NextOptionId);
 
                 ExecuteNonQuery(sqlCommandForInsertingReplacementFAQOptionIntoDatabase);
             }
@@ -161,7 +161,7 @@ namespace AirportApp.ClassLibrary.Entity.Repository.Database
             return listOfAllRetrievedFAQNodesFromDatabase.Select(currentlyIteratedFAQNode =>
                 currentlyIteratedFAQNode with
                 {
-                    options = comprehensiveDictionaryOfAllFAQOptionsMappedByNodeId.TryGetValue(currentlyIteratedFAQNode.faqNodeId, out var correspondingOptionsForThisNode)
+                    Options = comprehensiveDictionaryOfAllFAQOptionsMappedByNodeId.TryGetValue(currentlyIteratedFAQNode.FaqNodeId, out var correspondingOptionsForThisNode)
                         ? correspondingOptionsForThisNode
                         : ImmutableArray<FAQOption>.Empty
                 }).ToList();
@@ -176,6 +176,6 @@ namespace AirportApp.ClassLibrary.Entity.Repository.Database
                 sqlDataReaderContainingDatabaseRowData.GetBoolean(sqlDataReaderContainingDatabaseRowData.GetOrdinal("is_final_answer")));
         }
 
-        protected override int GetEntityId(FAQNode specificFAQNodeEntity) => specificFAQNodeEntity.faqNodeId;
+        protected override int GetEntityId(FAQNode specificFAQNodeEntity) => specificFAQNodeEntity.FaqNodeId;
     }
 }

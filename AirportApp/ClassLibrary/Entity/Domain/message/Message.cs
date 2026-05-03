@@ -58,7 +58,14 @@ namespace AirportApp.ClassLibrary.Entity.Domain.Message
 
         public ISender GetSender()
         {
-            return SenderId;
+            if (SenderId == BotEngine.CONSTANT_IDENTIFIER_FOR_DEFAULT_BOT_SYSTEM_USER)
+            {
+                // You might need to inject the strategy here or use a static reference
+                return new BotEngine(null!); // 'null!' assumes the strategy is provided externally
+            }
+
+            // Return a User object based on the SenderId
+            return new User(SenderId, "Unknown User", "unknown@email.com");
         }
 
         public int GetId()
@@ -71,14 +78,6 @@ namespace AirportApp.ClassLibrary.Entity.Domain.Message
             return new List<FAQOption>();
         }
 
-        DateTimeOffset IMessage.GetTimeStamp()
-        {
-            return Timestamp;
-        }
-
-        Chat IMessage.GetChat()
-        {
-            return Chat;
-        }
+       
     }
 }

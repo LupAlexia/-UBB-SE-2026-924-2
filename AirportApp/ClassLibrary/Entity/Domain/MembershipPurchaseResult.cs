@@ -1,5 +1,6 @@
 namespace AirportApp.ClassLibrary.Entity.Domain
 {
+
     /// <summary>
     /// Result of attempting a membership purchase.
     /// Used by MembershipService.PurchaseMembership to return

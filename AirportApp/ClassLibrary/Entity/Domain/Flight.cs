@@ -4,11 +4,16 @@ namespace AirportApp.ClassLibrary.Entity.Domain
 {
     public class Flight
     {
-        public int FlightId { get; set; }
-        public Route? Route { get; set; }
-        public Gate? Gate { get; set; }
+        public int Id { get; set; }
+
+        public int RouteId { get; set; }
+        public Route Route { get; set; } = null!;
+
+        public int GateId { get; set; }
+        public Gate Gate { get; set; } = null!;
+
         public DateTime Date { get; set; }
-        public string? FlightNumber { get; set; }
+        public string FlightNumber { get; set; } = string.Empty;
 
         public Flight()
         {
@@ -24,9 +29,11 @@ namespace AirportApp.ClassLibrary.Entity.Domain
 
         public Flight(int flightId, Route route, Gate gate, DateTime date, string flightNumber)
         {
-            FlightId = flightId;
+            Id = flightId;
             Route = route;
+            RouteId = route.Id;
             Gate = gate;
+            GateId = gate.Id;
             Date = date;
             FlightNumber = flightNumber;
         }

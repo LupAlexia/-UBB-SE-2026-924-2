@@ -134,7 +134,7 @@ namespace AirportApp.ClassLibrary.Repository
 
         protected override int GetEntityId(Ticket ticketEntity)
         {
-            return ticketEntity.TicketId;
+            return ticketEntity.Id;
         }
     }
 }

@@ -2,7 +2,7 @@
 {
     public class Company
     {
-        public int CompanyId { get; set; }
+        public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
 
         public Company()
@@ -16,7 +16,7 @@
 
         public Company(int companyId, string name)
         {
-            CompanyId = companyId;
+            Id = companyId;
             Name = name;
         }
     }

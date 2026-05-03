@@ -1,5 +1,6 @@
 ﻿namespace AirportApp.ClassLibrary.Entity.Domain
 {
+
     public class PriceBreakdown
     {
         public float BasePricePerPerson { get; set; }
