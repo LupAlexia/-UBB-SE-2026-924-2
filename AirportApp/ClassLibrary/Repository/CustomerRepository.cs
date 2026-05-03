@@ -23,7 +23,7 @@ namespace AirportApp.ClassLibrary.Entity.Domain
         {
             return this.dataBaseContext.customers
                 .Include(customer => customer.Membership)
-                .FirstOrDefault(customer => customer.UserId==id);
+                .FirstOrDefault(customer => customer.Id ==id);
         }
 
         public Customer? GetByEmail(string email)
@@ -43,7 +43,7 @@ namespace AirportApp.ClassLibrary.Entity.Domain
         {
             var userToUpdate = this.dataBaseContext.customers
                 .Include(customer => customer.Membership)
-                .FirstOrDefault(customer => customer.UserId == userId);
+                .FirstOrDefault(customer => customer.Id == userId);
 
             if( userToUpdate == null)
             {

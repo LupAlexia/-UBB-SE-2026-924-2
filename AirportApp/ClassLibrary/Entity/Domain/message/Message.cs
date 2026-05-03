@@ -58,7 +58,7 @@ namespace AirportApp.ClassLibrary.Entity.Domain.Message
         public Message(Chat chat, string text, ISender sender)
         {
             Chat = chat;
-            ChatId = chat.ChatId;
+            ChatId = chat.Id;
             Text = text;
             if (sender is User user) SenderUser = user;
             else if (sender is EmpNamespace.Employee emp) SenderEmployee = emp;
@@ -73,7 +73,7 @@ namespace AirportApp.ClassLibrary.Entity.Domain.Message
             if (sender is User user) SenderUser = user;
             else if (sender is EmpNamespace.Employee emp) SenderEmployee = emp;
             Chat = chat;
-            ChatId = chat.ChatId;
+            ChatId = chat.Id;
             Text = text;        
             Timestamp = timestamp; 
         }

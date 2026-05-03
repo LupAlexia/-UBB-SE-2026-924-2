@@ -7,17 +7,17 @@ namespace AirportApp.ClassLibrary.Repository
 {
     public class ReviewRepository : IRepository<int, Review>
     {
-        private readonly AirportDbContext _context;
+        private readonly AirportDbContext dataBaseContext;
 
         public ReviewRepository(AirportDbContext context)
         {
-            _context = context;
+            dataBaseContext = context ?? throw new ArgumentNullException(nameof(dataBaseContext));
         }
 
         public Review GetById(int id)
         {
             // .Include(r => r.User) ensures the author is loaded
-            return _context.reviews
+            return dataBaseContext.reviews
                 .Include(r => r.User)
                 .FirstOrDefault(r => r.Id == id)
                 ?? throw new KeyNotFoundException($"Review with id {id} was not found.");
@@ -25,7 +25,7 @@ namespace AirportApp.ClassLibrary.Repository
 
         public IEnumerable<Review> GetAll()
         {
-            return _context.reviews
+            return dataBaseContext.reviews
                 .Include(r => r.User)
                 .ToList();
         }
@@ -34,8 +34,8 @@ namespace AirportApp.ClassLibrary.Repository
         {
             if (reviewElement == null) throw new ArgumentNullException(nameof(reviewElement));
 
-            _context.reviews.Add(reviewElement);
-            _context.SaveChanges();
+            dataBaseContext.reviews.Add(reviewElement);
+            dataBaseContext.SaveChanges();
             return reviewElement.Id;
         }
 
@@ -44,17 +44,17 @@ namespace AirportApp.ClassLibrary.Repository
             if (reviewElement == null) throw new ArgumentNullException(nameof(reviewElement));
 
             // EF Core updates existing entities
-            _context.reviews.Update(reviewElement);
-            _context.SaveChanges();
+            dataBaseContext.reviews.Update(reviewElement);
+            dataBaseContext.SaveChanges();
         }
 
         public void DeleteById(int id)
         {
-            var review = _context.reviews.Find(id);
+            var review = dataBaseContext.reviews.Find(id);
             if (review != null)
             {
-                _context.reviews.Remove(review);
-                _context.SaveChanges();
+                dataBaseContext.reviews.Remove(review);
+                dataBaseContext.SaveChanges();
             }
         }
     }

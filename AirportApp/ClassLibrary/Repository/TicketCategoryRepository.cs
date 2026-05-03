@@ -7,23 +7,23 @@ namespace AirportApp.ClassLibrary.Repository
 {
     public class TicketCategoryRepository : ITicketCategoryRepository
     {
-        private readonly AirportDbContext _context;
+        private readonly AirportDbContext dataBaseContext;
 
         public TicketCategoryRepository(AirportDbContext context)
         {
-            _context = context;
+            dataBaseContext = context ?? throw new ArgumentNullException(nameof(dataBaseContext));
         }
 
         public IEnumerable<TicketCategory> GetAll()
         {
             // EF Core executes the SQL query immediately when ToList() is called
-            return _context.ticketCategories.ToList();
+            return dataBaseContext.ticketCategories.ToList();
         }
 
         public TicketCategory GetById(int categoryId)
         {
             // Find() looks for the entity by its primary key
-            return _context.ticketCategories.Find(categoryId)
+            return dataBaseContext.ticketCategories.Find(categoryId)
                    ?? throw new KeyNotFoundException($"Category with id {categoryId} not found.");
         }
     }

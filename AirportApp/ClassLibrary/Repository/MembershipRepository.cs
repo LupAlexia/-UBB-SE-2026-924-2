@@ -40,10 +40,9 @@ namespace AirportApp.ClassLibrary.Repository
                 return discounts;
             }
 
-            // Get the addon discounts for this membership
             var addOnDiscounts = this.dataBaseContext.addOns
-                .ToList() // Load in memory for now since there might not be a direct relationship table
-                .Select(a => new MembershipAddonDiscount(membership, a, 10f)) // Default 10% discount - adjust based on your data model
+                .ToList() 
+                .Select(a => new MembershipAddonDiscount(membership, a, 10f))
                 .ToList();
 
             return addOnDiscounts;

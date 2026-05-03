@@ -7,17 +7,17 @@ namespace AirportApp.ClassLibrary.Repository
 {
     public class TicketRepository : ITicketRepository
     {
-        private readonly AirportDbContext _context;
+        private readonly AirportDbContext dataBaseContext;
 
         public TicketRepository(AirportDbContext context)
         {
-            _context = context;
+            dataBaseContext = context ?? throw new ArgumentNullException(nameof(dataBaseContext));
         }
 
         public IEnumerable<Ticket> GetAll()
         {
             // Eager loading related entities
-            return _context.tickets
+            return dataBaseContext.tickets
                 .Include(t => t.Creator)
                 .Include(t => t.Category)
                 .Include(t => t.Subcategory)
@@ -26,7 +26,7 @@ namespace AirportApp.ClassLibrary.Repository
 
         public Ticket GetById(int id)
         {
-            return _context.tickets
+            return dataBaseContext.tickets
                 .Include(t => t.Creator)
                 .Include(t => t.Category)
                 .Include(t => t.Subcategory)
@@ -36,24 +36,24 @@ namespace AirportApp.ClassLibrary.Repository
 
         public int CreateNewEntity(Ticket ticket)
         {
-            _context.tickets.Add(ticket);
-            _context.SaveChanges();
+            dataBaseContext.tickets.Add(ticket);
+            dataBaseContext.SaveChanges();
             return ticket.Id;
         }
 
         public void UpdateById(int id, Ticket ticket)
         {
-            _context.tickets.Update(ticket);
-            _context.SaveChanges();
+            dataBaseContext.tickets.Update(ticket);
+            dataBaseContext.SaveChanges();
         }
 
         public void DeleteById(int id)
         {
-            var ticket = _context.tickets.Find(id);
+            var ticket = dataBaseContext.tickets.Find(id);
             if (ticket != null)
             {
-                _context.tickets.Remove(ticket);
-                _context.SaveChanges();
+                dataBaseContext.tickets.Remove(ticket);
+                dataBaseContext.SaveChanges();
             }
         }
     }

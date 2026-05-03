@@ -23,7 +23,7 @@ namespace AirportApp.ClassLibrary.Repository
         public IEnumerable<FlightTicket> GetTicketsByUserId(int userId)
         {
             return this.dataBaseContext.flightTickets
-                .Where(ticket => ticket.User.UserId == userId)
+                .Where(ticket => ticket.User.Id == userId)
                 .Include(ticket => ticket.User)
                 .Include(ticket => ticket.Flight)
                     .ThenInclude(flight => flight.Route)

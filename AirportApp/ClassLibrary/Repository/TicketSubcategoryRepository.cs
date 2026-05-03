@@ -7,24 +7,24 @@ namespace AirportApp.ClassLibrary.Repository
 {
     public class TicketSubcategoryRepository : ITicketSubcategoryRepository
     {
-        private readonly AirportDbContext _context;
+        private readonly AirportDbContext dataBaseContext;
 
         public TicketSubcategoryRepository(AirportDbContext context)
         {
-            _context = context;
+            dataBaseContext = context ?? throw new ArgumentNullException(nameof(dataBaseContext));
         }
 
         public IEnumerable<TicketSubcategory> GetAll()
         {
             // .Include(s => s.Category) ensures the parent category is loaded
-            return _context.ticketSubcategories
+            return dataBaseContext.ticketSubcategories
                            .Include(s => s.ParentCategory)
                            .ToList();
         }
 
         public TicketSubcategory GetById(int subcategoryId)
         {
-            return _context.ticketSubcategories
+            return dataBaseContext.ticketSubcategories
                            .Include(s => s.ParentCategory)
                            .FirstOrDefault(s => s.Id == subcategoryId)
                    ?? throw new KeyNotFoundException($"Subcategory with id {subcategoryId} not found.");
@@ -32,7 +32,7 @@ namespace AirportApp.ClassLibrary.Repository
 
         public IEnumerable<TicketSubcategory> GetByCategoryId(int categoryId)
         {
-            return _context.ticketSubcategories
+            return dataBaseContext.ticketSubcategories
                            .Include(s => s.ParentCategory)
                            .Where(s => s.ParentCategory.Id == categoryId)
                            .ToList();
