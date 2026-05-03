@@ -4,18 +4,22 @@ using System.Linq;
 using Microsoft.Data.SqlClient;
 using AirportApp.ClassLibrary.Entity.Domain;
 using AirportApp.ClassLibrary.Repository.Interfaces;
+using AirportApp.ClassLibrary.DataAccess;
 
 namespace AirportApp.ClassLibrary.Repository
 {
     public class AddOnRepository : IAddOnRepository
     {
-        private readonly IDatabaseConnectionFactory databaseConnectionFactory;
-
-        public AddOnRepository(IDatabaseConnectionFactory databaseConnectionFactory)
+        //private readonly IDatabaseConnectionFactory databaseConnectionFactory;
+        private readonly AirportDbContext dataBaseContext;
+        //public AddOnRepository(IDatabaseConnectionFactory databaseConnectionFactory)
+        //{
+        //    this.databaseConnectionFactory = databaseConnectionFactory ?? throw new ArgumentNullException(nameof(databaseConnectionFactory));
+        //}
+        public AddOnRepository(AirportDbContext databaseContext)
         {
-            this.databaseConnectionFactory = databaseConnectionFactory ?? throw new ArgumentNullException(nameof(databaseConnectionFactory));
+            this.dataBaseContext = dataBaseContext;
         }
-
         public IEnumerable<AddOn> GetAllAddOns()
         {
             var addons = new List<AddOn>();
