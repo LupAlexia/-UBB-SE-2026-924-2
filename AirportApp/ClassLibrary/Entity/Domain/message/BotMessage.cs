@@ -18,19 +18,13 @@ namespace AirportApp.ClassLibrary.Entity.Domain.Message
         public DateTimeOffset Timestamp { get; set; }
 
         // 2. Navigation Properties
-        public int ChatId { get; set; }
+        
         public Chat Chat { get; set; } = null!;
 
-        public int SenderId { get; set; }
+        public ISender Sender { get; set; } = null!;
 
-        //public int SenderId { get; set; }
-        //private int messageId;
-        //private ISender sender;
-        //private Chat chat;
-        //private DateTimeOffset timestamp;
-        //private string messageText;
-        // private IEnumerable<FAQOption> faqOptions;
-        public List<FAQOption> FAQOptions { get; set; } = new List<FAQOption>();
+       
+        public List<FAQOption> FAQOptions { get; set; } = new();
 
         public BotMessage() { }
 
@@ -43,12 +37,11 @@ namespace AirportApp.ClassLibrary.Entity.Domain.Message
         //    this.timestamp = DateTimeOffset.UtcNow;
         //    this.faqOptions = options;
         //}
-        public BotMessage(int id, int senderId, Chat chat, string text, List<FAQOption> options, DateTimeOffset timestamp)
+        public BotMessage(int id, ISender sender, Chat chat, string text, List<FAQOption> options, DateTimeOffset timestamp)
         {
             Id = id;
-            SenderId = senderId;
+            Sender = sender;
             Chat = chat;
-            ChatId = chat.Id;
             Text = text;
             FAQOptions = options;
             Timestamp = timestamp;
@@ -58,11 +51,7 @@ namespace AirportApp.ClassLibrary.Entity.Domain.Message
         //{
         //    this.Timestamp = timestamp;
         //}
-        private BotMessage(int id, ISender sender, Chat chat, string text, IEnumerable<FAQOption> options, DateTimeOffset timestamp)
-    : this(id, sender.RetrieveUniqueDatabaseIdentifierForBot(), chat, text, options.ToList(), timestamp)
-        {
-            // No code needed here because the primary constructor handles all assignments!
-        }
+       
 
         public Chat GetChat()
         {
@@ -74,10 +63,7 @@ namespace AirportApp.ClassLibrary.Entity.Domain.Message
             return Text;
         }
 
-        public ISender GetSender()
-        {
-            return new BotEngine(null!);
-        }
+        public ISender GetSender() => Sender;
 
         public int GetId()
         {
@@ -140,24 +126,21 @@ namespace AirportApp.ClassLibrary.Entity.Domain.Message
         {
             // These private fields hold the state during the building process
             private int _id;
-            private int _senderId;
+            private ISender _sender = new BotEngine(null!);
             private Chat _chat = null!;
             private string _messageText = string.Empty;
             private List<FAQOption> _faqOptions = new();
             private DateTimeOffset _timestamp = DateTimeOffset.UtcNow;
 
             // Primary constructor: expects the identifiers EF needs
-            public BotMessageBuilder(int senderId, Chat chat, int id)
+            public BotMessageBuilder(ISender sender, Chat chat, int id)
             {
-                _senderId = senderId;
+                _sender = sender;
                 _chat = chat;
                 _id = id;
             }
 
-            // Overload: keeps compatibility for when you have an ISender object
-            public BotMessageBuilder(ISender sender, Chat chat, int id)
-                : this(sender.RetrieveUniqueDatabaseIdentifierForBot(), chat, id) { }
-
+           
             // Fluent method: Set Timestamp
             public BotMessageBuilder WithTimestamp(DateTimeOffset timestamp)
             {
@@ -194,7 +177,7 @@ namespace AirportApp.ClassLibrary.Entity.Domain.Message
 
             public BotMessage Build()
             {
-                return new BotMessage(_id, _senderId, _chat, _messageText, _faqOptions, _timestamp);
+                return new BotMessage(_id, _sender, _chat, _messageText, _faqOptions, _timestamp);
             }
         }
     }

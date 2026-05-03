@@ -18,60 +18,43 @@ namespace AirportApp.ClassLibrary.Entity.Domain.Message
 
         // 2. Navigation Properties
         // This links the Message to a Chat in the database
-        public int ChatId { get; set; }
+       
         public Chat Chat { get; set; } = null!;
-        public int SenderId { get; set; }
+        public ISender Sender { get; set; } = null!;
 
         public Message() { }
 
-        public Message(Chat chat, string text, int senderId)
+        public Message(Chat chat, string text, ISender sender)
         {
             Chat = chat;
-            ChatId = chat.Id;
             Text = text;
-            SenderId = senderId;
+            Sender = sender;
             Timestamp = DateTimeOffset.UtcNow;
         }
 
         // TODO: This constructor is currently used only for mapping from DB. Without this message_id and timestamp are unsettable.
         // Updated Mapping Constructor
-        public Message(int id, int senderId, Chat chat, string text, DateTimeOffset timestamp)
+        public Message(int id, ISender sender, Chat chat, string text, DateTimeOffset timestamp)
         {
             Id = id;           
-            SenderId = senderId;
+            Sender = sender;
             Chat = chat;
-            ChatId = chat.Id;
             Text = text;        
             Timestamp = timestamp; 
         }
-
-        public Chat GetChat()
-        {
-            return this.Chat;
-        }
-
-        // Interface functionality
         public string GetMessage()
         {
             return Text;
         }
 
-        public ISender GetSender()
-        {
-            if (SenderId == BotEngine.CONSTANT_IDENTIFIER_FOR_DEFAULT_BOT_SYSTEM_USER)
-            {
-                // You might need to inject the strategy here or use a static reference
-                return new BotEngine(null!); // 'null!' assumes the strategy is provided externally
-            }
-
-            // Return a User object based on the SenderId
-            return new User(SenderId, "Unknown User", "unknown@email.com");
-        }
+        public ISender GetSender() => Sender;
 
         public int GetId()
         {
             return Id;
         }
+
+        public Chat GetChat() => Chat;
 
         IEnumerable<FAQOption> IMessage.GetNextOptions()
         {

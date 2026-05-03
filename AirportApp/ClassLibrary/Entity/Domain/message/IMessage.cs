@@ -23,11 +23,13 @@ namespace AirportApp.ClassLibrary.Entity.Domain.Message
         int Id { get; }
         string Text { get; }
         DateTimeOffset Timestamp { get; }
-        int ChatId { get; }
-        Chat Chat { get; }
-        int SenderId { get; }
+        //int ChatId { get; }
+        //Chat Chat { get; }
+        //int SenderId { get; }
 
         ISender GetSender();
+
+        Chat GetChat();
         IEnumerable<FAQOption> GetNextOptions();
     }
 }
