@@ -12,3 +12,4 @@ namespace AirportApp.ClassLibrary.Repository.Interfaces
         void UpdateById(int identificationNumber, User userEntity);
     }
 }
+

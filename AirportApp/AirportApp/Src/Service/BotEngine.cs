@@ -4,19 +4,18 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using AirportApp.Src.Model.Faq.Bot;
-using AirportApp.Src.Model.Message;
-using AirportApp.Src.Repository;
+using AirportApp.ClassLibrary.Entity.Domain.Message;
 using AirportApp.Src.Service.Bot.Strategy;
+
 
 namespace AirportApp.Src.Service.Bot
 {
     public class BotEngine : ISender
     {
         public const int CONSTANT_IDENTIFIER_FOR_DEFAULT_BOT_SYSTEM_USER = 0; // ChatBot is always identified as the first
-        private IBotStrategy activeStrategyForFormulatingBotResponses;
+        private ClassLibrary.Entity.Domain.Message.IBotStrategy activeStrategyForFormulatingBotResponses;
 
-        public BotEngine(IBotStrategy responseStrategy)
+        public BotEngine(ClassLibrary.Entity.Domain.Message.IBotStrategy responseStrategy)
         {
             this.activeStrategyForFormulatingBotResponses = responseStrategy;
         }
