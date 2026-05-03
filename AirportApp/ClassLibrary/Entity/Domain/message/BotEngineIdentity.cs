@@ -10,12 +10,12 @@ using AirportApp.ClassLibrary.Entity.Domain;
 
 namespace AirportApp.ClassLibrary.Entity.Domain.Message
 {
-    public class BotEngine : ISender
+    public class BotEngineIdentity : ISender
     {
         public const int CONSTANT_IDENTIFIER_FOR_DEFAULT_BOT_SYSTEM_USER = 0; // ChatBot is always identified as the first
         private IBotStrategy activeStrategyForFormulatingBotResponses;
 
-        public BotEngine(IBotStrategy responseStrategy)
+        public BotEngineIdentity(IBotStrategy responseStrategy)
         {
             this.activeStrategyForFormulatingBotResponses = responseStrategy;
         }

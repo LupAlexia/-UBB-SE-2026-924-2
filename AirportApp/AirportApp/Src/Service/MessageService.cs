@@ -12,12 +12,12 @@ namespace AirportApp.Src.Service
     {
         private readonly IRepository<int, Chat> chatRepository;
         private readonly IRepository<int, Message> messageRepository;
-        private readonly BotEngine botEngine;
+        private readonly BotEngineIdentity botEngine;
 
         public MessageService(
             IRepository<int, Chat> chatRepository,
             IRepository<int, Message> messageRepository,
-            BotEngine botEngine)
+            BotEngineIdentity botEngine)
         {
             this.chatRepository = chatRepository ?? throw new ArgumentNullException(nameof(chatRepository));
             this.messageRepository = messageRepository ?? throw new ArgumentNullException(nameof(messageRepository));
@@ -37,12 +37,12 @@ namespace AirportApp.Src.Service
 
             Chat chat = GetActiveChat(chatId);
 
-            var userMessage = new Message(sender, chat, selectedOption.Label);
+            var userMessage = new Message(chat, selectedOption.Label, sender);
             messageRepository.CreateNewEntity(userMessage);
 
             BotMessage botReply = botEngine.GenerateAppropriateResponseBasedOnCurrentStrategy(userMessage);
 
-            var botRow = new Message(botEngine, chat, botReply.GetMessage());
+            var botRow = new Message( chat, botReply.GetMessage(), botEngine);
             messageRepository.CreateNewEntity(botRow);
 
             return botReply;
@@ -64,7 +64,7 @@ namespace AirportApp.Src.Service
 
             return messageRepository.GetAll()
                 .Where(chatMessage => chatMessage.GetChat().Id == chatId)
-                .OrderBy(chatMessage => ((IMessage)chatMessage).GetTimeStamp());
+                .OrderBy(chatMessage => ((IMessage)chatMessage).Timestamp);
         }
 
         private Chat GetActiveChat(int chatId)

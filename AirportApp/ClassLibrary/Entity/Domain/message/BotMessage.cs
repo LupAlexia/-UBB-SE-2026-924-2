@@ -149,7 +149,7 @@ namespace AirportApp.ClassLibrary.Entity.Domain.Message
         {
             // These private fields hold the state during the building process
             private int _id;
-            private ISender _sender = new BotEngine(null!);
+            private ISender _sender = new BotEngineIdentity(null!);
             private Chat _chat = null!;
             private string _messageText = string.Empty;
             private List<FAQOption> _faqOptions = new();
@@ -196,6 +196,14 @@ namespace AirportApp.ClassLibrary.Entity.Domain.Message
                 _faqOptions.Clear();
                 _faqOptions.AddRange(setOptions);
                 return this;
+            }
+
+            public BotMessageBuilder(ISender sender, Chat chat, int id, FAQNode nodeToMessage)
+        : this(sender, chat, id) // Calls your existing 3-argument constructor
+            {
+                // Automatically set the text and options from the node
+                this._messageText = nodeToMessage.QuestionText; // Ensure property name matches FAQNode
+                this._faqOptions = nodeToMessage.Options.ToList();
             }
 
             public BotMessage Build()

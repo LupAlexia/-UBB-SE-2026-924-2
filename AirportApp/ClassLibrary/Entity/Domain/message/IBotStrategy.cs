@@ -8,8 +8,8 @@ namespace AirportApp.ClassLibrary.Entity.Domain.Message
 {
     public interface IBotStrategy
     {
-        BotMessage ProcessIncomingUserMessageAndDetermineNextDecisionTreeNode(BotEngine activeBotEngineInstance, IMessage incomingUserMessage);
-
+        BotMessage ProcessIncomingUserMessageAndDetermineNextDecisionTreeNode(BotEngineIdentity activeBotEngineInstance, IMessage incomingUserMessage);
+        //BotMessage ProcessIncomingUserMessageAndDetermineNextDecisionTreeNode(BotEngineIdentity botEngine, IMessage message);
         public void ResetCurrentlyActiveConversationNodeToInitialStartingPoint();
     }
 }

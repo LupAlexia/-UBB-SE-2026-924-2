@@ -21,7 +21,7 @@ namespace AirportApp.ClassLibrary.Entity.Dto.MappingProfiles
 
             CreateMap<BotMessage, MessageDTO>()
                 .IncludeBase<IMessage, MessageDTO>()
-                .ForMember(destination => destination.SenderId, option => option.MapFrom(source => BotEngine.CONSTANT_IDENTIFIER_FOR_DEFAULT_BOT_SYSTEM_USER));
+                .ForMember(destination => destination.SenderId, option => option.MapFrom(source => BotEngineIdentity.CONSTANT_IDENTIFIER_FOR_DEFAULT_BOT_SYSTEM_USER));
 
             CreateMap<Message, MessageDTO>()
                 .IncludeBase<IMessage, MessageDTO>();
