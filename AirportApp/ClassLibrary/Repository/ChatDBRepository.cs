@@ -32,7 +32,7 @@ namespace AirportApp.ClassLibrary.Repository
 
         protected override int GetEntityId(Chat specificChatEntity)
         {
-            return specificChatEntity.ChatId;
+            return specificChatEntity.Id;
         }
 
         public int CreateNewEntity(Chat incomingChatEntityToBeSaved)

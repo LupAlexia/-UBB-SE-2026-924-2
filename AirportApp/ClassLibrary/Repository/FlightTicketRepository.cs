@@ -48,7 +48,7 @@ namespace AirportApp.ClassLibrary.Repository
                     {
                         while (reader.Read())
                         {
-                            var user = new Customer { UserId = reader.GetInt32(reader.GetOrdinal("user_id")) };
+                            var user = new Customer { Id = reader.GetInt32(reader.GetOrdinal("user_id")) };
 
                             var airport = new Airport
                             {
@@ -75,7 +75,7 @@ namespace AirportApp.ClassLibrary.Repository
 
                             var flight = new Flight
                             {
-                                FlightId = reader.GetInt32(reader.GetOrdinal("flight_id")),
+                                Id = reader.GetInt32(reader.GetOrdinal("flight_id")),
                                 FlightNumber = reader.IsDBNull(reader.GetOrdinal("flight_number")) ? null : reader.GetString(reader.GetOrdinal("flight_number")),
                                 Date = reader.GetDateTime(reader.GetOrdinal("flight_date")),
                                 Route = route,
@@ -84,7 +84,7 @@ namespace AirportApp.ClassLibrary.Repository
 
                             var ticket = new FlightTicket
                             {
-                                TicketId = reader.GetInt32(reader.GetOrdinal("ticket_id")),
+                                Id = reader.GetInt32(reader.GetOrdinal("ticket_id")),
                                 User = user,
                                 Flight = flight,
                                 Seat = reader.IsDBNull(reader.GetOrdinal("seat")) ? null : reader.GetString(reader.GetOrdinal("seat")),
@@ -97,7 +97,7 @@ namespace AirportApp.ClassLibrary.Repository
                             };
 
                             tickets.Add(ticket);
-                            ticketById[ticket.TicketId] = ticket;
+                            ticketById[ticket.Id] = ticket;
                         }
                     }
                 }
@@ -134,7 +134,7 @@ namespace AirportApp.ClassLibrary.Repository
 
                                 ticket.SelectedAddOns.Add(new AddOn
                                 {
-                                    AddOnId = addOnReader.GetInt32(addOnReader.GetOrdinal("addon_id")),
+                                    Id = addOnReader.GetInt32(addOnReader.GetOrdinal("addon_id")),
                                     Name = addOnReader.GetString(addOnReader.GetOrdinal("name")),
                                     BasePrice = (float)addOnReader.GetDecimal(addOnReader.GetOrdinal("base_price"))
                                 });
@@ -159,8 +159,8 @@ namespace AirportApp.ClassLibrary.Repository
 
                 using (var insertTicketCommand = new SqlCommand(query, connection))
                 {
-                    insertTicketCommand.Parameters.AddWithValue("@UserId", ticket.User!.UserId);
-                    insertTicketCommand.Parameters.AddWithValue("@FlightId", ticket.Flight!.FlightId);
+                    insertTicketCommand.Parameters.AddWithValue("@UserId", ticket.User!.Id);
+                    insertTicketCommand.Parameters.AddWithValue("@FlightId", ticket.Flight!.Id);
                     insertTicketCommand.Parameters.AddWithValue("@Seat", ticket.Seat ?? (object)DBNull.Value);
                     insertTicketCommand.Parameters.AddWithValue("@Price", ticket.Price);
                     insertTicketCommand.Parameters.AddWithValue("@Status", ticket.Status ?? (object)DBNull.Value);
@@ -169,7 +169,7 @@ namespace AirportApp.ClassLibrary.Repository
                     insertTicketCommand.Parameters.AddWithValue("@PassengerEmail", ticket.PassengerEmail ?? (object)DBNull.Value);
                     insertTicketCommand.Parameters.AddWithValue("@PassengerPhone", ticket.PassengerPhone ?? (object)DBNull.Value);
 
-                    ticket.TicketId = (int)insertTicketCommand.ExecuteScalar()!;
+                    ticket.Id = (int)insertTicketCommand.ExecuteScalar()!;
                 }
             }
         }
@@ -287,8 +287,8 @@ namespace AirportApp.ClassLibrary.Repository
 
                     using var insertTicketCommand = new SqlCommand(insertTicketQuery, connection, transaction);
                     float persistedPrice = ticket.Price;
-                    insertTicketCommand.Parameters.AddWithValue("@userId", ticket.User?.UserId ?? 0);
-                    insertTicketCommand.Parameters.AddWithValue("@flightId", ticket.Flight?.FlightId ?? 0);
+                    insertTicketCommand.Parameters.AddWithValue("@userId", ticket.User?.Id ?? 0);
+                    insertTicketCommand.Parameters.AddWithValue("@flightId", ticket.Flight?.Id ?? 0);
                     insertTicketCommand.Parameters.AddWithValue("@seat", ticket.Seat ?? (object)DBNull.Value);
                     insertTicketCommand.Parameters.AddWithValue("@price", (decimal)persistedPrice);
                     insertTicketCommand.Parameters.AddWithValue("@status", ticket.Status ?? (object)DBNull.Value);
@@ -298,7 +298,7 @@ namespace AirportApp.ClassLibrary.Repository
                     insertTicketCommand.Parameters.AddWithValue("@phone", ticket.PassengerPhone ?? (object)DBNull.Value);
 
                     var newTicketId = Convert.ToInt32(await insertTicketCommand.ExecuteScalarAsync() ?? 0);
-                    ticket.TicketId = newTicketId;
+                    ticket.Id = newTicketId;
 
                     if (ticket.SelectedAddOns != null && ticket.SelectedAddOns.Any())
                     {
@@ -310,7 +310,7 @@ namespace AirportApp.ClassLibrary.Repository
                         {
                             using var insertAddOnCommand = new SqlCommand(insertAddonQuery, connection, transaction);
                             insertAddOnCommand.Parameters.AddWithValue("@ticketId", newTicketId);
-                            insertAddOnCommand.Parameters.AddWithValue("@addonId", addon.AddOnId);
+                            insertAddOnCommand.Parameters.AddWithValue("@addonId", addon.Id);
                             await insertAddOnCommand.ExecuteNonQueryAsync();
                         }
                     }

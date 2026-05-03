@@ -126,7 +126,7 @@ namespace AirportApp.ClassLibrary.Repository
 
             var route = new Route
             {
-                RouteId = reader.GetInt32(reader.GetOrdinal("route_id")),
+                Id = reader.GetInt32(reader.GetOrdinal("route_id")),
                 Company = company,
                 Airport = airport,
                 RouteType = reader.IsDBNull(reader.GetOrdinal("route_type")) ? null : reader.GetString(reader.GetOrdinal("route_type")),
@@ -147,7 +147,7 @@ namespace AirportApp.ClassLibrary.Repository
 
             return new Flight
             {
-                FlightId = reader.GetInt32(reader.GetOrdinal("flight_id")),
+                Id = reader.GetInt32(reader.GetOrdinal("flight_id")),
                 Route = route,
                 Gate = gate,
                 Date = reader.GetDateTime(reader.GetOrdinal("date")),

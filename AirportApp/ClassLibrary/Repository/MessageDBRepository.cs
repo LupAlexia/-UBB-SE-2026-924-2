@@ -37,7 +37,7 @@ namespace AirportApp.ClassLibrary.Repository.Interfaces
 
             var insertCommand = new SqlCommand(insertQuery);
             insertCommand.Parameters.AddWithValue("@senderId", newEntity.GetSender().RetrieveUniqueDatabaseIdentifierForBot());
-            insertCommand.Parameters.AddWithValue("@chatId", ((IMessage)newEntity).GetChat().ChatId);
+            insertCommand.Parameters.AddWithValue("@chatId", ((IMessage)newEntity).GetChat().Id);
             insertCommand.Parameters.AddWithValue("@timestamp", DateTimeOffset.UtcNow);
             insertCommand.Parameters.AddWithValue("@text", newEntity.GetMessage());
             insertCommand.Parameters.AddWithValue("@isRead", false);

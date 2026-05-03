@@ -33,7 +33,7 @@ namespace AirportApp.ClassLibrary.Repository
                         {
                             membership = new Membership
                             {
-                                MembershipId = reader.GetInt32(reader.GetOrdinal("membership_id")),
+                                Id = reader.GetInt32(reader.GetOrdinal("membership_id")),
                                 Name = reader.GetString(reader.GetOrdinal("name")),
                                 FlightDiscountPercentage = (float)reader.GetByte(reader.GetOrdinal("flight_discount_percentage"))
                             };
@@ -60,7 +60,7 @@ namespace AirportApp.ClassLibrary.Repository
                     {
                         memberships.Add(new Membership
                         {
-                            MembershipId = reader.GetInt32(reader.GetOrdinal("membership_id")),
+                            Id = reader.GetInt32(reader.GetOrdinal("membership_id")),
                             Name = reader.GetString(reader.GetOrdinal("name")),
                             FlightDiscountPercentage = (float)reader.GetByte(reader.GetOrdinal("flight_discount_percentage"))
                         });
@@ -95,14 +95,14 @@ namespace AirportApp.ClassLibrary.Repository
                         {
                             var membership = new Membership
                             {
-                                MembershipId = reader.GetInt32(reader.GetOrdinal("membership_id")),
+                                Id = reader.GetInt32(reader.GetOrdinal("membership_id")),
                                 Name = reader.GetString(reader.GetOrdinal("membership_name")),
                                 FlightDiscountPercentage = (float)reader.GetByte(reader.GetOrdinal("flight_discount_percentage"))
                             };
 
                             var addon = new AddOn
                             {
-                                AddOnId = reader.GetInt32(reader.GetOrdinal("addon_id")),
+                                Id = reader.GetInt32(reader.GetOrdinal("addon_id")),
                                 Name = reader.GetString(reader.GetOrdinal("addon_name")),
                                 BasePrice = (float)reader.GetDecimal(reader.GetOrdinal("base_price"))
                             };

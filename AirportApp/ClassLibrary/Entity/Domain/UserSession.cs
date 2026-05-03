@@ -1,5 +1,8 @@
-﻿namespace AirportApp.ClassLibrary.Entity.Domain
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace AirportApp.ClassLibrary.Entity.Domain
 {
+    [NotMapped]
     public static class UserSession
     {
         public static Customer? CurrentUser { get; set; }

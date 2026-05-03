@@ -30,14 +30,14 @@ namespace AirportApp.Src.Service
             {
                 throw new ArgumentNullException(nameof(selectedOption));
             }
-            if (selectedOption.nextOptionId == 1)
+            if (selectedOption.NextOptionId == 1)
             {
                 botEngine.ResetBotConversationStateToInitialRootNode();
             }
 
             Chat chat = GetActiveChat(chatId);
 
-            var userMessage = new Message(sender, chat, selectedOption.label);
+            var userMessage = new Message(sender, chat, selectedOption.Label);
             messageRepository.CreateNewEntity(userMessage);
 
             BotMessage botReply = botEngine.GenerateAppropriateResponseBasedOnCurrentStrategy(userMessage);
@@ -51,7 +51,7 @@ namespace AirportApp.Src.Service
         public IMessage GetMessage(int chatId, int messageId)
         {
             IMessage message = messageRepository.GetById(messageId);
-            if (message.GetChat().ChatId != chatId)
+            if (message.GetChat().Id != chatId)
             {
                 throw new InvalidOperationException($"Message {messageId} does not belong to chat {chatId}.");
             }
@@ -63,7 +63,7 @@ namespace AirportApp.Src.Service
             _ = chatRepository.GetById(chatId);
 
             return messageRepository.GetAll()
-                .Where(chatMessage => chatMessage.GetChat().ChatId == chatId)
+                .Where(chatMessage => chatMessage.GetChat().Id == chatId)
                 .OrderBy(chatMessage => ((IMessage)chatMessage).GetTimeStamp());
         }
 
