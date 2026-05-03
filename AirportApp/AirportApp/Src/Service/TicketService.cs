@@ -69,7 +69,7 @@ namespace AirportApp.Src.Service
             {
                 throw new ArgumentNullException("Null Subcategory.");
             }
-            if (ticket.Subcategory.ParentCategory.CategoryId != ticket.Category.CategoryId)
+            if (ticket.Subcategory.ParentCategory.Id != ticket.Category.Id)
             {
                 throw new ArgumentException($"The subcategory '{ticket.Subcategory.SubcategoryName}' does not belong to the category '{ticket.Category.CategoryName}'");
             }
