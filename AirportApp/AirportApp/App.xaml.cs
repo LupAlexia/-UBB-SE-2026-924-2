@@ -22,6 +22,9 @@ using AirportApp.Src.ViewModel.Review;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.EntityFrameworkCore;
+using AirportApp.ClassLibrary.DataAccess;
+using AirportApp.ClassLibrary.Entity.Repository.Database;
 
 namespace AirportApp
 {
@@ -104,6 +107,15 @@ namespace AirportApp
             });
 
             // --- Servicii Mystery Inc (Customer Support) ---
+            // Register EF DbContext using connection string from .env
+            // Use singleton lifetime here because many existing services are registered as singletons
+            // (short-term fix). Consider changing repositories/services to scoped instead.
+            services.AddDbContext<AirportDbContext>(options =>
+            {
+                var conn = DatabaseConnectionHandler.Instance.CreateConnection().ConnectionString;
+                options.UseSqlServer(conn);
+            }, contextLifetime: Microsoft.Extensions.DependencyInjection.ServiceLifetime.Singleton, optionsLifetime: Microsoft.Extensions.DependencyInjection.ServiceLifetime.Singleton);
+
             services.AddSingleton<DecisionTreeRepository>();
             services.AddSingleton<IRepository<int, FAQNode>>(p => p.GetRequiredService<DecisionTreeRepository>());
             services.AddTransient<IBotStrategy, DecisionTreeStrategy>();
@@ -126,6 +138,7 @@ namespace AirportApp
 
             services.AddSingleton<UserRepository>();
             services.AddSingleton<IUserRepository>(p => p.GetRequiredService<UserRepository>());
+            services.AddSingleton<AirportApp.ClassLibrary.Repository.Interfaces.IRepository<int, AirportApp.ClassLibrary.Entity.Domain.User>>(p => p.GetRequiredService<UserRepository>());
             //services.AddSingleton<IRepository<int, User>>(p => p.GetRequiredService<UserRepository>());
             services.AddSingleton<IUserService, UserService>();
 

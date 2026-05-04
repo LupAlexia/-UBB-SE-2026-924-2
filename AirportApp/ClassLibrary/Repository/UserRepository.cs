@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AirportApp.ClassLibrary.Repository
 {
-    public class UserRepository : IUserRepository
+    public class UserRepository : IUserRepository, AirportApp.ClassLibrary.Repository.Interfaces.IRepository<int, User>
     {
         private readonly AirportDbContext dataBaseContext;
 

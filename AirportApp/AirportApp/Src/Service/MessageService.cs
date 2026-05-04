@@ -63,8 +63,8 @@ namespace AirportApp.Src.Service
             _ = chatRepository.GetById(chatId);
 
             return messageRepository.GetAll()
-                .Where(chatMessage => chatMessage.GetChat().Id == chatId)
-                .OrderBy(chatMessage => ((IMessage)chatMessage).Timestamp);
+                .Where(chatMessage => chatMessage.ChatId == chatId)
+                .OrderBy(chatMessage => chatMessage.Timestamp);
         }
 
         private Chat GetActiveChat(int chatId)

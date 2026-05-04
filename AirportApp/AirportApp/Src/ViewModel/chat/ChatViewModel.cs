@@ -67,10 +67,14 @@ namespace AirportApp.Src.ViewModel.Chats
             var currentUserId = user.RetrieveUniqueDatabaseIdentifierForBot();
             foreach (var message in messages)
             {
-                var dateTime = mapper.Map<MessageDTO>(message);
-                dateTime.SenderName = userService.GetById(dateTime.SenderId)?.RetrieveConfiguredDisplayFullNameForBot();
-                dateTime.IsOutgoing = (dateTime.SenderId == currentUserId);
-                ChatHistory.Add(dateTime);
+                var dataTransferObject = mapper.Map<MessageDTO>(message);
+                
+                dataTransferObject.SenderName = dataTransferObject.SenderId == BotEngineIdentity.CONSTANT_IDENTIFIER_FOR_DEFAULT_BOT_SYSTEM_USER
+                    ? "Carlos"
+                    : userService.GetById(dataTransferObject.SenderId)?.RetrieveConfiguredDisplayFullNameForBot();
+                
+                dataTransferObject.IsOutgoing = (dataTransferObject.SenderId == currentUserId);
+                ChatHistory.Add(dataTransferObject);
             }
         }
 

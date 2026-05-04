@@ -13,7 +13,7 @@ namespace AirportApp.ClassLibrary.Repository
         private readonly AirportDbContext dataBaseContext;
         public AddOnRepository(AirportDbContext databaseContext)
         {
-            this.dataBaseContext = dataBaseContext ?? throw new ArgumentNullException(nameof(dataBaseContext));
+            this.dataBaseContext = databaseContext ?? throw new ArgumentNullException(nameof(databaseContext));
         }
         public IEnumerable<AddOn> GetAllAddOns()
         {
