@@ -48,6 +48,7 @@ namespace Airport.Web.Controllers
         [HttpPut("{id}")]
         public async Task<ActionResult> UpdateAsync(int id, [FromBody] FAQNode node)
         {
+
             await decisionTreeRepository.UpdateByIdAsync(id, node);
             return NoContent();
         }

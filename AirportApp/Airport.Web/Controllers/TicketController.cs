@@ -48,6 +48,11 @@ namespace Airport.Web.Controllers
         [HttpPut("{id}")]
         public async Task<ActionResult> UpdateAsync(int id, [FromBody] Ticket ticket)
         {
+            if (id != ticket.Id)
+            {
+                return BadRequest("ID in URL does not match ID in body.");
+            }
+
             await ticketRepository.UpdateByIdAsync(id, ticket);
             return NoContent();
         }

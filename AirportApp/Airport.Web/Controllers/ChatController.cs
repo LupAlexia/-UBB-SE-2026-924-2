@@ -48,6 +48,11 @@ namespace Airport.Web.Controllers
         [HttpPut("{id}")]
         public async Task<ActionResult> UpdateAsync(int id, [FromBody] Chat chat)
         {
+            if (id != chat.Id)
+            {
+                return BadRequest("ID in URL does not match ID in body.");
+            }
+
             await chatRepository.UpdateByIdAsync(id, chat);
             return NoContent();
         }
