@@ -1,18 +1,14 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using System.Collections.ObjectModel;
-using System.Linq;
 using AutoMapper;
 using AirportApp.ClassLibrary.Entity.Dto;
 using AirportApp.ClassLibrary.Entity.Domain.Ticket;
 using AirportApp.Src.Service.Interfaces;
 
 using AirportApp.Src.Service;
-using AutoMapper;
 
 namespace AirportApp.Src.ViewModel
 {
@@ -42,8 +38,8 @@ namespace AirportApp.Src.ViewModel
             this.userService = userService;
             this.mapper = mapper;
 
-            LoadTickets();
-            LoadCategories();
+            _ = LoadTicketsAsync();
+            _ = LoadCategoriesAsync();
         }
 
         // =================================
@@ -87,9 +83,9 @@ namespace AirportApp.Src.ViewModel
         // =================================
         // LOAD FROM DATABASE
         // =================================
-        private void LoadTickets()
+        private async Task LoadTicketsAsync()
         {
-            var ticketsFromDatabase = ticketService.GetAllTickets();
+            var ticketsFromDatabase = await ticketService.GetAllTicketsAsync();
 
             AllTickets.Clear();
 
@@ -122,30 +118,30 @@ namespace AirportApp.Src.ViewModel
         // =================================
         // UPDATE STATUS
         // =================================
-        public void UpdateStatus(int ticketId, TicketStatusEnum newStatus)
+        public async Task UpdateStatusAsync(int ticketId, TicketStatusEnum newStatus)
         {
-            ticketService.UpdateStatus(ticketId, newStatus);
-            LoadTickets();
+            await ticketService.UpdateStatusAsync(ticketId, newStatus);
+            await LoadTicketsAsync();
         }
 
         // =================================
         // UPDATE URGENCY
         // =================================
-        public void UpdateUrgencyLevel(int ticketId, TicketUrgencyLevelEnum newUrgencyLevel)
+        public async Task UpdateUrgencyLevelAsync(int ticketId, TicketUrgencyLevelEnum newUrgencyLevel)
         {
-            ticketService.UpdateUrgencyLevel(ticketId, newUrgencyLevel);
-            LoadTickets();
+            await ticketService.UpdateUrgencyLevelAsync(ticketId, newUrgencyLevel);
+            await LoadTicketsAsync();
         }
 
         // =================================
         // CREATE TICKET
         // =================================
-        public void CreateTicket(TicketDTO ticketDataTransferObject)
+        public async Task CreateTicketAsync(TicketDTO ticketDataTransferObject)
         {
             // Fetch related entities from DB
-            var creator = userService.GetById(ticketDataTransferObject.creatorAccountId);
-            var category = categoryService.GetCategoryById(ticketDataTransferObject.categoryId);
-            var subcategory = subcategoryService.GetSubcategoryById(ticketDataTransferObject.subcategoryId);
+            var creator = await userService.GetByIdAsync(ticketDataTransferObject.creatorAccountId);
+            var category = await categoryService.GetCategoryByIdAsync(ticketDataTransferObject.categoryId);
+            var subcategory = await subcategoryService.GetSubcategoryByIdAsync(ticketDataTransferObject.subcategoryId);
 
             var ticket = new Ticket(
                 ticketDataTransferObject.ticketId,
@@ -158,23 +154,23 @@ namespace AirportApp.Src.ViewModel
                 ticketDataTransferObject.creationTimestamp,
                 ticketDataTransferObject.urgencyLevel);
 
-            ticketService.AddTicket(ticket);
-            LoadTickets();
+            await ticketService.AddTicketAsync(ticket);
+            await LoadTicketsAsync();
         }
 
-        private void LoadCategories()
+        private async Task LoadCategoriesAsync()
         {
             Categories.Clear();
-            foreach (var categoryEntity in categoryService.GetAllCategories())
+            foreach (var categoryEntity in await categoryService.GetAllCategoriesAsync())
             {
                 Categories.Add(categoryEntity);
             }
         }
 
-        public void LoadSubcategories(int categoryId)
+        public async Task LoadSubcategoriesAsync(int categoryId)
         {
             Subcategories.Clear();
-            foreach (var subcategoryEntity in subcategoryService.GetSubcategoriesByCategoryId(categoryId))
+            foreach (var subcategoryEntity in await subcategoryService.GetSubcategoriesByCategoryIdAsync(categoryId))
             {
                 Subcategories.Add(subcategoryEntity);
             }

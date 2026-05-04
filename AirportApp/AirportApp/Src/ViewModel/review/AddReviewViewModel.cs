@@ -1,5 +1,6 @@
-﻿using System;
+using System;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using AirportApp.ClassLibrary.Entity.Domain;
 using AirportApp.Src.Service;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -58,7 +59,7 @@ namespace AirportApp.Src.ViewModel.Review
         }
 
         [RelayCommand(CanExecute = nameof(CanSubmitReview))]
-        private void SubmitReview()
+        private async Task SubmitReviewAsync()
         {
             try
             {
@@ -71,7 +72,7 @@ namespace AirportApp.Src.ViewModel.Review
                     return;
                 }
 
-                reviewService.CreateReview(1, currentUser, ReviewMessage, DutyRating, FlightRating, StaffRating, CleanRating);
+                await reviewService.CreateReviewAsync(1, currentUser, ReviewMessage, DutyRating, FlightRating, StaffRating, CleanRating);
 
                 DutyRating = 0;
                 FlightRating = 0;

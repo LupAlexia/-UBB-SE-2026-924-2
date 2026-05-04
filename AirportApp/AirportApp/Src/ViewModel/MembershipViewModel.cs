@@ -1,5 +1,6 @@
 using System;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using AirportApp.ClassLibrary.Entity.Domain;
 using AirportApp.Src.Service;
@@ -63,9 +64,9 @@ namespace AirportApp.Src.ViewModel
             this.navigationService = navigationService;
             this.Memberships = new ObservableCollection<MembershipDisplayModel>();
 
-            this.PurchaseCommand = new RelayCommand(parameter => this.ExecutePurchase(parameter));
+            this.PurchaseCommand = new RelayCommand(async parameter => await this.ExecutePurchaseAsync(parameter));
 
-            this.LoadMemberships();
+            _ = this.LoadMembershipsAsync();
         }
 
         public ObservableCollection<MembershipDisplayModel> Memberships { get; set; }
@@ -92,16 +93,16 @@ namespace AirportApp.Src.ViewModel
 
         public ICommand PurchaseCommand { get; }
 
-        private void LoadMemberships()
+        private async Task LoadMembershipsAsync()
         {
-            var memberships = this.membershipService.GetAllMemberships();
+            var memberships = await this.membershipService.GetAllMembershipsAsync();
             foreach (var m in memberships)
             {
                 this.Memberships.Add(new MembershipDisplayModel(m));
             }
         }
 
-        private void ExecutePurchase(object? parameter)
+        private async Task ExecutePurchaseAsync(object? parameter)
         {
             this.PurchaseSucceeded = null;
             this.PurchaseResultMessage = string.Empty;
@@ -117,7 +118,7 @@ namespace AirportApp.Src.ViewModel
                 return;
             }
 
-            var result = this.membershipService.PurchaseMembership(UserSession.CurrentUser.Id, membershipId);
+            var result = await this.membershipService.PurchaseMembershipAsync(UserSession.CurrentUser.Id, membershipId);
             this.PurchaseSucceeded = result.Succeeded;
             this.PurchaseResultMessage = result.Message;
         }

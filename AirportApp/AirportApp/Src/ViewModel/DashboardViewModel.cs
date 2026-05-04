@@ -1,5 +1,6 @@
-﻿using System;
+using System;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using AirportApp.ClassLibrary.Entity.Domain;
 
@@ -33,7 +34,7 @@ namespace AirportApp.Src.ViewModel
 
                 selectedTicketFilter = value;
                 OnPropertyChanged();
-                LoadUserTickets();
+                _ = LoadUserTicketsAsync();
             }
         }
 
@@ -85,10 +86,10 @@ namespace AirportApp.Src.ViewModel
             CancelTicketCommand = new RelayCommand(ExecuteCancelTicket);
             DownloadPdfCommand = new RelayCommand(ExecuteDownloadPdf);
 
-            LoadUserTickets();
+            _ = LoadUserTicketsAsync();
         }
 
-        public void LoadUserTickets()
+        public async Task LoadUserTicketsAsync()
         {
             MyTickets.Clear();
             int? currentUserId = UserSession.CurrentUser?.Id;
@@ -97,7 +98,7 @@ namespace AirportApp.Src.ViewModel
                 return;
             }
 
-            var filteredTickets = dashboardService.GetUserTickets(currentUserId.Value, SelectedTicketFilter);
+            var filteredTickets = await dashboardService.GetUserTicketsAsync(currentUserId.Value, SelectedTicketFilter);
             foreach (var FlightTicket in filteredTickets)
             {
                 MyTickets.Add(FlightTicket);
@@ -125,16 +126,16 @@ namespace AirportApp.Src.ViewModel
             PendingCancelTicket = FlightTicket;
         }
 
-        public void ConfirmCancellation()
+        public async Task ConfirmCancellationAsync()
         {
             if (PendingCancelTicket == null)
             {
                 return;
             }
 
-            cancellationService.CancelTicket(PendingCancelTicket.Id);
+            await cancellationService.CancelTicketAsync(PendingCancelTicket.Id);
             PendingCancelTicket = null;
-            LoadUserTickets();
+            await LoadUserTicketsAsync();
 
             CancellationSucceeded = true;
             CancellationMessage = "The FlightTicket status was updated to Cancelled.";
@@ -145,7 +146,7 @@ namespace AirportApp.Src.ViewModel
             PendingCancelTicket = null;
         }
 
-        public bool OnNavigatedTo()
+        public async Task<bool> OnNavigatedToAsync()
         {
             if (UserSession.CurrentUser == null)
             {
@@ -153,7 +154,7 @@ namespace AirportApp.Src.ViewModel
                 return false;
             }
 
-            LoadUserTickets();
+            await LoadUserTicketsAsync();
             return true;
         }
 

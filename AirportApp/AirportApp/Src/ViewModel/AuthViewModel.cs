@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using AirportApp.ClassLibrary.Entity.Domain;
 using AirportApp.Src.Service;
@@ -32,7 +33,7 @@ namespace AirportApp.Src.ViewModel
             this.authService = authService ?? throw new ArgumentNullException(nameof(authService));
             this.navigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
 
-            ActionCommand = new RelayCommand(parameter => ExecuteAction(), parameter => IsFormValid);
+            ActionCommand = new RelayCommand(async parameter => await ExecuteActionAsync(), parameter => IsFormValid);
             ToggleModeCommand = new RelayCommand(parameter => ToggleMode());
         }
 
@@ -212,11 +213,11 @@ namespace AirportApp.Src.ViewModel
         public ICommand ActionCommand { get; }
         public ICommand ToggleModeCommand { get; }
 
-        private void ExecuteAction()
+        private async Task ExecuteActionAsync()
         {
             if (IsLoginMode)
             {
-                Login();
+                await LoginAsync();
 
                 if (IsAuthenticated)
                 {
@@ -236,7 +237,7 @@ namespace AirportApp.Src.ViewModel
             }
             else
             {
-                Register();
+                await RegisterAsync();
 
                 if (string.IsNullOrWhiteSpace(ErrorMessage))
                 {
@@ -282,14 +283,14 @@ namespace AirportApp.Src.ViewModel
             IsRegisterFieldsVisible = true;
         }
 
-        private void Login()
+        private async Task LoginAsync()
         {
             try
             {
                 ErrorMessage = string.Empty;
                 SuccessMessage = string.Empty;
 
-                Customer user = authService.Login(EmailText, PasswordText);
+                Customer user = await authService.LoginAsync(EmailText, PasswordText);
 
                 AuthenticatedUser = user;
                 IsAuthenticated = true;
@@ -303,14 +304,14 @@ namespace AirportApp.Src.ViewModel
             }
         }
 
-        private void Register()
+        private async Task RegisterAsync()
         {
             try
             {
                 ErrorMessage = string.Empty;
                 SuccessMessage = string.Empty;
 
-                authService.Register(EmailText, PhoneText, UsernameText, PasswordText);
+                await authService.RegisterAsync(EmailText, PhoneText, UsernameText, PasswordText);
 
                 SuccessMessage = "Registration successful. You can now sign in.";
             }
