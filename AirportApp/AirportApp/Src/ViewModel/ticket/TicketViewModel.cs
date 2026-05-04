@@ -7,15 +7,10 @@ using System.Threading.Tasks;
 using System.Collections.ObjectModel;
 using System.Linq;
 using AutoMapper;
-using AirportApp.Src.Dto;
-using AirportApp.Src.Model;
-using AirportApp.Src.Model.Ticket;
-using AirportApp.Src.Repository.Database;
-using AirportApp.Src.Service;
-using Microsoft.Data.SqlClient;
+using AirportApp.ClassLibrary.Entity.Dto;
+using AirportApp.ClassLibrary.Entity.Domain.Ticket;
 using AirportApp.Src.Service.Interfaces;
-using AirportApp.Src.Dto;
-using AirportApp.Src.Model.Ticket;
+
 using AirportApp.Src.Service;
 using AutoMapper;
 

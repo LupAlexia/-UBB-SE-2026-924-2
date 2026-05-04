@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
-using AirportApp.Src.Domain;
-using AirportApp.Src.Model;
+using AirportApp.ClassLibrary.Entity.Domain;
 
 namespace AirportApp.Src.Service
 {

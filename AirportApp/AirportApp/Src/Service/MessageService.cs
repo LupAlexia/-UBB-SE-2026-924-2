@@ -1,11 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using AirportApp.Src.Model.Chats;
-using AirportApp.Src.Model.Faq.Bot;
-using AirportApp.Src.Model.Message;
-using AirportApp.Src.Repository;
-using AirportApp.Src.Service.Bot;
+using AirportApp.ClassLibrary.Entity.Domain.Chats;
+using AirportApp.ClassLibrary.Entity.Domain.Message;
+using AirportApp.ClassLibrary.Entity.Domain.Faq.Bot;
+using AirportApp.ClassLibrary.Repository.Interfaces;
 
 namespace AirportApp.Src.Service
 {
@@ -13,12 +12,12 @@ namespace AirportApp.Src.Service
     {
         private readonly IRepository<int, Chat> chatRepository;
         private readonly IRepository<int, Message> messageRepository;
-        private readonly BotEngine botEngine;
+        private readonly BotEngineIdentity botEngine;
 
         public MessageService(
             IRepository<int, Chat> chatRepository,
             IRepository<int, Message> messageRepository,
-            BotEngine botEngine)
+            BotEngineIdentity botEngine)
         {
             this.chatRepository = chatRepository ?? throw new ArgumentNullException(nameof(chatRepository));
             this.messageRepository = messageRepository ?? throw new ArgumentNullException(nameof(messageRepository));
@@ -31,19 +30,19 @@ namespace AirportApp.Src.Service
             {
                 throw new ArgumentNullException(nameof(selectedOption));
             }
-            if (selectedOption.nextOptionId == 1)
+            if (selectedOption.NextOptionId == 1)
             {
                 botEngine.ResetBotConversationStateToInitialRootNode();
             }
 
             Chat chat = GetActiveChat(chatId);
 
-            var userMessage = new Message(sender, chat, selectedOption.label);
+            var userMessage = new Message(chat, selectedOption.Label, sender);
             messageRepository.CreateNewEntity(userMessage);
 
             BotMessage botReply = botEngine.GenerateAppropriateResponseBasedOnCurrentStrategy(userMessage);
 
-            var botRow = new Message(botEngine, chat, botReply.GetMessage());
+            var botRow = new Message( chat, botReply.GetMessage(), botEngine);
             messageRepository.CreateNewEntity(botRow);
 
             return botReply;
@@ -52,7 +51,7 @@ namespace AirportApp.Src.Service
         public IMessage GetMessage(int chatId, int messageId)
         {
             IMessage message = messageRepository.GetById(messageId);
-            if (message.GetChat().ChatId != chatId)
+            if (message.GetChat().Id != chatId)
             {
                 throw new InvalidOperationException($"Message {messageId} does not belong to chat {chatId}.");
             }
@@ -64,8 +63,8 @@ namespace AirportApp.Src.Service
             _ = chatRepository.GetById(chatId);
 
             return messageRepository.GetAll()
-                .Where(chatMessage => chatMessage.GetChat().ChatId == chatId)
-                .OrderBy(chatMessage => ((IMessage)chatMessage).GetTimeStamp());
+                .Where(chatMessage => chatMessage.ChatId == chatId)
+                .OrderBy(chatMessage => chatMessage.Timestamp);
         }
 
         private Chat GetActiveChat(int chatId)

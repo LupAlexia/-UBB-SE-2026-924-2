@@ -4,9 +4,9 @@
    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
    xmlns:controls="using:Microsoft.UI.Xaml.Controls" 
-   xmlns:ticket="using:AirportApp.Src.Model.Ticket"
+   xmlns:ticket="using:AirportApp.ClassLibrary.Entity.Domain.Ticket"
    xmlns:general="using:AirportApp.Src.View.General"
-   xmlns:dto ="using:AirportApp.Src.Dto"
+   xmlns:dto ="using:AirportApp.ClassLibrary.Entity.Dto"
    RequestedTheme="Light"
    Background="{ThemeResource PageBackgroundBrush}">
 

@@ -8,7 +8,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:general="using:AirportApp.Src.View.General"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:dto="using:AirportApp.Src.Dto"
+    xmlns:dto="using:AirportApp.ClassLibrary.Entity.Dto"
     mc:Ignorable="d"
     RequestedTheme="Light"
     Background="{ThemeResource CardBackgroundBrush}">

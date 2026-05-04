@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using AirportApp.Src.Model;
-using AirportApp.Src.Repository;
+using AirportApp.ClassLibrary.Entity.Domain;
 using AirportApp.Src.Service.Interfaces;
-using AirportApp.Src.Repository.Interfaces;
+using AirportApp.ClassLibrary.Repository.Interfaces;
 
 namespace AirportApp.Src.Service
 {

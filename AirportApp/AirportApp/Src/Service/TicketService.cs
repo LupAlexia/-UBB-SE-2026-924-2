@@ -3,15 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using AirportApp.Src.Dto;
-using AirportApp.Src.Model;
-using AirportApp.Src.Model.Ticket;
-using AirportApp.Src.Repository;
-using AirportApp.Src.Repository.Interfaces;
+using AirportApp.ClassLibrary.Entity.Domain.Ticket;
+using AirportApp.ClassLibrary.Entity.Dto;
 using AirportApp.Src.Service.Interfaces;
+
+using User = AirportApp.ClassLibrary.Entity.Domain.User;
 using AirportApp.Src.ViewModel;
-using Windows.System;
-using User = AirportApp.Src.Model.User;
+using AirportApp.ClassLibrary.Repository.Interfaces;
 
 namespace AirportApp.Src.Service
 {
@@ -71,7 +69,7 @@ namespace AirportApp.Src.Service
             {
                 throw new ArgumentNullException("Null Subcategory.");
             }
-            if (ticket.Subcategory.ParentCategory.CategoryId != ticket.Category.CategoryId)
+            if (ticket.Subcategory.ParentCategory.Id != ticket.Category.Id)
             {
                 throw new ArgumentException($"The subcategory '{ticket.Subcategory.SubcategoryName}' does not belong to the category '{ticket.Category.CategoryName}'");
             }

@@ -9,7 +9,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AirportApp;
-using AirportApp.Src.Model;
 using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace AirportApp.Src.ViewModel.General

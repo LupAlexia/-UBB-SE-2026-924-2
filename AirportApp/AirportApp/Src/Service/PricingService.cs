@@ -1,8 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using AirportApp.Src.Domain;
-using AirportApp.Src.Model;
+using AirportApp.ClassLibrary.Entity.Domain;
 
 namespace AirportApp.Src.Service
 {
@@ -43,7 +42,7 @@ namespace AirportApp.Src.Service
                     {
                         foreach (var discount in ticket.User.Membership.AddonDiscounts)
                         {
-                            if (discount.AddOn != null && discount.AddOn.AddOnId == addon.AddOnId)
+                            if (discount.AddOn != null && discount.AddOn.Id == addon.Id)
                             {
                                 specificAddonDiscount = discount.DiscountPercentage;
                                 break;

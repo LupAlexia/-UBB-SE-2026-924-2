@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using AirportApp.Src.Domain;
-using AirportApp.Src.Repository;
+using AirportApp.ClassLibrary.Entity.Domain;
+using AirportApp.ClassLibrary.Repository.Interfaces;
 
 namespace AirportApp.Src.Service
 {
@@ -32,7 +32,7 @@ namespace AirportApp.Src.Service
             {
                 flights = flights.Where(flight =>
                 {
-                    int occupiedSeats = this.flightRepository.GetOccupiedSeatCount(flight.FlightId);
+                    int occupiedSeats = this.flightRepository.GetOccupiedSeatCount(flight.Id);
                     int availableSeats = flight.Route!.Capacity - occupiedSeats;
                     return availableSeats >= passengers.Value;
                 });

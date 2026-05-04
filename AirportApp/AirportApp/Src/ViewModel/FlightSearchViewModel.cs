@@ -1,10 +1,8 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
-using AirportApp.Src.Domain;
 using AirportApp.Src.Service;
-using AirportApp.Src.Model;
-
+using AirportApp.ClassLibrary.Entity.Domain;
 namespace AirportApp.Src.ViewModel
 {
     public class FlightSearchViewModel : ViewModelBase

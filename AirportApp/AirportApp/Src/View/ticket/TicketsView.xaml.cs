@@ -6,8 +6,8 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI;
 using Microsoft.Extensions.DependencyInjection;
 using AirportApp.Src.ViewModel;
-using AirportApp.Src.Dto;
-using AirportApp.Src.Model.Ticket;
+using AirportApp.ClassLibrary.Entity.Dto;
+using AirportApp.ClassLibrary.Entity.Domain.Ticket;
 using Microsoft.UI.Xaml.Media;
 
 namespace AirportApp.Src.View.Ticket
@@ -70,9 +70,9 @@ namespace AirportApp.Src.View.Ticket
                     creatorEmailAddress: DEFAULT_SYSTEM_EMAIL,
                     urgencyLevel: TicketUrgencyLevelEnum.LOW,
                     currentStatus: TicketStatusEnum.OPEN,
-                    categoryId: selectedCategory?.CategoryId ?? 1,
+                    categoryId: selectedCategory?.Id ?? 1,
                     categoryName: selectedCategory?.CategoryName ?? "General",
-                    subcategoryId: selectedSubcategory?.SubcategoryId ?? 1,
+                    subcategoryId: selectedSubcategory?.Id ?? 1,
                     subcategoryName: selectedSubcategory?.SubcategoryName ?? "General",
                     subject: inputs.TitleBox.Text,
                     description: inputs.DescriptionBox.Text,
@@ -115,7 +115,7 @@ namespace AirportApp.Src.View.Ticket
                 {
                     return;
                 }
-                ViewModel.LoadSubcategories(cat.CategoryId);
+                ViewModel.LoadSubcategories(cat.Id);
                 foreach (var sub in ViewModel.Subcategories)
                 {
                     subcategoryCombo.Items.Add(sub.SubcategoryName);

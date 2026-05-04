@@ -1,6 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using AutoMapper;
-using AirportApp.Src.Dto;
+using AirportApp.ClassLibrary.Entity.Dto;
 using AirportApp.Src.Service;
 using CommunityToolkit.Mvvm.ComponentModel;
 
@@ -27,7 +27,7 @@ namespace AirportApp.Src.ViewModel
 
             foreach (var review in allReviews)
             {
-                string realName = review.GetUser().RetrieveConfiguredDisplayFullNameForBot();
+                string realName = review.User.RetrieveConfiguredDisplayFullNameForBot();
 
                 float averageRating = reviewService.CalculateAverageRating(review);
 

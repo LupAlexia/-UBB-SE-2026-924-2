@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using AirportApp.Src.Model.Faq;
+using AirportApp.ClassLibrary.Entity.Domain.Faq;
 
 namespace AirportApp.Src.Service.Interfaces
 {

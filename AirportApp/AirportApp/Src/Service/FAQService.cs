@@ -1,11 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using AirportApp.Src.Model.Faq;
-using AirportApp.Src.Repository.Implementation;
-using AirportApp.Src.Repository.Interfaces;
+using AirportApp.ClassLibrary.Entity.Domain.Faq;
 using AirportApp.Src.Service.Interfaces;
 using Sprache;
+using AirportApp.ClassLibrary.Repository.Interfaces;
 
 namespace AirportApp.Src.Service.Implementation
 {

@@ -2,9 +2,10 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using AutoMapper;
-using AirportApp.Src.Dto;
+using AirportApp.ClassLibrary.Entity.Dto;
 using AirportApp.Src.Service;
 using CommunityToolkit.Mvvm.ComponentModel;
+using ReviewEntity = AirportApp.ClassLibrary.Entity.Domain.Review.Review;
 
 namespace AirportApp.Src.ViewModel.Review
 {
@@ -67,12 +68,12 @@ namespace AirportApp.Src.ViewModel.Review
             }
         }
 
-        private void CalculateCategoryAverages(List<Model.Review.Review> reviews)
+        private void CalculateCategoryAverages(List<ReviewEntity> reviews)
         {
-            AverageDutyFree = reviews.Average(review => review.GetDutyFreeRating());
-            AverageFlightExperience = reviews.Average(review => review.GetFlightExperienceRating());
-            AverageStaffFriendliness = reviews.Average(review => review.GetStaffFriendlinessRating());
-            AverageCleanliness = reviews.Average(review => review.GetCleanlinessRating());
+            AverageDutyFree = reviews.Average(review => review.DutyFreeRating);
+            AverageFlightExperience = reviews.Average(review => review.FlightExperienceRating);
+            AverageStaffFriendliness = reviews.Average(review => review.StaffFriendlinessRating);
+            AverageCleanliness = reviews.Average(review => review.CleanlinessRating);
         }
     }
 }

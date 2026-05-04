@@ -2,8 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using AirportApp.Src.Domain;
-using AirportApp.Src.Repository;
+using AirportApp.ClassLibrary.Entity.Domain;
+using AirportApp.ClassLibrary.Repository;
+using AirportApp.ClassLibrary.Repository.Interfaces;
 
 namespace AirportApp.Src.Service
 {
@@ -123,7 +124,7 @@ namespace AirportApp.Src.Service
             {
                 if (!string.IsNullOrWhiteSpace(ticket.Seat))
                 {
-                    bool seatAvailable = await this.ticketRepository.IsSeatAvailable(ticket.Flight?.FlightId ?? 0, ticket.Seat);
+                    bool seatAvailable = await this.ticketRepository.IsSeatAvailable(ticket.Flight?.Id ?? 0, ticket.Seat);
                     if (!seatAvailable)
                     {
                         return false;

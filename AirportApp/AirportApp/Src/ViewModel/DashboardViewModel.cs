@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
-using AirportApp.Src.Domain;
+using AirportApp.ClassLibrary.Entity.Domain;
+
 using AirportApp.Src.Service;
 
 namespace AirportApp.Src.ViewModel
@@ -90,7 +91,7 @@ namespace AirportApp.Src.ViewModel
         public void LoadUserTickets()
         {
             MyTickets.Clear();
-            int? currentUserId = UserSession.CurrentUser?.UserId;
+            int? currentUserId = UserSession.CurrentUser?.Id;
             if (!currentUserId.HasValue)
             {
                 return;
@@ -131,7 +132,7 @@ namespace AirportApp.Src.ViewModel
                 return;
             }
 
-            cancellationService.CancelTicket(PendingCancelTicket.TicketId);
+            cancellationService.CancelTicket(PendingCancelTicket.Id);
             PendingCancelTicket = null;
             LoadUserTickets();
 

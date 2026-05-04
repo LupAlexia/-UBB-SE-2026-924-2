@@ -61,7 +61,7 @@ namespace AirportApp.Src.View
                 var dialog = new ContentDialog
                 {
                     Title = "Cancel FlightTicket",
-                    Content = $"Are you sure you want to cancel FlightTicket #{viewModel.PendingCancelTicket.TicketId}?",
+                    Content = $"Are you sure you want to cancel FlightTicket #{viewModel.PendingCancelTicket.Id}?",
                     PrimaryButtonText = "Yes, cancel",
                     CloseButtonText = "No",
                     XamlRoot = this.XamlRoot

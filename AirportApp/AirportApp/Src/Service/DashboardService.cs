@@ -5,8 +5,8 @@ using System.Linq;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
-using AirportApp.Src.Domain;
-using AirportApp.Src.Repository;
+using AirportApp.ClassLibrary.Entity.Domain;
+using AirportApp.ClassLibrary.Repository.Interfaces;
 
 namespace AirportApp.Src.Service
 {
@@ -44,7 +44,7 @@ namespace AirportApp.Src.Service
         public string GenerateTicketPdf(FlightTicket FlightTicket)
         {
             string downloadsFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
-            string filePath = Path.Combine(downloadsFolder, $"WizzErr_Ticket_{FlightTicket.TicketId}_{DateTime.Now:yyyyMMdd_HHmmss}.pdf");
+            string filePath = Path.Combine(downloadsFolder, $"WizzErr_Ticket_{FlightTicket.Id}_{DateTime.Now:yyyyMMdd_HHmmss}.pdf");
 
             Document.Create(container =>
             {
@@ -62,7 +62,7 @@ namespace AirportApp.Src.Service
                     page.Content().PaddingVertical(1, Unit.Centimetre).Column(col =>
                     {
                         col.Spacing(PdfColumnSpacing);
-                        col.Item().Text($"FlightTicket ID: {FlightTicket.TicketId}").FontSize(PdfTicketIdFontSize).SemiBold();
+                        col.Item().Text($"FlightTicket ID: {FlightTicket.Id}").FontSize(PdfTicketIdFontSize).SemiBold();
                         col.Item().Text($"Status: {FlightTicket.Status}").FontColor(FlightTicket.Status == CancelledStatus ? Colors.Red.Medium : Colors.Green.Darken1);
                         col.Item().LineHorizontal(1).LineColor(Colors.Grey.Lighten2);
 

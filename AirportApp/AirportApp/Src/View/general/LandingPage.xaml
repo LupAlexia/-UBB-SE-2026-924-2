@@ -3,7 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:general="using:AirportApp.Src.View.General"
-    xmlns:dto="using:AirportApp.Src.Dto"
+    xmlns:dto="using:AirportApp.ClassLibrary.Entity.Dto"
     Background="{ThemeResource CardBackgroundBrush}">
 
     <Grid>

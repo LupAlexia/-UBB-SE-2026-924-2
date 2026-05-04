@@ -1,9 +1,8 @@
-using AirportApp.Src.Domain;
-using AirportApp.Src.Repository;
-using AirportApp.Src.Repository.Interfaces;
+using AirportApp.ClassLibrary.Entity.Domain;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using AirportApp.ClassLibrary.Repository.Interfaces;
 
 namespace AirportApp.Src.Service
 {
@@ -24,7 +23,7 @@ namespace AirportApp.Src.Service
 
             foreach (var membership in memberships)
             {
-                membership.AddonDiscounts = this.membershipRepository.GetAddonDiscounts(membership.MembershipId).ToList();
+                membership.AddonDiscounts = this.membershipRepository.GetAddonDiscounts(membership.Id).ToList();
             }
 
             return memberships;

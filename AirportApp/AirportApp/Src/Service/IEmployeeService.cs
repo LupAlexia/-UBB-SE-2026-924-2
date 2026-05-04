@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using AirportApp.Src.Model.Employee;
+using AirportApp.ClassLibrary.Entity.Domain.Employee;
 
 namespace AirportApp.Src.Service
 {

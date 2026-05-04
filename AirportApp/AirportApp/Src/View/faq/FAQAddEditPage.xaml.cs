@@ -4,12 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using AutoMapper;
-using AirportApp.Src.Dto;
-using AirportApp.Src.Dto.MappingProfiles;
-using AirportApp.Src.Model.Faq;
-using AirportApp.Src.Repository;
-using AirportApp.Src.Repository.Implementation;
-using AirportApp.Src.Service.Implementation;
+using AirportApp.ClassLibrary.Entity.Dto;
+using AirportApp.ClassLibrary.Entity.Domain.Faq;
 using AirportApp.Src.ViewModel.Faq;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
@@ -105,7 +101,7 @@ namespace AirportApp.Src.View.Faq
                 currentPersonId = navData.CurrentPersonId;
                 viewModel.IsAdmin = navData.IsEmployee;
 
-                if (navData.FAQEntry != null)
+                if (navData.FAQEntry is not null)
                 {
                     editingFaq = navData.FAQEntry;
                     isEditMode = true;

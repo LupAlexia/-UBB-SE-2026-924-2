@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using AirportApp.Src.Domain;
+using AirportApp.ClassLibrary.Entity.Domain;
 
 namespace AirportApp.Src.Service
 {

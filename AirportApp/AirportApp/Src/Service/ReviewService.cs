@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using AirportApp.Src.Model;
-using AirportApp.Src.Model.Review;
-using AirportApp.Src.Repository;
-
+using AirportApp.ClassLibrary.Entity.Domain.Review;
+using AirportApp.ClassLibrary.Entity.Domain;
+using AirportApp.ClassLibrary.Repository.Interfaces;
 namespace AirportApp.Src.Service
 {
     public class ReviewService
@@ -62,32 +61,32 @@ namespace AirportApp.Src.Service
                 throw new ArgumentException("Review already exists");
             }
 
-            if (review.GetUser() == null)
+            if (review.User == null)
             {
                 throw new ArgumentException("User cannot be null");
             }
 
-            if (string.IsNullOrEmpty(review.GetMessage()))
+            if (string.IsNullOrEmpty(review.Message))
             {
                 throw new ArgumentException("Message cannot be null or empty");
             }
 
-            if (review.GetDutyFreeRating() < MinRating || review.GetDutyFreeRating() > MaxRating)
+            if (review.DutyFreeRating < MinRating || review.DutyFreeRating > MaxRating)
             {
                 throw new ArgumentException($"Duty Free Rating must be between {MinRating} and {MaxRating}");
             }
 
-            if (review.GetFlightExperienceRating() < MinRating || review.GetFlightExperienceRating() > MaxRating)
+            if (review.FlightExperienceRating < MinRating || review.FlightExperienceRating > MaxRating)
             {
                 throw new ArgumentException($"Flight Experience Rating must be between {MinRating} and {MaxRating}");
             }
 
-            if (review.GetStaffFriendlinessRating() < MinRating || review.GetStaffFriendlinessRating() > MaxRating)
+            if (review.FlightExperienceRating < MinRating || review.FlightExperienceRating > MaxRating)
             {
                 throw new ArgumentException($"Staff Friendliness Rating must be between {MinRating} and {MaxRating}");
             }
 
-            if (review.GetCleanlinessRating() < MinRating || review.GetCleanlinessRating() > MaxRating)
+            if (review.FlightExperienceRating < MinRating || review.FlightExperienceRating > MaxRating)
             {
                 throw new ArgumentException($"Cleanliness Rating must be between {MinRating} and {MaxRating}");
             }
@@ -95,10 +94,10 @@ namespace AirportApp.Src.Service
 
         public float CalculateAverageRating(Review review)
         {
-            return (review.GetDutyFreeRating() +
-                    review.GetFlightExperienceRating() +
-                    review.GetStaffFriendlinessRating() +
-                    review.GetCleanlinessRating()) / (float)NumberOfRatings;
+            return (review.DutyFreeRating +
+                    review.FlightExperienceRating +
+                    review.StaffFriendlinessRating +
+                    review.CleanlinessRating) / (float)NumberOfRatings;
         }
     }
 }

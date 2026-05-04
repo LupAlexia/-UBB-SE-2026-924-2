@@ -5,9 +5,9 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using AutoMapper;
-using AirportApp.Src.Dto;
-using AirportApp.Src.Model.Faq;
-using AirportApp.Src.Service.Implementation;
+using AirportApp.ClassLibrary.Entity.Dto;
+using AirportApp.ClassLibrary.Entity.Domain.Faq;
+using AirportApp.ClassLibrary.Entity.Domain.Faq.Bot;
 using AirportApp.Src.Service.Interfaces;
 using AirportApp.Src.View.Faq;
 
