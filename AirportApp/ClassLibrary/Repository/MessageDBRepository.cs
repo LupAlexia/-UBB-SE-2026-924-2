@@ -10,7 +10,7 @@ using AirportApp.ClassLibrary.DataAccess;
 
 namespace AirportApp.ClassLibrary.Repository.Interfaces
 {
-    public class MessageDatabaseRepository : IRepository<int, Message>
+    public class MessageDatabaseRepository : IMessageRepository
     {
         private readonly AirportDbContext dataBaseContext;
 
@@ -28,12 +28,12 @@ namespace AirportApp.ClassLibrary.Repository.Interfaces
 
             this.dataBaseContext.messages.Add(newEntity);
             await this.dataBaseContext.SaveChangesAsync();
-            return newEntity.GetId();
+            return newEntity.Id;
         }
 
         public async Task DeleteByIdAsync(int identificationNumber)
         {
-            var message = await this.dataBaseContext.messages.FirstOrDefaultAsync(m => m.GetId() == identificationNumber);
+            var message = await this.dataBaseContext.messages.FirstOrDefaultAsync(m => m.Id == identificationNumber);
             if (message != null)
             {
                 this.dataBaseContext.messages.Remove(message);
@@ -48,7 +48,7 @@ namespace AirportApp.ClassLibrary.Repository.Interfaces
                 throw new ArgumentNullException(nameof(message));
             }
 
-            var existingMessage = await this.dataBaseContext.messages.FirstOrDefaultAsync(m => m.GetId() == identificationNumber);
+            var existingMessage = await this.dataBaseContext.messages.FirstOrDefaultAsync(m => m.Id == identificationNumber);
             if (existingMessage != null)
             {
                 await this.dataBaseContext.SaveChangesAsync();
@@ -62,14 +62,14 @@ namespace AirportApp.ClassLibrary.Repository.Interfaces
 
         public async Task<Message> GetByIdAsync(int identificationNumber)
         {
-            var message = await this.dataBaseContext.messages.FirstOrDefaultAsync(m => m.GetId() == identificationNumber);
+            var message = await this.dataBaseContext.messages.FirstOrDefaultAsync(m => m.Id == identificationNumber);
             return message ?? throw new KeyNotFoundException($"Message with id {identificationNumber} not found.");
         }
 
         public async Task<IEnumerable<Message>> GetByChatIdAsync(int chatId)
         {
             return await this.dataBaseContext.messages
-                .Where(m => m.GetChat().Id == chatId)
+                .Where(m => m.ChatId == chatId)
                 .OrderBy(m => m.Timestamp)
                 .ToListAsync();
         }
@@ -77,7 +77,7 @@ namespace AirportApp.ClassLibrary.Repository.Interfaces
         public async Task<IEnumerable<Message>> GetMessagesSinceAsync(int chatId, int firstMessageId)
         {
             return await this.dataBaseContext.messages
-                .Where(m => m.GetChat().Id == chatId && m.GetId() >= firstMessageId)
+                .Where(m => m.ChatId == chatId && m.Id >= firstMessageId)
                 .OrderBy(m => m.Timestamp)
                 .ToListAsync();
         }

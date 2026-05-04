@@ -16,14 +16,14 @@ namespace AirportApp.ClassLibrary.Entity.Domain
         public int UserId { get; set; }
 
         [ForeignKey(nameof(UserId))]
-        public Customer User { get; set; } = null!;
+        public Customer? User { get; set; }
 
         [Required]
         [Column("Flight_Id")]
         public int FlightId { get; set; }
 
         [ForeignKey(nameof(FlightId))]
-        public Flight Flight { get; set; } = null!;
+        public Flight? Flight { get; set; }
 
         [Required]
         [MaxLength(10)]

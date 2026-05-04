@@ -1,6 +1,14 @@
-
 using AirportApp.ClassLibrary.DataAccess;
+using AirportApp.ClassLibrary.Entity.Domain;
+using AirportApp.ClassLibrary.Entity.Domain.Chats;
+using AirportApp.ClassLibrary.Entity.Domain.Faq.Bot;
+using AirportApp.ClassLibrary.Entity.Domain.Message;
+using AirportApp.ClassLibrary.Entity.Domain.Review;
+using AirportApp.ClassLibrary.Entity.Repository.Database;
+using AirportApp.ClassLibrary.Repository;
+using AirportApp.ClassLibrary.Repository.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json.Serialization;
 
 namespace Airport.Web
 {
@@ -10,20 +18,40 @@ namespace Airport.Web
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add db context
             builder.Services.AddDbContext<AirportDbContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-            // Add services to the container.
+            builder.Services.AddScoped<IAddOnRepository, AddOnRepository>();
+            builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
+            builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+            builder.Services.AddScoped<IFAQRepository, FAQRepository>();
+            builder.Services.AddScoped<IFlightRepository, FlightRepository>();
+            builder.Services.AddScoped<IFlightTicketRepository, FlightTicketRepository>();
+            builder.Services.AddScoped<IMembershipRepository, MembershipRepository>();
+            builder.Services.AddScoped<ITicketRepository, TicketRepository>();
+            builder.Services.AddScoped<ITicketCategoryRepository, TicketCategoryRepository>();
+            builder.Services.AddScoped<ITicketSubcategoryRepository, TicketSubcategoryRepository>();
+            builder.Services.AddScoped<IUserRepository, UserRepository>();
 
-            builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+            builder.Services.AddScoped<IRepository<int, Chat>, ChatDatabaseRepository>();
+            builder.Services.AddScoped<IMessageRepository, MessageDatabaseRepository>();
+            builder.Services.AddScoped<IRepository<int, Review>, ReviewRepository>();
+            builder.Services.AddScoped<IRepository<int, FAQNode>, DecisionTreeRepository>();
+
+            builder.Services.AddControllers(options =>
+                {
+                    options.SuppressAsyncSuffixInActionNames = false;
+                })
+                .AddJsonOptions(options =>
+                {
+                    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+                });
+
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
@@ -31,10 +59,7 @@ namespace Airport.Web
             }
 
             app.UseHttpsRedirection();
-
             app.UseAuthorization();
-
-
             app.MapControllers();
 
             app.Run();

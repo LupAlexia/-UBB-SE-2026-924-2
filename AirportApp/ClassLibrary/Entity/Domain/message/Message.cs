@@ -36,7 +36,7 @@ namespace AirportApp.ClassLibrary.Entity.Domain.Message
         public int ChatId { get; set; }
 
         [ForeignKey(nameof(ChatId))]
-        public Chat Chat { get; set; } = null!;
+        public Chat? Chat { get; set; }
 
         // Explicit Sender IDs
         [Column("Sender_User_Id")]
@@ -51,7 +51,8 @@ namespace AirportApp.ClassLibrary.Entity.Domain.Message
         [ForeignKey(nameof(SenderEmployeeId))]
         public EmpNamespace.Employee ? SenderEmployee { get; set; }
         [NotMapped]
-        public ISender Sender => (ISender?)SenderUser ?? (ISender?)SenderEmployee!;
+        [System.Text.Json.Serialization.JsonIgnore]
+        public ISender? Sender => (ISender?)SenderUser ?? (ISender?)SenderEmployee;
 
         public Message() { }
 
@@ -91,14 +92,14 @@ namespace AirportApp.ClassLibrary.Entity.Domain.Message
             return Text;
         }
 
-        public ISender GetSender() => Sender;
+        public ISender GetSender() => Sender!;
 
         public int GetId()
         {
             return Id;
         }
 
-        public Chat GetChat() => Chat;
+        public Chat GetChat() => Chat!;
 
         IEnumerable<FAQOption> IMessage.GetNextOptions()
         {
