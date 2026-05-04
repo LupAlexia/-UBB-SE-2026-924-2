@@ -1,15 +1,16 @@
-﻿using AirportApp.ClassLibrary.Entity.Domain;
+using System.Threading.Tasks;
+using AirportApp.ClassLibrary.Entity.Domain;
 
 namespace AirportApp.ClassLibrary.Repository.Interfaces
 {
     public interface ICustomerRepository
     {
-        Customer? GetById(int id);
+        Task<Customer?> GetByIdAsync(int id);
 
-        Customer? GetByEmail(string email);
+        Task<Customer?> GetByEmailAsync(string email);
 
-        void AddUser(Customer user);
+        Task AddUserAsync(Customer user);
 
-        void UpdateUserMembership(int userId, int newMembershipId);
+        Task UpdateUserMembershipAsync(int userId, int newMembershipId);
     }
 }

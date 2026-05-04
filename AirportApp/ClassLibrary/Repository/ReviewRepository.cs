@@ -1,7 +1,10 @@
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using AirportApp.ClassLibrary.DataAccess;
 using AirportApp.ClassLibrary.Entity.Domain.Review;
 using AirportApp.ClassLibrary.Repository.Interfaces;
-using Microsoft.EntityFrameworkCore;
 
 namespace AirportApp.ClassLibrary.Repository
 {
@@ -14,47 +17,51 @@ namespace AirportApp.ClassLibrary.Repository
             dataBaseContext = context ?? throw new ArgumentNullException(nameof(dataBaseContext));
         }
 
-        public Review GetById(int id)
+        public async Task<Review> GetByIdAsync(int id)
         {
-            // .Include(r => r.User) ensures the author is loaded
-            return dataBaseContext.reviews
+            return await dataBaseContext.reviews
                 .Include(r => r.User)
-                .FirstOrDefault(r => r.Id == id)
+                .FirstOrDefaultAsync(r => r.Id == id)
                 ?? throw new KeyNotFoundException($"Review with id {id} was not found.");
         }
 
-        public IEnumerable<Review> GetAll()
+        public async Task<IEnumerable<Review>> GetAllAsync()
         {
-            return dataBaseContext.reviews
+            return await dataBaseContext.reviews
                 .Include(r => r.User)
-                .ToList();
+                .ToListAsync();
         }
 
-        public int CreateNewEntity(Review reviewElement)
+        public async Task<int> CreateNewEntityAsync(Review reviewElement)
         {
-            if (reviewElement == null) throw new ArgumentNullException(nameof(reviewElement));
+            if (reviewElement == null)
+            {
+                throw new ArgumentNullException(nameof(reviewElement));
+            }
 
             dataBaseContext.reviews.Add(reviewElement);
-            dataBaseContext.SaveChanges();
+            await dataBaseContext.SaveChangesAsync();
             return reviewElement.Id;
         }
 
-        public void UpdateById(int id, Review reviewElement)
+        public async Task UpdateByIdAsync(int id, Review reviewElement)
         {
-            if (reviewElement == null) throw new ArgumentNullException(nameof(reviewElement));
+            if (reviewElement == null)
+            {
+                throw new ArgumentNullException(nameof(reviewElement));
+            }
 
-            // EF Core updates existing entities
             dataBaseContext.reviews.Update(reviewElement);
-            dataBaseContext.SaveChanges();
+            await dataBaseContext.SaveChangesAsync();
         }
 
-        public void DeleteById(int id)
+        public async Task DeleteByIdAsync(int id)
         {
-            var review = dataBaseContext.reviews.Find(id);
+            var review = await dataBaseContext.reviews.FindAsync(id);
             if (review != null)
             {
                 dataBaseContext.reviews.Remove(review);
-                dataBaseContext.SaveChanges();
+                await dataBaseContext.SaveChangesAsync();
             }
         }
     }

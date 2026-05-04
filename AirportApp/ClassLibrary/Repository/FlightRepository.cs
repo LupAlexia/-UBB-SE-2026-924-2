@@ -1,10 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using AirportApp.ClassLibrary.Entity.Domain;
 using AirportApp.ClassLibrary.Repository.Interfaces;
 using AirportApp.ClassLibrary.DataAccess;
-using Microsoft.EntityFrameworkCore;
 
 namespace AirportApp.ClassLibrary.Repository
 {
@@ -17,18 +18,18 @@ namespace AirportApp.ClassLibrary.Repository
             this.dataBaseContext = dataBaseContext;
         }
 
-        public Flight? GetFlightById(int id)
+        public async Task<Flight?> GetFlightByIdAsync(int id)
         {
-            return this.dataBaseContext.flights
+            return await this.dataBaseContext.flights
                 .Include(flight => flight.Route)
                     .ThenInclude(route => route.Company)
                 .Include(flight => flight.Route)
                     .ThenInclude(route => route.Airport)
                 .Include(flight => flight.Gate)
-                .FirstOrDefault(flight => flight.Id == id);
+                .FirstOrDefaultAsync(flight => flight.Id == id);
         }
 
-        public IEnumerable<Flight> GetFlightsByRoute(string location, string routeType, DateTime? date)
+        public async Task<IEnumerable<Flight>> GetFlightsByRouteAsync(string location, string routeType, DateTime? date)
         {
             var query = this.dataBaseContext.flights
                 .Include(flight => flight.Route)
@@ -45,19 +46,19 @@ namespace AirportApp.ClassLibrary.Repository
 
             query = query.Where(flight => flight.Route.RouteType == routeType);
 
-            query = query.Where(flight => 
-                flight.Route.Airport.City == location || 
+            query = query.Where(flight =>
+                flight.Route.Airport.City == location ||
                 flight.Route.Airport.AirportCode == location);
 
-            return query.ToList();
+            return await query.ToListAsync();
         }
 
-        public int GetOccupiedSeatCount(int flightId)
+        public async Task<int> GetOccupiedSeatCountAsync(int flightId)
         {
-            return this.dataBaseContext.flightTickets
+            return await this.dataBaseContext.flightTickets
                 .Where(flightTicket => flightTicket.Status != "canceled" && flightTicket.Status != "Cancelled")
                 .Where(flightTicket => flightTicket.Flight.Id == flightId)
-                .Count();
+                .CountAsync();
         }
     }
 }

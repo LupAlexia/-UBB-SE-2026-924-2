@@ -1,15 +1,16 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using AirportApp.ClassLibrary.Entity.Domain;
 
 namespace AirportApp.ClassLibrary.Repository.Interfaces
 {
     public interface IFlightRepository
     {
-        IEnumerable<Flight> GetFlightsByRoute(string location, string routeType, DateTime? date);
+        Task<IEnumerable<Flight>> GetFlightsByRouteAsync(string location, string routeType, DateTime? date);
 
-        Flight? GetFlightById(int id);
+        Task<Flight?> GetFlightByIdAsync(int id);
 
-        int GetOccupiedSeatCount(int flightId);
+        Task<int> GetOccupiedSeatCountAsync(int flightId);
     }
 }

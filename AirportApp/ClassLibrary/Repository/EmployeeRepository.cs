@@ -1,6 +1,7 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using AirportApp.ClassLibrary.Entity.Domain.Employee;
 using AirportApp.ClassLibrary.Repository.Interfaces;
@@ -17,7 +18,7 @@ namespace AirportApp.ClassLibrary.Repository
             this.dataBaseContext = dataBaseContext ?? throw new ArgumentNullException(nameof(dataBaseContext));
         }
 
-        public int CreateNewEntity(Employee employeeEntity)
+        public async Task<int> CreateNewEntityAsync(Employee employeeEntity)
         {
             if (employeeEntity == null)
             {
@@ -25,28 +26,28 @@ namespace AirportApp.ClassLibrary.Repository
             }
 
             this.dataBaseContext.employees.Add(employeeEntity);
-            this.dataBaseContext.SaveChanges();
+            await this.dataBaseContext.SaveChangesAsync();
             return employeeEntity.Id;
         }
 
-        public void DeleteById(int identificationNumber)
+        public async Task DeleteByIdAsync(int identificationNumber)
         {
-            var employee = this.dataBaseContext.employees.FirstOrDefault(e => e.Id == identificationNumber);
+            var employee = await this.dataBaseContext.employees.FirstOrDefaultAsync(e => e.Id == identificationNumber);
             if (employee != null)
             {
                 this.dataBaseContext.employees.Remove(employee);
-                this.dataBaseContext.SaveChanges();
+                await this.dataBaseContext.SaveChangesAsync();
             }
         }
 
-        public IEnumerable<Employee> GetAll()
+        public async Task<IEnumerable<Employee>> GetAllAsync()
         {
-            return this.dataBaseContext.employees.ToList();
+            return await this.dataBaseContext.employees.ToListAsync();
         }
 
-        public Employee GetById(int identificationNumber)
+        public async Task<Employee> GetByIdAsync(int identificationNumber)
         {
-            var employee = this.dataBaseContext.employees.FirstOrDefault(e => e.Id == identificationNumber);
+            var employee = await this.dataBaseContext.employees.FirstOrDefaultAsync(e => e.Id == identificationNumber);
             if (employee == null)
             {
                 throw new KeyNotFoundException($"Employee with id {identificationNumber} was not found.");
@@ -55,20 +56,20 @@ namespace AirportApp.ClassLibrary.Repository
             return employee;
         }
 
-        public void UpdateById(int identificationNumber, Employee employeeEntity)
+        public async Task UpdateByIdAsync(int identificationNumber, Employee employeeEntity)
         {
             if (employeeEntity == null)
             {
                 throw new ArgumentNullException(nameof(employeeEntity), "Employee cannot be null.");
             }
 
-            var employee = this.dataBaseContext.employees.FirstOrDefault(e => e.Id == identificationNumber);
+            var employee = await this.dataBaseContext.employees.FirstOrDefaultAsync(e => e.Id == identificationNumber);
             if (employee != null)
             {
                 employee.FullName = employeeEntity.FullName;
                 employee.EmailAddress = employeeEntity.EmailAddress;
                 employee.AssignedDepartment = employeeEntity.AssignedDepartment;
-                this.dataBaseContext.SaveChanges();
+                await this.dataBaseContext.SaveChangesAsync();
             }
         }
     }

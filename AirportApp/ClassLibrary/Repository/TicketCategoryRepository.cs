@@ -1,7 +1,10 @@
-﻿using AirportApp.ClassLibrary.DataAccess;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using AirportApp.ClassLibrary.DataAccess;
 using AirportApp.ClassLibrary.Entity.Domain.Ticket;
 using AirportApp.ClassLibrary.Repository.Interfaces;
-using Microsoft.EntityFrameworkCore;
 
 namespace AirportApp.ClassLibrary.Repository
 {
@@ -14,16 +17,14 @@ namespace AirportApp.ClassLibrary.Repository
             dataBaseContext = context ?? throw new ArgumentNullException(nameof(dataBaseContext));
         }
 
-        public IEnumerable<TicketCategory> GetAll()
+        public async Task<IEnumerable<TicketCategory>> GetAllAsync()
         {
-            // EF Core executes the SQL query immediately when ToList() is called
-            return dataBaseContext.ticketCategories.ToList();
+            return await dataBaseContext.ticketCategories.ToListAsync();
         }
 
-        public TicketCategory GetById(int categoryId)
+        public async Task<TicketCategory> GetByIdAsync(int categoryId)
         {
-            // Find() looks for the entity by its primary key
-            return dataBaseContext.ticketCategories.Find(categoryId)
+            return await dataBaseContext.ticketCategories.FindAsync(categoryId)
                    ?? throw new KeyNotFoundException($"Category with id {categoryId} not found.");
         }
     }

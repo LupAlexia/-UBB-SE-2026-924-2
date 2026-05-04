@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using AirportApp.ClassLibrary.Entity.Domain.Chats;
 using AirportApp.ClassLibrary.Repository.Interfaces;
@@ -17,7 +18,7 @@ namespace AirportApp.ClassLibrary.Repository
             this.dataBaseContext = dataBaseContext ?? throw new ArgumentNullException(nameof(dataBaseContext));
         }
 
-        public int CreateNewEntity(Chat incomingChatEntityToBeSaved)
+        public async Task<int> CreateNewEntityAsync(Chat incomingChatEntityToBeSaved)
         {
             if (incomingChatEntityToBeSaved == null)
             {
@@ -25,43 +26,43 @@ namespace AirportApp.ClassLibrary.Repository
             }
 
             this.dataBaseContext.chats.Add(incomingChatEntityToBeSaved);
-            this.dataBaseContext.SaveChanges();
+            await this.dataBaseContext.SaveChangesAsync();
             return incomingChatEntityToBeSaved.Id;
         }
 
-        public void DeleteById(int identifierForChatToBeDeleted)
+        public async Task DeleteByIdAsync(int identifierForChatToBeDeleted)
         {
-            var chat = this.dataBaseContext.chats.FirstOrDefault(c => c.Id == identifierForChatToBeDeleted);
+            var chat = await this.dataBaseContext.chats.FirstOrDefaultAsync(c => c.Id == identifierForChatToBeDeleted);
             if (chat != null)
             {
                 this.dataBaseContext.chats.Remove(chat);
-                this.dataBaseContext.SaveChanges();
+                await this.dataBaseContext.SaveChangesAsync();
             }
         }
 
-        public void UpdateById(int identifierForChatToBeUpdated, Chat updatedChatEntityData)
+        public async Task UpdateByIdAsync(int identifierForChatToBeUpdated, Chat updatedChatEntityData)
         {
             if (updatedChatEntityData == null)
             {
                 throw new ArgumentNullException(nameof(updatedChatEntityData));
             }
 
-            var chatFound = this.dataBaseContext.chats.FirstOrDefault(c => c.Id == identifierForChatToBeUpdated);
+            var chatFound = await this.dataBaseContext.chats.FirstOrDefaultAsync(c => c.Id == identifierForChatToBeUpdated);
             if (chatFound != null)
             {
                 chatFound.Status = updatedChatEntityData.Status;
-                this.dataBaseContext.SaveChanges();
+                await this.dataBaseContext.SaveChangesAsync();
             }
         }
 
-        public IEnumerable<Chat> GetAll()
+        public async Task<IEnumerable<Chat>> GetAllAsync()
         {
-            return this.dataBaseContext.chats.ToList();
+            return await this.dataBaseContext.chats.ToListAsync();
         }
 
-        public Chat GetById(int identifierForRequestedChat)
+        public async Task<Chat> GetByIdAsync(int identifierForRequestedChat)
         {
-            var chat = this.dataBaseContext.chats.FirstOrDefault(c => c.Id == identifierForRequestedChat);
+            var chat = await this.dataBaseContext.chats.FirstOrDefaultAsync(c => c.Id == identifierForRequestedChat);
             return chat ?? throw new KeyNotFoundException($"Chat with id {identifierForRequestedChat} not found.");
         }
     }

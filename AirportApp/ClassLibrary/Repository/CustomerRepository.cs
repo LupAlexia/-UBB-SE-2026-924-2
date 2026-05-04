@@ -1,10 +1,10 @@
 using System;
 using System.Linq;
-using Microsoft.Data.SqlClient;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using AirportApp.ClassLibrary.Entity.Domain;
 using AirportApp.ClassLibrary.Repository.Interfaces;
 using AirportApp.ClassLibrary.DataAccess;
-using Microsoft.EntityFrameworkCore;
 
 namespace AirportApp.ClassLibrary.Entity.Domain
 {
@@ -15,45 +15,45 @@ namespace AirportApp.ClassLibrary.Entity.Domain
 
         public CustomerRepository(AirportDbContext dataBaseContext, IMembershipRepository membershipRepository)
         {
-            this.dataBaseContext = dataBaseContext ?? throw new ArgumentNullException(nameof(dataBaseContext)); ;
+            this.dataBaseContext = dataBaseContext ?? throw new ArgumentNullException(nameof(dataBaseContext));
             this.membershipRepository = membershipRepository ?? throw new ArgumentNullException(nameof(membershipRepository));
         }
 
-        public Customer? GetById(int id)
+        public async Task<Customer?> GetByIdAsync(int id)
         {
-            return this.dataBaseContext.customers
+            return await this.dataBaseContext.customers
                 .Include(customer => customer.Membership)
-                .FirstOrDefault(customer => customer.Id ==id);
+                .FirstOrDefaultAsync(customer => customer.Id == id);
         }
 
-        public Customer? GetByEmail(string email)
+        public async Task<Customer?> GetByEmailAsync(string email)
         {
-            return this.dataBaseContext.customers
+            return await this.dataBaseContext.customers
                 .Include(customer => customer.Membership)
-                .FirstOrDefault(customer => customer.Email == email);
+                .FirstOrDefaultAsync(customer => customer.Email == email);
         }
 
-        public void AddUser(Customer user)
+        public async Task AddUserAsync(Customer user)
         {
             this.dataBaseContext.Add(user);
-            this.dataBaseContext.SaveChanges();
+            await this.dataBaseContext.SaveChangesAsync();
         }
 
-        public void UpdateUserMembership(int userId, int newMembershipId)
+        public async Task UpdateUserMembershipAsync(int userId, int newMembershipId)
         {
-            var userToUpdate = this.dataBaseContext.customers
+            var userToUpdate = await this.dataBaseContext.customers
                 .Include(customer => customer.Membership)
-                .FirstOrDefault(customer => customer.Id == userId);
+                .FirstOrDefaultAsync(customer => customer.Id == userId);
 
-            if( userToUpdate == null)
+            if (userToUpdate == null)
             {
                 throw new KeyNotFoundException("User with id " + userId + " not found.");
             }
 
-            var membership = this.membershipRepository.GetMembershipById(newMembershipId);
+            var membership = await this.membershipRepository.GetMembershipByIdAsync(newMembershipId);
             userToUpdate.Membership = membership;
             this.dataBaseContext.Entry(userToUpdate).State = EntityState.Modified;
-            dataBaseContext.SaveChanges();
+            await this.dataBaseContext.SaveChangesAsync();
         }
     }
 }

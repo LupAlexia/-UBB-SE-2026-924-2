@@ -1,6 +1,7 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using AirportApp.ClassLibrary.Entity.Domain.Message;
 using AirportApp.ClassLibrary.Entity.Domain.Chats;
@@ -18,7 +19,7 @@ namespace AirportApp.ClassLibrary.Repository.Interfaces
             this.dataBaseContext = dataBaseContext ?? throw new ArgumentNullException(nameof(dataBaseContext));
         }
 
-        public int CreateNewEntity(Message newEntity)
+        public async Task<int> CreateNewEntityAsync(Message newEntity)
         {
             if (newEntity == null)
             {
@@ -26,70 +27,59 @@ namespace AirportApp.ClassLibrary.Repository.Interfaces
             }
 
             this.dataBaseContext.messages.Add(newEntity);
-            this.dataBaseContext.SaveChanges();
+            await this.dataBaseContext.SaveChangesAsync();
             return newEntity.GetId();
         }
 
-        public void DeleteById(int identificationNumber)
+        public async Task DeleteByIdAsync(int identificationNumber)
         {
-            var message = this.dataBaseContext.messages.FirstOrDefault(m => m.GetId() == identificationNumber);
+            var message = await this.dataBaseContext.messages.FirstOrDefaultAsync(m => m.GetId() == identificationNumber);
             if (message != null)
             {
                 this.dataBaseContext.messages.Remove(message);
-                this.dataBaseContext.SaveChanges();
+                await this.dataBaseContext.SaveChangesAsync();
             }
         }
 
-        public void UpdateById(int identificationNumber, Message message)
+        public async Task UpdateByIdAsync(int identificationNumber, Message message)
         {
             if (message == null)
             {
                 throw new ArgumentNullException(nameof(message));
             }
 
-            var existingMessage = this.dataBaseContext.messages.FirstOrDefault(m => m.GetId() == identificationNumber);
+            var existingMessage = await this.dataBaseContext.messages.FirstOrDefaultAsync(m => m.GetId() == identificationNumber);
             if (existingMessage != null)
             {
-                this.dataBaseContext.SaveChanges();
+                await this.dataBaseContext.SaveChangesAsync();
             }
         }
 
-        public IEnumerable<Message> GetAll()
+        public async Task<IEnumerable<Message>> GetAllAsync()
         {
-            return this.dataBaseContext.messages
-                .ToList();
+            return await this.dataBaseContext.messages.ToListAsync();
         }
 
-        public Message GetById(int identificationNumber)
+        public async Task<Message> GetByIdAsync(int identificationNumber)
         {
-            var message = this.dataBaseContext.messages.FirstOrDefault(m => m.GetId() == identificationNumber);
+            var message = await this.dataBaseContext.messages.FirstOrDefaultAsync(m => m.GetId() == identificationNumber);
             return message ?? throw new KeyNotFoundException($"Message with id {identificationNumber} not found.");
         }
 
-        public IEnumerable<Message> GetByChatId(int chatId)
+        public async Task<IEnumerable<Message>> GetByChatIdAsync(int chatId)
         {
-            return this.dataBaseContext.messages
+            return await this.dataBaseContext.messages
                 .Where(m => m.GetChat().Id == chatId)
                 .OrderBy(m => m.Timestamp)
-                .ToList();
+                .ToListAsync();
         }
 
-        public IEnumerable<Message> GetMessagesSince(int chatId, int firstMessageId)
+        public async Task<IEnumerable<Message>> GetMessagesSinceAsync(int chatId, int firstMessageId)
         {
-            return this.dataBaseContext.messages
+            return await this.dataBaseContext.messages
                 .Where(m => m.GetChat().Id == chatId && m.GetId() >= firstMessageId)
                 .OrderBy(m => m.Timestamp)
-                .ToList();
+                .ToListAsync();
         }
-
-        //public void MarkAsRead(int messageId)
-        //{
-        //    var message = this.dataBaseContext.messages.FirstOrDefault(m => m.GetId() == messageId);
-        //    if (message != null)
-        //    {
-        //        message.IsRead = true;
-        //        this.dataBaseContext.SaveChanges();
-        //    }
-        //}
     }
 }

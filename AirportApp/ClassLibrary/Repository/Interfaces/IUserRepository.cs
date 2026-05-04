@@ -1,15 +1,19 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using AirportApp.ClassLibrary.Entity.Domain;
 
 namespace AirportApp.ClassLibrary.Repository.Interfaces
 {
     public interface IUserRepository
     {
-        int CreateNewEntity(User userEntity);
-        void DeleteById(int identificationNumber);
-        IEnumerable<User> GetAll();
-        User GetById(int identificationNumber);
-        void UpdateById(int identificationNumber, User userEntity);
+        Task<int> CreateNewEntityAsync(User userEntity);
+
+        Task DeleteByIdAsync(int identificationNumber);
+
+        Task<IEnumerable<User>> GetAllAsync();
+
+        Task<User> GetByIdAsync(int identificationNumber);
+
+        Task UpdateByIdAsync(int identificationNumber, User userEntity);
     }
 }
-

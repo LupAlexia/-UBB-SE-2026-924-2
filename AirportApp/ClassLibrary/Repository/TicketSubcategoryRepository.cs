@@ -1,7 +1,11 @@
-﻿using AirportApp.ClassLibrary.DataAccess;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using AirportApp.ClassLibrary.DataAccess;
 using AirportApp.ClassLibrary.Entity.Domain.Ticket;
 using AirportApp.ClassLibrary.Repository.Interfaces;
-using Microsoft.EntityFrameworkCore;
 
 namespace AirportApp.ClassLibrary.Repository
 {
@@ -14,28 +18,27 @@ namespace AirportApp.ClassLibrary.Repository
             dataBaseContext = context ?? throw new ArgumentNullException(nameof(dataBaseContext));
         }
 
-        public IEnumerable<TicketSubcategory> GetAll()
+        public async Task<IEnumerable<TicketSubcategory>> GetAllAsync()
         {
-            // .Include(s => s.Category) ensures the parent category is loaded
-            return dataBaseContext.ticketSubcategories
+            return await dataBaseContext.ticketSubcategories
                            .Include(s => s.ParentCategory)
-                           .ToList();
+                           .ToListAsync();
         }
 
-        public TicketSubcategory GetById(int subcategoryId)
+        public async Task<TicketSubcategory> GetByIdAsync(int subcategoryId)
         {
-            return dataBaseContext.ticketSubcategories
+            return await dataBaseContext.ticketSubcategories
                            .Include(s => s.ParentCategory)
-                           .FirstOrDefault(s => s.Id == subcategoryId)
+                           .FirstOrDefaultAsync(s => s.Id == subcategoryId)
                    ?? throw new KeyNotFoundException($"Subcategory with id {subcategoryId} not found.");
         }
 
-        public IEnumerable<TicketSubcategory> GetByCategoryId(int categoryId)
+        public async Task<IEnumerable<TicketSubcategory>> GetByCategoryIdAsync(int categoryId)
         {
-            return dataBaseContext.ticketSubcategories
+            return await dataBaseContext.ticketSubcategories
                            .Include(s => s.ParentCategory)
                            .Where(s => s.ParentCategory.Id == categoryId)
-                           .ToList();
+                           .ToListAsync();
         }
     }
 }

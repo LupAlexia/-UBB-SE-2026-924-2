@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using AirportApp.ClassLibrary.Entity.Domain;
 using AirportApp.ClassLibrary.Repository.Interfaces;
@@ -17,31 +18,30 @@ namespace AirportApp.ClassLibrary.Repository
             this.dataBaseContext = dataBaseContext ?? throw new ArgumentNullException(nameof(dataBaseContext));
         }
 
-        public Membership? GetMembershipById(int id)
+        public async Task<Membership?> GetMembershipByIdAsync(int id)
         {
-            return this.dataBaseContext.memberships
-                .FirstOrDefault(m => m.Id == id);
+            return await this.dataBaseContext.memberships
+                .FirstOrDefaultAsync(m => m.Id == id);
         }
 
-        public IEnumerable<Membership> GetAllMemberships()
+        public async Task<IEnumerable<Membership>> GetAllMembershipsAsync()
         {
-            return this.dataBaseContext.memberships.ToList();
+            return await this.dataBaseContext.memberships.ToListAsync();
         }
 
-        public IEnumerable<MembershipAddonDiscount> GetAddonDiscounts(int membershipId)
+        public async Task<IEnumerable<MembershipAddonDiscount>> GetAddonDiscountsAsync(int membershipId)
         {
-            var discounts = new List<MembershipAddonDiscount>();
-            
-            var membership = this.dataBaseContext.memberships
-                .FirstOrDefault(m => m.Id == membershipId);
-            
+            var membership = await this.dataBaseContext.memberships
+                .FirstOrDefaultAsync(m => m.Id == membershipId);
+
             if (membership == null)
             {
-                return discounts;
+                return new List<MembershipAddonDiscount>();
             }
 
-            var addOnDiscounts = this.dataBaseContext.addOns
-                .ToList() 
+            var addOns = await this.dataBaseContext.addOns.ToListAsync();
+
+            var addOnDiscounts = addOns
                 .Select(a => new MembershipAddonDiscount(membership, a, 10f))
                 .ToList();
 
