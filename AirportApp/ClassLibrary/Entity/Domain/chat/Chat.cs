@@ -17,7 +17,7 @@ namespace AirportApp.ClassLibrary.Entity.Domain.Chats
 
         // 2. Navigation Property instead of just int UserId
         [ForeignKey(nameof(UserId))]
-        public User User { get; set; } = null!;
+        public User? User { get; set; }
         [Required]
         [Column("User_Id")]
         public int UserId { get; set; }

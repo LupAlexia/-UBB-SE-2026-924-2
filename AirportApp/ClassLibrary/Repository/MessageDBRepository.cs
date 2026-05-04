@@ -10,7 +10,7 @@ using AirportApp.ClassLibrary.DataAccess;
 
 namespace AirportApp.ClassLibrary.Repository.Interfaces
 {
-    public class MessageDatabaseRepository : IRepository<int, Message>
+    public class MessageDatabaseRepository : IMessageRepository
     {
         private readonly AirportDbContext dataBaseContext;
 
