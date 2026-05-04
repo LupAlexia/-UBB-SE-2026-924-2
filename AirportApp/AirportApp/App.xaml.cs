@@ -1,4 +1,5 @@
-﻿using System;
+using System;
+using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
 using AirportApp.ClassLibrary.Entity.Domain;
 using AirportApp.ClassLibrary.Entity.Domain.Faq.Bot;
@@ -90,7 +91,9 @@ namespace AirportApp
 
         private static IServiceProvider ConfigureServices()
         {
-            DotNetEnv.Env.Load(System.IO.Path.Combine(AppContext.BaseDirectory, ".env"));
+            var configuration = new Microsoft.Extensions.Configuration.ConfigurationBuilder()
+                .AddJsonFile(System.IO.Path.Combine(AppContext.BaseDirectory, "appsettings.json"), optional: false, reloadOnChange: true)
+                .Build();
 
             var services = new ServiceCollection();
             services.AddLogging();
@@ -107,12 +110,10 @@ namespace AirportApp
             });
 
             // --- Servicii Mystery Inc (Customer Support) ---
-            // Register EF DbContext using connection string from .env
-            // Use singleton lifetime here because many existing services are registered as singletons
-            // (short-term fix). Consider changing repositories/services to scoped instead.
+            // Register EF DbContext using connection string from appsettings.json
             services.AddDbContext<AirportDbContext>(options =>
             {
-                var conn = DatabaseConnectionHandler.Instance.CreateConnection().ConnectionString;
+                var conn = configuration.GetConnectionString("DefaultConnection");
                 options.UseSqlServer(conn);
             }, contextLifetime: Microsoft.Extensions.DependencyInjection.ServiceLifetime.Singleton, optionsLifetime: Microsoft.Extensions.DependencyInjection.ServiceLifetime.Singleton);
 
