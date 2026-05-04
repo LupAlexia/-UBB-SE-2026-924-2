@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
@@ -30,11 +31,11 @@ namespace AirportApp.Src.Service
             QuestPDF.Settings.License = LicenseType.Community;
         }
 
-        public IEnumerable<FlightTicket> GetUserTickets(int userId, string ticketFilter)
+        public async Task<IEnumerable<FlightTicket>> GetUserTicketsAsync(int userId, string ticketFilter)
         {
             var now = DateTime.Now;
-            var tickets = this.ticketRepository.GetTicketsByUserId(userId)
-                .Where(FlightTicket => FlightTicket.Flight != null);
+            var allTickets = await this.ticketRepository.GetTicketsByUserIdAsync(userId);
+            var tickets = allTickets.Where(FlightTicket => FlightTicket.Flight != null);
 
             return string.Equals(ticketFilter, "Past", StringComparison.OrdinalIgnoreCase)
                 ? tickets.Where(FlightTicket => FlightTicket.Flight!.Date < now).OrderByDescending(FlightTicket => FlightTicket.Flight!.Date)

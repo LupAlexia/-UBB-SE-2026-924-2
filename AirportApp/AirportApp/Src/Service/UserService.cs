@@ -1,7 +1,6 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using AirportApp.ClassLibrary.Entity.Domain;
 using AirportApp.Src.Service.Interfaces;
@@ -18,42 +17,42 @@ namespace AirportApp.Src.Service
             this.userRepository = userRepository;
         }
 
-        public User GetById(int identificationNumber)
+        public async Task<User> GetByIdAsync(int identificationNumber)
         {
-            return userRepository.GetById(identificationNumber);
+            return await userRepository.GetByIdAsync(identificationNumber);
         }
 
-        public int AddUser(User user)
+        public async Task<int> AddUserAsync(User user)
         {
-            return userRepository.CreateNewEntity(user);
+            return await userRepository.CreateNewEntityAsync(user);
         }
 
-        public void UpdateUserById(int identificationNumber, User userEntity)
+        public async Task UpdateUserByIdAsync(int identificationNumber, User userEntity)
         {
-            userRepository.UpdateById(identificationNumber, userEntity);
+            await userRepository.UpdateByIdAsync(identificationNumber, userEntity);
         }
 
-        public void DeleteUserById(int identificationNumber)
+        public async Task DeleteUserByIdAsync(int identificationNumber)
         {
-            userRepository.DeleteById(identificationNumber);
+            await userRepository.DeleteByIdAsync(identificationNumber);
         }
 
-        public List<User> GetAllUsers()
+        public async Task<List<User>> GetAllUsersAsync()
         {
-            return userRepository.GetAll().ToList();
+            return (await userRepository.GetAllAsync()).ToList();
         }
 
-        public void CreateNewUser(int identificationNumber, string fullName, string emailAddress)
+        public async Task CreateNewUserAsync(int identificationNumber, string fullName, string emailAddress)
         {
             User user = new User(identificationNumber, fullName, emailAddress);
-            ValidateUserIntegrity(user);
-            AddUser(user);
+            await ValidateUserIntegrityAsync(user);
+            await AddUserAsync(user);
         }
 
-        public void ValidateUserIntegrity(User userEntity)
+        public async Task ValidateUserIntegrityAsync(User userEntity)
         {
             ArgumentNullException.ThrowIfNull(userEntity);
-            if (this.GetAllUsers().Contains(userEntity))
+            if ((await this.GetAllUsersAsync()).Contains(userEntity))
             {
                 throw new ArgumentException("User already exists");
             }

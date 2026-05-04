@@ -1,11 +1,9 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using AirportApp.ClassLibrary.Entity.Domain.Employee;
 using AirportApp.ClassLibrary.Repository.Interfaces;
-
 
 namespace AirportApp.Src.Service
 {
@@ -18,44 +16,44 @@ namespace AirportApp.Src.Service
             this.employeeRepository = employeeRepository;
         }
 
-        public Employee GetEmployeeById(int identificationNumber)
+        public async Task<Employee> GetEmployeeByIdAsync(int identificationNumber)
         {
-            return employeeRepository.GetById(identificationNumber);
+            return await employeeRepository.GetByIdAsync(identificationNumber);
         }
 
-        public int AddEmployee(Employee employeeEntity)
+        public async Task<int> AddEmployeeAsync(Employee employeeEntity)
         {
-            return employeeRepository.CreateNewEntity(employeeEntity);
+            return await employeeRepository.CreateNewEntityAsync(employeeEntity);
         }
 
-        public void UpdateEmployeeById(int identificationNumber, Employee employeeEntity)
+        public async Task UpdateEmployeeByIdAsync(int identificationNumber, Employee employeeEntity)
         {
-            employeeRepository.UpdateById(identificationNumber, employeeEntity);
+            await employeeRepository.UpdateByIdAsync(identificationNumber, employeeEntity);
         }
 
-        public void DeleteEmployeeById(int identificationNumber)
+        public async Task DeleteEmployeeByIdAsync(int identificationNumber)
         {
-            employeeRepository.DeleteById(identificationNumber);
+            await employeeRepository.DeleteByIdAsync(identificationNumber);
         }
 
-        public List<Employee> GetAllEmployees()
+        public async Task<List<Employee>> GetAllEmployeesAsync()
         {
-            return employeeRepository.GetAll().ToList();
+            return (await employeeRepository.GetAllAsync()).ToList();
         }
 
-        public void CreateNewEmployee(int identificationNumber, string fullName, string emailAddress, string departmentName)
+        public async Task CreateNewEmployeeAsync(int identificationNumber, string fullName, string emailAddress, string departmentName)
         {
             EmployeeDepartment departmentEnum = (EmployeeDepartment)Enum.Parse(typeof(EmployeeDepartment), departmentName);
             Employee newEmployee = new Employee(identificationNumber, fullName, emailAddress, departmentEnum);
-            ValidateEmployeeIntegrity(newEmployee);
-            AddEmployee(newEmployee);
+            await ValidateEmployeeIntegrityAsync(newEmployee);
+            await AddEmployeeAsync(newEmployee);
         }
 
-        public void ValidateEmployeeIntegrity(Employee employeeEntity)
+        public async Task ValidateEmployeeIntegrityAsync(Employee employeeEntity)
         {
             ArgumentNullException.ThrowIfNull(employeeEntity);
 
-            if (this.GetAllEmployees().Contains(employeeEntity))
+            if ((await this.GetAllEmployeesAsync()).Contains(employeeEntity))
             {
                 throw new ArgumentException("Employee already exists");
             }

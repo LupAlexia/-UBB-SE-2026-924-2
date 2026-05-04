@@ -1,7 +1,4 @@
-﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using AirportApp.ClassLibrary.Entity.Domain.Ticket;
 using AirportApp.Src.Service.Interfaces;
@@ -16,12 +13,13 @@ public class TicketCategoryService : ITicketCategoryService
         this.categoryRepository = categoryRepository;
     }
 
-    public TicketCategory GetCategoryById(int categoryId)
+    public async Task<TicketCategory> GetCategoryByIdAsync(int categoryId)
     {
-        return categoryRepository.GetById(categoryId);
+        return await categoryRepository.GetByIdAsync(categoryId);
     }
-    public IEnumerable<TicketCategory> GetAllCategories()
+
+    public async Task<IEnumerable<TicketCategory>> GetAllCategoriesAsync()
     {
-        return categoryRepository.GetAll();
+        return await categoryRepository.GetAllAsync();
     }
 }

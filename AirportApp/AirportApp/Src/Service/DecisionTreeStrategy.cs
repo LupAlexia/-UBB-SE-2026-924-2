@@ -1,8 +1,7 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 using AirportApp.ClassLibrary.Repository.Interfaces;
@@ -22,30 +21,39 @@ namespace AirportApp.Src.Service.Bot.Strategy
         public DecisionTreeStrategy(IRepository<int, FAQNode> faqRepository)
         {
             this.repositoryForAccessingFrequentlyAskedQuestionsDecisionNodes = faqRepository;
-            this.currentlyActiveConversationDecisionTreeNode = repositoryForAccessingFrequentlyAskedQuestionsDecisionNodes.GetById(1);
+            // Initialization of the first node is deferred to first use via async
         }
 
-        public BotMessage ProcessIncomingUserMessageAndDetermineNextDecisionTreeNode(BotEngineIdentity activeBotEngineInstance, IMessage incomingUserMessage)
+        private async Task EnsureInitializedAsync()
         {
+            if (currentlyActiveConversationDecisionTreeNode == null)
+            {
+                currentlyActiveConversationDecisionTreeNode = await repositoryForAccessingFrequentlyAskedQuestionsDecisionNodes.GetByIdAsync(1);
+            }
+        }
+
+        public async Task<BotMessage> ProcessIncomingUserMessageAndDetermineNextDecisionTreeNodeAsync(BotEngineIdentity activeBotEngineInstance, IMessage incomingUserMessage)
+        {
+            await EnsureInitializedAsync();
+
             string extractedTextContentFromIncomingUserMessage = incomingUserMessage.Text;
 
             FAQOption? selectedUserOptionMatchingIncomingMessageText = currentlyActiveConversationDecisionTreeNode.Options.FirstOrDefault((option) => option.Label.Equals(extractedTextContentFromIncomingUserMessage));
             if (selectedUserOptionMatchingIncomingMessageText == null)
             {
-                return new BotMessage.BotMessageBuilder(activeBotEngineInstance, incomingUserMessage.GetChat(), CONSTANT_VALUE_REPRESENTING_UNASSIGNED_DATABASE_IDENTIFIER,
-                    repositoryForAccessingFrequentlyAskedQuestionsDecisionNodes.GetById((int)BotStandardMessages.RestartConversation)).Build();
-               
+                var restartNode = await repositoryForAccessingFrequentlyAskedQuestionsDecisionNodes.GetByIdAsync((int)BotStandardMessages.RestartConversation);
+                return new BotMessage.BotMessageBuilder(activeBotEngineInstance, incomingUserMessage.GetChat(), CONSTANT_VALUE_REPRESENTING_UNASSIGNED_DATABASE_IDENTIFIER, restartNode).Build();
             }
 
-            FAQNode nextQuestion = repositoryForAccessingFrequentlyAskedQuestionsDecisionNodes.GetById(selectedUserOptionMatchingIncomingMessageText.NextOptionId);
+            FAQNode nextQuestion = await repositoryForAccessingFrequentlyAskedQuestionsDecisionNodes.GetByIdAsync(selectedUserOptionMatchingIncomingMessageText.NextOptionId);
             currentlyActiveConversationDecisionTreeNode = nextQuestion;
 
             return new BotMessage.BotMessageBuilder(activeBotEngineInstance, incomingUserMessage.GetChat(), CONSTANT_VALUE_REPRESENTING_UNASSIGNED_DATABASE_IDENTIFIER, nextQuestion).Build();
         }
 
-        public void ResetCurrentlyActiveConversationNodeToInitialStartingPoint()
+        public async Task ResetCurrentlyActiveConversationNodeToInitialStartingPointAsync()
         {
-            currentlyActiveConversationDecisionTreeNode = repositoryForAccessingFrequentlyAskedQuestionsDecisionNodes.GetById(1);
+            currentlyActiveConversationDecisionTreeNode = await repositoryForAccessingFrequentlyAskedQuestionsDecisionNodes.GetByIdAsync(1);
         }
     }
 }

@@ -1,7 +1,6 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using AirportApp.ClassLibrary.Entity.Domain;
 using AirportApp.ClassLibrary.Entity.Domain.Chats;
@@ -22,29 +21,29 @@ namespace AirportApp.Src.Service
             _userRepository = userRepository;
         }
 
-        public Chat OpenChat(int userId)
+        public async Task<Chat> OpenChatAsync(int userId)
         {
-            User user = _userRepository.GetById(userId);
+            User user = await _userRepository.GetByIdAsync(userId);
             try
             {
                 Chat newChat = new Chat(UNASSIGNED_CHAT_ID, user, ChatStatus.Active);
-                int newIdentificationNumber = Convert.ToInt32(chatRepository.CreateNewEntity(newChat));
+                int newIdentificationNumber = Convert.ToInt32(await chatRepository.CreateNewEntityAsync(newChat));
                 newChat.Id = newIdentificationNumber;
                 return newChat;
             }
             catch (Exception exceptionThrown)
             {
-                    throw (new Exception(message: exceptionThrown.Message));
+                throw (new Exception(message: exceptionThrown.Message));
             }
         }
 
-        public void CloseChat(int chatId)
+        public async Task CloseChatAsync(int chatId)
         {
             try
             {
-                Chat chat = chatRepository.GetById(chatId);
+                Chat chat = await chatRepository.GetByIdAsync(chatId);
                 chat.CloseChat();
-                chatRepository.UpdateById(chatId, chat);
+                await chatRepository.UpdateByIdAsync(chatId, chat);
             }
             catch (Exception exceptionThrown)
             {

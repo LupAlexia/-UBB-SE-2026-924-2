@@ -1,6 +1,7 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 using AutoMapper;
 using AirportApp.ClassLibrary.Entity.Dto;
 using AirportApp.Src.Service;
@@ -43,12 +44,12 @@ namespace AirportApp.Src.ViewModel.Review
         {
             this.reviewService = reviewService;
             this.mapper = mapper;
-            LoadData();
+            _ = LoadDataAsync();
         }
 
-        public void LoadData()
+        public async Task LoadDataAsync()
         {
-            var reviewsFromDb = reviewService.GetAll();
+            var reviewsFromDb = await reviewService.GetAllAsync();
             Reviews.Clear();
 
             if (reviewsFromDb == null || reviewsFromDb.Count == 0)

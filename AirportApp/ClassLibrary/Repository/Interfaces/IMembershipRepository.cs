@@ -1,14 +1,15 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using AirportApp.ClassLibrary.Entity.Domain;
 
 namespace AirportApp.ClassLibrary.Repository.Interfaces
 {
     public interface IMembershipRepository
     {
-        Membership? GetMembershipById(int id);
+        Task<Membership?> GetMembershipByIdAsync(int id);
 
-        IEnumerable<MembershipAddonDiscount> GetAddonDiscounts(int membershipId);
+        Task<IEnumerable<MembershipAddonDiscount>> GetAddonDiscountsAsync(int membershipId);
 
-        IEnumerable<Membership> GetAllMemberships();
+        Task<IEnumerable<Membership>> GetAllMembershipsAsync();
     }
 }

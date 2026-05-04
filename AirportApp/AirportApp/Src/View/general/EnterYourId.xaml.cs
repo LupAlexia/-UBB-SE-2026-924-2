@@ -62,7 +62,8 @@ namespace AirportApp.Src.View.General
 
                 if (await confirmationDialog.ShowAsync() == ContentDialogResult.Primary)
                 {
-                    if (ViewModel.TryAuthenticate(out _))
+                    var (success, _) = await ViewModel.TryAuthenticateAsync();
+                    if (success)
                     {
                         if ((Application.Current as App).IsEmployee)
                         {

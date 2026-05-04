@@ -1,7 +1,4 @@
-﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using AirportApp.ClassLibrary.Entity.Domain.Ticket;
 
@@ -9,8 +6,8 @@ namespace AirportApp.ClassLibrary.Repository.Interfaces
 {
     public interface ITicketCategoryRepository
     {
-        IEnumerable<TicketCategory> GetAll();
+        Task<IEnumerable<TicketCategory>> GetAllAsync();
 
-        TicketCategory GetById(int categoryId);
+        Task<TicketCategory> GetByIdAsync(int categoryId);
     }
 }

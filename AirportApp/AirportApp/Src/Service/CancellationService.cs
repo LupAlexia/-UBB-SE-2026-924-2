@@ -1,4 +1,5 @@
-﻿using System;
+using System;
+using System.Threading.Tasks;
 using AirportApp.ClassLibrary.Entity.Domain;
 using AirportApp.ClassLibrary.Repository.Interfaces;
 
@@ -33,9 +34,9 @@ namespace AirportApp.Src.Service
             return (true, string.Empty);
         }
 
-        public void CancelTicket(int ticketId)
+        public async Task CancelTicketAsync(int ticketId)
         {
-            ticketRepository.UpdateTicketStatus(ticketId, "Cancelled");
+            await ticketRepository.UpdateTicketStatusAsync(ticketId, "Cancelled");
         }
     }
 }

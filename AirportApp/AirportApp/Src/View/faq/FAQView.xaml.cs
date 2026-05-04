@@ -44,7 +44,7 @@ namespace AirportApp.Src.View.Faq
             UpdateAdminVisibility();
         }
 
-        protected override void OnNavigatedTo(NavigationEventArgs arguments)
+        protected override async void OnNavigatedTo(NavigationEventArgs arguments)
         {
             base.OnNavigatedTo(arguments);
 
@@ -61,7 +61,7 @@ namespace AirportApp.Src.View.Faq
                 currentPersonId = app.User.RetrieveUniqueDatabaseIdentifierForBot();
             }
 
-            ViewModel.LoadFAQ();
+            await ViewModel.LoadFAQAsync();
             UpdateAdminVisibility();
         }
 
@@ -165,24 +165,24 @@ namespace AirportApp.Src.View.Faq
 
             if (result == ContentDialogResult.Primary)
             {
-                ViewModel.DeleteFAQEntry(faq);
+                await ViewModel.DeleteFAQEntryAsync(faq);
                 ViewModel.SelectedFAQEntry = null;
             }
         }
 
-        private void HelpfulButton_Click(object sender, RoutedEventArgs arguments)
+        private async void HelpfulButton_Click(object sender, RoutedEventArgs arguments)
         {
             if (sender is Button button && button.Tag is FAQEntryDTO faq)
             {
-                ViewModel.GiveFeedback(faq, true);
+                await ViewModel.GiveFeedbackAsync(faq, true);
             }
         }
 
-        private void NotHelpfulButton_Click(object sender, RoutedEventArgs arguments)
+        private async void NotHelpfulButton_Click(object sender, RoutedEventArgs arguments)
         {
             if (sender is Button button && button.Tag is FAQEntryDTO faq)
             {
-                ViewModel.GiveFeedback(faq, false);
+                await ViewModel.GiveFeedbackAsync(faq, false);
             }
         }
 

@@ -1,5 +1,6 @@
-﻿using System;
+using System;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 using AutoMapper;
 using AirportApp.ClassLibrary.Entity.Dto;
 using AirportApp.Src.Service;
@@ -35,12 +36,12 @@ namespace AirportApp.Src.ViewModel
             this.chatId = chatId;
             this.currentUserId = currentUserId;
 
-            LoadMessages();
+            _ = LoadMessagesAsync();
         }
 
-        public void LoadMessages()
+        public async Task LoadMessagesAsync()
         {
-            var messagesFromDb = messageService.GetAllMessages(chatId);
+            var messagesFromDb = await messageService.GetAllMessagesAsync(chatId);
             Messages.Clear();
 
             foreach (var message in messagesFromDb)
@@ -50,7 +51,7 @@ namespace AirportApp.Src.ViewModel
         }
 
         [RelayCommand]
-        public void SendMessage(FAQOption selectedOption)
+        public async Task SendMessageAsync(FAQOption selectedOption)
         {
             if (selectedOption == null)
             {
@@ -58,9 +59,9 @@ namespace AirportApp.Src.ViewModel
             }
 
             // Lazily resolve the current user only when needed.
-            var sender = userService.GetById(currentUserId);
+            var sender = await userService.GetByIdAsync(currentUserId);
 
-            BotMessage botReply = messageService.SendMessage(chatId, sender, selectedOption);
+            BotMessage botReply = await messageService.SendMessageAsync(chatId, sender, selectedOption);
 
             Messages.Add(mapper.Map<MessageDTO>(new Message(sender, botReply.GetChat(), selectedOption.Label)));
             Messages.Add(mapper.Map<MessageDTO>(botReply));

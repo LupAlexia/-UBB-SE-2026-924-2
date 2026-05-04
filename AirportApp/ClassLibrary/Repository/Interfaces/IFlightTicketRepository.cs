@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using AirportApp.ClassLibrary.Entity.Domain;
 
@@ -6,12 +6,18 @@ namespace AirportApp.ClassLibrary.Repository.Interfaces
 {
     public interface IFlightTicketRepository
     {
-        IEnumerable<FlightTicket> GetTicketsByUserId(int userId);
-        void AddTicket(FlightTicket ticket);
-        void UpdateTicketStatus(int ticketId, string status);
-        void AddTicketAddOns(int ticketId, IEnumerable<int> addOnIds);
-        IEnumerable<string> GetOccupiedSeats(int flightId);
+        Task<IEnumerable<FlightTicket>> GetTicketsByUserIdAsync(int userId);
+
+        Task AddTicketAsync(FlightTicket ticket);
+
+        Task UpdateTicketStatusAsync(int ticketId, string status);
+
+        Task AddTicketAddOnsAsync(int ticketId, IEnumerable<int> addOnIds);
+
+        Task<IEnumerable<string>> GetOccupiedSeatsAsync(int flightId);
+
         Task<bool> SaveTicketsWithAddOnsAsync(List<FlightTicket> tickets);
-        Task<bool> IsSeatAvailable(int flightId, string seat);
+
+        Task<bool> IsSeatAvailableAsync(int flightId, string seat);
     }
 }

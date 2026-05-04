@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using AirportApp.ClassLibrary.Entity.Domain.Faq;
 using AirportApp.ClassLibrary.Repository.Interfaces;
@@ -17,9 +18,9 @@ namespace AirportApp.ClassLibrary.Repository
             this.dataBaseContext = dataBaseContext ?? throw new ArgumentNullException(nameof(dataBaseContext));
         }
 
-        public FAQEntry GetById(int askedQuestionId)
+        public async Task<FAQEntry> GetByIdAsync(int askedQuestionId)
         {
-            var faqEntry = this.dataBaseContext.faqs.FirstOrDefault(f => f.Id == askedQuestionId);
+            var faqEntry = await this.dataBaseContext.faqs.FirstOrDefaultAsync(f => f.Id == askedQuestionId);
             if (faqEntry == null)
             {
                 throw new KeyNotFoundException($"FAQ with id {askedQuestionId} was not found.");
@@ -28,7 +29,7 @@ namespace AirportApp.ClassLibrary.Repository
             return faqEntry;
         }
 
-        public int CreateNewEntity(FAQEntry questionEntity)
+        public async Task<int> CreateNewEntityAsync(FAQEntry questionEntity)
         {
             if (questionEntity == null)
             {
@@ -36,18 +37,18 @@ namespace AirportApp.ClassLibrary.Repository
             }
 
             this.dataBaseContext.faqs.Add(questionEntity);
-            this.dataBaseContext.SaveChanges();
+            await this.dataBaseContext.SaveChangesAsync();
             return questionEntity.Id;
         }
 
-        public void UpdateById(int identificationNumber, FAQEntry questionEntity)
+        public async Task UpdateByIdAsync(int identificationNumber, FAQEntry questionEntity)
         {
             if (questionEntity == null)
             {
                 throw new ArgumentNullException(nameof(questionEntity), "FAQ entry cannot be null.");
             }
 
-            var faqEntry = this.dataBaseContext.faqs.FirstOrDefault(f => f.Id == identificationNumber);
+            var faqEntry = await this.dataBaseContext.faqs.FirstOrDefaultAsync(f => f.Id == identificationNumber);
             if (faqEntry != null)
             {
                 faqEntry.Question = questionEntity.Question;
@@ -56,64 +57,64 @@ namespace AirportApp.ClassLibrary.Repository
                 faqEntry.ViewCount = questionEntity.ViewCount;
                 faqEntry.HelpfulVotesCount = questionEntity.HelpfulVotesCount;
                 faqEntry.NotHelpfulVotesCount = questionEntity.NotHelpfulVotesCount;
-                this.dataBaseContext.SaveChanges();
+                await this.dataBaseContext.SaveChangesAsync();
             }
         }
 
-        public void DeleteById(int identificationNumber)
+        public async Task DeleteByIdAsync(int identificationNumber)
         {
-            var faqEntry = this.dataBaseContext.faqs.FirstOrDefault(f => f.Id == identificationNumber);
+            var faqEntry = await this.dataBaseContext.faqs.FirstOrDefaultAsync(f => f.Id == identificationNumber);
             if (faqEntry != null)
             {
                 this.dataBaseContext.faqs.Remove(faqEntry);
-                this.dataBaseContext.SaveChanges();
+                await this.dataBaseContext.SaveChangesAsync();
             }
         }
 
-        public IEnumerable<FAQEntry> GetAll()
+        public async Task<IEnumerable<FAQEntry>> GetAllAsync()
         {
-            return this.dataBaseContext.faqs.ToList();
+            return await this.dataBaseContext.faqs.ToListAsync();
         }
 
-        public List<FAQEntry> GetByCategory(FAQCategoryEnum category)
+        public async Task<List<FAQEntry>> GetByCategoryAsync(FAQCategoryEnum category)
         {
             if (category == FAQCategoryEnum.All)
             {
-                return this.dataBaseContext.faqs.ToList();
+                return await this.dataBaseContext.faqs.ToListAsync();
             }
 
-            return this.dataBaseContext.faqs
+            return await this.dataBaseContext.faqs
                 .Where(f => f.Category == category)
-                .ToList();
+                .ToListAsync();
         }
 
-        public void IncrementViewCount(int identificationNumber)
+        public async Task IncrementViewCountAsync(int identificationNumber)
         {
-            var faqEntry = this.dataBaseContext.faqs.FirstOrDefault(f => f.Id == identificationNumber);
+            var faqEntry = await this.dataBaseContext.faqs.FirstOrDefaultAsync(f => f.Id == identificationNumber);
             if (faqEntry != null)
             {
                 faqEntry.ViewCount++;
-                this.dataBaseContext.SaveChanges();
+                await this.dataBaseContext.SaveChangesAsync();
             }
         }
 
-        public void IncrementWasHelpfulVotes(int identificationNumber)
+        public async Task IncrementWasHelpfulVotesAsync(int identificationNumber)
         {
-            var faqEntry = this.dataBaseContext.faqs.FirstOrDefault(f => f.Id == identificationNumber);
+            var faqEntry = await this.dataBaseContext.faqs.FirstOrDefaultAsync(f => f.Id == identificationNumber);
             if (faqEntry != null)
             {
                 faqEntry.HelpfulVotesCount++;
-                this.dataBaseContext.SaveChanges();
+                await this.dataBaseContext.SaveChangesAsync();
             }
         }
 
-        public void IncrementWasNotHelpfulVotes(int identificationNumber)
+        public async Task IncrementWasNotHelpfulVotesAsync(int identificationNumber)
         {
-            var faqEntry = this.dataBaseContext.faqs.FirstOrDefault(f => f.Id == identificationNumber);
+            var faqEntry = await this.dataBaseContext.faqs.FirstOrDefaultAsync(f => f.Id == identificationNumber);
             if (faqEntry != null)
             {
                 faqEntry.NotHelpfulVotesCount++;
-                this.dataBaseContext.SaveChanges();
+                await this.dataBaseContext.SaveChangesAsync();
             }
         }
     }

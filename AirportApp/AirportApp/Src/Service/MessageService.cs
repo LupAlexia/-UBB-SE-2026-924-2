@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using AirportApp.ClassLibrary.Entity.Domain.Chats;
 using AirportApp.ClassLibrary.Entity.Domain.Message;
 using AirportApp.ClassLibrary.Entity.Domain.Faq.Bot;
@@ -24,7 +25,7 @@ namespace AirportApp.Src.Service
             this.botEngine = botEngine ?? throw new ArgumentNullException(nameof(botEngine));
         }
 
-        public BotMessage SendMessage(int chatId, ISender sender, FAQOption selectedOption)
+        public async Task<BotMessage> SendMessageAsync(int chatId, ISender sender, FAQOption selectedOption)
         {
             if (selectedOption == null)
             {
@@ -32,25 +33,25 @@ namespace AirportApp.Src.Service
             }
             if (selectedOption.NextOptionId == 1)
             {
-                botEngine.ResetBotConversationStateToInitialRootNode();
+                await botEngine.ResetBotConversationStateToInitialRootNodeAsync();
             }
 
-            Chat chat = GetActiveChat(chatId);
+            Chat chat = await GetActiveChatAsync(chatId);
 
             var userMessage = new Message(chat, selectedOption.Label, sender);
-            messageRepository.CreateNewEntity(userMessage);
+            await messageRepository.CreateNewEntityAsync(userMessage);
 
-            BotMessage botReply = botEngine.GenerateAppropriateResponseBasedOnCurrentStrategy(userMessage);
+            BotMessage botReply = await botEngine.GenerateAppropriateResponseBasedOnCurrentStrategyAsync(userMessage);
 
-            var botRow = new Message( chat, botReply.GetMessage(), botEngine);
-            messageRepository.CreateNewEntity(botRow);
+            var botRow = new Message(chat, botReply.GetMessage(), botEngine);
+            await messageRepository.CreateNewEntityAsync(botRow);
 
             return botReply;
         }
 
-        public IMessage GetMessage(int chatId, int messageId)
+        public async Task<IMessage> GetMessageAsync(int chatId, int messageId)
         {
-            IMessage message = messageRepository.GetById(messageId);
+            IMessage message = await messageRepository.GetByIdAsync(messageId);
             if (message.GetChat().Id != chatId)
             {
                 throw new InvalidOperationException($"Message {messageId} does not belong to chat {chatId}.");
@@ -58,18 +59,19 @@ namespace AirportApp.Src.Service
             return message;
         }
 
-        public IEnumerable<Message> GetAllMessages(int chatId)
+        public async Task<IEnumerable<Message>> GetAllMessagesAsync(int chatId)
         {
-            _ = chatRepository.GetById(chatId);
+            _ = await chatRepository.GetByIdAsync(chatId);
 
-            return messageRepository.GetAll()
+            var allMessages = await messageRepository.GetAllAsync();
+            return allMessages
                 .Where(chatMessage => chatMessage.ChatId == chatId)
                 .OrderBy(chatMessage => chatMessage.Timestamp);
         }
 
-        private Chat GetActiveChat(int chatId)
+        private async Task<Chat> GetActiveChatAsync(int chatId)
         {
-            Chat chat = chatRepository.GetById(chatId);
+            Chat chat = await chatRepository.GetByIdAsync(chatId);
             if (chat.Status != ChatStatus.Active)
             {
                 throw new InvalidOperationException($"Chat {chatId} is not active.");

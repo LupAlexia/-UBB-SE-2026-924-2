@@ -1,69 +1,74 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using AirportApp.ClassLibrary.Entity.Domain.Faq;
 using AirportApp.Src.Service.Interfaces;
-using Sprache;
 using AirportApp.ClassLibrary.Repository.Interfaces;
 
 namespace AirportApp.Src.Service.Implementation
 {
-	public class FAQService : IFAQService
-	{
-		private readonly IFAQRepository faqRepository;
+    public class FAQService : IFAQService
+    {
+        private readonly IFAQRepository faqRepository;
 
-		public FAQService(IFAQRepository faqRepository)
-		{
-			this.faqRepository = faqRepository;
-		}
-
-		public List<FAQEntry> GetAll()
-		{
-			return faqRepository.GetAll().ToList();
-		}
-
-        public List<FAQEntry> GetByCategory(FAQCategoryEnum category)
+        public FAQService(IFAQRepository faqRepository)
         {
-			return faqRepository.GetByCategory(category);
+            this.faqRepository = faqRepository;
         }
 
-		public void AddFAQEntry(FAQEntry newElem)
-		{
-			faqRepository.CreateNewEntity(newElem);
-		}
-
-		public void EditFAQEntry(FAQEntry tempEntry, int faqEntryId)
-		{
-			faqRepository.UpdateById(faqEntryId, tempEntry);
-		}
-
-		public void DeleteFAQEntry(int entryId)
-		{
-			faqRepository.DeleteById(entryId);
-		}
-
-		public void IncrementViewCount(FAQEntry entry)
-		{
-			faqRepository.IncrementViewCount(entry.Id);
-		}
-
-		public void IncrementWasHelpfulVotes(FAQEntry entry)
-		{
-			faqRepository.IncrementWasHelpfulVotes(entry.Id);
-		}
-
-        public void IncrementWasNotHelpfulVotes(FAQEntry entry)
+        public async Task<List<FAQEntry>> GetAllAsync()
         {
-			faqRepository.IncrementWasNotHelpfulVotes(entry.Id);
+            return (await faqRepository.GetAllAsync()).ToList();
         }
 
-		public List<FAQEntry> FilterFAQEntry(FAQCategoryEnum category, string searchQuery)
-		{
-			var frequentlyAskedQuestions = this.faqRepository.GetAll().AsEnumerable();
-			if (category != FAQCategoryEnum.All)
-			{
-				frequentlyAskedQuestions = this.GetByCategory(category);
-			}
+        public async Task<List<FAQEntry>> GetByCategoryAsync(FAQCategoryEnum category)
+        {
+            return await faqRepository.GetByCategoryAsync(category);
+        }
+
+        public async Task AddFAQEntryAsync(FAQEntry newElem)
+        {
+            await faqRepository.CreateNewEntityAsync(newElem);
+        }
+
+        public async Task EditFAQEntryAsync(FAQEntry tempEntry, int faqEntryId)
+        {
+            await faqRepository.UpdateByIdAsync(faqEntryId, tempEntry);
+        }
+
+        public async Task DeleteFAQEntryAsync(int entryId)
+        {
+            await faqRepository.DeleteByIdAsync(entryId);
+        }
+
+        public async Task IncrementViewCountAsync(FAQEntry entry)
+        {
+            await faqRepository.IncrementViewCountAsync(entry.Id);
+        }
+
+        public async Task IncrementWasHelpfulVotesAsync(FAQEntry entry)
+        {
+            await faqRepository.IncrementWasHelpfulVotesAsync(entry.Id);
+        }
+
+        public async Task IncrementWasNotHelpfulVotesAsync(FAQEntry entry)
+        {
+            await faqRepository.IncrementWasNotHelpfulVotesAsync(entry.Id);
+        }
+
+        public async Task<List<FAQEntry>> FilterFAQEntryAsync(FAQCategoryEnum category, string searchQuery)
+        {
+            IEnumerable<FAQEntry> frequentlyAskedQuestions;
+
+            if (category != FAQCategoryEnum.All)
+            {
+                frequentlyAskedQuestions = await this.GetByCategoryAsync(category);
+            }
+            else
+            {
+                frequentlyAskedQuestions = await this.GetAllAsync();
+            }
 
             if (!string.IsNullOrWhiteSpace(searchQuery))
             {
@@ -71,7 +76,8 @@ namespace AirportApp.Src.Service.Implementation
                     (question.Question?.Contains(searchQuery, StringComparison.OrdinalIgnoreCase) ?? false) ||
                     (question.Answer?.Contains(searchQuery, StringComparison.OrdinalIgnoreCase) ?? false));
             }
-			return frequentlyAskedQuestions.ToList();
+
+            return frequentlyAskedQuestions.ToList();
         }
     }
 }

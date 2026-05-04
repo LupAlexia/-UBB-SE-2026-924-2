@@ -1,5 +1,6 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using AirportApp.ClassLibrary.Entity.Dto;
 using AirportApp.ClassLibrary.Entity.Domain.Ticket;
 using AirportApp.ClassLibrary.Entity.Domain;
@@ -9,24 +10,24 @@ namespace AirportApp.Src.Service.Interfaces
 {
     public interface ITicketService
     {
-        void CreateTicket(int ticketId, User ticketCreator, TicketStatusEnum initialStatus,
+        Task CreateTicketAsync(int ticketId, User ticketCreator, TicketStatusEnum initialStatus,
             TicketCategory category, TicketSubcategory subcategory,
             string subject, string description, DateTime creationTimestamp,
             TicketUrgencyLevelEnum? initialUrgencyLevel = null);
 
-        void AddTicket(Ticket ticketEntity);
+        Task AddTicketAsync(Ticket ticketEntity);
 
-        void DeleteTicketById(int ticketId);
+        Task DeleteTicketByIdAsync(int ticketId);
 
-        Ticket GetTicketById(int ticketId);
+        Task<Ticket> GetTicketByIdAsync(int ticketId);
 
-        IEnumerable<Ticket> GetAllTickets();
+        Task<IEnumerable<Ticket>> GetAllTicketsAsync();
 
-        void UpdateTicketById(int id, Ticket ticket);
+        Task UpdateTicketByIdAsync(int id, Ticket ticket);
 
-        void UpdateUrgencyLevel(int ticketId, TicketUrgencyLevelEnum newUrgencyLevel);
+        Task UpdateUrgencyLevelAsync(int ticketId, TicketUrgencyLevelEnum newUrgencyLevel);
 
-        void UpdateStatus(int ticketId, TicketStatusEnum newStatus);
+        Task UpdateStatusAsync(int ticketId, TicketStatusEnum newStatus);
 
         IEnumerable<TicketDTO> FilterTicketsByStatus(IEnumerable<TicketDTO> tickets, TicketFilterStatusEnum filter);
     }

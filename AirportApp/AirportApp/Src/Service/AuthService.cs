@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Net.Mail;
 using Microsoft.AspNetCore.Identity;
 using AirportApp.ClassLibrary.Entity.Domain;
@@ -22,7 +23,7 @@ namespace AirportApp.Src.Service
             this.passwordHasher = new PasswordHasher<Customer>();
         }
 
-        public Customer Login(string email, string password)
+        public async Task<Customer> LoginAsync(string email, string password)
         {
             if (string.IsNullOrWhiteSpace(email))
             {
@@ -34,7 +35,7 @@ namespace AirportApp.Src.Service
                 throw new ArgumentException("Password is required.");
             }
 
-            Customer? existingUser = this.userRepository.GetByEmail(email.Trim());
+            Customer? existingUser = await this.userRepository.GetByEmailAsync(email.Trim());
 
             if (existingUser == null)
             {
@@ -52,7 +53,7 @@ namespace AirportApp.Src.Service
             return existingUser;
         }
 
-        public void Register(string email, string phone, string username, string password)
+        public async Task RegisterAsync(string email, string phone, string username, string password)
         {
             string? normalizedEmail = email?.Trim();
             string? normalizedUsername = username?.Trim();
@@ -60,7 +61,7 @@ namespace AirportApp.Src.Service
 
             this.ValidateRegistrationData(normalizedEmail, normalizedPhone, normalizedUsername, password);
 
-            Customer? existingUser = this.userRepository.GetByEmail(normalizedEmail!);
+            Customer? existingUser = await this.userRepository.GetByEmailAsync(normalizedEmail!);
             if (existingUser != null)
             {
                 throw new InvalidOperationException("An account with this email already exists.");
@@ -77,7 +78,7 @@ namespace AirportApp.Src.Service
             string hashedPassword = this.passwordHasher.HashPassword(newUser, password);
             newUser.PasswordHash = hashedPassword;
 
-            this.userRepository.AddUser(newUser);
+            await this.userRepository.AddUserAsync(newUser);
         }
 
         public void Logout()
@@ -135,4 +136,3 @@ namespace AirportApp.Src.Service
         }
     }
 }
-

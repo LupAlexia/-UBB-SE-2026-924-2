@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using AirportApp.ClassLibrary.DataAccess;
 using AirportApp.ClassLibrary.Entity.Domain.Faq.Bot;
@@ -14,16 +16,19 @@ namespace AirportApp.ClassLibrary.Entity.Repository.Database
 
         public DecisionTreeRepository(AirportDbContext dataBaseContext)
         {
-            this.dataBaseContext = dataBaseContext ?? throw new ArgumentNullException(nameof(dataBaseContext)); ;
+            this.dataBaseContext = dataBaseContext ?? throw new ArgumentNullException(nameof(dataBaseContext));
         }
 
-        public FAQNode GetById(int id)
+        public async Task<FAQNode> GetByIdAsync(int id)
         {
-            var node = this.dataBaseContext.faqNodes
+            var node = await this.dataBaseContext.faqNodes
                 .Include(n => n.Options)
-                .FirstOrDefault(n => n.NodeId == id);
+                .FirstOrDefaultAsync(n => n.NodeId == id);
 
-            if (node == null) return null;
+            if (node == null)
+            {
+                return null;
+            }
 
             var options = node.Options
                 .Select(o => new FAQOption(o.Label, o.NextOptionId))
@@ -32,7 +37,7 @@ namespace AirportApp.ClassLibrary.Entity.Repository.Database
             return new FAQNode(node.NodeId, node.QuestionText, options, node.IsFinalAnswer);
         }
 
-        public int CreateNewEntity(FAQNode incomingFAQNodeEntityToBeSaved)
+        public async Task<int> CreateNewEntityAsync(FAQNode incomingFAQNodeEntityToBeSaved)
         {
             var nodeEntity = new FAQNodeEntity
             {
@@ -46,35 +51,39 @@ namespace AirportApp.ClassLibrary.Entity.Repository.Database
             }
 
             this.dataBaseContext.faqNodes.Add(nodeEntity);
-            this.dataBaseContext.SaveChanges();
+            await this.dataBaseContext.SaveChangesAsync();
 
             return nodeEntity.NodeId;
         }
 
-        public void DeleteById(int id)
+        public async Task DeleteByIdAsync(int id)
         {
-            var node = this.dataBaseContext.faqNodes.Include(n => n.Options).FirstOrDefault(n => n.NodeId == id);
-            if (node == null) return;
+            var node = await this.dataBaseContext.faqNodes.Include(n => n.Options).FirstOrDefaultAsync(n => n.NodeId == id);
+            if (node == null)
+            {
+                return;
+            }
 
-            // Remove options first
             if (node.Options != null && node.Options.Any())
             {
                 this.dataBaseContext.faqOptions.RemoveRange(node.Options);
             }
 
             this.dataBaseContext.faqNodes.Remove(node);
-            this.dataBaseContext.SaveChanges();
+            await this.dataBaseContext.SaveChangesAsync();
         }
 
-        public void UpdateById(int id, FAQNode updatedFAQNodeEntityData)
+        public async Task UpdateByIdAsync(int id, FAQNode updatedFAQNodeEntityData)
         {
-            var node = this.dataBaseContext.faqNodes.Include(n => n.Options).FirstOrDefault(n => n.NodeId == id);
-            if (node == null) return;
+            var node = await this.dataBaseContext.faqNodes.Include(n => n.Options).FirstOrDefaultAsync(n => n.NodeId == id);
+            if (node == null)
+            {
+                return;
+            }
 
             node.QuestionText = updatedFAQNodeEntityData.QuestionText;
             node.IsFinalAnswer = updatedFAQNodeEntityData.IsFinalAnswer;
 
-            // Replace options
             this.dataBaseContext.faqOptions.RemoveRange(node.Options);
             node.Options.Clear();
 
@@ -83,14 +92,14 @@ namespace AirportApp.ClassLibrary.Entity.Repository.Database
                 node.Options.Add(new FAQOptionEntity { NodeId = id, Label = opt.Label, NextOptionId = opt.NextOptionId });
             }
 
-            this.dataBaseContext.SaveChanges();
+            await this.dataBaseContext.SaveChangesAsync();
         }
 
-        public IEnumerable<FAQNode> GetAll()
+        public async Task<IEnumerable<FAQNode>> GetAllAsync()
         {
-            var nodes = this.dataBaseContext.faqNodes
+            var nodes = await this.dataBaseContext.faqNodes
                 .Include(n => n.Options)
-                .ToList();
+                .ToListAsync();
 
             return nodes.Select(n => new FAQNode(
                 n.NodeId,

@@ -1,7 +1,10 @@
-﻿using AirportApp.ClassLibrary.DataAccess;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using AirportApp.ClassLibrary.DataAccess;
 using AirportApp.ClassLibrary.Entity.Domain.Ticket;
 using AirportApp.ClassLibrary.Repository.Interfaces;
-using Microsoft.EntityFrameworkCore;
 
 namespace AirportApp.ClassLibrary.Repository
 {
@@ -14,46 +17,45 @@ namespace AirportApp.ClassLibrary.Repository
             dataBaseContext = context ?? throw new ArgumentNullException(nameof(dataBaseContext));
         }
 
-        public IEnumerable<Ticket> GetAll()
+        public async Task<IEnumerable<Ticket>> GetAllAsync()
         {
-            // Eager loading related entities
-            return dataBaseContext.tickets
+            return await dataBaseContext.tickets
                 .Include(t => t.Creator)
                 .Include(t => t.Category)
                 .Include(t => t.Subcategory)
-                .ToList();
+                .ToListAsync();
         }
 
-        public Ticket GetById(int id)
+        public async Task<Ticket> GetByIdAsync(int id)
         {
-            return dataBaseContext.tickets
+            return await dataBaseContext.tickets
                 .Include(t => t.Creator)
                 .Include(t => t.Category)
                 .Include(t => t.Subcategory)
-                .FirstOrDefault(t => t.Id == id)
+                .FirstOrDefaultAsync(t => t.Id == id)
                 ?? throw new KeyNotFoundException($"Ticket with id {id} not found.");
         }
 
-        public int CreateNewEntity(Ticket ticket)
+        public async Task<int> CreateNewEntityAsync(Ticket ticket)
         {
             dataBaseContext.tickets.Add(ticket);
-            dataBaseContext.SaveChanges();
+            await dataBaseContext.SaveChangesAsync();
             return ticket.Id;
         }
 
-        public void UpdateById(int id, Ticket ticket)
+        public async Task UpdateByIdAsync(int id, Ticket ticket)
         {
             dataBaseContext.tickets.Update(ticket);
-            dataBaseContext.SaveChanges();
+            await dataBaseContext.SaveChangesAsync();
         }
 
-        public void DeleteById(int id)
+        public async Task DeleteByIdAsync(int id)
         {
-            var ticket = dataBaseContext.tickets.Find(id);
+            var ticket = await dataBaseContext.tickets.FindAsync(id);
             if (ticket != null)
             {
                 dataBaseContext.tickets.Remove(ticket);
-                dataBaseContext.SaveChanges();
+                await dataBaseContext.SaveChangesAsync();
             }
         }
     }

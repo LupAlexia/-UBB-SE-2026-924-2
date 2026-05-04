@@ -18,7 +18,7 @@ namespace AirportApp.Src.View.General
             this.InitializeComponent();
             this.DataContext = ViewModel;
             StartCarousel();
-            this.Loaded += (sender, arguments) => ViewModel.LoadReviews();
+            this.Loaded += async (sender, arguments) => await ViewModel.LoadReviewsAsync();
         }
 
         private void StartCarousel()

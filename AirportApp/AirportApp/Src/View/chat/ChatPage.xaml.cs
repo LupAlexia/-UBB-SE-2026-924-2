@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using AirportApp.Src.ViewModel;
 using AirportApp.Src.ViewModel.Chats;
 using AirportApp.Src.ViewModel.General;
@@ -18,9 +18,9 @@ namespace AirportApp.Src.View.Chat
             this.InitializeComponent();
         }
 
-        public void EndChat(object sender, RoutedEventArgs arguments)
+        public async void EndChat(object sender, RoutedEventArgs arguments)
         {
-            ViewModel.CloseChat();
+            await ViewModel.CloseChatAsync();
             this.Frame.Navigate(typeof(AirportApp.Src.View.General.LandingPage));
         }
     }

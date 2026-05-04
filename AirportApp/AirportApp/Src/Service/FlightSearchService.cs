@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using AirportApp.ClassLibrary.Entity.Domain;
 using AirportApp.ClassLibrary.Repository.Interfaces;
 
@@ -18,7 +19,7 @@ namespace AirportApp.Src.Service
             this.flightRepository = flightRepository ?? throw new ArgumentNullException(nameof(flightRepository));
         }
 
-        public IEnumerable<Flight> SearchFlights(string location, bool isDeparture, DateTime? date, int? passengers)
+        public async Task<IEnumerable<Flight>> SearchFlightsAsync(string location, bool isDeparture, DateTime? date, int? passengers)
         {
             if (string.IsNullOrWhiteSpace(location))
             {
@@ -26,20 +27,27 @@ namespace AirportApp.Src.Service
             }
 
             string flightType = isDeparture ? DepartureRouteType : ArrivalRouteType;
-            var flights = this.flightRepository.GetFlightsByRoute(location, flightType, date);
+            var flights = (await this.flightRepository.GetFlightsByRouteAsync(location, flightType, date)).ToList();
 
             if (passengers.HasValue && passengers.Value > 0)
             {
-                flights = flights.Where(flight =>
+                var filteredFlights = new List<Flight>();
+                foreach (var flight in flights)
                 {
-                    int occupiedSeats = this.flightRepository.GetOccupiedSeatCount(flight.Id);
+                    int occupiedSeats = await this.flightRepository.GetOccupiedSeatCountAsync(flight.Id);
                     int availableSeats = flight.Route!.Capacity - occupiedSeats;
-                    return availableSeats >= passengers.Value;
-                });
+                    if (availableSeats >= passengers.Value)
+                    {
+                        filteredFlights.Add(flight);
+                    }
+                }
+
+                return filteredFlights;
             }
 
             return flights;
         }
+
         public int? ParsePassengerCount(string input)
         {
             if (string.IsNullOrWhiteSpace(input))

@@ -2,6 +2,7 @@ using AirportApp.ClassLibrary.Entity.Domain;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using AirportApp.ClassLibrary.Repository.Interfaces;
 
 namespace AirportApp.Src.Service
@@ -17,35 +18,36 @@ namespace AirportApp.Src.Service
             this.membershipRepository = membershipRepository ?? throw new ArgumentNullException(nameof(membershipRepository));
         }
 
-        public IEnumerable<Membership> GetAllMemberships()
+        public async Task<IEnumerable<Membership>> GetAllMembershipsAsync()
         {
-            var memberships = this.membershipRepository.GetAllMemberships().ToList();
+            var memberships = (await this.membershipRepository.GetAllMembershipsAsync()).ToList();
 
             foreach (var membership in memberships)
             {
-                membership.AddonDiscounts = this.membershipRepository.GetAddonDiscounts(membership.Id).ToList();
+                membership.AddonDiscounts = (await this.membershipRepository.GetAddonDiscountsAsync(membership.Id)).ToList();
             }
 
             return memberships;
         }
 
-        public Membership? UpgradeUserMembership(int userId, int newMembershipId)
+        public async Task<Membership?> UpgradeUserMembershipAsync(int userId, int newMembershipId)
         {
-            this.userRepository.UpdateUserMembership(userId, newMembershipId);
+            await this.userRepository.UpdateUserMembershipAsync(userId, newMembershipId);
 
-            var membership = this.membershipRepository.GetMembershipById(newMembershipId);
+            var membership = await this.membershipRepository.GetMembershipByIdAsync(newMembershipId);
             if (membership != null)
             {
-                membership.AddonDiscounts = this.membershipRepository.GetAddonDiscounts(newMembershipId).ToList();
+                membership.AddonDiscounts = (await this.membershipRepository.GetAddonDiscountsAsync(newMembershipId)).ToList();
             }
 
             return membership;
         }
-        public MembershipPurchaseResult PurchaseMembership(int userId, int membershipId)
+
+        public async Task<MembershipPurchaseResult> PurchaseMembershipAsync(int userId, int membershipId)
         {
             try
             {
-                var updatedMembership = UpgradeUserMembership(userId, membershipId);
+                var updatedMembership = await UpgradeUserMembershipAsync(userId, membershipId);
                 if (updatedMembership != null && UserSession.CurrentUser != null)
                 {
                     UserSession.CurrentUser.Membership = updatedMembership;

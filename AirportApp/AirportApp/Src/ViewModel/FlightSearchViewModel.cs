@@ -1,8 +1,10 @@
 using System;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using AirportApp.Src.Service;
 using AirportApp.ClassLibrary.Entity.Domain;
+
 namespace AirportApp.Src.ViewModel
 {
     public class FlightSearchViewModel : ViewModelBase
@@ -78,7 +80,7 @@ namespace AirportApp.Src.ViewModel
             this.pricingService = pricingService;
             AvailableFlights = new ObservableCollection<FlightDisplayModel>();
 
-            SearchCommand = new RelayCommand(parameter => ExecuteSearch());
+            SearchCommand = new RelayCommand(async parameter => await ExecuteSearchAsync());
             BookFlightCommand = new RelayCommand(parameter => ExecuteBookFlight(parameter as FlightDisplayModel));
         }
 
@@ -90,7 +92,7 @@ namespace AirportApp.Src.ViewModel
             }
         }
 
-        private void ExecuteSearch()
+        private async Task ExecuteSearchAsync()
         {
             AvailableFlights.Clear();
             SearchResultMessage = string.Empty;
@@ -103,7 +105,7 @@ namespace AirportApp.Src.ViewModel
             DateTime? date = FlightDate?.Date;
             int? requestedPassengers = searchService.ParsePassengerCount(Passengers);
 
-            var results = searchService.SearchFlights(Location, IsDeparture, date, requestedPassengers);
+            var results = await searchService.SearchFlightsAsync(Location, IsDeparture, date, requestedPassengers);
             bool hasResults = false;
 
             foreach (var flight in results)
@@ -139,4 +141,3 @@ namespace AirportApp.Src.ViewModel
         }
     }
 }
-

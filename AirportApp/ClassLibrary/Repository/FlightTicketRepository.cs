@@ -2,10 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using AirportApp.ClassLibrary.Entity.Domain;
 using AirportApp.ClassLibrary.Repository.Interfaces;
 using AirportApp.ClassLibrary.DataAccess;
-using Microsoft.EntityFrameworkCore;
 
 namespace AirportApp.ClassLibrary.Repository
 {
@@ -17,12 +17,12 @@ namespace AirportApp.ClassLibrary.Repository
 
         public FlightTicketRepository(AirportDbContext dataBaseContext)
         {
-            this.dataBaseContext = dataBaseContext ?? throw new ArgumentNullException(nameof(dataBaseContext)); ;
+            this.dataBaseContext = dataBaseContext ?? throw new ArgumentNullException(nameof(dataBaseContext));
         }
 
-        public IEnumerable<FlightTicket> GetTicketsByUserId(int userId)
+        public async Task<IEnumerable<FlightTicket>> GetTicketsByUserIdAsync(int userId)
         {
-            return this.dataBaseContext.flightTickets
+            return await this.dataBaseContext.flightTickets
                 .Where(ticket => ticket.User.Id == userId)
                 .Include(ticket => ticket.User)
                 .Include(ticket => ticket.Flight)
@@ -34,35 +34,35 @@ namespace AirportApp.ClassLibrary.Repository
                 .Include(ticket => ticket.Flight)
                     .ThenInclude(flight => flight.Gate)
                 .Include(ticket => ticket.SelectedAddOns)
-                .ToList();
+                .ToListAsync();
         }
 
-        public void AddTicket(FlightTicket ticket)
+        public async Task AddTicketAsync(FlightTicket ticket)
         {
             this.dataBaseContext.Add(ticket);
-            this.dataBaseContext.SaveChanges();
+            await this.dataBaseContext.SaveChangesAsync();
         }
 
-        public void UpdateTicketStatus(int ticketId, string status)
+        public async Task UpdateTicketStatusAsync(int ticketId, string status)
         {
-            var ticket = this.dataBaseContext.flightTickets.FirstOrDefault(t => t.Id == ticketId);
+            var ticket = await this.dataBaseContext.flightTickets.FirstOrDefaultAsync(t => t.Id == ticketId);
             if (ticket != null)
             {
                 ticket.Status = status;
-                this.dataBaseContext.SaveChanges();
+                await this.dataBaseContext.SaveChangesAsync();
             }
         }
 
-        public void AddTicketAddOns(int ticketId, IEnumerable<int> addOnIds)
+        public async Task AddTicketAddOnsAsync(int ticketId, IEnumerable<int> addOnIds)
         {
             if (addOnIds == null || !addOnIds.Any())
             {
                 return;
             }
 
-            var ticket = this.dataBaseContext.flightTickets
+            var ticket = await this.dataBaseContext.flightTickets
                 .Include(t => t.SelectedAddOns)
-                .FirstOrDefault(t => t.Id == ticketId);
+                .FirstOrDefaultAsync(t => t.Id == ticketId);
 
             if (ticket == null)
             {
@@ -71,31 +71,31 @@ namespace AirportApp.ClassLibrary.Repository
 
             foreach (var addOnId in addOnIds)
             {
-                var addOn = this.dataBaseContext.addOns.FirstOrDefault(a => a.Id == addOnId);
+                var addOn = await this.dataBaseContext.addOns.FirstOrDefaultAsync(a => a.Id == addOnId);
                 if (addOn != null && !ticket.SelectedAddOns.Contains(addOn))
                 {
                     ticket.SelectedAddOns.Add(addOn);
                 }
             }
 
-            this.dataBaseContext.SaveChanges();
+            await this.dataBaseContext.SaveChangesAsync();
         }
 
-        public IEnumerable<string> GetOccupiedSeats(int flightId)
+        public async Task<IEnumerable<string>> GetOccupiedSeatsAsync(int flightId)
         {
-            return this.dataBaseContext.flightTickets
-                .Where(ticket => ticket.Flight.Id == flightId 
-                    && ticket.Status != CancelledStatus 
+            return await this.dataBaseContext.flightTickets
+                .Where(ticket => ticket.Flight.Id == flightId
+                    && ticket.Status != CancelledStatus
                     && ticket.Seat != null)
                 .Select(ticket => ticket.Seat)
-                .ToList();
+                .ToListAsync();
         }
 
-        public async Task<bool> IsSeatAvailable(int flightId, string seat)
+        public async Task<bool> IsSeatAvailableAsync(int flightId, string seat)
         {
             int count = await this.dataBaseContext.flightTickets
-                .Where(ticket => ticket.Flight.Id == flightId 
-                    && ticket.Seat == seat 
+                .Where(ticket => ticket.Flight.Id == flightId
+                    && ticket.Seat == seat
                     && ticket.Status != CancelledStatus)
                 .CountAsync();
 
@@ -121,5 +121,3 @@ namespace AirportApp.ClassLibrary.Repository
         }
     }
 }
-
-

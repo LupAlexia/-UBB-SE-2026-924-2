@@ -1,8 +1,7 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using AirportApp.ClassLibrary.Entity.Domain;
@@ -30,6 +29,7 @@ namespace AirportApp.Src.ViewModel.Chats
         private Chat chat;
         private User user;
         private const int FIRST_OPTION = 1;
+
         public ChatViewModel(MessageService msgService, ChatService chatService, IMapper mapper, IUserService userService, User testUser = null)
         {
             messageService = msgService;
@@ -45,51 +45,64 @@ namespace AirportApp.Src.ViewModel.Chats
                 return;
             }
 
-            chat = this.chatService.OpenChat(user.RetrieveUniqueDatabaseIdentifierForBot());
+            _ = InitializeChatAsync();
+        }
 
-            LoadChatHistory();
+        private async Task InitializeChatAsync()
+        {
+            chat = await this.chatService.OpenChatAsync(user.RetrieveUniqueDatabaseIdentifierForBot());
+
+            await LoadChatHistoryAsync();
 
             if (ChatHistory.Count == 0)
             {
-                LoadFirstMessage();
+                await LoadFirstMessageAsync();
             }
         }
 
         public string FormatUserId => "User Id: " + user.RetrieveUniqueDatabaseIdentifierForBot().ToString();
-        public void CloseChat()
+
+        public async Task CloseChatAsync()
         {
-            chatService.CloseChat(chat.Id);
+            await chatService.CloseChatAsync(chat.Id);
         }
-        private void LoadChatHistory()
+
+        private async Task LoadChatHistoryAsync()
         {
             ChatHistory.Clear();
-            var messages = messageService.GetAllMessages(chat.Id);
+            var messages = await messageService.GetAllMessagesAsync(chat.Id);
             var currentUserId = user.RetrieveUniqueDatabaseIdentifierForBot();
             foreach (var message in messages)
             {
                 var dataTransferObject = mapper.Map<MessageDTO>(message);
-                
-                dataTransferObject.SenderName = dataTransferObject.SenderId == BotEngineIdentity.CONSTANT_IDENTIFIER_FOR_DEFAULT_BOT_SYSTEM_USER
-                    ? "Carlos"
-                    : userService.GetById(dataTransferObject.SenderId)?.RetrieveConfiguredDisplayFullNameForBot();
-                
+
+                if (dataTransferObject.SenderId == BotEngineIdentity.CONSTANT_IDENTIFIER_FOR_DEFAULT_BOT_SYSTEM_USER)
+                {
+                    dataTransferObject.SenderName = "Carlos";
+                }
+                else
+                {
+                    var senderUser = await userService.GetByIdAsync(dataTransferObject.SenderId);
+                    dataTransferObject.SenderName = senderUser?.RetrieveConfiguredDisplayFullNameForBot();
+                }
+
                 dataTransferObject.IsOutgoing = (dataTransferObject.SenderId == currentUserId);
                 ChatHistory.Add(dataTransferObject);
             }
         }
 
         [RelayCommand]
-        private void HandleOptionClick(FAQOption option)
+        private async Task HandleOptionClickAsync(FAQOption option)
         {
             if (option == null)
             {
                 return;
             }
 
-            BotMessage botReply = messageService.SendMessage(chat.Id, user, option);
+            BotMessage botReply = await messageService.SendMessageAsync(chat.Id, user, option);
             System.Diagnostics.Debug.WriteLine($"User selected: {option.Label}");
 
-            LoadChatHistory();
+            await LoadChatHistoryAsync();
             UpdateAvailableOptions(botReply);
         }
 
@@ -98,7 +111,6 @@ namespace AirportApp.Src.ViewModel.Chats
             CurrentOptions.Clear();
             var nextOptions = (botReply as IMessage).GetNextOptions();
 
-            // var dto = _mapper.Map<MessageDTO>();
             if (nextOptions != null)
             {
                 foreach (var option in nextOptions)
@@ -112,10 +124,9 @@ namespace AirportApp.Src.ViewModel.Chats
             }
         }
 
-        private void LoadFirstMessage()
+        private async Task LoadFirstMessageAsync()
         {
-            HandleOptionClick(new FAQOption("Hello! I need help.", FIRST_OPTION));
-            // _messageService.SendMessage(_chat.ChatId, _user, new FAQOption("Hello! I need help.", _FIRST_OPTION));
+            await HandleOptionClickAsync(new FAQOption("Hello! I need help.", FIRST_OPTION));
         }
     }
 }

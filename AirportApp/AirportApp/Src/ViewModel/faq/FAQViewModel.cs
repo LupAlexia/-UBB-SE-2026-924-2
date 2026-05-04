@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
@@ -64,7 +64,7 @@ namespace AirportApp.Src.ViewModel.Faq
             {
                 searchQuery = value;
                 OnPropertyChanged();
-                ApplyFilters();
+                _ = ApplyFiltersAsync();
             }
         }
 
@@ -75,7 +75,7 @@ namespace AirportApp.Src.ViewModel.Faq
             {
                 selectedCategory = value;
                 OnPropertyChanged();
-                ApplyFilters();
+                _ = ApplyFiltersAsync();
             }
         }
 
@@ -100,22 +100,22 @@ namespace AirportApp.Src.ViewModel.Faq
             selectedCategory = FAQCategoryEnum.All;
         }
 
-        public void LoadFAQ()
+        public async Task LoadFAQAsync()
         {
             FAQs.Clear();
 
-            var questionEntries = questionsService.GetAll().OrderByDescending(entry => entry.ViewCount);
+            var questionEntries = (await questionsService.GetAllAsync()).OrderByDescending(entry => entry.ViewCount);
             foreach (var entry in questionEntries)
             {
                 FAQs.Add(mapper.Map<FAQEntryDTO>(entry));
             }
 
-            ApplyFilters();
+            await ApplyFiltersAsync();
         }
 
-        public void ApplyFilters()
+        public async Task ApplyFiltersAsync()
         {
-            var result = questionsService.FilterFAQEntry(SelectedCategory, SearchQuery)
+            var result = (await questionsService.FilterFAQEntryAsync(SelectedCategory, SearchQuery))
                                     .OrderByDescending(entry => entry.ViewCount)
                                     .AsEnumerable().Select(entry => mapper.Map<FAQEntryDTO>(entry));
 
@@ -131,11 +131,7 @@ namespace AirportApp.Src.ViewModel.Faq
             SelectedCategory = category;
         }
 
-        // public void Search()
-        // {
-        //    ApplyFilters();
-        // }
-        public void AddFAQEntry(FAQEntryDTO questionDataTransfer)
+        public async Task AddFAQEntryAsync(FAQEntryDTO questionDataTransfer)
         {
             if (!IsAdmin)
             {
@@ -143,11 +139,11 @@ namespace AirportApp.Src.ViewModel.Faq
             }
 
             var questionEntity = mapper.Map<FAQEntry>(questionDataTransfer);
-            questionsService.AddFAQEntry(questionEntity);
-            LoadFAQ();
+            await questionsService.AddFAQEntryAsync(questionEntity);
+            await LoadFAQAsync();
         }
 
-        public void EditFAQEntry(FAQEntryDTO questionDataTransfer)
+        public async Task EditFAQEntryAsync(FAQEntryDTO questionDataTransfer)
         {
             if (!IsAdmin)
             {
@@ -160,11 +156,11 @@ namespace AirportApp.Src.ViewModel.Faq
             }
 
             var questionEntity = mapper.Map<FAQEntry>(questionDataTransfer);
-            questionsService.EditFAQEntry(questionEntity, questionDataTransfer.Id);
-            LoadFAQ();
+            await questionsService.EditFAQEntryAsync(questionEntity, questionDataTransfer.Id);
+            await LoadFAQAsync();
         }
 
-        public void DeleteFAQEntry(FAQEntryDTO questionDataTransfer)
+        public async Task DeleteFAQEntryAsync(FAQEntryDTO questionDataTransfer)
         {
             if (!IsAdmin)
             {
@@ -176,11 +172,11 @@ namespace AirportApp.Src.ViewModel.Faq
                 throw new ArgumentNullException(nameof(questionDataTransfer));
             }
 
-            questionsService.DeleteFAQEntry(questionDataTransfer.Id);
-            LoadFAQ();
+            await questionsService.DeleteFAQEntryAsync(questionDataTransfer.Id);
+            await LoadFAQAsync();
         }
 
-        public void IncrementViewCount()
+        public async Task IncrementViewCountAsync()
         {
             if (SelectedFAQEntry == null)
             {
@@ -188,10 +184,11 @@ namespace AirportApp.Src.ViewModel.Faq
             }
 
             var questionEntity = mapper.Map<FAQEntry>(SelectedFAQEntry);
-            questionsService.IncrementViewCount(questionEntity);
-            LoadFAQ();
+            await questionsService.IncrementViewCountAsync(questionEntity);
+            await LoadFAQAsync();
         }
-        public void IncrementWasHelpfulVotes()
+
+        public async Task IncrementWasHelpfulVotesAsync()
         {
             if (SelectedFAQEntry == null)
             {
@@ -199,13 +196,13 @@ namespace AirportApp.Src.ViewModel.Faq
             }
 
             var questionEntity = mapper.Map<FAQEntry>(SelectedFAQEntry);
-            questionsService.IncrementWasHelpfulVotes(questionEntity);
+            await questionsService.IncrementWasHelpfulVotesAsync(questionEntity);
 
             SelectedFAQEntry.HelpfulVotesCount++;
             OnPropertyChanged(nameof(SelectedFAQEntry));
         }
 
-        public void IncrementWasNotHelpfulVotes()
+        public async Task IncrementWasNotHelpfulVotesAsync()
         {
             if (SelectedFAQEntry == null)
             {
@@ -213,7 +210,7 @@ namespace AirportApp.Src.ViewModel.Faq
             }
 
             var questionEntity = mapper.Map<FAQEntry>(SelectedFAQEntry);
-            questionsService.IncrementWasNotHelpfulVotes(questionEntity);
+            await questionsService.IncrementWasNotHelpfulVotesAsync(questionEntity);
 
             SelectedFAQEntry.NotHelpfulVotesCount++;
             OnPropertyChanged(nameof(SelectedFAQEntry));
@@ -243,7 +240,7 @@ namespace AirportApp.Src.ViewModel.Faq
             if (willExpand)
             {
                 SelectedFAQEntry = questionDataTransfer;
-                IncrementViewCountFor(questionDataTransfer.Id);
+                _ = IncrementViewCountForAsync(questionDataTransfer.Id);
             }
             else
             {
@@ -251,7 +248,7 @@ namespace AirportApp.Src.ViewModel.Faq
             }
         }
 
-        public void IncrementViewCountFor(int questionId)
+        public async Task IncrementViewCountForAsync(int questionId)
         {
             var frequentlyAskedQuestion = FAQs.FirstOrDefault(mainListDataTransfer => mainListDataTransfer.Id == questionId);
             if (frequentlyAskedQuestion == null)
@@ -260,7 +257,7 @@ namespace AirportApp.Src.ViewModel.Faq
             }
 
             var questionEntity = mapper.Map<FAQEntry>(frequentlyAskedQuestion);
-            questionsService.IncrementViewCount(questionEntity);
+            await questionsService.IncrementViewCountAsync(questionEntity);
 
             frequentlyAskedQuestion.ViewCount++;
 
@@ -274,7 +271,7 @@ namespace AirportApp.Src.ViewModel.Faq
             OnPropertyChanged(nameof(FilteredFAQs));
         }
 
-        public Task Save(string question, string answer, string? categoryString)
+        public async Task SaveAsync(string question, string answer, string? categoryString)
         {
             if (string.IsNullOrWhiteSpace(question))
             {
@@ -302,23 +299,21 @@ namespace AirportApp.Src.ViewModel.Faq
 
             if (sourceDataTransfer.Id == 0)
             {
-                AddFAQEntry(sourceDataTransfer);
+                await AddFAQEntryAsync(sourceDataTransfer);
             }
             else
             {
-                EditFAQEntry(sourceDataTransfer);
+                await EditFAQEntryAsync(sourceDataTransfer);
             }
-
-            return Task.CompletedTask;
         }
 
         public void SetCategory(FAQCategoryEnum category)
         {
             SelectedCategory = category;
-            ApplyFilters();
+            _ = ApplyFiltersAsync();
         }
 
-        public void GiveFeedback(FAQEntryDTO frequentlyAskedQuestion, bool isHelpful)
+        public async Task GiveFeedbackAsync(FAQEntryDTO frequentlyAskedQuestion, bool isHelpful)
         {
             if (frequentlyAskedQuestion == null)
             {
@@ -331,12 +326,12 @@ namespace AirportApp.Src.ViewModel.Faq
 
             if (isHelpful)
             {
-                questionsService.IncrementWasHelpfulVotes(questionEntity);
+                await questionsService.IncrementWasHelpfulVotesAsync(questionEntity);
                 frequentlyAskedQuestion.HelpfulVotesCount++;
             }
             else
             {
-                questionsService.IncrementWasNotHelpfulVotes(questionEntity);
+                await questionsService.IncrementWasNotHelpfulVotesAsync(questionEntity);
                 frequentlyAskedQuestion.NotHelpfulVotesCount++;
             }
 
