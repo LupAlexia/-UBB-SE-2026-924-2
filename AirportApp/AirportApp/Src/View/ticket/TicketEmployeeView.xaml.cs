@@ -97,7 +97,7 @@ namespace AirportApp.Src.View.Ticket
                 {
                     if (Enum.TryParse<TicketStatusEnum>(selectedStr, out var newStatus))
                     {
-                        ViewModel.UpdateStatus(ticket.ticketId, newStatus);
+                        await ViewModel.UpdateStatusAsync(ticket.ticketId, newStatus);
                     }
                 }
             }

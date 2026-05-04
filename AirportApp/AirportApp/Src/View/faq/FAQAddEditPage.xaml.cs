@@ -163,7 +163,7 @@ namespace AirportApp.Src.View.Faq
         {
             try
             {
-                await viewModel.Save(
+                await viewModel.SaveAsync(
                     QuestionTextBox.Text,
                     AnswerTextBox.Text,
                     (CategoryComboBox.SelectedItem as ComboBoxItem)?.Content?.ToString());

@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
 using AirportApp.ClassLibrary.Entity.Domain;
@@ -25,7 +26,6 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.EntityFrameworkCore;
 using AirportApp.ClassLibrary.DataAccess;
-using AirportApp.ClassLibrary.Entity.Repository.Database;
 
 namespace AirportApp
 {
@@ -74,12 +74,12 @@ namespace AirportApp
             {
                 if (IsEmployee)
                 {
-                    Employee = Services.GetService<IEmployeeService>()!.GetEmployeeById(userId);
+                    Employee = Task.Run(() => Services.GetService<IEmployeeService>()!.GetEmployeeByIdAsync(userId)).GetAwaiter().GetResult();
                     return Employee != null;
                 }
                 else
                 {
-                    User = Services.GetService<IUserService>()!.GetById(userId);
+                    User = Task.Run(() => Services.GetService<IUserService>()!.GetByIdAsync(userId)).GetAwaiter().GetResult();
                     return User != null;
                 }
             }

@@ -21,10 +21,10 @@ namespace AirportApp.Src.View
             viewModel.PropertyChanged += ViewModel_PropertyChanged;
         }
 
-        protected override void OnNavigatedTo(NavigationEventArgs eventArgs)
+        protected override async void OnNavigatedTo(NavigationEventArgs eventArgs)
         {
             base.OnNavigatedTo(eventArgs);
-            viewModel.OnNavigatedTo();
+            await viewModel.OnNavigatedToAsync();
         }
 
         private async void ViewModel_PropertyChanged(object? sender, PropertyChangedEventArgs eventArgs)
@@ -70,7 +70,7 @@ namespace AirportApp.Src.View
                 var dialogResult = await dialog.ShowAsync();
                 if (dialogResult == ContentDialogResult.Primary)
                 {
-                    viewModel.ConfirmCancellation();
+                    await viewModel.ConfirmCancellationAsync();
                 }
                 else
                 {

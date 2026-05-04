@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.UI.Xaml;
@@ -78,7 +78,7 @@ namespace AirportApp.Src.View.Ticket
                     description: inputs.DescriptionBox.Text,
                     creationTimestamp: DateTime.Now);
 
-                ViewModel.CreateTicket(newTicket);
+                await ViewModel.CreateTicketAsync(newTicket);
                 dialog.Hide();
             }
             catch (Exception exceptionThrown)
@@ -107,7 +107,7 @@ namespace AirportApp.Src.View.Ticket
             var subcategoryCombo = new ComboBox { Header = "Subcategory*", Width = 400, PlaceholderText = "Select Subcategory" };
             panel.Children.Add(subcategoryCombo);
 
-            categoryCombo.SelectionChanged += (sender, arguments) =>
+            categoryCombo.SelectionChanged += async (sender, arguments) =>
             {
                 subcategoryCombo.Items.Clear();
                 var cat = ViewModel.Categories.FirstOrDefault(categoryItem => categoryItem.CategoryName == categoryCombo.SelectedItem?.ToString());
@@ -115,7 +115,7 @@ namespace AirportApp.Src.View.Ticket
                 {
                     return;
                 }
-                ViewModel.LoadSubcategories(cat.Id);
+                await ViewModel.LoadSubcategoriesAsync(cat.Id);
                 foreach (var sub in ViewModel.Subcategories)
                 {
                     subcategoryCombo.Items.Add(sub.SubcategoryName);
