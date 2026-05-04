@@ -1,4 +1,5 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+using System.Threading.Tasks;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 /// <summary>
 /// ViewModel for the EnterYourId page.
@@ -19,22 +20,22 @@ namespace AirportApp.Src.ViewModel.General
 
         /// <summary>
         /// Attempts to authenticate the user by parsing the identification string
-        /// and calling the application's SetUser method.
+        /// and calling the application's SetUserAsync method.
         /// </summary>
-        /// <param name="parsedId">The parsed integer user ID if successful.</param>
-        /// <returns>True if authentication succeeds; otherwise, false.</returns>
-        public bool TryAuthenticate(out int parsedId)
+        /// <returns>A tuple of (Success, ParsedId). Success is true if authentication succeeds.</returns>
+        public async Task<(bool Success, int ParsedId)> TryAuthenticateAsync()
         {
-            if (int.TryParse(UserIdentification, out parsedId))
+            if (int.TryParse(UserIdentification, out int parsedId))
             {
                 if (IsTestingMode)
                 {
-                    return true;
+                    return (true, parsedId);
                 }
 
-                return ((App)App.Current).SetUser(parsedId);
+                bool result = await ((App)App.Current).SetUserAsync(parsedId);
+                return (result, parsedId);
             }
-            return false;
+            return (false, 0);
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -20,9 +20,9 @@ namespace AirportApp.ClassLibrary.Entity.Domain.Message
             this.activeStrategyForFormulatingBotResponses = responseStrategy;
         }
 
-        public BotMessage GenerateAppropriateResponseBasedOnCurrentStrategy(IMessage message)
+        public async Task<BotMessage> GenerateAppropriateResponseBasedOnCurrentStrategyAsync(IMessage message)
         {
-            return activeStrategyForFormulatingBotResponses.ProcessIncomingUserMessageAndDetermineNextDecisionTreeNode(this, message);
+            return await activeStrategyForFormulatingBotResponses.ProcessIncomingUserMessageAndDetermineNextDecisionTreeNodeAsync(this, message);
         }
 
         public string RetrieveConfiguredEmailAddressForBotContact()
@@ -40,9 +40,9 @@ namespace AirportApp.ClassLibrary.Entity.Domain.Message
             return CONSTANT_IDENTIFIER_FOR_DEFAULT_BOT_SYSTEM_USER;
         }
 
-        public void ResetBotConversationStateToInitialRootNode()
+        public async Task ResetBotConversationStateToInitialRootNodeAsync()
         {
-            activeStrategyForFormulatingBotResponses.ResetCurrentlyActiveConversationNodeToInitialStartingPoint();
+            await activeStrategyForFormulatingBotResponses.ResetCurrentlyActiveConversationNodeToInitialStartingPointAsync();
         }
     }
 }

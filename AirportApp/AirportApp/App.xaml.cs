@@ -66,7 +66,7 @@ namespace AirportApp
         }
         
 
-        public bool SetUser(int userId)
+        public async Task<bool> SetUserAsync(int userId)
         {
             User = null;
             Employee = null;
@@ -74,12 +74,12 @@ namespace AirportApp
             {
                 if (IsEmployee)
                 {
-                    Employee = Task.Run(() => Services.GetService<IEmployeeService>()!.GetEmployeeByIdAsync(userId)).GetAwaiter().GetResult();
+                    Employee = await Services.GetService<IEmployeeService>()!.GetEmployeeByIdAsync(userId);
                     return Employee != null;
                 }
                 else
                 {
-                    User = Task.Run(() => Services.GetService<IUserService>()!.GetByIdAsync(userId)).GetAwaiter().GetResult();
+                    User = await Services.GetService<IUserService>()!.GetByIdAsync(userId);
                     return User != null;
                 }
             }

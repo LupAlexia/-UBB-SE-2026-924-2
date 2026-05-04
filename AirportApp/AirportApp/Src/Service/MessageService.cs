@@ -33,7 +33,7 @@ namespace AirportApp.Src.Service
             }
             if (selectedOption.NextOptionId == 1)
             {
-                botEngine.ResetBotConversationStateToInitialRootNode();
+                await botEngine.ResetBotConversationStateToInitialRootNodeAsync();
             }
 
             Chat chat = await GetActiveChatAsync(chatId);
@@ -41,7 +41,7 @@ namespace AirportApp.Src.Service
             var userMessage = new Message(chat, selectedOption.Label, sender);
             await messageRepository.CreateNewEntityAsync(userMessage);
 
-            BotMessage botReply = botEngine.GenerateAppropriateResponseBasedOnCurrentStrategy(userMessage);
+            BotMessage botReply = await botEngine.GenerateAppropriateResponseBasedOnCurrentStrategyAsync(userMessage);
 
             var botRow = new Message(chat, botReply.GetMessage(), botEngine);
             await messageRepository.CreateNewEntityAsync(botRow);
