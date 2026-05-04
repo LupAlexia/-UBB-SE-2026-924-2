@@ -1,7 +1,4 @@
-﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using AirportApp.ClassLibrary.Entity.Domain.Ticket;
 using AirportApp.Src.Service.Interfaces;
@@ -18,17 +15,14 @@ namespace AirportApp.Src.Service
             this.subcategoryRepository = subcategoryRepository;
         }
 
-        public IEnumerable<TicketSubcategory> GetSubcategoriesByCategoryId(int categoryId)
+        public async Task<IEnumerable<TicketSubcategory>> GetSubcategoriesByCategoryIdAsync(int categoryId)
         {
-            return subcategoryRepository.GetByCategoryId(categoryId);
+            return await subcategoryRepository.GetByCategoryIdAsync(categoryId);
         }
-        public TicketSubcategory GetSubcategoryById(int subcategoryId)
+
+        public async Task<TicketSubcategory> GetSubcategoryByIdAsync(int subcategoryId)
         {
-            return subcategoryRepository.GetById(subcategoryId);
+            return await subcategoryRepository.GetByIdAsync(subcategoryId);
         }
-        // public IEnumerable<TicketCategory> GetAllSubcategories()
-        // {
-        //    return _subcategoryRepository.GetAll();
-        // }
     }
 }

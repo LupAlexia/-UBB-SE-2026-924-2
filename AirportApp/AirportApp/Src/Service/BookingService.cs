@@ -124,7 +124,7 @@ namespace AirportApp.Src.Service
             {
                 if (!string.IsNullOrWhiteSpace(ticket.Seat))
                 {
-                    bool seatAvailable = await this.ticketRepository.IsSeatAvailable(ticket.Flight?.Id ?? 0, ticket.Seat);
+                    bool seatAvailable = await this.ticketRepository.IsSeatAvailableAsync(ticket.Flight?.Id ?? 0, ticket.Seat);
                     if (!seatAvailable)
                     {
                         return false;
@@ -137,12 +137,12 @@ namespace AirportApp.Src.Service
 
         public async Task<List<AddOn>> GetAvailableAddOnsAsync()
         {
-            return await Task.FromResult(this.addOnRepository.GetAllAddOns().ToList());
+            return (await this.addOnRepository.GetAllAddOnsAsync()).ToList();
         }
 
         public async Task<List<string>> GetOccupiedSeatsAsync(int flightId)
         {
-            return await Task.FromResult(this.ticketRepository.GetOccupiedSeats(flightId).ToList());
+            return (await this.ticketRepository.GetOccupiedSeatsAsync(flightId)).ToList();
         }
 
         public BookingParametersResult ParseBookingParameters(object parameter)

@@ -1,16 +1,17 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using AirportApp.ClassLibrary.Entity.Domain.Employee;
 
 namespace AirportApp.Src.Service
 {
     public interface IEmployeeService
     {
-        Employee GetEmployeeById(int identificationNumber);
-        int AddEmployee(Employee employeeEntity);
-        void UpdateEmployeeById(int identificationNumber, Employee employeeEntity);
-        void DeleteEmployeeById(int identificationNumber);
-        List<Employee> GetAllEmployees();
-        void CreateNewEmployee(int identificationNumber, string fullName, string emailAddress, string departmentName);
-        void ValidateEmployeeIntegrity(Employee employeeEntity);
+        Task<Employee> GetEmployeeByIdAsync(int identificationNumber);
+        Task<int> AddEmployeeAsync(Employee employeeEntity);
+        Task UpdateEmployeeByIdAsync(int identificationNumber, Employee employeeEntity);
+        Task DeleteEmployeeByIdAsync(int identificationNumber);
+        Task<List<Employee>> GetAllEmployeesAsync();
+        Task CreateNewEmployeeAsync(int identificationNumber, string fullName, string emailAddress, string departmentName);
+        Task ValidateEmployeeIntegrityAsync(Employee employeeEntity);
     }
 }

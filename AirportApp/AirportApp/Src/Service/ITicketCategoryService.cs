@@ -1,12 +1,13 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using AirportApp.ClassLibrary.Entity.Domain.Ticket;
 
 namespace AirportApp.Src.Service.Interfaces
 {
     public interface ITicketCategoryService
     {
-        TicketCategory GetCategoryById(int categoryId);
+        Task<TicketCategory> GetCategoryByIdAsync(int categoryId);
 
-        IEnumerable<TicketCategory> GetAllCategories();
+        Task<IEnumerable<TicketCategory>> GetAllCategoriesAsync();
     }
 }

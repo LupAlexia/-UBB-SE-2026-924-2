@@ -1,9 +1,11 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using AirportApp.ClassLibrary.Entity.Domain.Review;
 using AirportApp.ClassLibrary.Entity.Domain;
 using AirportApp.ClassLibrary.Repository.Interfaces;
+
 namespace AirportApp.Src.Service
 {
     public class ReviewService
@@ -19,44 +21,45 @@ namespace AirportApp.Src.Service
             this.reviewRepository = reviewRepository;
         }
 
-        public Review GetById(int identificationNumber)
+        public async Task<Review> GetByIdAsync(int identificationNumber)
         {
-            return reviewRepository.GetById(identificationNumber);
+            return await reviewRepository.GetByIdAsync(identificationNumber);
         }
 
-        public int Add(Review review)
+        public async Task<int> AddAsync(Review review)
         {
-            return reviewRepository.CreateNewEntity(review);
+            return await reviewRepository.CreateNewEntityAsync(review);
         }
 
-        public void UpdateById(int identificationNumber, Review review)
+        public async Task UpdateByIdAsync(int identificationNumber, Review review)
         {
-            reviewRepository.UpdateById(identificationNumber, review);
+            await reviewRepository.UpdateByIdAsync(identificationNumber, review);
         }
 
-        public void DeleteById(int identificationNumber)
+        public async Task DeleteByIdAsync(int identificationNumber)
         {
-            reviewRepository.DeleteById(identificationNumber);
+            await reviewRepository.DeleteByIdAsync(identificationNumber);
         }
 
-        public List<Review>? GetAll()
+        public async Task<List<Review>?> GetAllAsync()
         {
-            var reviews = reviewRepository.GetAll();
+            var reviews = await reviewRepository.GetAllAsync();
             return reviews?.ToList();
         }
 
-        public void CreateReview(int identificationNumber, User user, string message, int dutyFreeRating, int flightExperienceRating, int staffFriendlinessRating, int cleanlinessRating)
+        public async Task CreateReviewAsync(int identificationNumber, User user, string message, int dutyFreeRating, int flightExperienceRating, int staffFriendlinessRating, int cleanlinessRating)
         {
-            Review review = new (identificationNumber, user, message, dutyFreeRating, flightExperienceRating, staffFriendlinessRating, cleanlinessRating);
-            ValidateReview(review);
-            Add(review);
+            Review review = new(identificationNumber, user, message, dutyFreeRating, flightExperienceRating, staffFriendlinessRating, cleanlinessRating);
+            await ValidateReviewAsync(review);
+            await AddAsync(review);
         }
 
-        public void ValidateReview(Review review)
+        public async Task ValidateReviewAsync(Review review)
         {
             ArgumentNullException.ThrowIfNull(review);
 
-            if (this.GetAll().Contains(review))
+            var allReviews = await this.GetAllAsync();
+            if (allReviews != null && allReviews.Contains(review))
             {
                 throw new ArgumentException("Review already exists");
             }

@@ -1,8 +1,7 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 using AirportApp.ClassLibrary.Repository.Interfaces;
@@ -22,7 +21,7 @@ namespace AirportApp.Src.Service.Bot.Strategy
         public DecisionTreeStrategy(IRepository<int, FAQNode> faqRepository)
         {
             this.repositoryForAccessingFrequentlyAskedQuestionsDecisionNodes = faqRepository;
-            this.currentlyActiveConversationDecisionTreeNode = repositoryForAccessingFrequentlyAskedQuestionsDecisionNodes.GetById(1);
+            this.currentlyActiveConversationDecisionTreeNode = repositoryForAccessingFrequentlyAskedQuestionsDecisionNodes.GetByIdAsync(1).GetAwaiter().GetResult();
         }
 
         public BotMessage ProcessIncomingUserMessageAndDetermineNextDecisionTreeNode(BotEngineIdentity activeBotEngineInstance, IMessage incomingUserMessage)
@@ -33,11 +32,11 @@ namespace AirportApp.Src.Service.Bot.Strategy
             if (selectedUserOptionMatchingIncomingMessageText == null)
             {
                 return new BotMessage.BotMessageBuilder(activeBotEngineInstance, incomingUserMessage.GetChat(), CONSTANT_VALUE_REPRESENTING_UNASSIGNED_DATABASE_IDENTIFIER,
-                    repositoryForAccessingFrequentlyAskedQuestionsDecisionNodes.GetById((int)BotStandardMessages.RestartConversation)).Build();
+                    repositoryForAccessingFrequentlyAskedQuestionsDecisionNodes.GetByIdAsync((int)BotStandardMessages.RestartConversation).GetAwaiter().GetResult()).Build();
                
             }
 
-            FAQNode nextQuestion = repositoryForAccessingFrequentlyAskedQuestionsDecisionNodes.GetById(selectedUserOptionMatchingIncomingMessageText.NextOptionId);
+            FAQNode nextQuestion = repositoryForAccessingFrequentlyAskedQuestionsDecisionNodes.GetByIdAsync(selectedUserOptionMatchingIncomingMessageText.NextOptionId).GetAwaiter().GetResult();
             currentlyActiveConversationDecisionTreeNode = nextQuestion;
 
             return new BotMessage.BotMessageBuilder(activeBotEngineInstance, incomingUserMessage.GetChat(), CONSTANT_VALUE_REPRESENTING_UNASSIGNED_DATABASE_IDENTIFIER, nextQuestion).Build();
@@ -45,7 +44,7 @@ namespace AirportApp.Src.Service.Bot.Strategy
 
         public void ResetCurrentlyActiveConversationNodeToInitialStartingPoint()
         {
-            currentlyActiveConversationDecisionTreeNode = repositoryForAccessingFrequentlyAskedQuestionsDecisionNodes.GetById(1);
+            currentlyActiveConversationDecisionTreeNode = repositoryForAccessingFrequentlyAskedQuestionsDecisionNodes.GetByIdAsync(1).GetAwaiter().GetResult();
         }
     }
 }

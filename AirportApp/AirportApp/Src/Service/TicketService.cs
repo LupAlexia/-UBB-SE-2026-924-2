@@ -1,7 +1,6 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using AirportApp.ClassLibrary.Entity.Domain.Ticket;
 using AirportApp.ClassLibrary.Entity.Dto;
@@ -22,35 +21,39 @@ namespace AirportApp.Src.Service
             this.ticketRepository = ticketRepository;
         }
 
-        public void CreateTicket(int ticketId, User ticketCreator, TicketStatusEnum initialStatus, TicketCategory category, TicketSubcategory subcategory, string subject, string description, DateTime creationTimestamp, TicketUrgencyLevelEnum? initialUrgencyLevel = null)
+        public async Task CreateTicketAsync(int ticketId, User ticketCreator, TicketStatusEnum initialStatus, TicketCategory category, TicketSubcategory subcategory, string subject, string description, DateTime creationTimestamp, TicketUrgencyLevelEnum? initialUrgencyLevel = null)
         {
             Ticket newTicket = new Ticket(ticketId, ticketCreator, initialStatus, category, subcategory, subject, description, creationTimestamp, initialUrgencyLevel);
 
             ValidateTicket(newTicket);
-            AddTicket(newTicket);
+            await AddTicketAsync(newTicket);
         }
 
-        public void AddTicket(Ticket ticketEntity)
+        public async Task AddTicketAsync(Ticket ticketEntity)
         {
-            ticketRepository.CreateNewEntity(ticketEntity);
-        }
-        public void DeleteTicketById(int ticketId)
-        {
-            ticketRepository.DeleteById(ticketId);
-        }
-        public Ticket GetTicketById(int ticketId)
-        {
-            return ticketRepository.GetById(ticketId);
+            await ticketRepository.CreateNewEntityAsync(ticketEntity);
         }
 
-        public IEnumerable<Ticket> GetAllTickets()
+        public async Task DeleteTicketByIdAsync(int ticketId)
         {
-            return ticketRepository.GetAll();
+            await ticketRepository.DeleteByIdAsync(ticketId);
         }
-        public void UpdateTicketById(int identificationNumber, Ticket ticket)
+
+        public async Task<Ticket> GetTicketByIdAsync(int ticketId)
         {
-            ticketRepository.UpdateById(identificationNumber, ticket);
+            return await ticketRepository.GetByIdAsync(ticketId);
         }
+
+        public async Task<IEnumerable<Ticket>> GetAllTicketsAsync()
+        {
+            return await ticketRepository.GetAllAsync();
+        }
+
+        public async Task UpdateTicketByIdAsync(int identificationNumber, Ticket ticket)
+        {
+            await ticketRepository.UpdateByIdAsync(identificationNumber, ticket);
+        }
+
         public void ValidateTicket(Ticket ticket)
         {
             if (ticket == null)
@@ -83,18 +86,18 @@ namespace AirportApp.Src.Service
             }
         }
 
-        public void UpdateUrgencyLevel(int ticketId, TicketUrgencyLevelEnum newUrgencyLevel)
+        public async Task UpdateUrgencyLevelAsync(int ticketId, TicketUrgencyLevelEnum newUrgencyLevel)
         {
-            Ticket targetTicket = ticketRepository.GetById(ticketId);
+            Ticket targetTicket = await ticketRepository.GetByIdAsync(ticketId);
             targetTicket.UpdateUrgencyLevel(newUrgencyLevel);
-            ticketRepository.UpdateById(ticketId, targetTicket);
+            await ticketRepository.UpdateByIdAsync(ticketId, targetTicket);
         }
 
-        public void UpdateStatus(int ticketId, TicketStatusEnum newStatus)
+        public async Task UpdateStatusAsync(int ticketId, TicketStatusEnum newStatus)
         {
-            Ticket targetTicket = ticketRepository.GetById(ticketId);
+            Ticket targetTicket = await ticketRepository.GetByIdAsync(ticketId);
             targetTicket.UpdateStatus(newStatus);
-            ticketRepository.UpdateById(ticketId, targetTicket);
+            await ticketRepository.UpdateByIdAsync(ticketId, targetTicket);
         }
 
         public IEnumerable<TicketDTO> FilterTicketsByStatus(IEnumerable<TicketDTO> tickets, TicketFilterStatusEnum filter)
@@ -111,6 +114,7 @@ namespace AirportApp.Src.Service
                     return tickets;
             }
         }
+
         private bool IsStatusOpen(TicketDTO ticket) => ticket.currentStatus == TicketStatusEnum.OPEN;
         private bool IsStatusInProgress(TicketDTO ticket) => ticket.currentStatus == TicketStatusEnum.IN_PROGRESS;
         private bool IsStatusResolved(TicketDTO ticket) => ticket.currentStatus == TicketStatusEnum.RESOLVED;
