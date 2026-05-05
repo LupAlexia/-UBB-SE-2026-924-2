@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using AirportApp.ClassLibrary.Entity.Domain.Ticket;
 using AirportApp.ClassLibrary.Repository.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using AirportApp.ClassLibrary.Entity.Dto;
 
 namespace Airport.Web.Controllers
 {
@@ -40,8 +41,21 @@ namespace Airport.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> CreateAsync([FromBody] Ticket ticket)
+        public async Task<ActionResult> CreateAsync([FromBody] CreateTicketDTO dto)
         {
+
+            var ticket = new Ticket
+            {
+                CreatorId = dto.CreatorId,
+                CategoryId = dto.CategoryId,
+                SubcategoryId = dto.SubcategoryId,
+                Subject = dto.Subject,
+                Description = dto.Description,
+                CreationTimestamp = dto.CreationTimestamp,
+                CurrentStatus = dto.CurrentStatus,
+                UrgencyLevel = dto.UrgencyLevel
+            };
+
             int createdId = await ticketRepository.CreateNewEntityAsync(ticket);
             return CreatedAtAction(nameof(GetByIdAsync), new { id = createdId }, ticket);
         }

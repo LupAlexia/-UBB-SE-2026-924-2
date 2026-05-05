@@ -8,13 +8,13 @@ using System.Threading.Tasks;
 namespace AirportApp.ClassLibrary.Entity.Dto
 {
     public record CreateTicketDTO(
-           int CreatorId,
-           int CategoryId,
-           int SubcategoryId,
-           string Subject,
-           string Description,
-           DateTime CreationTimestamp,
-           TicketStatusEnum CurrentStatus,
-           TicketUrgencyLevelEnum UrgencyLevel
-       );
+        int CreatorId,
+        int CategoryId,
+        int SubcategoryId,
+        string Subject,
+        string Description,
+        DateTime CreationTimestamp,
+        TicketStatusEnum CurrentStatus,
+        TicketUrgencyLevelEnum UrgencyLevel
+    );
 }
