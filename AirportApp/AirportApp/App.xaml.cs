@@ -180,7 +180,7 @@ namespace AirportApp
             services.AddSingleton<IPricingService, PricingService>();
             services.AddSingleton<IDashboardService, DashboardServiceProxy>();
             services.AddSingleton<ICancellationService, CancellationServiceProxy>();
-            services.AddSingleton<IMembershipService, MembershipService>();
+            services.AddSingleton<IMembershipService, MembershipServiceProxy>();
             services.AddSingleton<NavigationService>();
 
             var provider = services.BuildServiceProvider();
