@@ -1,10 +1,14 @@
-﻿using AutoMapper;
-using CloudSpritzers1.Src.Dto;
-using CloudSpritzers1.Src.Dto.MappingProfiles;
-using CloudSpritzers1.Src.Model;
-using CloudSpritzers1.Src.Model.Ticket;
+using AutoMapper;
+using AirportApp.ClassLibrary.Entity.Dto;
+using AirportApp.ClassLibrary.Entity.Dto.MappingProfiles;
+using AirportApp.ClassLibrary.Entity.Domain;
+using AirportApp.ClassLibrary.Entity.Domain.Ticket;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.Extensions.Logging;
+using NSubstitute;
+using System;
 
-namespace CloudSpritzers1Tests.Src.Dto.MappingProfiles
+namespace AirportApp.Tests.Unit.Src.Dto.MappingProfiles
 {
     [TestClass]
     public class TicketMappingProfileTests
@@ -14,11 +18,13 @@ namespace CloudSpritzers1Tests.Src.Dto.MappingProfiles
         private TicketCategory _testCategory;
         private TicketSubcategory _testSubcategory;
         private Ticket _testTicket;
+        private ILoggerFactory _loggerFactory;
 
         [TestInitialize]
         public void Setup()
         {
-            var configuration = new MapperConfiguration(cfg => cfg.AddProfile<TicketMappingProfile>());
+            _loggerFactory = Substitute.For<ILoggerFactory>();
+            var configuration = new AutoMapper.MapperConfiguration(cfg => cfg.AddProfile<TicketMappingProfile>(), _loggerFactory);
             _mapper = configuration.CreateMapper();
 
             _testUser = new User(101, "Jane Doe", "jane@example.com");
@@ -51,7 +57,7 @@ namespace CloudSpritzers1Tests.Src.Dto.MappingProfiles
         {
             var resultDataTransferObject = _mapper.Map<TicketDTO>(_testTicket);
 
-            Assert.AreEqual(_testTicket.TicketId, resultDataTransferObject.ticketId);
+            Assert.AreEqual(_testTicket.Id, resultDataTransferObject.ticketId);
         }
 
         [TestMethod]
@@ -59,7 +65,7 @@ namespace CloudSpritzers1Tests.Src.Dto.MappingProfiles
         {
             var resultDataTransferObject = _mapper.Map<TicketDTO>(_testTicket);
 
-            Assert.AreEqual(_testTicket.Creator.UserId, resultDataTransferObject.creatorAccountId);
+            Assert.AreEqual(_testTicket.Creator.Id, resultDataTransferObject.creatorAccountId);
         }
 
         [TestMethod]
@@ -91,7 +97,7 @@ namespace CloudSpritzers1Tests.Src.Dto.MappingProfiles
         {
             var resultDataTransferObject = _mapper.Map<TicketDTO>(_testTicket);
 
-            Assert.AreEqual(_testTicket.Category.CategoryId, resultDataTransferObject.categoryId);
+            Assert.AreEqual(_testTicket.Category.Id, resultDataTransferObject.categoryId);
         }
 
         [TestMethod]
@@ -107,7 +113,7 @@ namespace CloudSpritzers1Tests.Src.Dto.MappingProfiles
         {
             var resultDataTransferObject = _mapper.Map<TicketDTO>(_testTicket);
 
-            Assert.AreEqual(_testTicket.Subcategory.SubcategoryId, resultDataTransferObject.subcategoryId);
+            Assert.AreEqual(_testTicket.Subcategory.Id, resultDataTransferObject.subcategoryId);
         }
 
         [TestMethod]

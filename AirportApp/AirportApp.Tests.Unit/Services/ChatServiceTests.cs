@@ -1,99 +1,107 @@
-using CloudSpritzers1.Src.Model.Chats;
-using CloudSpritzers1.Src.Repository;
-using CloudSpritzers1.Src.Service;
+using AirportApp.Src.ViewModel;
+using AirportApp.ClassLibrary.Entity.Domain.Chats;
+using AirportApp.ClassLibrary.Repository.Interfaces;
+using AirportApp.ClassLibrary.Entity.Domain;
+using AirportApp.Src.Service;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
-namespace CloudSpritzers1Tests.Src.Service
+namespace AirportApp.Tests.Unit.Src.Service
 {
     [TestClass]
     public class ChatServiceTests
     {
         private IRepository<int, Chat> _mockChatRepository = null!;
+        private IRepository<int, User> _mockUserRepository = null!;
         private ChatService _chatService = null!;
+        private User _testUser;
 
         [TestInitialize]
         public void Setup()
         {
             _mockChatRepository = Substitute.For<IRepository<int, Chat>>();
-            _chatService = new ChatService(_mockChatRepository);
+            _mockUserRepository = Substitute.For<IRepository<int, User>>();
+            _chatService = new ChatService(_mockChatRepository, _mockUserRepository);
+            _testUser = new User(101, "Test User", "test@test.com");
+            _mockUserRepository.GetByIdAsync(101).Returns(Task.FromResult(_testUser));
         }
 
         [TestMethod]
-        public void OpenChat_ValidUserId_ReturnsChatWithCorrectId()
+        public async Task OpenChat_ValidUserId_ReturnsChatWithCorrectId()
         {
-            _mockChatRepository.CreateNewEntity(Arg.Any<Chat>()).Returns(5);
+            _mockChatRepository.CreateNewEntityAsync(Arg.Any<Chat>()).Returns(Task.FromResult(5));
 
-            var resultChat = _chatService.OpenChat(101);
+            var resultChat = await _chatService.OpenChatAsync(101);
 
-            Assert.AreEqual(5, resultChat.ChatId);
+            Assert.AreEqual(5, resultChat.Id);
         }
 
         [TestMethod]
-        public void OpenChat_ValidUserId_ReturnsChatWithCorrectUserId()
+        public async Task OpenChat_ValidUserId_ReturnsChatWithCorrectUserId()
         {
-            _mockChatRepository.CreateNewEntity(Arg.Any<Chat>()).Returns(5);
+            _mockChatRepository.CreateNewEntityAsync(Arg.Any<Chat>()).Returns(Task.FromResult(5));
 
-            var resultedChat = _chatService.OpenChat(101);
+            var resultedChat = await _chatService.OpenChatAsync(101);
 
             Assert.AreEqual(101, resultedChat.UserId);
         }
 
         [TestMethod]
-        public void OpenChat_ValidUserId_ReturnsChatWithActiveStatus()
+        public async Task OpenChat_ValidUserId_ReturnsChatWithActiveStatus()
         {
-            _mockChatRepository.CreateNewEntity(Arg.Any<Chat>()).Returns(5);
+            _mockChatRepository.CreateNewEntityAsync(Arg.Any<Chat>()).Returns(Task.FromResult(5));
 
-            var resultedChat = _chatService.OpenChat(101);
+            var resultedChat = await _chatService.OpenChatAsync(101);
 
             Assert.AreEqual(ChatStatus.Active, resultedChat.Status);
         }
 
         [TestMethod]
-        public void OpenChat_RepositoryThrowsException_ThrowsException()
+        public async Task OpenChat_RepositoryThrowsException_ThrowsException()
         {
-            _mockChatRepository.CreateNewEntity(Arg.Any<Chat>()).Returns(capturedArguments => throw new Exception("Database error"));
+            _mockChatRepository.CreateNewEntityAsync(Arg.Any<Chat>()).Returns(x => Task.FromException<int>(new Exception("Database error")));
 
-            Assert.ThrowsExactly<Exception>(() => _chatService.OpenChat(101));
+            await Assert.ThrowsExceptionAsync<Exception>(async () => await _chatService.OpenChatAsync(101));
         }
 
         [TestMethod]
-        public void OpenChat_RepositoryThrowsException_ThrowsCorrectErrorMessage()
+        public async Task OpenChat_RepositoryThrowsException_ThrowsCorrectErrorMessage()
         {
-            _mockChatRepository.CreateNewEntity(Arg.Any<Chat>()).Returns(capturedArguments => throw new Exception("Database error"));
+            _mockChatRepository.CreateNewEntityAsync(Arg.Any<Chat>()).Returns(x => Task.FromException<int>(new Exception("Database error")));
 
-            var exceptionThrown = Assert.ThrowsExactly<Exception>(() => _chatService.OpenChat(101));
+            var exceptionThrown = await Assert.ThrowsExceptionAsync<Exception>(async () => await _chatService.OpenChatAsync(101));
 
             Assert.AreEqual("Database error", exceptionThrown.Message);
         }
 
         [TestMethod]
-        public void CloseChat_ExistingChat_CallsRepositoryUpdateWithClosedStatus()
+        public async Task CloseChat_ExistingChat_CallsRepositoryUpdateWithClosedStatus()
         {
-            var exampleChat = new Chat(1, 101, ChatStatus.Active);
-            _mockChatRepository.GetById(1).Returns(exampleChat);
+            var exampleChat = new Chat(1, _testUser, ChatStatus.Active);
+            _mockChatRepository.GetByIdAsync(1).Returns(Task.FromResult(exampleChat));
 
-            _chatService.CloseChat(1);
+            await _chatService.CloseChatAsync(1);
 
-            _mockChatRepository.Received(1).UpdateById(1, Arg.Is<Chat>(updatedChatEntity => updatedChatEntity.Status == ChatStatus.Closed));
+            await _mockChatRepository.Received(1).UpdateByIdAsync(1, Arg.Is<Chat>(updatedChatEntity => updatedChatEntity.Status == ChatStatus.Closed));
         }
 
         [TestMethod]
-        public void CloseChat_RepositoryThrowsException_ThrowsException()
+        public async Task CloseChat_RepositoryThrowsException_ThrowsException()
         {
-            _mockChatRepository.GetById(999).Returns(capturedArguments => throw new KeyNotFoundException("Chat not found"));
+            _mockChatRepository.GetByIdAsync(999).Returns(x => Task.FromException<Chat>(new KeyNotFoundException("Chat not found")));
 
-            Assert.ThrowsExactly<Exception>(() => _chatService.CloseChat(999));
+            await Assert.ThrowsExceptionAsync<Exception>(async () => await _chatService.CloseChatAsync(999));
         }
 
         [TestMethod]
-        public void CloseChat_RepositoryThrowsException_ThrowsCorrectErrorMessage()
+        public async Task CloseChat_RepositoryThrowsException_ThrowsCorrectErrorMessage()
         {
-            _mockChatRepository.GetById(999).Returns(capturedArguments => throw new KeyNotFoundException("Chat not found"));
+            _mockChatRepository.GetByIdAsync(999).Returns(x => Task.FromException<Chat>(new KeyNotFoundException("Chat not found")));
 
-            var exceptionThrown = Assert.ThrowsExactly<Exception>(() => _chatService.CloseChat(999));
+            var exceptionThrown = await Assert.ThrowsExceptionAsync<Exception>(async () => await _chatService.CloseChatAsync(999));
 
             Assert.AreEqual("Chat not found", exceptionThrown.Message);
         }

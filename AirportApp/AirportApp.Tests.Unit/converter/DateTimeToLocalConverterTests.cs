@@ -1,11 +1,11 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using CloudSpritzers1.Src.Converter;
+using AirportApp.Src.Converter;
 
-namespace CloudSpritzers1Tests.src.converter;
+namespace AirportApp.Tests.Unit.src.converter;
 
 [TestClass]
 public class DateTimeToLocalConverterTests
@@ -62,7 +62,11 @@ public class DateTimeToLocalConverterTests
     [TestMethod]
     public void ConvertBack_WhenCalled_ThrowsNotImplementedException()
     {
-        Assert.ThrowsExactly<NotImplementedException>(() =>
+        Assert.ThrowsException<NotImplementedException>(() =>
             _converter.ConvertBack("Jan 10, 12:30", typeof(DateTimeOffset), null, null));
     }
 }
+
+
+
+

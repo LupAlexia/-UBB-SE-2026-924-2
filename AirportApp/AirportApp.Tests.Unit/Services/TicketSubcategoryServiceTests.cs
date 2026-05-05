@@ -1,13 +1,14 @@
-using CloudSpritzers1.Src.Model.Ticket;
-using CloudSpritzers1.Src.Repository;
-using CloudSpritzers1.Src.Repository.Interfaces;
-using CloudSpritzers1.Src.Service;
+using AirportApp.Src.ViewModel;
+using AirportApp.ClassLibrary.Entity.Domain.Ticket;
+using AirportApp.ClassLibrary.Repository.Interfaces;
+using AirportApp.Src.Service;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
-namespace CloudSpritzers1Tests.Src.Service
+namespace AirportApp.Tests.Unit.Src.Service
 {
     [TestClass]
     public class TicketSubcategoryServiceTests
@@ -26,40 +27,39 @@ namespace CloudSpritzers1Tests.Src.Service
         }
 
         [TestMethod]
-        public void GetSubcategoryById_WhenCalled_ReturnsEntityFromRepository()
+        public async Task GetSubcategoryById_WhenCalled_ReturnsEntityFromRepository()
         {
             var expectedSub = new TicketSubcategory(10, "Software", 500, _testCategory);
-            _subcategoryRepositoryMock.GetById(10).Returns(expectedSub);
+            _subcategoryRepositoryMock.GetByIdAsync(10).Returns(Task.FromResult(expectedSub));
 
-            var resultedCategory = _subcategoryService.GetSubcategoryById(10);
+            var resultedCategory = await _subcategoryService.GetSubcategoryByIdAsync(10);
 
             Assert.AreEqual("Software", resultedCategory.SubcategoryName);
-            _subcategoryRepositoryMock.Received(1).GetById(10);
+            await _subcategoryRepositoryMock.Received(1).GetByIdAsync(10);
         }
 
         [TestMethod]
-        public void GetSubcategoriesByCategoryId_WhenCalled_ReturnsFilteredList()
+        public async Task GetSubcategoriesByCategoryId_WhenCalled_ReturnsFilteredList()
         {
             var expectedSubcategoryList = new List<TicketSubcategory>
             {
                 new TicketSubcategory(10, "Software", 500, _testCategory),
                 new TicketSubcategory(11, "Hardware", 501, _testCategory)
             };
-            _subcategoryRepositoryMock.GetByCategoryId(1).Returns(expectedSubcategoryList);
+            _subcategoryRepositoryMock.GetByCategoryIdAsync(1).Returns(Task.FromResult((IEnumerable<TicketSubcategory>)expectedSubcategoryList));
 
-            var resultedSubcategories = _subcategoryService.GetSubcategoriesByCategoryId(1).ToList();
+            var resultedSubcategories = (await _subcategoryService.GetSubcategoriesByCategoryIdAsync(1)).ToList();
 
             Assert.AreEqual(2, resultedSubcategories.Count);
             Assert.AreEqual("Software", resultedSubcategories[0].SubcategoryName);
-            _subcategoryRepositoryMock.Received(1).GetByCategoryId(1);
+            await _subcategoryRepositoryMock.Received(1).GetByCategoryIdAsync(1);
         }
 
         [TestMethod]
-        public void GetSubcategoryById_WhenIdIsInvalid_PropagatesException()
+        public async Task GetSubcategoryById_WhenIdIsInvalid_PropagatesException()
         {
-
-            _subcategoryRepositoryMock.GetById(999).Returns(capturedArguments => { throw new KeyNotFoundException(); });
-            Assert.ThrowsExactly<KeyNotFoundException>(() => _subcategoryService.GetSubcategoryById(999));
+            _subcategoryRepositoryMock.GetByIdAsync(999).Returns(x => Task.FromException<TicketSubcategory>(new KeyNotFoundException()));
+            await Assert.ThrowsExceptionAsync<KeyNotFoundException>(async () => await _subcategoryService.GetSubcategoryByIdAsync(999));
         }
     }
 }

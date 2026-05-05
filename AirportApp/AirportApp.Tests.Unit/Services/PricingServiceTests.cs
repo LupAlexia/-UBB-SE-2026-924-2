@@ -1,4 +1,6 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using AirportApp.ClassLibrary.Entity.Domain.Ticket;
+using AirportApp.Src.ViewModel;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using AirportApp.ClassLibrary.Entity.Domain;
 using AirportApp.Src.Service;
 using System;
@@ -325,3 +327,6 @@ namespace AirportApp.Tests.Unit.Src.Service
         }
     }
 }
+
+
+

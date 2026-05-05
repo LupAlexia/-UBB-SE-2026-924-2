@@ -1,3 +1,4 @@
+using AirportApp.Src.ViewModel;
 using AirportApp.ClassLibrary.Entity.Domain.Chats;
 using AirportApp.ClassLibrary.Entity.Domain.Faq.Bot;
 using AirportApp.ClassLibrary.Entity.Domain.Message;
@@ -207,3 +208,6 @@ namespace AirportApp.Tests.Unit.Src.Service
         }
     }
 }
+
+
+

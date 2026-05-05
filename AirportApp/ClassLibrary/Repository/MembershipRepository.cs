@@ -31,21 +31,10 @@ namespace AirportApp.ClassLibrary.Repository
 
         public async Task<IEnumerable<MembershipAddonDiscount>> GetAddonDiscountsAsync(int membershipId)
         {
-            var membership = await this.dataBaseContext.memberships
-                .FirstOrDefaultAsync(m => m.Id == membershipId);
-
-            if (membership == null)
-            {
-                return new List<MembershipAddonDiscount>();
-            }
-
-            var addOns = await this.dataBaseContext.addOns.ToListAsync();
-
-            var addOnDiscounts = addOns
-                .Select(a => new MembershipAddonDiscount(membership, a, 10f))
-                .ToList();
-
-            return addOnDiscounts;
+            return await this.dataBaseContext.membershipAddonDiscounts
+                .Include(d => d.AddOn)
+                .Where(d => d.MembershipId == membershipId)
+                .ToListAsync();
         }
     }
 }

@@ -1,24 +1,31 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using AutoMapper;
-using CloudSpritzers1.Src.Dto;
-using CloudSpritzers1.Src.Dto.MappingProfiles;
-using CloudSpritzers1.Src.Model.Chats;
+using AirportApp.ClassLibrary.Entity.Dto;
+using AirportApp.ClassLibrary.Entity.Dto.MappingProfiles;
+using AirportApp.ClassLibrary.Entity.Domain.Chats;
+using AirportApp.ClassLibrary.Entity.Domain;
+using Microsoft.Extensions.Logging;
+using NSubstitute;
 
-namespace CloudSpritzers1Tests.src.dto.mappingprofiles;
+namespace AirportApp.Tests.Unit.src.dto.mappingprofiles;
 
 [TestClass]
 public class ChatMappingProfileTests
 {
     private IMapper _mapper;
     private Chat _chat;
+    private User _testUser;
+    private ILoggerFactory _loggerFactory;
 
     [TestInitialize]
     public void Setup()
     {
-        var configuration = new MapperConfiguration(mapperConfiguration => mapperConfiguration.AddProfile<ChatMappingProfile>());
+        _loggerFactory = Substitute.For<ILoggerFactory>();
+        var configuration = new AutoMapper.MapperConfiguration(cfg => cfg.AddProfile<ChatMappingProfile>(), _loggerFactory);
 
         _mapper = configuration.CreateMapper();
-        _chat = new Chat(1, 10, ChatStatus.Active);
+        _testUser = new User(10, "Test User", "test@test.com");
+        _chat = new Chat(1, _testUser, ChatStatus.Active);
     }
 
     [TestMethod]
@@ -26,7 +33,7 @@ public class ChatMappingProfileTests
     {
         var resultedDataTransferObject = _mapper.Map<ChatDTO>(_chat);
 
-        Assert.AreEqual(_chat.ChatId, resultedDataTransferObject.chatId);
+        Assert.AreEqual(_chat.Id, resultedDataTransferObject.chatId);
     }
 
     [TestMethod]
@@ -56,7 +63,7 @@ public class ChatMappingProfileTests
     [TestMethod]
     public void Map_ChatToChatDTO_ValidConfiguration()
     {
-        var configuration = new MapperConfiguration(mapperConfiguration => mapperConfiguration.AddProfile<ChatMappingProfile>());
+        var configuration = new AutoMapper.MapperConfiguration(cfg => cfg.AddProfile<ChatMappingProfile>(), _loggerFactory);
 
         configuration.AssertConfigurationIsValid();
     }

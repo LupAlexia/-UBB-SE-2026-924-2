@@ -1,4 +1,4 @@
-﻿using AirportApp.Src.Converter;
+using AirportApp.Src.Converter;
 using Microsoft.UI.Xaml;
 using System;
 using System.Collections.Generic;
@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CloudSpritzers1Tests.src.converter;
+namespace AirportApp.Tests.Unit.src.converter;
 
 [TestClass]
 public class BooleanToAlignmentConversterTests
@@ -54,3 +54,7 @@ public class BooleanToAlignmentConversterTests
     }
 
 }
+
+
+
+

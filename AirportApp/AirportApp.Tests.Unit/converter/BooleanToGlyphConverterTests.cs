@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using AirportApp.Src.Converter;
 using System;
 using System.Collections.Generic;
@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.UI.Xaml;
 
-namespace CloudSpritzers1Tests.src.converter;
+namespace AirportApp.Tests.Unit.src.converter;
 
 [TestClass()]
 public class BooleanToGlyphConverterTests
@@ -41,3 +41,6 @@ public class BooleanToGlyphConverterTests
         Assert.ThrowsException<NotImplementedException>(() => _converter.ConvertBack(HorizontalAlignment.Left, typeof(bool), null, null));
     }
 }
+
+
+

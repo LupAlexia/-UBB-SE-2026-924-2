@@ -1,37 +1,31 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using CloudSpritzers1.Src.Service;
-using CloudSpritzers1.Src.Repository.Interfaces;
-using CloudSpritzers1.Src.Model.Review;
-using CloudSpritzers1.Src.Model;
+using AirportApp.Src.ViewModel;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using AirportApp.Src.Service;
+using AirportApp.ClassLibrary.Repository.Interfaces;
+using AirportApp.ClassLibrary.Entity.Domain.Review;
+using AirportApp.ClassLibrary.Entity.Domain;
 using NSubstitute;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using CloudSpritzers1.Src.Repository;
+using System.Threading.Tasks;
 
-namespace CloudSpritzers1Tests.Src.Service
+namespace AirportApp.Tests.Unit.Src.Service
 {
     [TestClass]
     public class ReviewServiceTests
     {
-        private IRepository<int, Review> _reviewRepository;
-        private ReviewService _reviewService;
-        private User _testUser;
+        private IRepository<int, Review> _reviewRepository = null!;
+        private ReviewService _reviewService = null!;
+        private User _testUser = null!;
 
         [TestInitialize]
         public void Setup()
         {
-            // 1. Mock the repository using NSubstitute
             _reviewRepository = Substitute.For<IRepository<int, Review>>();
-
-            // 2. Inject the mock into the service
             _reviewService = new ReviewService(_reviewRepository);
-
-            // 3. Create a real User for test data
             _testUser = new User(1, "Test User", "test@test.com");
-
-            // 4. Setup a default "GetAll" return to prevent null reference errors during validation
-            _reviewRepository.GetAll().Returns(new List<Review>());
+            _reviewRepository.GetAllAsync().Returns(Task.FromResult((IEnumerable<Review>)new List<Review>()));
         }
 
         [TestMethod]
@@ -45,48 +39,41 @@ namespace CloudSpritzers1Tests.Src.Service
         }
 
         [TestMethod]
-        public void CreateReview_WithValidData_CallsRepositoryToSave()
+        public async Task CreateReview_WithValidData_CallsRepositoryToSave()
         {
-        
-            _reviewService.CreateReview(1, _testUser, "Great flight", 5, 5, 5, 5);
-
-            _reviewRepository.Received(1).CreateNewEntity(Arg.Any<Review>());
+            await _reviewService.CreateReviewAsync(1, _testUser, "Great flight", 5, 5, 5, 5);
+            await _reviewRepository.Received(1).CreateNewEntityAsync(Arg.Any<Review>());
         }
 
         [TestMethod]
-        public void ValidateReview_RatingBelowMin_ThrowsArgumentException()
+        public async Task ValidateReview_RatingBelowMin_ThrowsArgumentException()
         {
-
             var review = new Review(1, _testUser, "Too low", 0, 5, 5, 5);
-
            
-            var exceptionThrown = Assert.ThrowsExactly<ArgumentException>(() =>
-                _reviewService.ValidateReview(review));
+            var exceptionThrown = await Assert.ThrowsExceptionAsync<ArgumentException>(async () =>
+                await _reviewService.ValidateReviewAsync(review));
 
             StringAssert.Contains("Duty Free Rating must be between 1 and 5", exceptionThrown.Message);
         }
 
         [TestMethod]
-        public void ValidateReview_RatingAboveMax_ThrowsArgumentException()
+        public async Task ValidateReview_RatingAboveMax_ThrowsArgumentException()
         {
-            
             var review = new Review(1, _testUser, "Too high", 5, 5, 5, 6);
-
             
-            var exceptionThrown = Assert.ThrowsExactly<ArgumentException>(() =>
-                _reviewService.ValidateReview(review));
+            var exceptionThrown = await Assert.ThrowsExceptionAsync<ArgumentException>(async () =>
+                await _reviewService.ValidateReviewAsync(review));
 
             StringAssert.Contains("Cleanliness Rating must be between 1 and 5", exceptionThrown.Message);
         }
 
         [TestMethod]
-        public void ValidateReview_EmptyMessage_ThrowsArgumentException()
+        public async Task ValidateReview_EmptyMessage_ThrowsArgumentException()
         {
-            
             var review = new Review(1, _testUser, "", 5, 5, 5, 5);
 
-            var exceptionThrown = Assert.ThrowsExactly<ArgumentException>(() =>
-                _reviewService.ValidateReview(review));
+            var exceptionThrown = await Assert.ThrowsExceptionAsync<ArgumentException>(async () =>
+                await _reviewService.ValidateReviewAsync(review));
 
             StringAssert.Contains("Message cannot be null or empty", exceptionThrown.Message);
         }
@@ -94,132 +81,114 @@ namespace CloudSpritzers1Tests.Src.Service
         [TestMethod]
         public void ValidateReview_NullUser_ThrowsArgumentException()
         {
-            
-            var review = new Review(1, null, "No user", 5, 5, 5, 5);
-
-            var exceptionThrown = Assert.ThrowsExactly<ArgumentException>(() =>
-                _reviewService.ValidateReview(review));
+            var exceptionThrown = Assert.ThrowsException<ArgumentException>(() =>
+                new Review(1, null, "No user", 5, 5, 5, 5));
 
             StringAssert.Contains("User cannot be null", exceptionThrown.Message);
         }
 
         [TestMethod]
-        public void ValidateReview_DuplicateReview_ThrowsArgumentException()
+        public async Task ValidateReview_DuplicateReview_ThrowsArgumentException()
         {
             var existingReview = new Review(1, _testUser, "I already exist", 5, 5, 5, 5);
 
-            _reviewRepository.GetAll().Returns(new List<Review> { existingReview });
+            _reviewRepository.GetAllAsync().Returns(Task.FromResult((IEnumerable<Review>)new List<Review> { existingReview }));
 
-            var exceptionThrown = Assert.ThrowsExactly<ArgumentException>(() =>
-                _reviewService.ValidateReview(existingReview));
+            var exceptionThrown = await Assert.ThrowsExceptionAsync<ArgumentException>(async () =>
+                await _reviewService.ValidateReviewAsync(existingReview));
             StringAssert.Contains("Review already exists", exceptionThrown.Message);
         }
 
         [TestMethod]
-        public void GetById_ValidId_ReturnsReviewFromRepository()
+        public async Task GetById_ValidId_ReturnsReviewFromRepository()
         {
-            
             var expectedReview = new Review(1, _testUser, "Great", 5, 5, 5, 5);
-            _reviewRepository.GetById(1).Returns(expectedReview);
+            _reviewRepository.GetByIdAsync(1).Returns(Task.FromResult(expectedReview));
 
-            
-            var resultedReview = _reviewService.GetById(1);
+            var resultedReview = await _reviewService.GetByIdAsync(1);
 
-            
             Assert.AreEqual(expectedReview, resultedReview);
-            _reviewRepository.Received(1).GetById(1); 
+            await _reviewRepository.Received(1).GetByIdAsync(1); 
         }
 
         [TestMethod]
-        public void UpdateById_WhenCalled_CallsRepositoryUpdate()
+        public async Task UpdateById_WhenCalled_CallsRepositoryUpdate()
         {
-           
             var updatedReview = new Review(1, _testUser, "Updated Message", 4, 4, 4, 4);
-            _reviewService.UpdateById(1, updatedReview);
-            _reviewRepository.Received(1).UpdateById(1, updatedReview);
+            await _reviewService.UpdateByIdAsync(1, updatedReview);
+            await _reviewRepository.Received(1).UpdateByIdAsync(1, updatedReview);
         }
 
         [TestMethod]
-        public void DeleteById_WhenCalled_CallsRepositoryDelete()
+        public async Task DeleteById_WhenCalled_CallsRepositoryDelete()
         {
-            _reviewService.DeleteById(10);
-            _reviewRepository.Received(1).DeleteById(10);
+            await _reviewService.DeleteByIdAsync(10);
+            await _reviewRepository.Received(1).DeleteByIdAsync(10);
         }
 
         [TestMethod]
-        public void GetAll_WhenCalled_ReturnsListOfReviews()
+        public async Task GetAll_WhenCalled_ReturnsListOfReviews()
         {
-            
             var reviews = new List<Review>
-        {
-        new Review(1, _testUser, "R1", 5, 5, 5, 5),
-        new Review(2, _testUser, "R2", 4, 4, 4, 4)
-        };
-            _reviewRepository.GetAll().Returns(reviews);
+            {
+                new Review(1, _testUser, "R1", 5, 5, 5, 5),
+                new Review(2, _testUser, "R2", 4, 4, 4, 4)
+            };
+            _reviewRepository.GetAllAsync().Returns(Task.FromResult((IEnumerable<Review>)reviews));
 
-            
-            var resultedReviewList = _reviewService.GetAll();
+            var resultedReviewList = (await _reviewService.GetAllAsync()).ToList();
 
-            
             Assert.AreEqual(2, resultedReviewList.Count);
-            _reviewRepository.Received(1).GetAll();
+            await _reviewRepository.Received(1).GetAllAsync();
         }
 
         [TestMethod]
-        public void ValidateReview_FlightExperienceRatingInvalid_ThrowsArgumentException()
+        public async Task ValidateReview_FlightExperienceRatingInvalid_ThrowsArgumentException()
         {
-            
             var review = new Review(1, _testUser, "Test", 5, 0, 5, 5);
 
-            
-            var exceptionThrown = Assert.ThrowsExactly<ArgumentException>(() =>
-                _reviewService.ValidateReview(review));
+            var exceptionThrown = await Assert.ThrowsExceptionAsync<ArgumentException>(async () =>
+                await _reviewService.ValidateReviewAsync(review));
 
             StringAssert.Contains("Flight Experience Rating must be between 1 and 5", exceptionThrown.Message);
         }
 
         [TestMethod]
-        public void ValidateReview_StaffFriendlinessRatingInvalid_ThrowsArgumentException()
+        public async Task ValidateReview_StaffFriendlinessRatingInvalid_ThrowsArgumentException()
         {
-            
             var review = new Review(1, _testUser, "Test", 5, 5, 6, 5);
 
-            
-            var exceptionThrown = Assert.ThrowsExactly<ArgumentException>(() =>
-                _reviewService.ValidateReview(review));
+            var exceptionThrown = await Assert.ThrowsExceptionAsync<ArgumentException>(async () =>
+                await _reviewService.ValidateReviewAsync(review));
 
             StringAssert.Contains("Staff Friendliness Rating must be between 1 and 5", exceptionThrown.Message);
         }
 
         [TestMethod]
-        public void ValidateReview_CleanlinessRatingInvalid_ThrowsArgumentException()
+        public async Task ValidateReview_CleanlinessRatingInvalid_ThrowsArgumentException()
         {
-            
             var review = new Review(1, _testUser, "Test", 5, 5, 5, 0);
 
-            
-            var exceptionThrown = Assert.ThrowsExactly<ArgumentException>(() =>
-                _reviewService.ValidateReview(review));
+            var exceptionThrown = await Assert.ThrowsExceptionAsync<ArgumentException>(async () =>
+                await _reviewService.ValidateReviewAsync(review));
 
             StringAssert.Contains("Cleanliness Rating must be between 1 and 5", exceptionThrown.Message);
         }
 
         [TestMethod]
-        public void ValidateReview_WithAllValidData_DoesNotThrowAndMovesToNextStep()
+        public async Task ValidateReview_WithAllValidData_DoesNotThrowAndMovesToNextStep()
         {
-            
             var validReview = new Review(1, _testUser, "Everything was perfect!", 5, 5, 5, 5);
 
-            _reviewService.ValidateReview(validReview);
+            await _reviewService.ValidateReviewAsync(validReview);
         }
 
         [TestMethod]
-        public void ValidateReview_StaffFriendlinessBelowMin_ThrowsArgumentException()
+        public async Task ValidateReview_StaffFriendlinessBelowMin_ThrowsArgumentException()
         {
-            
             var review = new Review(1, _testUser, "Test", 5, 5, 0, 5);
 
-            Assert.ThrowsExactly<ArgumentException>(() => _reviewService.ValidateReview(review));
+            await Assert.ThrowsExceptionAsync<ArgumentException>(async () => await _reviewService.ValidateReviewAsync(review));
         }
     }
 }

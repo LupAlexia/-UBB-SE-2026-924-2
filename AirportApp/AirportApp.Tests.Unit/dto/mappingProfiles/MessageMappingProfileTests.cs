@@ -1,13 +1,15 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using AutoMapper;
-using CloudSpritzers1.Src.Dto;
-using CloudSpritzers1.Src.Dto.MappingProfiles;
-using CloudSpritzers1.Src.Model.Message;
-using CloudSpritzers1.Src.Model.Chats;
-using CloudSpritzers1.Src.Model;
+using AirportApp.ClassLibrary.Entity.Dto;
+using AirportApp.ClassLibrary.Entity.Dto.MappingProfiles;
+using AirportApp.ClassLibrary.Entity.Domain.Message;
+using AirportApp.ClassLibrary.Entity.Domain.Chats;
+using AirportApp.ClassLibrary.Entity.Domain;
+using Microsoft.Extensions.Logging;
+using NSubstitute;
 using System;
 
-namespace CloudSpritzers1Tests.Src.Dto.MappingProfiles
+namespace AirportApp.Tests.Unit.Src.Dto.MappingProfiles
 {
     [TestClass]
     public class MessageMappingProfileTests
@@ -16,22 +18,24 @@ namespace CloudSpritzers1Tests.Src.Dto.MappingProfiles
         private User _testUser;
         private Chat _testChat;
         private Message _testMessage;
+        private ILoggerFactory _loggerFactory;
 
         [TestInitialize]
         public void Setup()
         {
-            var configuration = new MapperConfiguration(mapperConfiguration => mapperConfiguration.AddProfile<MessageMappingProfile>());
+            _loggerFactory = Substitute.For<ILoggerFactory>();
+            var configuration = new AutoMapper.MapperConfiguration(cfg => cfg.AddProfile<MessageMappingProfile>(), _loggerFactory);
             _autoMapperInstance = configuration.CreateMapper();
 
             _testUser = new User(1, "Alex", "alex@mail.com");
-            _testChat = new Chat(10, 1, ChatStatus.Active);
+            _testChat = new Chat(10, _testUser, ChatStatus.Active);
             _testMessage = new Message(_testUser, _testChat, "Hello");
         }
 
         [TestMethod]
         public void Configuration_IsValid_PassesValidation()
         {
-            var configuration = new MapperConfiguration(mapperConfiguration => mapperConfiguration.AddProfile<MessageMappingProfile>());
+            var configuration = new AutoMapper.MapperConfiguration(cfg => cfg.AddProfile<MessageMappingProfile>(), _loggerFactory);
 
             configuration.AssertConfigurationIsValid();
         }
@@ -49,7 +53,7 @@ namespace CloudSpritzers1Tests.Src.Dto.MappingProfiles
         {
             var resultMessageDataTransferObject = _autoMapperInstance.Map<MessageDTO>(_testMessage);
 
-            Assert.AreEqual(_testChat.ChatId, resultMessageDataTransferObject.ChatId);
+            Assert.AreEqual(_testChat.Id, resultMessageDataTransferObject.ChatId);
         }
 
         [TestMethod]

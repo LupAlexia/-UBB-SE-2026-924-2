@@ -1,21 +1,40 @@
-using TicketManager.Domain;
+using AirportApp.ClassLibrary.Entity.Domain;
 
-namespace TicketManager.Tests.Unit.Fixtures;
+namespace AirportApp.Tests.Unit.Fixtures;
 
 public static class TicketFixture
 {
-    public static Ticket CreateValidTestTicket()
+    public static FlightTicket CreateValidTestTicket(
+        Customer user,
+        Flight flight,
+        string seat = "12A",
+        float price = 150.0f,
+        string status = "Confirmed")
     {
-        return new Ticket
+        return new FlightTicket
         {
-            TicketId = 1,
-            PassengerFirstName = "Bogdan",
-            PassengerLastName = "Dragomir",
-            PassengerEmail = "bogdan.d@gmail.com",
-            PassengerPhone = "0755112233",
-            Seat = "10C",
-            Price = 120.0f,
-            Status = "Active"
+            Id = 1,
+            User = user,
+            UserId = user.Id,
+            Flight = flight,
+            FlightId = flight.Id,
+            Seat = seat,
+            Price = price,
+            Status = status,
+            PassengerFirstName = "Andrei",
+            PassengerLastName = "Ionescu",
+            PassengerEmail = "andrei.ionescu@gmail.com",
+            PassengerPhone = "0722112233"
         };
+    }
+
+    public static FlightTicket CreateConfirmedTicket(Customer user, Flight flight)
+    {
+        return CreateValidTestTicket(user, flight, status: "Confirmed");
+    }
+
+    public static FlightTicket CreatePendingTicket(Customer user, Flight flight)
+    {
+        return CreateValidTestTicket(user, flight, status: "Pending");
     }
 }

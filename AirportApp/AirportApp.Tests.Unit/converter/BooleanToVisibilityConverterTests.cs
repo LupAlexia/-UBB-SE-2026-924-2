@@ -41,3 +41,7 @@ public class BooleanToVisibilityConverterTests
         Assert.AreEqual(false, result);
     }
 }
+
+
+
+

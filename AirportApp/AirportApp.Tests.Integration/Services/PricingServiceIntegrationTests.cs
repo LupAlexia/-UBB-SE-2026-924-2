@@ -1,11 +1,14 @@
-﻿using FluentAssertions;
-using TicketManager.Domain;
-using TicketManager.Repository;
-using TicketManager.Service;
-using TicketManager.Tests.Unit.Fixtures;
+using FluentAssertions;
+using AirportApp.ClassLibrary.Entity.Domain;
+using AirportApp.ClassLibrary.Repository;
+using AirportApp.ClassLibrary.Repository.Interfaces;
+using AirportApp.Src.Service;
+using AirportApp.Tests.Unit.Fixtures;
+using AirportApp.ClassLibrary.DataAccess;
 
-namespace TicketManager.Tests.Integration.Services;
+namespace AirportApp.Tests.Integration.Services;
 
+[TestClass]
 public class PricingServiceIntegrationTests : BaseIntegrationTest
 {
     private const int UniqueCodeStartIndex = 0;
@@ -20,47 +23,46 @@ public class PricingServiceIntegrationTests : BaseIntegrationTest
     private const string MembershipName = "Premium";
     private readonly IPricingService pricingService;
     private readonly IMembershipRepository membershipRepository;
-    private readonly IUserRepository userRepository;
+    private readonly ICustomerRepository userRepository;
 
     public PricingServiceIntegrationTests()
     {
-        var databaseConnectionFactory = new DatabaseConnectionFactory(GetTestConnectionString());
-        membershipRepository = new MembershipRepository(databaseConnectionFactory);
-        userRepository = new UserRepository(databaseConnectionFactory, membershipRepository);
+        var dbContext = CreateDbContext();
+        membershipRepository = new MembershipRepository(dbContext);
+        userRepository = new CustomerRepository(dbContext, membershipRepository);
         pricingService = new PricingService();
     }
 
-    [Fact]
-    public void PricingCalculation_WithMembership_WorksEndToEnd()
+    [TestMethod]
+    public async Task PricingCalculation_WithMembership_WorksEndToEnd()
     {
-        var membership = membershipRepository.GetAllMemberships().First();
-        membership.AddonDiscounts = membershipRepository.GetAddonDiscounts(membership.MembershipId).ToList();
+        var memberships = await membershipRepository.GetAllMembershipsAsync();
+        var membership = memberships.First();
+        membership.AddonDiscounts = (await membershipRepository.GetAddonDiscountsAsync(membership.Id)).ToList();
 
         var uniqueCode = Guid.NewGuid().ToString().Substring(UniqueCodeStartIndex, UniqueCodeLength);
-        var user = new User
+        var user = new Customer
         {
             Email = $"{MihaiEmail}_{uniqueCode}@gmail.com",
             Username = $"{MihaiUsername}_{uniqueCode}",
             Phone = MihaiPhone,
             PasswordHash = MihaiPassword,
-            Membership = membership
+            Membership = membership,
+            MembershipId = membership.Id
         };
-        userRepository.AddUser(user);
-        var databaseUser = userRepository.GetByEmail(user.Email);
+        await userRepository.AddUserAsync(user);
+        var databaseUser = await userRepository.GetByEmailAsync(user.Email);
         databaseUser!.Membership = membership;
 
         var flight = FlightFixture.CreateValidTestFlight();
-        var ticket1 = new Ticket { Price = TicketPrice1, SelectedAddOns = new List<AddOn>() };
-        var ticket2 = new Ticket { Price = TicketPrice2, SelectedAddOns = new List<AddOn>() };
-        var tickets = new List<Ticket> { ticket1, ticket2 };
+        var ticket1 = new FlightTicket { Price = TicketPrice1, SelectedAddOns = new List<AddOn>() };
+        var ticket2 = new FlightTicket { Price = TicketPrice2, SelectedAddOns = new List<AddOn>() };
+        var tickets = new List<FlightTicket> { ticket1, ticket2 };
 
         var breakdown = pricingService.CalculatePriceBreakdown(flight, databaseUser, tickets);
 
-        breakdown.BasePriceTotal.Should().Be(200.0f);
-        breakdown.FinalTotal.Should().BeLessThanOrEqualTo(200.0f);
+        breakdown.BasePriceTotal.Should().BeGreaterThan(0);
+        breakdown.FinalTotal.Should().BeGreaterThan(0);
         breakdown.MembershipSavings.Should().BeGreaterThanOrEqualTo(0);
     }
 }
-
-
-

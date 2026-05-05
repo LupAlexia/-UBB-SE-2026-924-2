@@ -1,6 +1,6 @@
-using CloudSpritzers1.Src.Converter;
+using AirportApp.Src.Converter;
 using Microsoft.UI.Xaml;
-namespace CloudSpritzers1Tests.src.converter;
+namespace AirportApp.Tests.Unit.src.converter;
 
 [TestClass]
 public class InverseBooleanToVisibilityConverterTests
@@ -30,6 +30,11 @@ public class InverseBooleanToVisibilityConverterTests
     [TestMethod()]
     public void ConvertBack_WhenCalled_ThrowsNotImplementedException()
     {
-        Assert.ThrowsExactly<NotImplementedException>(() => _converter.ConvertBack(Visibility.Collapsed, typeof(bool), null, null));
+        Assert.ThrowsException<NotImplementedException>(() => _converter.ConvertBack(Visibility.Collapsed, typeof(bool), null, null));
     }
 }
+
+
+
+
+

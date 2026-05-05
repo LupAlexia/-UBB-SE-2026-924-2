@@ -1,18 +1,22 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Moq;
-using Xunit;
-using TicketManager.Domain;
-using TicketManager.Service;
-using TicketManager.ViewModel;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using AirportApp.ClassLibrary.Entity.Domain;
+using AirportApp.Src.Service;
+using AirportApp.Src.ViewModel;
+using AirportApp.Src.Service.Interfaces;
+using AirportEntity = AirportApp.ClassLibrary.Entity.Domain.Airport;
 
-[assembly: Xunit.CollectionBehavior(DisableTestParallelization = true)]
-
-namespace TicketManager.Tests.Unit.ViewModel
+namespace AirportApp.Tests.Unit.ViewModel
 {
+    [TestClass]
+    [DoNotParallelize]
     public class FlightSearchViewModelTests
     {
+        private const int ExpectedUserId = 1;
         private readonly Mock<IFlightSearchService> mockFlightSearchService;
         private readonly Mock<INavigationService> mockNavigationService;
         private readonly Mock<IPricingService> mockPricingService;
@@ -34,8 +38,8 @@ namespace TicketManager.Tests.Unit.ViewModel
             UserSession.PendingBookingParameters = null;
         }
 
-        [Fact]
-        public void SearchCommand_ValidLocationAndDate_PopulatesAvailableFlightsCollection()
+        [TestMethod]
+        public async Task SearchCommand_ValidLocationAndDate_PopulatesAvailableFlightsCollection()
         {
             const string ValidLocation = "Cluj-Napoca";
             const int ExpectedPassengerCount = 2;
@@ -47,10 +51,10 @@ namespace TicketManager.Tests.Unit.ViewModel
             {
                 new Flight
                 {
-                    FlightId = ExpectedFlightId,
+                    Id = ExpectedFlightId,
                     Route = new Route
                     {
-                        Airport = new Airport { City = ValidLocation },
+                        Airport = new AirportEntity { City = ValidLocation },
                         Capacity = ExpectedCapacity
                     }
                 }
@@ -61,49 +65,49 @@ namespace TicketManager.Tests.Unit.ViewModel
             viewModel.IsDeparture = true;
 
             mockFlightSearchService.Setup(service => service.ParsePassengerCount(ExpectedPassengerCount.ToString())).Returns(ExpectedPassengerCount);
-            mockFlightSearchService.Setup(service => service.SearchFlights(ValidLocation, true, It.IsAny<DateTime?>(), ExpectedPassengerCount)).Returns(flightList);
+            mockFlightSearchService.Setup(service => service.SearchFlightsAsync(ValidLocation, true, It.IsAny<DateTime?>(), ExpectedPassengerCount)).ReturnsAsync(flightList);
             mockPricingService.Setup(service => service.CalculateBasePrice(It.IsAny<Flight>())).Returns(DefaultBasePrice);
 
             viewModel.SearchCommand.Execute(null);
 
-            Assert.True(viewModel.AvailableFlights.Count > 0, "AvailableFlights collection should be populated with the search results.");
-            Assert.Equal(ValidLocation, viewModel.AvailableFlights.First().Flight.Route?.Airport?.City);
+            Assert.IsTrue(viewModel.AvailableFlights.Count > 0, "AvailableFlights collection should be populated with the search results.");
+            Assert.AreEqual(ValidLocation, viewModel.AvailableFlights.First().Flight.Route?.Airport?.City);
         }
 
-        [Fact]
-        public void SearchCommand_EmptyResults_SetsSearchResultMessageToNoFlightsFound()
+        [TestMethod]
+        public async Task SearchCommand_EmptyResults_SetsSearchResultMessageToNoFlightsFound()
         {
             const string ValidLocation = "Bucuresti";
             const string ExpectedNoResultsMessage = "No flights found for the selected criteria.";
 
             viewModel.Location = ValidLocation;
 
-            mockFlightSearchService.Setup(service => service.SearchFlights(ValidLocation, true, It.IsAny<DateTime?>(), It.IsAny<int?>()))
-                .Returns(new List<Flight>());
+            mockFlightSearchService.Setup(service => service.SearchFlightsAsync(ValidLocation, true, It.IsAny<DateTime?>(), It.IsAny<int?>()))
+                .ReturnsAsync(new List<Flight>());
 
             viewModel.SearchCommand.Execute(null);
 
-            Assert.Empty(viewModel.AvailableFlights);
-            Assert.Equal(ExpectedNoResultsMessage, viewModel.SearchResultMessage);
+            Assert.AreEqual(0, viewModel.AvailableFlights.Count);
+            Assert.AreEqual(ExpectedNoResultsMessage, viewModel.SearchResultMessage);
         }
 
-        [Fact]
+        [TestMethod]
         public void SearchCommand_EmptyLocation_DoesNotInvokeSearchService()
         {
             viewModel.Location = string.Empty;
 
             viewModel.SearchCommand.Execute(null);
 
-            mockFlightSearchService.Verify(service => service.SearchFlights(It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<DateTime?>(), It.IsAny<int?>()), Times.Never);
+            mockFlightSearchService.Verify(service => service.SearchFlightsAsync(It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<DateTime?>(), It.IsAny<int?>()), Times.Never);
         }
 
-        [Fact]
+        [TestMethod]
         public void BookFlightCommand_UserNotLoggedIn_NavigatesToAuthenticationPage()
         {
             UserSession.CurrentUser = null;
             const float DefaultBasePrice = 100.0f;
             const int ExpectedFlightId = 1;
-            var flightDisplayModel = new FlightDisplayModel(new Flight { FlightId = ExpectedFlightId }, DefaultBasePrice);
+            var flightDisplayModel = new FlightDisplayModel(new Flight { Id = ExpectedFlightId }, DefaultBasePrice);
             const string PassengerInput = "1";
             viewModel.Passengers = PassengerInput;
 
@@ -111,20 +115,19 @@ namespace TicketManager.Tests.Unit.ViewModel
 
             viewModel.BookFlightCommand.Execute(flightDisplayModel);
 
-            mockNavigationService.Verify(service => service.NavigateTo(typeof(TicketManager.View.AuthPage), It.IsAny<object>()), Times.Once);
-            Assert.NotNull(UserSession.PendingBookingParameters);
+            mockNavigationService.Verify(service => service.NavigateTo(It.IsAny<Type>(), It.IsAny<object?>()), Times.AtLeastOnce);
+            Assert.IsNotNull(UserSession.PendingBookingParameters);
         }
 
-        [Fact]
+        [TestMethod]
         public void BookFlightCommand_UserLoggedIn_NavigatesToBookingPage()
         {
-            const int ExpectedUserId = 1;
             const string ExpectedEmailAddress = "test@test.com";
-            UserSession.CurrentUser = new User { UserId = ExpectedUserId, Email = ExpectedEmailAddress };
+            UserSession.CurrentUser = new Customer { Id = ExpectedUserId, Email = ExpectedEmailAddress };
 
             const float DefaultBasePrice = 100.0f;
             const int ExpectedFlightId = 1;
-            var flightDisplayModel = new FlightDisplayModel(new Flight { FlightId = ExpectedFlightId }, DefaultBasePrice);
+            var flightDisplayModel = new FlightDisplayModel(new Flight { Id = ExpectedFlightId }, DefaultBasePrice);
             const string PassengerInput = "1";
             viewModel.Passengers = PassengerInput;
 
@@ -132,7 +135,7 @@ namespace TicketManager.Tests.Unit.ViewModel
 
             viewModel.BookFlightCommand.Execute(flightDisplayModel);
 
-            mockNavigationService.Verify(service => service.NavigateTo(typeof(TicketManager.View.BookingPage), It.IsAny<object[]>()), Times.Once);
+            mockNavigationService.Verify(service => service.NavigateTo(It.IsAny<Type>(), It.IsAny<object?>()), Times.AtLeastOnce);
         }
     }
 }

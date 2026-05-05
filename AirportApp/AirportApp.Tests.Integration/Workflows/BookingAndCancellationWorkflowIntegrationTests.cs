@@ -1,11 +1,14 @@
-﻿using FluentAssertions;
-using TicketManager.Domain;
-using TicketManager.Repository;
-using TicketManager.Service;
-using TicketManager.Tests.Unit.Fixtures;
+using FluentAssertions;
+using AirportApp.ClassLibrary.Entity.Domain;
+using AirportApp.ClassLibrary.Repository;
+using AirportApp.ClassLibrary.Repository.Interfaces;
+using AirportApp.Src.Service;
+using AirportApp.Tests.Unit.Fixtures;
+using AirportApp.ClassLibrary.DataAccess;
 
-namespace TicketManager.Tests.Integration.Workflows;
+namespace AirportApp.Tests.Integration.Workflows;
 
+[TestClass]
 public class BookingAndCancellationWorkflowIntegrationTests : BaseIntegrationTest
 {
     private const int UniqueCodeStartIndex = 0;
@@ -13,7 +16,6 @@ public class BookingAndCancellationWorkflowIntegrationTests : BaseIntegrationTes
     private const float BasePrice = 100.0f;
     private const int TwoPassengers = 2;
     private const string ReservationEmail = "rezervare.zbor";
-    private const string ReservationUsername = "Utilizator";
     private const string ReservationPassword = "ParolaRezervare123!";
     private const string ReservationPhone = "0722112233";
     private const string DuplicateSeatsEmail = "locuri.duplicate";
@@ -25,7 +27,6 @@ public class BookingAndCancellationWorkflowIntegrationTests : BaseIntegrationTes
     private const string VasileLastName = "Traian";
     private const string Seat1A = "1A";
     private const string CancellationEmail = "anulare.zbor";
-    private const string CancellationUsername = "Anulare";
     private const string CancellationPassword = "ParolaAnulare123!";
     private const string MariusFirstName = "Marius";
     private const string MariusLastName = "Lacatus";
@@ -35,8 +36,9 @@ public class BookingAndCancellationWorkflowIntegrationTests : BaseIntegrationTes
     private const string CancelledStatus = "Cancelled";
     private const string DomainGmail = "@gmail.com";
     private const string AlreadyCancelledMessage = "already cancelled";
-    private readonly IUserRepository userRepository;
-    private readonly ITicketRepository ticketRepository;
+    private readonly ICustomerRepository userRepository;
+    private readonly IFlightTicketRepository ticketRepository;
+    private readonly IFlightRepository flightRepository;
     private readonly IAddOnRepository addOnRepository;
     private readonly AuthService authentificationService;
     private readonly BookingService bookingService;
@@ -45,75 +47,76 @@ public class BookingAndCancellationWorkflowIntegrationTests : BaseIntegrationTes
 
     public BookingAndCancellationWorkflowIntegrationTests()
     {
-        var databaseConnectionFactory = new DatabaseConnectionFactory(GetTestConnectionString());
-        var membershipRepository = new MembershipRepository(databaseConnectionFactory);
-        userRepository = new UserRepository(databaseConnectionFactory, membershipRepository);
-        ticketRepository = new TicketRepository(databaseConnectionFactory);
-        addOnRepository = new AddOnRepository(databaseConnectionFactory);
+        var dbContext = CreateDbContext();
+        var membershipRepository = new MembershipRepository(dbContext);
+        userRepository = new CustomerRepository(dbContext, membershipRepository);
+        ticketRepository = new FlightTicketRepository(dbContext);
+        flightRepository = new FlightRepository(dbContext);
+        addOnRepository = new AddOnRepository(dbContext);
         authentificationService = new AuthService(userRepository);
         bookingService = new BookingService(ticketRepository, addOnRepository);
         pricingService = new PricingService();
         cancellationService = new CancellationService(ticketRepository);
     }
 
-    [Fact]
+    [TestMethod]
     public async Task CompleteBookingWorkflow_ValidData_Succeeds()
     {
         var uniqueCode = Guid.NewGuid().ToString().Substring(UniqueCodeStartIndex, UniqueCodeLength);
         var email = $"{ReservationEmail}_{uniqueCode}{DomainGmail}";
         var password = ReservationPassword;
 
-        authentificationService.Register(email, ReservationPhone, $"{ReservationUsername}_{uniqueCode}", password);
-        var user = authentificationService.Login(email, password);
+        await authentificationService.RegisterAsync(email, ReservationPhone, $"Utilizator_{uniqueCode}", password);
+        var user = await authentificationService.LoginAsync(email, password);
 
         var flightId = GetFirstAvailableFlightId();
-        var flight = FlightFixture.CreateValidTestFlight(flightId: flightId);
+        var flight = await flightRepository.GetFlightByIdAsync(flightId);
         var passengers = PassengerDataFixture.CreateValidPassengerList(TwoPassengers);
 
         var validationResult = bookingService.ValidatePassengers(passengers);
         validationResult.Should().BeEmpty();
 
-        var tickets = bookingService.CreateTickets(flight, user, passengers, BasePrice);
+        var tickets = bookingService.CreateTickets(flight!, user, passengers, BasePrice);
         tickets.Should().HaveCount(TwoPassengers);
 
         var saveResult = await bookingService.SaveTicketsAsync(tickets);
         saveResult.Should().BeTrue();
 
-        var userTickets = ticketRepository.GetTicketsByUserId(user.UserId);
+        var userTickets = await ticketRepository.GetTicketsByUserIdAsync(user.Id);
         userTickets.Should().HaveCount(TwoPassengers);
     }
 
-    [Fact]
+    [TestMethod]
     public async Task SaveTickets_DuplicateSeats_ThrowsException()
     {
         var uniqueCode = Guid.NewGuid().ToString().Substring(UniqueCodeStartIndex, UniqueCodeLength);
         var email = $"{DuplicateSeatsEmail}_{uniqueCode}{DomainGmail}";
-        authentificationService.Register(email, ReservationPhone, $"{GigelUsername}_{uniqueCode}", GigelPassword);
-        var user = authentificationService.Login(email, GigelPassword);
+        await authentificationService.RegisterAsync(email, ReservationPhone, $"{GigelUsername}_{uniqueCode}", GigelPassword);
+        var user = await authentificationService.LoginAsync(email, GigelPassword);
 
         var flightId = GetFirstAvailableFlightId();
-        var flight = FlightFixture.CreateValidTestFlight(flightId: flightId);
-        var ticket1 = new Ticket { Flight = flight, User = user, Seat = Seat1A, Price = BasePrice, Status = ActiveStatus, PassengerFirstName = GigelFirstName, PassengerLastName = GigelLastName };
-        var ticket2 = new Ticket { Flight = flight, User = user, Seat = Seat1A, Price = BasePrice, Status = ActiveStatus, PassengerFirstName = VasileFirstName, PassengerLastName = VasileLastName };
+        var flight = await flightRepository.GetFlightByIdAsync(flightId);
+        var ticket1 = new FlightTicket { Flight = flight!, User = user, Seat = Seat1A, Price = BasePrice, Status = ActiveStatus, PassengerFirstName = GigelFirstName, PassengerLastName = GigelLastName };
+        var ticket2 = new FlightTicket { Flight = flight!, User = user, Seat = Seat1A, Price = BasePrice, Status = ActiveStatus, PassengerFirstName = VasileFirstName, PassengerLastName = VasileLastName };
 
-        var saveTicketsResult = await bookingService.SaveTicketsAsync(new List<Ticket> { ticket1, ticket2 });
+        var saveTicketsResult = await bookingService.SaveTicketsAsync(new List<FlightTicket> { ticket1, ticket2 });
 
         saveTicketsResult.Should().BeFalse();
     }
 
-    [Fact]
-    public void ValidateCancellation_BeforeCancelling_ReturnsTrue()
+    [TestMethod]
+    public async Task ValidateCancellation_BeforeCancelling_ReturnsTrue()
     {
         var uniqueCode = Guid.NewGuid().ToString().Substring(UniqueCodeStartIndex, UniqueCodeLength);
         var email = $"{CancellationEmail}_{uniqueCode}{DomainGmail}";
-        authentificationService.Register(email, ReservationPhone, $"{CancellationUsername}_{uniqueCode}", CancellationPassword);
-        var user = authentificationService.Login(email, CancellationPassword);
+        await authentificationService.RegisterAsync(email, ReservationPhone, $"Anulare_{uniqueCode}", CancellationPassword);
+        var user = await authentificationService.LoginAsync(email, CancellationPassword);
 
         var flightId = GetFirstAvailableFlightId();
-        var flight = FlightFixture.CreateValidTestFlight(flightId: flightId);
-        var ticket = new Ticket
+        var flight = await flightRepository.GetFlightByIdAsync(flightId);
+        var ticket = new FlightTicket
         {
-            Flight = flight,
+            Flight = flight!,
             User = user,
             Seat = $"{uniqueCode}{CancellationSeatSuffix}",
             Price = CancellationPrice,
@@ -122,17 +125,19 @@ public class BookingAndCancellationWorkflowIntegrationTests : BaseIntegrationTes
             PassengerLastName = MariusLastName,
             PassengerEmail = email
         };
-        ticketRepository.AddTicket(ticket);
+        await ticketRepository.AddTicketAsync(ticket);
 
-        var createdTicket = ticketRepository.GetTicketsByUserId(user.UserId).First();
+        var userTickets = await ticketRepository.GetTicketsByUserIdAsync(user.Id);
+        var createdTicket = userTickets.First();
 
         var (canCancel, reason) = cancellationService.CanCancelTicket(createdTicket);
         canCancel.Should().BeTrue();
         reason.Should().BeEmpty();
 
-        cancellationService.CancelTicket(createdTicket.TicketId);
+        await cancellationService.CancelTicketAsync(createdTicket.Id);
 
-        var cancelledTicket = ticketRepository.GetTicketsByUserId(user.UserId).First();
+        userTickets = await ticketRepository.GetTicketsByUserIdAsync(user.Id);
+        var cancelledTicket = userTickets.First();
         cancelledTicket.Status.Should().Be(CancelledStatus);
 
         var (canCancelAgain, reasonAgain) = cancellationService.CanCancelTicket(cancelledTicket);

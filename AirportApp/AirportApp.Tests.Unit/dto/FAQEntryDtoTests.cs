@@ -1,7 +1,7 @@
-using CloudSpritzers1.Src.Dto;
-using CloudSpritzers1.Src.Model.Faq;
+using AirportApp.ClassLibrary.Entity.Dto;
+using AirportApp.ClassLibrary.Entity.Domain.Faq;
 
-namespace CloudSpritzers1Tests.Dto;
+namespace AirportApp.Tests.Unit.Dto;
 
 [TestClass]
 public class FAQEntryDtoTests
@@ -18,3 +18,7 @@ public class FAQEntryDtoTests
         Assert.AreEqual("IsExpanded", changedProperty);
     }
 }
+
+
+
+

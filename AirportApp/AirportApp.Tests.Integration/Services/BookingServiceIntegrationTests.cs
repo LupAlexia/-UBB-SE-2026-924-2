@@ -1,70 +1,63 @@
-﻿using FluentAssertions;
-using TicketManager.Domain;
-using TicketManager.Repository;
-using TicketManager.Service;
+using FluentAssertions;
+using AirportApp.ClassLibrary.Entity.Domain;
+using AirportApp.ClassLibrary.Repository;
+using AirportApp.ClassLibrary.Repository.Interfaces;
+using AirportApp.Src.Service;
+using AirportApp.Tests.Unit.Fixtures;
+using AirportApp.ClassLibrary.DataAccess;
 
-namespace TicketManager.Tests.Integration.Services;
+namespace AirportApp.Tests.Integration.Services;
 
+[TestClass]
 public class BookingServiceIntegrationTests : BaseIntegrationTest
 {
-    private const float DefaultBasePrice = 150.0f;
-    private const int DefaultFlightCapacity = 180;
-    private const int DefaultOccupiedSeats = 50;
-    private const int DefaultRequestedPassengers = 10;
     private const int UniqueCodeStartIndex = 0;
     private const int UniqueCodeLength = 4;
-    private const int ExpectedTicketCount = 1;
-    private const string MirceaEmail = "mrc.popa";
-    private const string MirceaUsername = "MirceaP";
-    private const string MirceaPassword = "Mircea123!";
-    private const string MirceaPhone = "0722334455";
-    private const string MirceaFirstName = "Mircea";
-    private const string MirceaLastName = "Popa";
-    private const string SeatIdentifier = "_1A";
-
-    private readonly ITicketRepository ticketRepository;
-    private readonly IAddOnRepository addOnRepository;
-    private readonly IUserRepository userRepository;
-    private readonly BookingService bookingService;
+    private const string MihaiEmail = "mihai.popescu";
+    private const string MihaiUsername = "MihaiPopescu";
+    private const string MihaiPassword = "Parolalamos123!";
+    private const string MihaiPhone = "0722112233";
+    private const float TicketPrice = 100.0f;
+    private readonly IBookingService bookingService;
+    private readonly IFlightTicketRepository ticketRepository;
+    private readonly IFlightRepository flightRepository;
 
     public BookingServiceIntegrationTests()
     {
-        var databaseConnectionFactory = new DatabaseConnectionFactory(GetTestConnectionString());
-        ticketRepository = new TicketRepository(databaseConnectionFactory);
-        addOnRepository = new AddOnRepository(databaseConnectionFactory);
-        var membershipRepository = new MembershipRepository(databaseConnectionFactory);
-        userRepository = new UserRepository(databaseConnectionFactory, membershipRepository);
-        bookingService = new BookingService(ticketRepository, addOnRepository);
+        var dbContext = CreateDbContext();
+        ticketRepository = new FlightTicketRepository(dbContext);
+        flightRepository = new FlightRepository(dbContext);
+        bookingService = new BookingService(ticketRepository, new AddOnRepository(dbContext));
     }
 
-    [Fact]
+    [TestMethod]
     public async Task CreateAndSaveTickets_ValidTickets_Succeeds()
     {
-        var flightId = GetFirstAvailableFlightId();
-        var flight = new Flight { FlightId = flightId };
         var uniqueCode = Guid.NewGuid().ToString().Substring(UniqueCodeStartIndex, UniqueCodeLength);
-        var user = new User { Email = $"{MirceaEmail}_{uniqueCode}@gmail.com", Username = $"{MirceaUsername}_{uniqueCode}", PasswordHash = MirceaPassword };
-        userRepository.AddUser(user);
-        var databaseUser = userRepository.GetByEmail(user.Email);
+        var user = new Customer { Email = $"{MihaiEmail}_{uniqueCode}@gmail.com", Username = $"{MihaiUsername}_{uniqueCode}", Phone = MihaiPhone, PasswordHash = MihaiPassword };
+        
+        var flightId = GetFirstAvailableFlightId();
+        var flight = await flightRepository.GetFlightByIdAsync(flightId);
 
-        var passengers = new List<PassengerData>
+        var tickets = new List<FlightTicket>
         {
-            new PassengerData { FirstName = MirceaFirstName, LastName = MirceaLastName, Email = user.Email, Phone = MirceaPhone, SelectedSeat = $"{uniqueCode}{SeatIdentifier}" }
+            new FlightTicket { Flight = flight!, User = user, Seat = "1A", Price = TicketPrice, Status = "Active", PassengerFirstName = "Mihai", PassengerLastName = "Popescu" }
         };
 
-        var tickets = bookingService.CreateTickets(flight, databaseUser!, passengers, DefaultBasePrice);
         var saveResult = await bookingService.SaveTicketsAsync(tickets);
 
         saveResult.Should().BeTrue();
-        tickets.Should().HaveCount(ExpectedTicketCount);
     }
 
-    [Fact]
+    [TestMethod]
     public void CalculateMaximumPassengers_Integration_CalculatesCorrectly()
     {
-        var maxPassengers = bookingService.CalculateMaxPassengers(DefaultFlightCapacity, DefaultOccupiedSeats, DefaultRequestedPassengers);
-        maxPassengers.Should().Be(DefaultRequestedPassengers);
+        int capacity = 180;
+        int occupiedCount = 50;
+        int requestedCount = 3;
+
+        int max = bookingService.CalculateMaxPassengers(capacity, occupiedCount, requestedCount);
+
+        max.Should().Be(3);
     }
 }
-
-

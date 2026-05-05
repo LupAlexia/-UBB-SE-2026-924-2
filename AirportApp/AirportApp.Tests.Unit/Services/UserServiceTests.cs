@@ -1,15 +1,17 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using CloudSpritzers1.Src.Service;
-using CloudSpritzers1.Src.Repository.Interfaces;
-using CloudSpritzers1.Src.Model;
+using AirportApp.Src.ViewModel;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using AirportApp.Src.Service;
+using AirportApp.ClassLibrary.Repository.Interfaces;
+using AirportApp.ClassLibrary.Entity.Domain;
 using NSubstitute;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
-namespace CloudSpritzers1Tests.Src.Service
+namespace AirportApp.Tests.Unit.Src.Service
 {
-    [TestClass()]
+    [TestClass]
     public class UserServiceTests
     {
         private IUserRepository _userRepository;
@@ -26,100 +28,100 @@ namespace CloudSpritzers1Tests.Src.Service
                 new User(1, "Ion Popescu", "ion@test.com"),
                 new User(2, "Maria Ioana", "maria@test.com")
             };
-            _userRepository.GetAll().Returns(initialUsers);
+            _userRepository.GetAllAsync().Returns(Task.FromResult((IEnumerable<User>)initialUsers));
         }
 
-        [TestMethod()]
-        public void GetById_ExistingId_ReturnsUserFromRepository()
+        [TestMethod]
+        public async Task GetById_ExistingId_ReturnsUserFromRepository()
         {
             var expectedUser = new User(1, "Ion Popescu", "ion@test.com");
-            _userRepository.GetById(1).Returns(expectedUser); 
+            _userRepository.GetByIdAsync(1).Returns(Task.FromResult(expectedUser)); 
 
-            var resultedUser = _userService.GetById(1);
+            var resultedUser = await _userService.GetByIdAsync(1);
 
             Assert.AreEqual(expectedUser, resultedUser);
-            _userRepository.Received(1).GetById(1); 
+            await _userRepository.Received(1).GetByIdAsync(1); 
         }
 
-        [TestMethod()]
-        public void GetAllUsers_WhenCalled_ReturnsAllEntities()
+        [TestMethod]
+        public async Task GetAllUsers_WhenCalled_ReturnsAllEntities()
         {
-            var resultedUser = _userService.GetAllUsers();
+            var resultedUser = await _userService.GetAllUsersAsync();
 
             Assert.AreEqual(2, resultedUser.Count); 
             Assert.AreEqual("Ion Popescu", resultedUser[0].RetrieveConfiguredDisplayFullNameForBot()); 
             Assert.AreEqual("Maria Ioana", resultedUser[1].RetrieveConfiguredDisplayFullNameForBot());
         }
 
-        [TestMethod()]
-        public void CreateNewUser_WithValidData_CallsRepository()
+        [TestMethod]
+        public async Task CreateNewUser_WithValidData_CallsRepository()
         {
             int identificationNumber = 10;
             string fullName = "New User";
             string emailAddress = "new@test.com";
 
-            _userService.CreateNewUser(identificationNumber, fullName, emailAddress);
+            await _userService.CreateNewUserAsync(identificationNumber, fullName, emailAddress);
 
-            _userRepository.Received(1).CreateNewEntity(Arg.Is<User>(user => user.RetrieveUniqueDatabaseIdentifierForBot() == identificationNumber));
+            await _userRepository.Received(1).CreateNewEntityAsync(Arg.Is<User>(user => user.RetrieveUniqueDatabaseIdentifierForBot() == identificationNumber));
         }
 
-        [TestMethod()]
-        public void ValidateUserIntegrity_WithNullUser_ThrowsArgumentNullException()
+        [TestMethod]
+        public async Task ValidateUserIntegrity_WithNullUser_ThrowsArgumentNullException()
         {
-            Assert.ThrowsExactly<ArgumentNullException>(() =>
-                _userService.ValidateUserIntegrity(null!));
+            await Assert.ThrowsExceptionAsync<ArgumentNullException>(async () =>
+                await _userService.ValidateUserIntegrityAsync(null!));
         }
 
-        [TestMethod()]
-        public void ValidateUserIntegrity_ForDuplicateUser_ThrowsArgumentException()
+        [TestMethod]
+        public async Task ValidateUserIntegrity_ForDuplicateUser_ThrowsArgumentException()
         {
-            var existingUser = _userService.GetAllUsers().First();
+            var existingUser = (await _userService.GetAllUsersAsync()).First();
 
-            var exceptionThrown = Assert.ThrowsExactly<ArgumentException>(() =>
-                _userService.ValidateUserIntegrity(existingUser));
+            var exceptionThrown = await Assert.ThrowsExceptionAsync<ArgumentException>(async () =>
+                await _userService.ValidateUserIntegrityAsync(existingUser));
 
             StringAssert.Contains("User already exists", exceptionThrown.Message);
         }
 
-        [TestMethod()]
-        public void ValidateUserIntegrity_WithEmptyName_ThrowsArgumentException()
+        [TestMethod]
+        public async Task ValidateUserIntegrity_WithEmptyName_ThrowsArgumentException()
         {
             var userWithEmptyName = new User(1, "", "email@test.com");
 
-            var exceptionThrown = Assert.ThrowsExactly<ArgumentException>(() =>
-                _userService.ValidateUserIntegrity(userWithEmptyName));
+            var exceptionThrown = await Assert.ThrowsExceptionAsync<ArgumentException>(async () =>
+                await _userService.ValidateUserIntegrityAsync(userWithEmptyName));
 
             StringAssert.Contains("Name cannot be null or empty", exceptionThrown.Message);
         }
 
-        [TestMethod()]
-        public void ValidateUserIntegrity_WithEmptyEmail_ThrowsArgumentException()
+        [TestMethod]
+        public async Task ValidateUserIntegrity_WithEmptyEmail_ThrowsArgumentException()
         {
             var userWithEmptyEmail = new User(1, "Nume Valid", "");
 
-            var exceptionThrown = Assert.ThrowsExactly<ArgumentException>(() =>
-                _userService.ValidateUserIntegrity(userWithEmptyEmail));
+            var exceptionThrown = await Assert.ThrowsExceptionAsync<ArgumentException>(async () =>
+                await _userService.ValidateUserIntegrityAsync(userWithEmptyEmail));
 
             StringAssert.Contains("Email cannot be null or empty", exceptionThrown.Message);
         }
 
-        [TestMethod()]
-        public void DeleteUserById_WhenCalled_CallsRepository()
+        [TestMethod]
+        public async Task DeleteUserById_WhenCalled_CallsRepository()
         {
-            _userService.DeleteUserById(100);
+            await _userService.DeleteUserByIdAsync(100);
 
-            _userRepository.Received(1).DeleteById(100);
+            await _userRepository.Received(1).DeleteByIdAsync(100);
         }
 
-        [TestMethod()]
-        public void UpdateUserById_WithCorrectData_CallsRepository()
+        [TestMethod]
+        public async Task UpdateUserById_WithCorrectData_CallsRepository()
         {
             int identificationNumber = 1;
             var updatedUser = new User(identificationNumber, "Nume Actualizat", "updated@test.com");
 
-            _userService.UpdateUserById(identificationNumber, updatedUser);
+            await _userService.UpdateUserByIdAsync(identificationNumber, updatedUser);
 
-            _userRepository.Received(1).UpdateById(identificationNumber, updatedUser);
+            await _userRepository.Received(1).UpdateByIdAsync(identificationNumber, updatedUser);
         }
     }
 }

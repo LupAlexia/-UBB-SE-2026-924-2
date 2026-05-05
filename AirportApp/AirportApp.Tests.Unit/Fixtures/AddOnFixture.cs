@@ -1,3 +1,4 @@
+using AirportApp.Src.ViewModel;
 using AirportApp.ClassLibrary.Entity.Domain;
 
 namespace Tests.Unit.Fixtures;
@@ -23,3 +24,7 @@ public static class AddOnFixture
         };
     }
 }
+
+
+
+

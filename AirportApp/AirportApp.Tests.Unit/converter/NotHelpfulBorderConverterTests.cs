@@ -1,7 +1,7 @@
-using CloudSpritzers1.Src.Converter;
+using AirportApp.Src.Converter;
 using Windows.UI;
 
-namespace CloudSpritzers1Tests.Src.Converter;
+namespace AirportApp.Tests.Unit.Src.Converter;
 
 [TestClass]
 public class NotHelpfulBorderConverterTests
@@ -18,6 +18,11 @@ public class NotHelpfulBorderConverterTests
     public void ConvertBack_WhenCalled_ThrowsNotImplementedException()
     {
 
-        Assert.ThrowsExactly<NotImplementedException>(() => _converter.ConvertBack(Color.FromArgb(255, 248, 249, 251), typeof(bool), null, null));
+        Assert.ThrowsException<NotImplementedException>(() => _converter.ConvertBack(Color.FromArgb(255, 248, 249, 251), typeof(bool), null, null));
     }
 }
+
+
+
+
+

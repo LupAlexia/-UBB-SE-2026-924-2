@@ -1,13 +1,14 @@
-﻿using System;
+using AirportApp.Src.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
 using Moq;
-using TicketManager.Domain;
-using TicketManager.Repository;
-using TicketManager.Service;
+using AirportApp.ClassLibrary.Entity.Domain;
+using AirportApp.ClassLibrary.Repository.Interfaces;
+using AirportApp.Src.Service;
 
-namespace TicketManager.Tests.Unit.Services;
+namespace AirportApp.Tests.Unit.Services;
 
 public class FlightSearchServiceTests
 {
@@ -49,57 +50,57 @@ public class FlightSearchServiceTests
         flightSearchService = new FlightSearchService(mockFlightRepository.Object);
     }
 
-    [Fact]
+    [TestMethod]
     public void SearchFlights_MatchingCriteria_ReturnsFlights()
     {
         var flights = new List<Flight>
         {
-            new Flight { FlightId = FlightId1, FlightNumber = FlightNumber1, Route = new Route { Capacity = DefaultCapacity } },
-            new Flight { FlightId = FlightId2, FlightNumber = FlightNumber2, Route = new Route { Capacity = DefaultCapacity } }
+            new Flight { Id = FlightId1, FlightNumber = FlightNumber1, Route = new Route { Capacity = DefaultCapacity } },
+            new Flight { Id = FlightId2, FlightNumber = FlightNumber2, Route = new Route { Capacity = DefaultCapacity } }
         };
-        mockFlightRepository.Setup(repoWithMatchingFlights => repoWithMatchingFlights.GetFlightsByRoute(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<DateTime?>()))
-            .Returns(flights);
-        mockFlightRepository.Setup(repoWithAvailableSeats => repoWithAvailableSeats.GetOccupiedSeatCount(It.IsAny<int>())).Returns(OccupiedSeatsLow);
+        mockFlightRepository.Setup(repoWithMatchingFlights => repoWithMatchingFlights.GetFlightsByRouteAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<DateTime?>()))
+            .ReturnsAsync(flights);
+        mockFlightRepository.Setup(repoWithAvailableSeats => repoWithAvailableSeats.GetOccupiedSeatCountAsync(It.IsAny<int>())).ReturnsAsync(OccupiedSeatsLow);
 
-        var foundFlights = flightSearchService.SearchFlights(BucharestLocation, true, DateTime.Now.AddDays(DaysOffsetTarget), SinglePassenger);
+        var foundFlights = flightSearchService.SearchFlightsAsync(BucharestLocation, true, DateTime.Now.AddDays(DaysOffsetTarget), SinglePassenger);
 
-        foundFlights.Should().NotBeNull();
-        foundFlights.Should().HaveCount(ExpectedFlightsCountMatching);
+        foundFlights.Result.Should().NotBeNull();
+        foundFlights.Result.Should().HaveCount(ExpectedFlightsCountMatching);
     }
 
-    [Fact]
+    [TestMethod]
     public void SearchFlights_NoMatches_ReturnsEmptyList()
     {
-        mockFlightRepository.Setup(repoWithNoMatchingFlights => repoWithNoMatchingFlights.GetFlightsByRoute(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<DateTime?>()))
-            .Returns(new List<Flight>());
+        mockFlightRepository.Setup(repoWithNoMatchingFlights => repoWithNoMatchingFlights.GetFlightsByRouteAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<DateTime?>()))
+            .ReturnsAsync(new List<Flight>());
 
-        var foundFlights = flightSearchService.SearchFlights(ClujNapovaLocation, true, DateTime.Now.AddDays(DaysOffsetNoMatch), SinglePassenger);
+        var foundFlights = flightSearchService.SearchFlightsAsync(ClujNapovaLocation, true, DateTime.Now.AddDays(DaysOffsetNoMatch), SinglePassenger);
 
-        foundFlights.Should().NotBeNull();
-        foundFlights.Should().BeEmpty();
+        foundFlights.Result.Should().NotBeNull();
+        foundFlights.Result.Should().BeEmpty();
     }
 
-    [Fact]
+    [TestMethod]
     public void SearchFlights_CapacityFilter_FiltersFlights()
     {
-        var flight1 = new Flight { FlightId = FlightId1, FlightNumber = FlightNumber1, Route = new Route { Capacity = DefaultCapacity } };
-        var flight2 = new Flight { FlightId = FlightId2, FlightNumber = FlightNumber2, Route = new Route { Capacity = DefaultCapacity } };
-        var flight3 = new Flight { FlightId = FlightId3, FlightNumber = FlightNumber3, Route = new Route { Capacity = DefaultCapacity } };
+        var flight1 = new Flight { Id = FlightId1, FlightNumber = FlightNumber1, Route = new Route { Capacity = DefaultCapacity } };
+        var flight2 = new Flight { Id = FlightId2, FlightNumber = FlightNumber2, Route = new Route { Capacity = DefaultCapacity } };
+        var flight3 = new Flight { Id = FlightId3, FlightNumber = FlightNumber3, Route = new Route { Capacity = DefaultCapacity } };
         var flights = new List<Flight> { flight1, flight2, flight3 };
 
-        mockFlightRepository.Setup(repoWithMultipleFlights => repoWithMultipleFlights.GetFlightsByRoute(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<DateTime?>()))
-            .Returns(flights);
-        mockFlightRepository.Setup(repoWithFlight1Seats => repoWithFlight1Seats.GetOccupiedSeatCount(FlightId1)).Returns(Flight1OccupiedSeats);
-        mockFlightRepository.Setup(repoWithFlight2Seats => repoWithFlight2Seats.GetOccupiedSeatCount(FlightId2)).Returns(Flight2OccupiedSeats);
-        mockFlightRepository.Setup(repoWithFlight3Seats => repoWithFlight3Seats.GetOccupiedSeatCount(FlightId3)).Returns(Flight3OccupiedSeats);
+        mockFlightRepository.Setup(repoWithMultipleFlights => repoWithMultipleFlights.GetFlightsByRouteAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<DateTime?>()))
+            .ReturnsAsync(flights);
+        mockFlightRepository.Setup(repoWithFlight1Seats => repoWithFlight1Seats.GetOccupiedSeatCountAsync(FlightId1)).ReturnsAsync(Flight1OccupiedSeats);
+        mockFlightRepository.Setup(repoWithFlight2Seats => repoWithFlight2Seats.GetOccupiedSeatCountAsync(FlightId2)).ReturnsAsync(Flight2OccupiedSeats);
+        mockFlightRepository.Setup(repoWithFlight3Seats => repoWithFlight3Seats.GetOccupiedSeatCountAsync(FlightId3)).ReturnsAsync(Flight3OccupiedSeats);
 
-        var foundFlights = flightSearchService.SearchFlights(GenericLocation, true, null, GroupPassengers);
+        var foundFlights = flightSearchService.SearchFlightsAsync(GenericLocation, true, null, GroupPassengers);
 
-        foundFlights.Should().HaveCount(ExpectedFlightsCountFiltered);
-        foundFlights.First().FlightId.Should().Be(FlightId3);
+        foundFlights.Result.Should().HaveCount(ExpectedFlightsCountFiltered);
+        foundFlights.Result.First().Id.Should().Be(FlightId3);
     }
 
-    [Fact]
+    [TestMethod]
     public void ParsePassengerCount_EmptyInput_ReturnsNull()
     {
         var resultNull = flightSearchService.ParsePassengerCount(NullPassengerInput);
@@ -109,14 +110,14 @@ public class FlightSearchServiceTests
         resultEmpty.Should().BeNull();
     }
 
-    [Fact]
+    [TestMethod]
     public void ParsePassengerCount_ValidPositiveNumber_ReturnsParsedValue()
     {
         var parsedValue = flightSearchService.ParsePassengerCount(ValidPassengerInputStr);
         parsedValue.Should().Be(ValidPassengerInputInt);
     }
 
-    [Fact]
+    [TestMethod]
     public void ParsePassengerCount_InvalidNumber_ReturnsDefault()
     {
         var resultZero = flightSearchService.ParsePassengerCount(ZeroPassengerInput);
@@ -129,4 +130,7 @@ public class FlightSearchServiceTests
         resultText.Should().Be(DefaultPassengerFallback);
     }
 }
+
+
+
 

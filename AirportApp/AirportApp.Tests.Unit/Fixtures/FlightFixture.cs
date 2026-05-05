@@ -1,11 +1,13 @@
-using TicketManager.Domain;
+using AirportApp.Src.ViewModel;
+using AirportApp.ClassLibrary.Entity.Domain;
+using AirportEntity = AirportApp.ClassLibrary.Entity.Domain.Airport;
 
-namespace TicketManager.Tests.Unit.Fixtures;
+namespace AirportApp.Tests.Unit.Fixtures;
 
 public static class FlightFixture
 {
     public static Flight CreateValidTestFlight(
-        int flightId = 1,
+        int id = 1,
         string flightNumber = "RO101",
         DateTime? departureTime = null,
         DateTime? arrivalTime = null,
@@ -16,9 +18,9 @@ public static class FlightFixture
 
         var route = new Route
         {
-            RouteId = 1,
-            Company = new Company { CompanyId = 1, Name = "Tarom" },
-            Airport = new Airport { AirportId = 1, City = "Otopeni" },
+            Id = 1,
+            Company = new Company { Id = 1, Name = "Tarom" },
+            Airport = new AirportEntity { Id = 1, City = "Otopeni" },
             RouteType = "OneWay",
             DepartureTime = departure,
             ArrivalTime = arrival,
@@ -27,10 +29,10 @@ public static class FlightFixture
 
         return new Flight
         {
-            FlightId = flightId,
+            Id = id,
             FlightNumber = flightNumber,
             Route = route,
-            Gate = new Gate { GateId = 1, GateName = "A1" },
+            Gate = new Gate { Id = 1, GateName = "A1" },
             Date = departure
         };
     }
@@ -42,9 +44,9 @@ public static class FlightFixture
 
         var route = new Route
         {
-            RouteId = 1,
-            Company = new Company { CompanyId = 1, Name = "Tarom" },
-            Airport = new Airport { AirportId = 1, City = "Otopeni" },
+            Id = 1,
+            Company = new Company { Id = 1, Name = "Tarom" },
+            Airport = new AirportEntity { Id = 1, City = "Otopeni" },
             RouteType = "OneWay",
             DepartureTime = departure,
             ArrivalTime = arrival,
@@ -53,10 +55,10 @@ public static class FlightFixture
 
         return new Flight
         {
-            FlightId = 1,
+            Id = 1,
             FlightNumber = "RO101",
             Route = route,
-            Gate = new Gate { GateId = 1, GateName = "A1" },
+            Gate = new Gate { Id = 1, GateName = "A1" },
             Date = departure
         };
     }
@@ -65,10 +67,10 @@ public static class FlightFixture
     {
         return new Flight
         {
-            FlightId = 1,
+            Id = 1,
             FlightNumber = "RO999",
             Route = null,
-            Gate = new Gate { GateId = 1, GateName = "A1" },
+            Gate = new Gate { Id = 1, GateName = "A1" },
             Date = DateTime.Now.AddDays(1)
         };
     }
@@ -83,4 +85,3 @@ public static class FlightFixture
         return CreateFlightWithDurationMinutes(480);
     }
 }
-

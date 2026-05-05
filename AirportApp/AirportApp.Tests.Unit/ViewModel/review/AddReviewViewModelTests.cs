@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using AirportApp.Src.ViewModel;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using AirportApp.Src.ViewModel.Review;
 using AirportApp.Src.Service;
 using AirportApp.ClassLibrary.Repository.Interfaces;
@@ -8,7 +9,7 @@ using NSubstitute;
 
 
 
-namespace CloudSpritzers1Tests.Src.ViewModel
+namespace AirportApp.Tests.Unit.Src.ViewModel
 {
     [TestClass]
     public class AddReviewViewModelTests
@@ -170,3 +171,6 @@ namespace CloudSpritzers1Tests.Src.ViewModel
         }
     }
 }
+
+
+

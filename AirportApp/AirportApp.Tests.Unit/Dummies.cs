@@ -1,7 +1,7 @@
 using System;
-using TicketManager.Service;
+using AirportApp.Src.Service;
 
-namespace TicketManager.View
+namespace AirportApp.Src.View
 {
     public class FlightSearchPage
     {
@@ -26,7 +26,7 @@ namespace TicketManager.View
     }
 }
 
-namespace TicketManager.Service
+namespace AirportApp.Src.Service
 {
     public class NavigationService : INavigationService
     {
@@ -39,3 +39,7 @@ namespace TicketManager.Service
         public bool CanGoBack => false;
     }
 }
+
+
+
+

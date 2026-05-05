@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using AirportApp.Src.ViewModel;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using AirportApp.Src.Service;
 using AirportApp.ClassLibrary.Repository.Interfaces;
 using AirportApp.ClassLibrary.Entity.Dto;
@@ -6,6 +7,9 @@ using AirportApp.ClassLibrary.Entity.Dto.MappingProfiles;
 using AirportApp.Src.ViewModel.Review;
 using AutoMapper;
 using NSubstitute;
+using Microsoft.Extensions.Logging;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using ReviewEntity = AirportApp.ClassLibrary.Entity.Domain.Review.Review;
 using UserEntity = AirportApp.ClassLibrary.Entity.Domain.User;
 
@@ -18,15 +22,15 @@ namespace AirportApp.Src.ViewModel
         private IRepository<int, ReviewEntity> _mockRepository;
         private IMapper _mapper;
         private UserEntity _testUser;
+        private ILoggerFactory _loggerFactory;
 
         [TestInitialize]
         public void Setup()
         {
-
-            var configuration = new MapperConfiguration(cfg => cfg.AddProfile<ReviewMappingProfile>(), null);
+            _loggerFactory = Substitute.For<ILoggerFactory>();
+            var configuration = new AutoMapper.MapperConfiguration(cfg => cfg.AddProfile<ReviewMappingProfile>(), _loggerFactory);
             _mapper = configuration.CreateMapper();
 
-          
             _mockRepository = Substitute.For<IRepository<int, ReviewEntity>>();
             var reviewService = new ReviewService(_mockRepository);
 
@@ -38,7 +42,7 @@ namespace AirportApp.Src.ViewModel
         [TestMethod]
         public async Task LoadData_WhenNoReviewsExist_DoesNotCalculateAverages()
         {
-            _mockRepository.GetAllAsync().Returns(new List<ReviewEntity>());
+            _mockRepository.GetAllAsync().Returns(Task.FromResult((IEnumerable<ReviewEntity>)new List<ReviewEntity>()));
 
             await _viewModel.LoadDataAsync();
 
@@ -54,7 +58,7 @@ namespace AirportApp.Src.ViewModel
                 new ReviewEntity(1, _testUser, "Good", 5, 4, 3, 2),
                 new ReviewEntity(2, _testUser, "Bad", 1, 2, 3, 4)
             };
-            _mockRepository.GetAllAsync().Returns(reviews);
+            _mockRepository.GetAllAsync().Returns(Task.FromResult((IEnumerable<ReviewEntity>)reviews));
 
             await _viewModel.LoadDataAsync();
 
@@ -71,7 +75,7 @@ namespace AirportApp.Src.ViewModel
             {
                 new ReviewEntity(1, _testUser, "Excellent service", 5, 5, 5, 5)
             };
-            _mockRepository.GetAllAsync().Returns(reviews);
+            _mockRepository.GetAllAsync().Returns(Task.FromResult((IEnumerable<ReviewEntity>)reviews));
 
             await _viewModel.LoadDataAsync();
 
@@ -83,7 +87,7 @@ namespace AirportApp.Src.ViewModel
         [TestMethod]
         public async Task LoadData_WhenServiceReturnsNull_ReturnsEarlyWithoutError()
         {
-            _mockRepository.GetAllAsync().Returns((List<ReviewEntity>)null!);
+            _mockRepository.GetAllAsync().Returns(Task.FromResult((IEnumerable<ReviewEntity>)null!));
 
             await _viewModel.LoadDataAsync();
 

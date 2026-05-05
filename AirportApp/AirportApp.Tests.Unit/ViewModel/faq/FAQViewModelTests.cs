@@ -1,19 +1,22 @@
+using AirportApp.ClassLibrary.Entity.Domain.Ticket;
+using AirportApp.Src.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using AutoMapper;
-using CloudSpritzers1.Src.Dto;
-using CloudSpritzers1.Src.Dto.MappingProfiles;
-using CloudSpritzers1.Src.Model.Faq;
-using CloudSpritzers1.Src.Repository.Interfaces;
-using CloudSpritzers1.Src.Service.Implementation;
-using CloudSpritzers1.Src.Service.Interfaces;
-using CloudSpritzers1.Src.ViewModel.Faq;
+using AirportApp.ClassLibrary.Entity.Dto;
+using AirportApp.ClassLibrary.Entity.Dto.MappingProfiles;
+using AirportApp.ClassLibrary.Entity.Domain.Faq;
+using AirportApp.ClassLibrary.Repository.Interfaces;
+using AirportApp.Src.Service.Implementation;
+using AirportApp.Src.Service.Interfaces;
+using AirportApp.Src.ViewModel.Faq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using NSubstitute.Core;
 
-namespace CloudSpritzers1Tests.Src.ViewModel.Faq
+namespace AirportApp.Tests.Unit.Src.ViewModel.Faq
 {
     [TestClass]
     public class FAQViewModelTests
@@ -23,7 +26,7 @@ namespace CloudSpritzers1Tests.Src.ViewModel.Faq
         private FAQViewModel _faqViewModel;
 
         [TestInitialize]
-        public void Setup()
+        public async Task Setup()
         {
             _mapper = Substitute.For<IMapper>();
             _faqService = Substitute.For<IFAQService>();
@@ -38,18 +41,18 @@ namespace CloudSpritzers1Tests.Src.ViewModel.Faq
                 new FAQEntry(3, "Can I bring my dog on the plane?", "Only if you buy a ticket for him also", FAQCategoryEnum.Baggage, 3, 4, 2),
             };
             questionEntries = questionEntries.OrderByDescending(entry => entry.ViewCount).ToList();
-            _faqService.GetAll().Returns(questionEntries);
-            _faqService.FilterFAQEntry(Arg.Any<FAQCategoryEnum>(), Arg.Any<string>()).Returns(questionEntries);
+            _faqService.GetAllAsync().Returns(Task.FromResult(questionEntries));
+            _faqService.FilterFAQEntryAsync(Arg.Any<FAQCategoryEnum>(), Arg.Any<string>()).Returns(Task.FromResult(questionEntries));
 
             _faqViewModel = new FAQViewModel(_faqService, _mapper);
-            _faqViewModel.LoadFAQ();
+            await _faqViewModel.LoadFAQAsync();
         }
 
         [TestMethod]
-        public void Constructor_WhenCalled_LoadsFAQsAndSetsVariable()
+        public async Task Constructor_WhenCalled_LoadsFAQsAndSetsVariable()
         {
-            var allFrequentlyAskedQuestions = _faqService.GetAll().OrderByDescending(questionEntry => questionEntry.ViewCount).ToList();
-            _faqService.FilterFAQEntry(Arg.Any<FAQCategoryEnum>(), Arg.Any<string>()).Returns(allFrequentlyAskedQuestions);
+            var allFrequentlyAskedQuestions = (await _faqService.GetAllAsync()).OrderByDescending(questionEntry => questionEntry.ViewCount).ToList();
+            _faqService.FilterFAQEntryAsync(Arg.Any<FAQCategoryEnum>(), Arg.Any<string>()).Returns(Task.FromResult(allFrequentlyAskedQuestions));
 
             Assert.AreEqual(3, _faqViewModel.FAQs.Count);
             Assert.AreEqual(3, _faqViewModel.FilteredFAQs.Count);
@@ -66,7 +69,7 @@ namespace CloudSpritzers1Tests.Src.ViewModel.Faq
                 new FAQEntry(2, "How much does parking cost per day?", "Parking is 100 euros", FAQCategoryEnum.Parking, 2, 3, 1),
             };
             searchResults = searchResults.OrderByDescending(entry => entry.ViewCount).ToList();
-            _faqService.FilterFAQEntry(FAQCategoryEnum.All, "park").Returns(searchResults);
+            _faqService.FilterFAQEntryAsync(FAQCategoryEnum.All, "park").Returns(Task.FromResult(searchResults));
 
             _faqViewModel.SearchQuery = "park";
 
@@ -82,8 +85,8 @@ namespace CloudSpritzers1Tests.Src.ViewModel.Faq
                 new FAQEntry(1, "What cars can I park here?", "Only Audis", FAQCategoryEnum.Parking, 1, 1, 0),
                 new FAQEntry(2, "How much does parking cost per day?", "Parking is 100 euros", FAQCategoryEnum.Parking, 2, 3, 1),
             };
-            parkingEntries.OrderByDescending(entry => entry.ViewCount).ToList();
-            _faqService.FilterFAQEntry(FAQCategoryEnum.Parking, Arg.Any<string>()).Returns(parkingEntries);
+            parkingEntries = parkingEntries.OrderByDescending(entry => entry.ViewCount).ToList();
+            _faqService.FilterFAQEntryAsync(FAQCategoryEnum.Parking, Arg.Any<string>()).Returns(Task.FromResult(parkingEntries));
             _faqViewModel.FilterByCategory(FAQCategoryEnum.Parking);
 
             Assert.AreEqual(FAQCategoryEnum.Parking, _faqViewModel.SelectedCategory);
@@ -92,7 +95,7 @@ namespace CloudSpritzers1Tests.Src.ViewModel.Faq
         }
 
         [TestMethod]
-        public void Delete_FAQEntryAsAdmin_Succeeds()
+        public async Task Delete_FAQEntryAsAdmin_Succeeds()
         {
             _faqViewModel.IsAdmin = true;
             var entryToDelete = new FAQEntry(1, "What cars can I park here?", "Only Audis", FAQCategoryEnum.Parking, 1, 1, 0);
@@ -101,29 +104,29 @@ namespace CloudSpritzers1Tests.Src.ViewModel.Faq
                 new FAQEntry(2, "How much does parking cost per day?", "Parking is 100 euros", FAQCategoryEnum.Parking, 2, 3, 1),
                 new FAQEntry(3, "Can I bring my dog on the plane?", "Only if you buy a ticket for him also", FAQCategoryEnum.Baggage, 3, 4, 2),
             };
-            _faqService.GetAll().Returns(updatedEntries);
+            _faqService.GetAllAsync().Returns(Task.FromResult(updatedEntries));
             var entryToDeleteDataTransferObject = MapToDto(entryToDelete);
 
-            _faqViewModel.DeleteFAQEntry(entryToDeleteDataTransferObject);
+            await _faqViewModel.DeleteFAQEntryAsync(entryToDeleteDataTransferObject);
 
-            _faqService.Received(1).DeleteFAQEntry(entryToDelete.Id);
+            await _faqService.Received(1).DeleteFAQEntryAsync(entryToDelete.Id);
             Assert.AreEqual(2, _faqViewModel.FAQs.Count);
         }
 
         [TestMethod]
-        public void Delete_FAQEntryNotAdmin_ThrowsUnauthorizedAccessException()
+        public async Task Delete_FAQEntryNotAdmin_ThrowsUnauthorizedAccessException()
         {
-            Assert.ThrowsExactly<UnauthorizedAccessException>(() => _faqViewModel.DeleteFAQEntry(MapToDto(new FAQEntry(4, "Q", "A", FAQCategoryEnum.Baggage, 0, 0, 0))));
-            _faqService.DidNotReceive().DeleteFAQEntry(Arg.Any<int>());
+            await Assert.ThrowsExceptionAsync<UnauthorizedAccessException>(async () => await _faqViewModel.DeleteFAQEntryAsync(MapToDto(new FAQEntry(4, "Q", "A", FAQCategoryEnum.Baggage, 0, 0, 0))));
+            await _faqService.DidNotReceive().DeleteFAQEntryAsync(Arg.Any<int>());
         }
 
         [TestMethod]
-        public void Delete_NullFAQEntry_ThrowsArgumentNullException()
+        public async Task Delete_NullFAQEntry_ThrowsArgumentNullException()
         {
             _faqViewModel.IsAdmin = true;
             
-            Assert.ThrowsExactly<ArgumentNullException>(() => _faqViewModel.DeleteFAQEntry(null));
-            _faqService.DidNotReceive().DeleteFAQEntry(Arg.Any<int>());
+            await Assert.ThrowsExceptionAsync<ArgumentNullException>(async () => await _faqViewModel.DeleteFAQEntryAsync(null));
+            await _faqService.DidNotReceive().DeleteFAQEntryAsync(Arg.Any<int>());
         }
 
         [TestMethod]
@@ -138,7 +141,7 @@ namespace CloudSpritzers1Tests.Src.ViewModel.Faq
             Assert.IsTrue(firstFrequentlyAskedQuestion.IsExpanded);
             Assert.IsFalse(secondFrequentlyAskedQuestion.IsExpanded);
             Assert.AreEqual(viewCountBeforeExpanding+1, _faqViewModel.FAQs.First(faqDataTransferObject => faqDataTransferObject.Id == firstFrequentlyAskedQuestion.Id).ViewCount);
-            _faqService.Received(1).IncrementViewCount(Arg.Any<FAQEntry>());
+            _faqService.Received(1).IncrementViewCountAsync(Arg.Any<FAQEntry>());
         }
 
         [TestMethod]
@@ -149,19 +152,19 @@ namespace CloudSpritzers1Tests.Src.ViewModel.Faq
             _faqViewModel.ToggleFAQ(null);
 
             Assert.IsFalse(firstFrequentlyAskedQuestion.IsExpanded);
-            _faqService.DidNotReceive().IncrementViewCount(Arg.Any<FAQEntry>());
+            _faqService.DidNotReceive().IncrementViewCountAsync(Arg.Any<FAQEntry>());
         }
 
         [TestMethod]
-        public void IncrementWasNotHelpfulVotes_ForSelectedFAQ_UpdatesNotHelpfulVotesCount()
+        public async Task IncrementWasNotHelpfulVotes_ForSelectedFAQ_UpdatesNotHelpfulVotesCount()
         {
             var entryToIncrementNotHelpfulVotes = new FAQEntryDTO(3, "Can I bring my dog on the plane?", "Only if you buy a ticket for him also", FAQCategoryEnum.Baggage, 4, 4, 2); ;
             _faqViewModel.SelectedFAQEntry = entryToIncrementNotHelpfulVotes;
             var expectedUpdatedEntry = new FAQEntryDTO(3, "Can I bring my dog on the plane?", "Only if you buy a ticket for him also", FAQCategoryEnum.Baggage, 4, 4, 3);
            
-            _faqViewModel.IncrementWasNotHelpfulVotes();
+            await _faqViewModel.IncrementWasNotHelpfulVotesAsync();
 
-            _faqService.Received(1).IncrementWasNotHelpfulVotes(Arg.Any<FAQEntry>());
+            await _faqService.Received(1).IncrementWasNotHelpfulVotesAsync(Arg.Any<FAQEntry>());
             Assert.AreEqual(expectedUpdatedEntry.NotHelpfulVotesCount, _faqViewModel.SelectedFAQEntry!.NotHelpfulVotesCount);
         }
 
@@ -170,9 +173,9 @@ namespace CloudSpritzers1Tests.Src.ViewModel.Faq
         {
             _faqViewModel.IsAdmin = true;
 
-            await _faqViewModel.Save("Can my dog come on the plane?", "Depending on the breed", FAQCategoryEnum.Baggage.ToString());
+            await _faqViewModel.SaveAsync("Can my dog come on the plane?", "Depending on the breed", FAQCategoryEnum.Baggage.ToString());
 
-            _faqService.Received(1).AddFAQEntry(Arg.Is<FAQEntry>(receivedEntry =>
+            await _faqService.Received(1).AddFAQEntryAsync(Arg.Is<FAQEntry>(receivedEntry =>
                 receivedEntry.Id == 0 &&
                 receivedEntry.Question == "Can my dog come on the plane?" &&
                 receivedEntry.Answer == "Depending on the breed" &&
@@ -185,9 +188,9 @@ namespace CloudSpritzers1Tests.Src.ViewModel.Faq
             _faqViewModel.IsAdmin = true;
             _faqViewModel.SelectedFAQEntry = _faqViewModel.FAQs[0];
 
-            await _faqViewModel.Save("Can my dog come on the plane?", "Depending on the size", FAQCategoryEnum.Parking.ToString());
+            await _faqViewModel.SaveAsync("Can my dog come on the plane?", "Depending on the size", FAQCategoryEnum.Parking.ToString());
 
-            _faqService.Received(1).EditFAQEntry(
+            await _faqService.Received(1).EditFAQEntryAsync(
                 Arg.Is<FAQEntry>(entityToUpdate =>
                     entityToUpdate.Id == _faqViewModel.FAQs[0].Id &&
                     entityToUpdate.Question == "Can my dog come on the plane?" &&
@@ -199,59 +202,59 @@ namespace CloudSpritzers1Tests.Src.ViewModel.Faq
         [TestMethod]
         public async Task Save_WithEmptyQuestion_ThrowsArgumentException()
         {
-            await Assert.ThrowsExactlyAsync<ArgumentException>(async () =>
-                await _faqViewModel.Save("   ", "Depending on the size", FAQCategoryEnum.Parking.ToString()));
+            await Assert.ThrowsExceptionAsync<ArgumentException>(async () =>
+                await _faqViewModel.SaveAsync("   ", "Depending on the size", FAQCategoryEnum.Parking.ToString()));
         }
 
         [TestMethod]
         public async Task Save_WithEmptyAnswer_ThrowsArgumentException()
         {
-            await Assert.ThrowsExactlyAsync<ArgumentException>(async () =>
-                await _faqViewModel.Save("Can my dog come on the plane?", "   ", FAQCategoryEnum.Parking.ToString()));
+            await Assert.ThrowsExceptionAsync<ArgumentException>(async () =>
+                await _faqViewModel.SaveAsync("Can my dog come on the plane?", "   ", FAQCategoryEnum.Parking.ToString()));
         }
 
         [TestMethod]
         public async Task Save_WithInvalidCategory_ThrowsArgumentException()
         {
-            await Assert.ThrowsExactlyAsync<ArgumentException>(async () =>
-                await _faqViewModel.Save("Can my dog come on the plane?", "Depending on the size", "NotARealCategory"));
+            await Assert.ThrowsExceptionAsync<ArgumentException>(async () =>
+                await _faqViewModel.SaveAsync("Can my dog come on the plane?", "Depending on the size", "NotARealCategory"));
         }
 
         [TestMethod]
-        public void GiveFeedback_Helpful_UpdatesFlagsAndVotes()
+        public async Task GiveFeedback_Helpful_UpdatesFlagsAndVotes()
         {
             var frequentlyAskedQuestion = _faqViewModel.FilteredFAQs[0];
             var initialHelpfulVotes = frequentlyAskedQuestion.HelpfulVotesCount;
 
-            _faqViewModel.GiveFeedback(frequentlyAskedQuestion, true);
+            await _faqViewModel.GiveFeedbackAsync(frequentlyAskedQuestion, true);
 
-            _faqService.Received(1).IncrementWasHelpfulVotes(Arg.Any<FAQEntry>());
+            await _faqService.Received(1).IncrementWasHelpfulVotesAsync(Arg.Any<FAQEntry>());
             Assert.AreEqual(initialHelpfulVotes + 1, frequentlyAskedQuestion.HelpfulVotesCount);
             Assert.IsTrue(frequentlyAskedQuestion.IsHelpfulSelected);
             Assert.IsFalse(frequentlyAskedQuestion.IsNotHelpfulSelected);
         }
 
         [TestMethod]
-        public void GiveFeedback_NotHelpful_UpdatesFlagsAndVotes()
+        public async Task GiveFeedback_NotHelpful_UpdatesFlagsAndVotes()
         {
             var frequentlyAskedQuestion = _faqViewModel.FilteredFAQs[0];
             var initialNotHelpfulVotes = frequentlyAskedQuestion.NotHelpfulVotesCount;
 
-            _faqViewModel.GiveFeedback(frequentlyAskedQuestion, false);
+            await _faqViewModel.GiveFeedbackAsync(frequentlyAskedQuestion, false);
 
-            _faqService.Received(1).IncrementWasNotHelpfulVotes(Arg.Any<FAQEntry>());
+            await _faqService.Received(1).IncrementWasNotHelpfulVotesAsync(Arg.Any<FAQEntry>());
             Assert.AreEqual(initialNotHelpfulVotes + 1, frequentlyAskedQuestion.NotHelpfulVotesCount);
             Assert.IsTrue(frequentlyAskedQuestion.HasFeedback);
             Assert.IsTrue(frequentlyAskedQuestion.IsNotHelpfulSelected);
         }
 
         [TestMethod]
-        public void GiveFeedback_WithNullFaq_DoesNothing()
+        public async Task GiveFeedback_WithNullFaq_DoesNothing()
         {
-            _faqViewModel.GiveFeedback(null, true);
+            await _faqViewModel.GiveFeedbackAsync(null, true);
 
-            _faqService.DidNotReceive().IncrementWasHelpfulVotes(Arg.Any<FAQEntry>());
-            _faqService.DidNotReceive().IncrementWasNotHelpfulVotes(Arg.Any<FAQEntry>());
+            await _faqService.DidNotReceive().IncrementWasHelpfulVotesAsync(Arg.Any<FAQEntry>());
+            await _faqService.DidNotReceive().IncrementWasNotHelpfulVotesAsync(Arg.Any<FAQEntry>());
         }
 
         [TestMethod]
@@ -291,26 +294,26 @@ namespace CloudSpritzers1Tests.Src.ViewModel.Faq
         }
 
         [TestMethod]
-        public void IncrementViewCountFor_FaqNotFound_ReturnsWithoutCallingService()
+        public async Task IncrementViewCountFor_FaqNotFound_ReturnsWithoutCallingService()
         {
             var nonExistingId = 999;
 
-            _faqViewModel.IncrementViewCountFor(nonExistingId);
+            await _faqViewModel.IncrementViewCountForAsync(nonExistingId);
 
-            _faqService.DidNotReceive().IncrementViewCount(Arg.Any<FAQEntry>());
+            await _faqService.DidNotReceive().IncrementViewCountAsync(Arg.Any<FAQEntry>());
         }
 
         [TestMethod]
-        public void IncrementViewCountFor_FilteredFaqSameInstance_DoesNotDuplicateUpdate()
+        public async Task IncrementViewCountFor_FilteredFaqSameInstance_DoesNotDuplicateUpdate()
         {
             var frequentlyAskedQuestion = _faqViewModel.FAQs[0];
             var viewCountBeforeIncrementing = frequentlyAskedQuestion.ViewCount;
             _faqViewModel.FilteredFAQs.Clear();
             _faqViewModel.FilteredFAQs.Add(frequentlyAskedQuestion);
 
-            _faqViewModel.IncrementViewCountFor(frequentlyAskedQuestion.Id);
+            await _faqViewModel.IncrementViewCountForAsync(frequentlyAskedQuestion.Id);
 
-            _faqService.Received(1).IncrementViewCount(Arg.Any<FAQEntry>());
+            await _faqService.Received(1).IncrementViewCountAsync(Arg.Any<FAQEntry>());
             Assert.AreEqual(viewCountBeforeIncrementing+1, frequentlyAskedQuestion.ViewCount);
         }
 

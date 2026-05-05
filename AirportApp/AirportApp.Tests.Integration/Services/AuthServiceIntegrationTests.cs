@@ -1,10 +1,13 @@
-﻿using FluentAssertions;
-using TicketManager.Domain;
-using TicketManager.Repository;
-using TicketManager.Service;
+using FluentAssertions;
+using AirportApp.ClassLibrary.Entity.Domain;
+using AirportApp.ClassLibrary.Repository;
+using AirportApp.ClassLibrary.Repository.Interfaces;
+using AirportApp.Src.Service;
+using AirportApp.ClassLibrary.DataAccess;
 
-namespace TicketManager.Tests.Integration.Services;
+namespace AirportApp.Tests.Integration.Services;
 
+[TestClass]
 public class AuthServiceIntegrationTests : BaseIntegrationTest
 {
     private const int UniqueCodeStartIndex = 0;
@@ -24,19 +27,19 @@ public class AuthServiceIntegrationTests : BaseIntegrationTest
     private const string DefaultPhone = "0744112233";
     private const string AlternateUsername = "AltUtilizator";
     private const string AlternatePassword = "AltaParola2";
-    private readonly IUserRepository userRepository;
+    private readonly ICustomerRepository userRepository;
     private readonly AuthService authentificationService;
 
     public AuthServiceIntegrationTests()
     {
-        var databaseConnectionFactory = new DatabaseConnectionFactory(GetTestConnectionString());
-        var membershipRepository = new MembershipRepository(databaseConnectionFactory);
-        userRepository = new UserRepository(databaseConnectionFactory, membershipRepository);
+        var dbContext = CreateDbContext();
+        var membershipRepository = new MembershipRepository(dbContext);
+        userRepository = new CustomerRepository(dbContext, membershipRepository);
         authentificationService = new AuthService(userRepository);
     }
 
-    [Fact]
-    public void RegisterAndLogin_ValidData_Succeeds()
+    [TestMethod]
+    public async Task RegisterAndLogin_ValidData_Succeeds()
     {
         string uniqueCode = Guid.NewGuid().ToString().Substring(UniqueCodeStartIndex, UniqueCodeLength);
         string email = $"{AndreiEmail}_{uniqueCode}{DomainGmail}";
@@ -44,36 +47,34 @@ public class AuthServiceIntegrationTests : BaseIntegrationTest
         string username = $"{AndreiUsername}_{uniqueCode}";
         string password = AndreiPassword;
 
-        authentificationService.Register(email, phone, username, password);
-        var loginResult = authentificationService.Login(email, password);
+        await authentificationService.RegisterAsync(email, phone, username, password);
+        var loginResult = await authentificationService.LoginAsync(email, password);
 
         loginResult.Should().NotBeNull();
         loginResult.Email.Should().Be(email);
     }
 
-    [Fact]
-    public void Register_DuplicateEmailAddress_ThrowsException()
+    [TestMethod]
+    public async Task Register_DuplicateEmailAddress_ThrowsException()
     {
         string uniqueCode = Guid.NewGuid().ToString().Substring(UniqueCodeStartIndex, UniqueCodeLength);
         string email = $"{ClaudiaEmail}_{uniqueCode}{DomainYahoo}";
-        authentificationService.Register(email, DefaultPhone, $"ClaudiaR_{uniqueCode}", ClaudiaPassword);
+        await authentificationService.RegisterAsync(email, DefaultPhone, $"ClaudiaR_{uniqueCode}", ClaudiaPassword);
 
-        Action registerAction = () => authentificationService.Register(email, DefaultPhone, $"{AlternateUsername}_{uniqueCode}", AlternatePassword);
-        registerAction.Should().Throw<InvalidOperationException>();
+        Func<Task> registerAction = async () => await authentificationService.RegisterAsync(email, DefaultPhone, $"{AlternateUsername}_{uniqueCode}", AlternatePassword);
+        await registerAction.Should().ThrowAsync<InvalidOperationException>();
     }
 
-    [Fact]
-    public void Register_ValidUser_HashesPasswordInDatabase()
+    [TestMethod]
+    public async Task Register_ValidUser_HashesPasswordInDatabase()
     {
         string uniqueCode = Guid.NewGuid().ToString().Substring(UniqueCodeStartIndex, UniqueCodeLength);
         string email = $"{SorinEmail}_{uniqueCode}{DomainGmail}";
         string password = SorinPassword;
 
-        authentificationService.Register(email, SorinPhone, $"{SorinUsername}_{uniqueCode}", password);
-        var user = userRepository.GetByEmail(email);
+        await authentificationService.RegisterAsync(email, SorinPhone, $"{SorinUsername}_{uniqueCode}", password);
+        var user = await userRepository.GetByEmailAsync(email);
 
         user!.PasswordHash.Should().NotBe(password);
     }
 }
-
-

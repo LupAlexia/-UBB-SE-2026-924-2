@@ -1,86 +1,67 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using CloudSpritzers1.Src.Service.Implementation;
-using System;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using AirportApp.Src.Service.Implementation;
+using AirportApp.ClassLibrary.Repository.Interfaces;
+using AirportApp.ClassLibrary.Entity.Domain.Faq;
+using NSubstitute;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using NSubstitute;
-using CloudSpritzers1.Src.Repository.Interfaces;
-using CloudSpritzers1.Src.Model.Faq;
-using CloudSpritzers1.Src.Service.Interfaces;
-using CloudSpritzers1.Src.Dto;
-namespace CloudSpritzers1Tests.Src.Service.Implementation
+
+namespace AirportApp.Tests.Unit.Src.Service
 {
-    [TestClass()]
+    [TestClass]
     public class FAQServiceTests
     {
-        private IFAQRepository _faqRepository;
-        private IFAQService _faqService;
+        private IFAQRepository _faqRepositoryMock;
+        private FAQService _faqService;
+
         [TestInitialize]
         public void Setup()
         {
-            _faqRepository = Substitute.For<IFAQRepository>();
-            _faqService = new FAQService(_faqRepository);
-
-            var frequentlyAskedQuestionsList = new List<FAQEntry>
-            {
-                new FAQEntry(1, "What cars can I park here?", "Only Audis", FAQCategoryEnum.Parking, 1, 1, 0),
-                new FAQEntry(2, "How much does parking cost per day?", "100 euros", FAQCategoryEnum.Parking, 200, 3, 1),
-                new FAQEntry(3, "Can I bring my dog on the plane?", "Only if you buy a plane ticket for him also", FAQCategoryEnum.Baggage, 123, 34, 2),
-            };
-            _faqRepository.GetAll().Returns(frequentlyAskedQuestionsList);
+            _faqRepositoryMock = Substitute.For<IFAQRepository>();
+            _faqService = new FAQService(_faqRepositoryMock);
         }
 
-        [TestMethod()]
-        public void FilterFAQEntry_WithCategoryAndQuestionSearchMatch_ReturnsFilteredEntities()
+        [TestMethod]
+        public async Task GetByCategory_WhenCalled_ReturnsFilteredFAQs()
         {
-            var FAQCatgoryToFilterBy = FAQCategoryEnum.All;
-            var SearchQueryToFilterBy = "cars";
-
-            var expectededFAQs = new List<FAQEntry>
+            var faqs = new List<FAQEntry>
             {
-                new FAQEntry(1, "What cars can I park here?", "Only Audis", FAQCategoryEnum.Parking, 1, 1, 0),
+                new FAQEntry(1, "Q1", "A1", FAQCategoryEnum.CheckIn, 0, 0, 0),
+                new FAQEntry(2, "Q2", "A2", FAQCategoryEnum.CheckIn, 0, 0, 0),
+                new FAQEntry(3, "Q3", "A3", FAQCategoryEnum.Baggage, 0, 0, 0)
             };
+            _faqRepositoryMock.GetByCategoryAsync(FAQCategoryEnum.CheckIn).Returns(Task.FromResult(faqs.Where(f => f.Category == FAQCategoryEnum.CheckIn).ToList()));
 
-            _faqRepository.GetByCategory(FAQCategoryEnum.All).Returns(expectededFAQs);
-            
-            var resultedFAQs = _faqService.FilterFAQEntry(FAQCatgoryToFilterBy, SearchQueryToFilterBy);
-            CollectionAssert.AreEqual(expectededFAQs, resultedFAQs);
+            var result = (await _faqService.GetByCategoryAsync(FAQCategoryEnum.CheckIn)).ToList();
+
+            Assert.AreEqual(2, result.Count);
+            Assert.IsTrue(result.All(f => f.Category == FAQCategoryEnum.CheckIn));
+            await _faqRepositoryMock.Received(1).GetByCategoryAsync(FAQCategoryEnum.CheckIn);
         }
 
-        [TestMethod()]
-        public void SearchMatchEntry_WithNoMatchingString_ReturnsEmptyList()
+        [TestMethod]
+        public async Task GetAll_WhenCalled_ReturnsAllFromRepository()
         {
-            var FAQCatgoryToFilterBy = FAQCategoryEnum.All;
-            var SearchQueryToFilterBy = "water";
-
-            var expectedFAQs = new List<FAQEntry>
+            var faqs = new List<FAQEntry>
             {
+                new FAQEntry(1, "Q1", "A1", FAQCategoryEnum.CheckIn, 0, 0, 0),
+                new FAQEntry(2, "Q2", "A2", FAQCategoryEnum.Baggage, 0, 0, 0)
             };
+            _faqRepositoryMock.GetAllAsync().Returns(Task.FromResult((IEnumerable<FAQEntry>)faqs));
 
-            _faqRepository.GetByCategory(FAQCatgoryToFilterBy).Returns(expectedFAQs);
+            var result = (await _faqService.GetAllAsync()).ToList();
 
-            var resultedFAQs = _faqService.FilterFAQEntry(FAQCatgoryToFilterBy, SearchQueryToFilterBy);
-            Assert.AreEqual(0, resultedFAQs.Count());
-            CollectionAssert.AreEqual(expectedFAQs, resultedFAQs);
+            Assert.AreEqual(2, result.Count);
+            await _faqRepositoryMock.Received(1).GetAllAsync();
         }
 
-        [TestMethod()]
-        public void FilterFAQEntry_WithCategoryAndAnswerSearchMatch_ReturnsFilteredEntities()
+        [TestMethod]
+        public async Task AddFAQEntry_WhenCalled_CallsRepository()
         {
-            var FAQCatgoryToFilterBy = FAQCategoryEnum.Parking;
-            var SearchQueryToFilterBy = "audi";
-
-            var expectedFAQs = new List<FAQEntry>
-            {
-                new FAQEntry(1, "What cars can I park here?", "Only Audis", FAQCategoryEnum.Parking, 1, 1, 0),
-            };
-
-            _faqRepository.GetByCategory(FAQCategoryEnum.Parking).Returns(expectedFAQs);
-
-            var resultedFAQs = _faqService.FilterFAQEntry(FAQCatgoryToFilterBy, SearchQueryToFilterBy);
-            CollectionAssert.AreEqual(expectedFAQs, resultedFAQs);
+            var faq = new FAQEntry(1, "Q1", "A1", FAQCategoryEnum.CheckIn, 0, 0, 0);
+            await _faqService.AddFAQEntryAsync(faq);
+            await _faqRepositoryMock.Received(1).CreateNewEntityAsync(faq);
         }
     }
 }

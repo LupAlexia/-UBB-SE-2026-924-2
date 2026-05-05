@@ -1,26 +1,26 @@
 using System.ComponentModel;
-using Xunit;
-using TicketManager.ViewModel;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using AirportApp.Src.ViewModel;
 
-namespace TicketManager.Tests.Unit.ViewModel
+namespace AirportApp.Tests.Unit.ViewModel
 {
     public class PassengerFormViewModelTests
     {
-        [Fact]
+        [TestMethod]
         public void Initialization_DefaultState_SetsEmptyDefaults()
         {
             var viewModel = new PassengerFormViewModel();
 
-            Assert.Equal(string.Empty, viewModel.FirstName);
-            Assert.Equal(string.Empty, viewModel.LastName);
-            Assert.Equal(string.Empty, viewModel.Email);
-            Assert.Equal(string.Empty, viewModel.Phone);
-            Assert.Equal(string.Empty, viewModel.SelectedSeat);
-            Assert.NotNull(viewModel.SelectedAddOns);
-            Assert.Empty(viewModel.SelectedAddOns);
+            Assert.AreEqual(string.Empty, viewModel.FirstName);
+            Assert.AreEqual(string.Empty, viewModel.LastName);
+            Assert.AreEqual(string.Empty, viewModel.Email);
+            Assert.AreEqual(string.Empty, viewModel.Phone);
+            Assert.AreEqual(string.Empty, viewModel.SelectedSeat);
+            Assert.IsNotNull(viewModel.SelectedAddOns);
+            Assert.AreEqual(0, viewModel.SelectedAddOns.Count);
         }
 
-        [Fact]
+        [TestMethod]
         public void SetFirstName_NewValue_FiresPropertyChangedEvent()
         {
             const string ExpectedPropertyName = "FirstName";
@@ -39,8 +39,12 @@ namespace TicketManager.Tests.Unit.ViewModel
 
             viewModel.FirstName = NewFirstNameValue;
 
-            Assert.True(eventFired, "PropertyChanged event should be fired when FirstName is updated.");
-            Assert.Equal(NewFirstNameValue, viewModel.FirstName);
+            Assert.IsTrue(eventFired, "PropertyChanged event should be fired when FirstName is updated.");
+            Assert.AreEqual(NewFirstNameValue, viewModel.FirstName);
         }
     }
 }
+
+
+
+

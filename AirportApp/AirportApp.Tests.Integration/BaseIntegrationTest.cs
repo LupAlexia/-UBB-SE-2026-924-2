@@ -1,30 +1,39 @@
 using Microsoft.Data.SqlClient;
-using TicketManager.Repository;
+using Microsoft.EntityFrameworkCore;
+using AirportApp.ClassLibrary.DataAccess;
+using AirportApp.ClassLibrary.Repository;
+using AirportApp.ClassLibrary.Entity.Domain;
+using System.Linq;
+using System;
 
-namespace TicketManager.Tests.Integration;
+namespace AirportApp.Tests.Integration;
 
 public abstract class BaseIntegrationTest
 {
     protected string GetTestConnectionString()
     {
-        return "Server=MARINELA\\SQLEXPRESS01;Database=TicketsDB;Trusted_Connection=True;TrustServerCertificate=True;";
+        return "Server=DESKTOP-NENJ194\\SQLEXPRESS;Database=AirportAppDb;Trusted_Connection=True;MultipleActiveResultSets=true;TrustServerCertificate=True;";
     }
 
     protected int GetFirstAvailableFlightId()
     {
-        using var connection = new SqlConnection(GetTestConnectionString());
-        connection.Open();
+        using var dbContext = CreateDbContext();
+        var flight = dbContext.flights
+            .OrderBy(f => f.Date > DateTime.Now ? 0 : 1)
+            .ThenBy(f => f.Date)
+            .FirstOrDefault();
 
-        using var getTopFlightIdCommand = new SqlCommand("SELECT TOP 1 id FROM Flights ORDER BY CASE WHEN date > GETDATE() THEN 0 ELSE 1 END, date ASC", connection);
-        var scalarResult = getTopFlightIdCommand.ExecuteScalar();
-        if (scalarResult == null || scalarResult == DBNull.Value)
+        if (flight == null)
         {
             throw new Exception("Nu s-au gasit zboruri in baza de date. Va rugam sa rulati scriptul de seed.");
         }
 
-        return Convert.ToInt32(scalarResult);
+        return flight.Id;
+    }
+    protected AirportDbContext CreateDbContext()
+    {
+        var optionsBuilder = new DbContextOptionsBuilder<AirportDbContext>();
+        optionsBuilder.UseSqlServer(GetTestConnectionString());
+        return new AirportDbContext(optionsBuilder.Options);
     }
 }
-
-
-

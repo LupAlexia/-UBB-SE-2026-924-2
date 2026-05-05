@@ -1,25 +1,29 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using AutoMapper;
-using CloudSpritzers1.Src.Dto;
-using CloudSpritzers1.Src.Dto.MappingProfiles;
-using CloudSpritzers1.Src.Model;
+using AirportApp.ClassLibrary.Entity.Dto;
+using AirportApp.ClassLibrary.Entity.Dto.MappingProfiles;
+using AirportApp.ClassLibrary.Entity.Domain;
+using Microsoft.Extensions.Logging;
+using NSubstitute;
 
-namespace CloudSpritzers1Tests.src.dto.mappingprofiles;
+namespace AirportApp.Tests.Unit.src.dto.mappingprofiles;
 
 [TestClass]
 public class UserMappingProfileTests
 {
     private IMapper _mapper;
+    private ILoggerFactory _loggerFactory;
 
     [TestInitialize]
     public void Setup()
     {
-        var configuration = new MapperConfiguration(mapperConfiguration => mapperConfiguration.AddProfile<UserMappingProfile>());
+        _loggerFactory = Substitute.For<ILoggerFactory>();
+        var configuration = new AutoMapper.MapperConfiguration(cfg => cfg.AddProfile<UserMappingProfile>(), _loggerFactory);
 
         _mapper = configuration.CreateMapper();
     }
@@ -47,7 +51,7 @@ public class UserMappingProfileTests
     [TestMethod]
     public void Map_UserToUserDTO_ValidConfiguration()
     {
-        var configuration = new MapperConfiguration(mapperConfiguration => mapperConfiguration.AddProfile<UserMappingProfile>());
+        var configuration = new AutoMapper.MapperConfiguration(cfg => cfg.AddProfile<UserMappingProfile>(), _loggerFactory);
 
         configuration.AssertConfigurationIsValid();
     }

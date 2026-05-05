@@ -1,6 +1,7 @@
-using TicketManager.Domain;
+using AirportApp.Src.ViewModel;
+using AirportApp.ClassLibrary.Entity.Domain;
 
-namespace TicketManager.Tests.Unit.Fixtures;
+namespace AirportApp.Tests.Unit.Fixtures;
 
 public static class PassengerDataFixture
 {
@@ -42,5 +43,9 @@ public static class PassengerDataFixture
         return passengers;
     }
 }
+
+
+
+
 
 

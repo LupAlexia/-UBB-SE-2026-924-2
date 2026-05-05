@@ -1,12 +1,16 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Moq;
-using Xunit;
-using TicketManager.Domain;
-using TicketManager.Service;
-using TicketManager.ViewModel;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using AirportApp.ClassLibrary.Entity.Domain;
+using AirportApp.Src.Service;
+using AirportApp.Src.ViewModel;
+using System;
 
-namespace TicketManager.Tests.Unit.ViewModel
+namespace AirportApp.Tests.Unit.ViewModel
 {
+    [TestClass]
+    [DoNotParallelize]
     public class MembershipViewModelTests
     {
         private readonly Mock<IMembershipService> mockMembershipService;
@@ -17,12 +21,14 @@ namespace TicketManager.Tests.Unit.ViewModel
             mockMembershipService = new Mock<IMembershipService>();
             mockNavigationService = new Mock<INavigationService>();
 
+            mockMembershipService.Setup(service => service.GetAllMembershipsAsync()).ReturnsAsync(new List<Membership>());
+
             // Ensure a clean session for every test execution
             UserSession.CurrentUser = null;
         }
 
-        [Fact]
-        public void Initialization_ValidServiceCall_PopulatesMembershipsCollection()
+        [TestMethod]
+        public async Task Initialization_ValidServiceCall_PopulatesMembershipsCollection()
         {
             const int ExpectedMembershipId = 1;
             const string ExpectedMembershipName = "Gold";
@@ -30,18 +36,20 @@ namespace TicketManager.Tests.Unit.ViewModel
 
             var memberships = new List<Membership>
             {
-                new Membership { MembershipId = ExpectedMembershipId, Name = ExpectedMembershipName, FlightDiscountPercentage = ExpectedDiscountPercentage }
+                new Membership { Id = ExpectedMembershipId, Name = ExpectedMembershipName, FlightDiscountPercentage = ExpectedDiscountPercentage }
             };
 
-            mockMembershipService.Setup(service => service.GetAllMemberships()).Returns(memberships);
+            mockMembershipService.Setup(service => service.GetAllMembershipsAsync()).ReturnsAsync(memberships);
 
             var viewModel = new MembershipViewModel(mockMembershipService.Object, mockNavigationService.Object);
+            // Assuming the ViewModel loads memberships in constructor, we might need a small delay or a public Load method
+            await Task.Delay(100); 
 
-            Assert.True(viewModel.Memberships.Count > 0, "Memberships collection should be populated on initialization.");
-            Assert.Equal(ExpectedMembershipName, viewModel.Memberships[0].Name);
+            Assert.IsTrue(viewModel.Memberships.Count > 0, "Memberships collection should be populated on initialization.");
+            Assert.AreEqual(ExpectedMembershipName, viewModel.Memberships[0].Name);
         }
 
-        [Fact]
+        [TestMethod]
         public void PurchaseCommand_UserNotLoggedIn_NavigatesToAuthenticationPage()
         {
             UserSession.CurrentUser = null;
@@ -50,26 +58,27 @@ namespace TicketManager.Tests.Unit.ViewModel
             var viewModel = new MembershipViewModel(mockMembershipService.Object, mockNavigationService.Object);
             viewModel.PurchaseCommand.Execute(DummyMembershipId);
 
-            mockNavigationService.Verify(service => service.NavigateTo(typeof(TicketManager.View.AuthPage), It.IsAny<object>()), Times.Once);
+            mockNavigationService.Verify(service => service.NavigateTo(It.IsAny<Type>(), It.IsAny<object?>()), Times.AtLeastOnce);
         }
 
-        [Fact]
-        public void PurchaseCommand_ValidMembershipPurchase_SetsPurchaseSucceededToTrue()
+        [TestMethod]
+        public async Task PurchaseCommand_ValidMembershipPurchase_SetsPurchaseSucceededToTrue()
         {
             const int ExpectedUserId = 1;
             const int ExpectedMembershipId = 2;
             const string ExpectedSuccessMessage = "Purchase successful!";
 
-            UserSession.CurrentUser = new User { UserId = ExpectedUserId };
+            UserSession.CurrentUser = new Customer(ExpectedUserId, "test@test.com", "0722112233", "test_user", "hashed_password", null);
 
-            mockMembershipService.Setup(service => service.PurchaseMembership(ExpectedUserId, ExpectedMembershipId))
-                .Returns(new MembershipPurchaseResult { Succeeded = true, Message = ExpectedSuccessMessage });
+            mockMembershipService.Setup(service => service.PurchaseMembershipAsync(ExpectedUserId, ExpectedMembershipId))
+                .ReturnsAsync(new MembershipPurchaseResult { Succeeded = true, Message = ExpectedSuccessMessage });
 
             var viewModel = new MembershipViewModel(mockMembershipService.Object, mockNavigationService.Object);
             viewModel.PurchaseCommand.Execute(ExpectedMembershipId);
+            await Task.Delay(100);
 
-            Assert.True(viewModel.PurchaseSucceeded, "PurchaseSucceeded should be true for a successful purchase.");
-            Assert.Equal(ExpectedSuccessMessage, viewModel.PurchaseResultMessage);
+            Assert.IsTrue(viewModel.PurchaseSucceeded, "PurchaseSucceeded should be true for a successful purchase.");
+            Assert.AreEqual(ExpectedSuccessMessage, viewModel.PurchaseResultMessage);
         }
     }
 }

@@ -1,7 +1,7 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using CloudSpritzers1.Src.Model;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using AirportApp.ClassLibrary.Entity.Domain;
 
-namespace CloudSpritzers1Tests.Src.Model
+namespace AirportApp.Tests.Unit.Src.Model
 {
     [TestClass]
     public class UserTests
@@ -31,3 +31,6 @@ namespace CloudSpritzers1Tests.Src.Model
         }
     }
 }
+
+
+
