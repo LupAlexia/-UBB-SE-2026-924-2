@@ -78,7 +78,7 @@ namespace AirportApp.Src.ViewModel.Chats
             foreach (var message in messages)
             {
                 var dataTransferObject = mapper.Map<MessageDTO>(message);
-
+                System.Diagnostics.Debug.WriteLine($"Message: {dataTransferObject.MessageText}, SenderId: {dataTransferObject.SenderId}, SenderUserId: {(message as Message)?.SenderUserId}");
                 if (dataTransferObject.SenderId == BotEngineIdentity.CONSTANT_IDENTIFIER_FOR_DEFAULT_BOT_SYSTEM_USER)
                 {
                     dataTransferObject.SenderName = "Carlos";

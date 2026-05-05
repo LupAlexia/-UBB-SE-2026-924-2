@@ -20,8 +20,13 @@ namespace AirportApp.Src.Proxy
 
         public async Task<Chat> OpenChatAsync(int userId)
         {
-            // construim chat-ul si il trimitem la API
-            var newChat = new Chat(0, new User { Id = userId }, ChatStatus.Active);
+            // trimitem doar userId, fara obiectul User nested
+            var newChat = new Chat
+            {
+                Id = 0,
+                UserId = userId,
+                Status = ChatStatus.Active
+            };
             var response = await httpClient.PostAsJsonAsync(BaseUrl, newChat);
             response.EnsureSuccessStatusCode();
             return await response.Content.ReadFromJsonAsync<Chat>();

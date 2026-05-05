@@ -1,9 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using AirportApp.ClassLibrary.Entity.Domain.Message;
+using AirportApp.ClassLibrary.Entity.Dto;
+using AirportApp.ClassLibrary.Repository.Interfaces;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
-using AirportApp.ClassLibrary.Entity.Domain.Message;
-using AirportApp.ClassLibrary.Repository.Interfaces;
 
 namespace AirportApp.Src.Proxy
 {
@@ -25,10 +28,20 @@ namespace AirportApp.Src.Proxy
 
         public async Task<int> CreateNewEntityAsync(Message elem)
         {
-            var response = await httpClient.PostAsJsonAsync(BaseUrl, elem);
+            // trimitem doar campurile simple, fara obiecte nested
+            var dto = new
+            {
+                id = 0,
+                text = elem.Text,
+                timestamp = elem.Timestamp == default ? DateTimeOffset.UtcNow : elem.Timestamp,
+                chatId = elem.ChatId != 0 ? elem.ChatId : elem.Chat?.Id ?? 0,
+                senderUserId = elem.SenderUserId ?? elem.SenderUser?.Id,
+                senderEmployeeId = elem.SenderEmployeeId ?? elem.SenderEmployee?.Id
+            };
+
+            var response = await httpClient.PostAsJsonAsync(BaseUrl, dto);
             response.EnsureSuccessStatusCode();
-            var created = await response.Content.ReadFromJsonAsync<Message>();
-            return created!.Id;
+            return 0;
         }
 
         public async Task UpdateByIdAsync(int id, Message elem)
@@ -44,7 +57,20 @@ namespace AirportApp.Src.Proxy
         }
 
         public async Task<IEnumerable<Message>> GetByChatIdAsync(int chatId)
-            => await httpClient.GetFromJsonAsync<IEnumerable<Message>>($"{BaseUrl}/chat/{chatId}");
+        {
+            var dtos = await httpClient.GetFromJsonAsync<IEnumerable<MessageWithSenderDTO>>
+                ($"{BaseUrl}/chat/{chatId}/with-senders");
+
+            return dtos.Select(dto => new Message
+            {
+                Id = dto.Id,
+                Text = dto.Text,
+                Timestamp = dto.Timestamp,
+                ChatId = dto.ChatId,
+                SenderUserId = dto.SenderUserId,
+                SenderEmployeeId = dto.SenderEmployeeId
+            });
+        }
 
         public async Task<IEnumerable<Message>> GetMessagesSinceAsync(int chatId, int firstMessageId)
             => await httpClient.GetFromJsonAsync<IEnumerable<Message>>($"{BaseUrl}/chat/{chatId}/since/{firstMessageId}");
