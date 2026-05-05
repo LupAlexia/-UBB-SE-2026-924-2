@@ -1,17 +1,15 @@
-using System;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Configuration;
-using System.Collections.Generic;
+using AirportApp.ClassLibrary.DataAccess;
 using AirportApp.ClassLibrary.Entity.Domain;
+using AirportApp.ClassLibrary.Entity.Domain.Chats;
+using AirportApp.ClassLibrary.Entity.Domain.Employee;
 using AirportApp.ClassLibrary.Entity.Domain.Faq.Bot;
 using AirportApp.ClassLibrary.Entity.Domain.Message;
-using AirportApp.ClassLibrary.Entity.Domain.Employee;
-using AirportApp.ClassLibrary.Entity.Domain.Chats;
 using AirportApp.ClassLibrary.Entity.Domain.Review;
 using AirportApp.ClassLibrary.Entity.Dto.MappingProfiles;
+using AirportApp.ClassLibrary.Entity.Repository.Database;
 using AirportApp.ClassLibrary.Repository;
 using AirportApp.ClassLibrary.Repository.Interfaces;
-using AirportApp.ClassLibrary.Entity.Repository.Database;
+using AirportApp.Src.Proxy;
 using AirportApp.Src.Service;
 using AirportApp.Src.Service.Bot.Strategy;
 using AirportApp.Src.Service.Implementation;
@@ -21,11 +19,15 @@ using AirportApp.Src.ViewModel.Chats;
 using AirportApp.Src.ViewModel.Faq;
 using AirportApp.Src.ViewModel.General;
 using AirportApp.Src.ViewModel.Review;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.EntityFrameworkCore;
-using AirportApp.ClassLibrary.DataAccess;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using System.Net.Http;
 
 namespace AirportApp
 {
@@ -98,6 +100,11 @@ namespace AirportApp
             var services = new ServiceCollection();
             services.AddLogging();
 
+            services.AddSingleton<HttpClient>(sp => new HttpClient
+            {
+                BaseAddress = new Uri("http://localhost:5253/")
+            });
+
             // Înlocuiește cu asta:
             services.AddAutoMapper(cfg =>
             {
@@ -117,31 +124,48 @@ namespace AirportApp
                 options.UseSqlServer(conn);
             }, contextLifetime: Microsoft.Extensions.DependencyInjection.ServiceLifetime.Singleton, optionsLifetime: Microsoft.Extensions.DependencyInjection.ServiceLifetime.Singleton);
 
-            services.AddSingleton<DecisionTreeRepository>();
-            services.AddSingleton<IRepository<int, FAQNode>>(p => p.GetRequiredService<DecisionTreeRepository>());
+            //services.AddSingleton<DecisionTreeRepository>();
+            //services.AddSingleton<IRepository<int, FAQNode>>(p => p.GetRequiredService<DecisionTreeRepository>());
+            services.AddSingleton<IRepository<int, FAQNode>, FAQNodeRepositoryProxy>();
+
             services.AddTransient<IBotStrategy, DecisionTreeStrategy>();
             services.AddTransient<BotEngineIdentity>();
 
-            services.AddSingleton<MessageDatabaseRepository>();
-            services.AddSingleton<IRepository<int, Message>>(p => p.GetRequiredService<MessageDatabaseRepository>());
-            services.AddSingleton<MessageService>();
+            //services.AddSingleton<MessageDatabaseRepository>();
+            //services.AddSingleton<IRepository<int, Message>>(p => p.GetRequiredService<MessageDatabaseRepository>());
+            //services.AddSingleton<MessageService>();
 
-            services.AddSingleton<ChatDatabaseRepository>();
-            services.AddSingleton<IRepository<int, Chat>>(p => p.GetRequiredService<ChatDatabaseRepository>());
-            services.AddSingleton<ChatService>();
+            //services.AddSingleton<ChatDatabaseRepository>();
+            //services.AddSingleton<IRepository<int, Chat>>(p => p.GetRequiredService<ChatDatabaseRepository>());
+            //services.AddSingleton<ChatService>();
 
-            services.AddSingleton<ReviewRepository>();
-            services.AddSingleton<IRepository<int, Review>>(p => p.GetRequiredService<ReviewRepository>());
-            services.AddSingleton<ReviewService>();
+            //services.AddSingleton<ReviewRepository>();
+            //services.AddSingleton<IRepository<int, Review>>(p => p.GetRequiredService<ReviewRepository>());
+            //services.AddSingleton<ReviewService>();
+            services.AddTransient<MessageDatabaseRepository>();
+            services.AddTransient<IRepository<int, Message>>(p => p.GetRequiredService<MessageDatabaseRepository>());
+            services.AddTransient<MessageService>();
 
-            services.AddSingleton<IEmployeeRepository, EmployeeRepository>();
-            services.AddSingleton<IEmployeeService, EmployeeService>();
+            services.AddTransient<ChatDatabaseRepository>();
+            services.AddTransient<IRepository<int, Chat>>(p => p.GetRequiredService<ChatDatabaseRepository>());
+            services.AddTransient<ChatService>();
 
-            services.AddSingleton<UserRepository>();
-            services.AddSingleton<IUserRepository>(p => p.GetRequiredService<UserRepository>());
-            services.AddSingleton<AirportApp.ClassLibrary.Repository.Interfaces.IRepository<int, AirportApp.ClassLibrary.Entity.Domain.User>>(p => p.GetRequiredService<UserRepository>());
-            //services.AddSingleton<IRepository<int, User>>(p => p.GetRequiredService<UserRepository>());
-            services.AddSingleton<IUserService, UserService>();
+            services.AddTransient<ReviewRepository>();
+            services.AddTransient<IRepository<int, Review>>(p => p.GetRequiredService<ReviewRepository>());
+            services.AddTransient<ReviewService>();
+
+
+
+            //services.AddSingleton<IEmployeeRepository, EmployeeRepository>();
+            //services.AddSingleton<IEmployeeService, EmployeeService>();
+            services.AddSingleton<IEmployeeService, EmployeeServiceProxy>();
+
+            //services.AddSingleton<UserRepository>();
+            //services.AddSingleton<IUserRepository>(p => p.GetRequiredService<UserRepository>());
+            //services.AddSingleton<AirportApp.ClassLibrary.Repository.Interfaces.IRepository<int, AirportApp.ClassLibrary.Entity.Domain.User>>(p => p.GetRequiredService<UserRepository>());
+            ////services.AddSingleton<IRepository<int, User>>(p => p.GetRequiredService<UserRepository>());
+            //services.AddSingleton<IUserService, UserService>();
+            services.AddSingleton<IUserService, UserServiceProxy>();
 
             services.AddTransient<LandingViewModel>();
             services.AddTransient<AllReviewsViewModel>();
@@ -149,16 +173,22 @@ namespace AirportApp
             services.AddTransient<ChatViewModel>();
             services.AddTransient<UpperBarViewModel>();
 
-            services.AddSingleton<ITicketRepository, TicketRepository>();
-            services.AddSingleton<ITicketCategoryRepository, TicketCategoryRepository>();
-            services.AddSingleton<ITicketSubcategoryRepository, TicketSubcategoryRepository>();
-            services.AddSingleton<ITicketService, TicketService>();
-            services.AddSingleton<ITicketCategoryService, TicketCategoryService>();
-            services.AddSingleton<ITicketSubcategoryService, TicketSubcategoryService>();
+            //services.AddSingleton<ITicketRepository, TicketRepository>();
+            //services.AddSingleton<ITicketCategoryRepository, TicketCategoryRepository>();
+            //services.AddSingleton<ITicketSubcategoryRepository, TicketSubcategoryRepository>();
+            //services.AddSingleton<ITicketService, TicketService>();
+            //services.AddSingleton<ITicketCategoryService, TicketCategoryService>();
+            //services.AddSingleton<ITicketSubcategoryService, TicketSubcategoryService>();
+            services.AddSingleton<ITicketService, TicketServiceProxy>();
+            services.AddSingleton<ITicketCategoryService, TicketCategoryServiceProxy>();
+            services.AddSingleton<ITicketSubcategoryService, TicketSubcategoryServiceProxy>();
+
             services.AddTransient<TicketsViewModel>();
 
-            services.AddSingleton<IFAQRepository, FAQRepository>();
-            services.AddSingleton<IFAQService, FAQService>();
+            //services.AddSingleton<IFAQRepository, FAQRepository>();
+            //services.AddSingleton<IFAQService, FAQService>();
+            services.AddSingleton<IFAQService, FAQServiceProxy>();
+
             services.AddTransient<FAQViewModel>();
 
             // --- Servicii CloudSpritzers (Flight Tickets) ---
