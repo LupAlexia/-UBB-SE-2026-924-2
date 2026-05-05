@@ -84,12 +84,12 @@ namespace AirportApp.Src.Service
                 throw new ArgumentException($"Flight Experience Rating must be between {MinRating} and {MaxRating}");
             }
 
-            if (review.FlightExperienceRating < MinRating || review.FlightExperienceRating > MaxRating)
+            if (review.StaffFriendlinessRating < MinRating || review.StaffFriendlinessRating > MaxRating)
             {
                 throw new ArgumentException($"Staff Friendliness Rating must be between {MinRating} and {MaxRating}");
             }
 
-            if (review.FlightExperienceRating < MinRating || review.FlightExperienceRating > MaxRating)
+            if (review.CleanlinessRating < MinRating || review.CleanlinessRating > MaxRating)
             {
                 throw new ArgumentException($"Cleanliness Rating must be between {MinRating} and {MaxRating}");
             }

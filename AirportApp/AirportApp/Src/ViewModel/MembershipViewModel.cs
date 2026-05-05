@@ -119,8 +119,11 @@ namespace AirportApp.Src.ViewModel
             }
 
             var result = await this.membershipService.PurchaseMembershipAsync(UserSession.CurrentUser.Id, membershipId);
-            this.PurchaseSucceeded = result.Succeeded;
-            this.PurchaseResultMessage = result.Message;
+            if (result != null)
+            {
+                this.PurchaseSucceeded = result.Succeeded;
+                this.PurchaseResultMessage = result.Message;
+            }
         }
     }
 }
