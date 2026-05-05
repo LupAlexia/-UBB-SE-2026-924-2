@@ -175,7 +175,7 @@ namespace AirportApp
             services.AddSingleton<IMembershipRepository, MembershipRepository>();
             services.AddSingleton<ICustomerRepository, CustomerRepository>();
             services.AddSingleton<IAuthService, AuthServiceProxy>();
-            services.AddSingleton<IFlightSearchService, FlightSearchService>();
+            services.AddSingleton<IFlightSearchService, FlightSearchServiceProxy>();
             services.AddSingleton<IBookingService, BookingServiceProxy>();
             services.AddSingleton<IPricingService, PricingService>();
             services.AddSingleton<IDashboardService, DashboardServiceProxy>();
