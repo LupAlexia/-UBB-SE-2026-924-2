@@ -179,7 +179,7 @@ namespace AirportApp
             services.AddSingleton<IBookingService, BookingServiceProxy>();
             services.AddSingleton<IPricingService, PricingService>();
             services.AddSingleton<IDashboardService, DashboardService>();
-            services.AddSingleton<ICancellationService, CancellationService>();
+            services.AddSingleton<ICancellationService, CancellationServiceProxy>();
             services.AddSingleton<IMembershipService, MembershipService>();
             services.AddSingleton<NavigationService>();
 
