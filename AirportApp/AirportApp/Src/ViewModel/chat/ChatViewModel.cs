@@ -22,15 +22,15 @@ namespace AirportApp.Src.ViewModel.Chats
         public ObservableCollection<FAQOption> CurrentOptions { get; } = new ();
         public ObservableCollection<MessageDTO> ChatHistory { get; } = new ();
 
-        private MessageService messageService;
-        private ChatService chatService;
+        private IMessageService messageService;
+        private IChatService chatService;
         private IUserService userService;
         private IMapper mapper;
         private Chat chat;
         private User user;
         private const int FIRST_OPTION = 1;
 
-        public ChatViewModel(MessageService msgService, ChatService chatService, IMapper mapper, IUserService userService, User testUser = null)
+        public ChatViewModel(IMessageService msgService, IChatService chatService, IMapper mapper, IUserService userService, User testUser = null)
         {
             messageService = msgService;
             this.chatService = chatService;

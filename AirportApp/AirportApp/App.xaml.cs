@@ -142,17 +142,12 @@ namespace AirportApp
             //services.AddSingleton<ReviewRepository>();
             //services.AddSingleton<IRepository<int, Review>>(p => p.GetRequiredService<ReviewRepository>());
             //services.AddSingleton<ReviewService>();
-            services.AddTransient<MessageDatabaseRepository>();
-            services.AddTransient<IRepository<int, Message>>(p => p.GetRequiredService<MessageDatabaseRepository>());
-            services.AddTransient<MessageService>();
-
-            services.AddTransient<ChatDatabaseRepository>();
-            services.AddTransient<IRepository<int, Chat>>(p => p.GetRequiredService<ChatDatabaseRepository>());
-            services.AddTransient<ChatService>();
-
-            services.AddTransient<ReviewRepository>();
-            services.AddTransient<IRepository<int, Review>>(p => p.GetRequiredService<ReviewRepository>());
-            services.AddTransient<ReviewService>();
+            services.AddSingleton<IReviewService, ReviewServiceProxy>();
+            services.AddSingleton<IChatService, ChatServiceProxy>();
+            services.AddSingleton<IRepository<int, Chat>, ChatRepositoryProxy>();
+            services.AddSingleton<IMessageRepository, MessageRepositoryProxy>();
+            services.AddSingleton<IRepository<int, Message>>(p => p.GetRequiredService<IMessageRepository>());
+            services.AddSingleton<MessageService>();
 
 
 
