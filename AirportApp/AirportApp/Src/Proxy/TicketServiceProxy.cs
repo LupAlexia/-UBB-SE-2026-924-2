@@ -49,6 +49,13 @@ namespace AirportApp.Src.Proxy
             await AddTicketAsync(ticket);
         }
 
+        public async Task UpdateStatusAsync(int ticketId, TicketStatusEnum newStatus)
+        {
+            var updateRequest = new { currentStatus = newStatus };
+            var response = await httpClient.PutAsJsonAsync($"{BaseUrl}/{ticketId}/status", updateRequest);
+            response.EnsureSuccessStatusCode();
+        }
+
         public async Task UpdateTicketByIdAsync(int id, Ticket ticket)
         {
             var response = await httpClient.PutAsJsonAsync($"{BaseUrl}/{id}", ticket);
@@ -63,17 +70,9 @@ namespace AirportApp.Src.Proxy
 
         public async Task UpdateUrgencyLevelAsync(int ticketId, TicketUrgencyLevelEnum newUrgencyLevel)
         {
-            // get -> modifica -> put, la fel ca service-ul original dar prin API
-            var ticket = await GetTicketByIdAsync(ticketId);
-            ticket.UpdateUrgencyLevel(newUrgencyLevel);
-            await UpdateTicketByIdAsync(ticketId, ticket);
-        }
-
-        public async Task UpdateStatusAsync(int ticketId, TicketStatusEnum newStatus)
-        {
-            var ticket = await GetTicketByIdAsync(ticketId);
-            ticket.UpdateStatus(newStatus);
-            await UpdateTicketByIdAsync(ticketId, ticket);
+            var request = new { urgencyLevel = newUrgencyLevel };
+            var response = await httpClient.PutAsJsonAsync($"{BaseUrl}/{ticketId}/urgency", request);
+            response.EnsureSuccessStatusCode();
         }
 
         // logica pura, fara DB, ramane local
@@ -87,5 +86,6 @@ namespace AirportApp.Src.Proxy
                 _ => tickets
             };
         }
+
     }
 }

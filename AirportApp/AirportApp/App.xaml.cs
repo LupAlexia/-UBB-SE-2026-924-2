@@ -105,7 +105,9 @@ namespace AirportApp
                 BaseAddress = new Uri("http://localhost:5253/")
             });
 
-            // Înlocuiește cu asta:
+
+
+
             services.AddAutoMapper(cfg =>
             {
                 cfg.AddProfile<UserMappingProfile>();
@@ -147,7 +149,7 @@ namespace AirportApp
             services.AddSingleton<IRepository<int, Chat>, ChatRepositoryProxy>();
             services.AddSingleton<IMessageRepository, MessageRepositoryProxy>();
             services.AddSingleton<IRepository<int, Message>>(p => p.GetRequiredService<IMessageRepository>());
-            services.AddSingleton<MessageService>();
+            services.AddSingleton<IMessageService, MessageService>();
 
 
 

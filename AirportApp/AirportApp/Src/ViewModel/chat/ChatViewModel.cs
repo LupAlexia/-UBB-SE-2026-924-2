@@ -64,7 +64,10 @@ namespace AirportApp.Src.ViewModel.Chats
 
         public async Task CloseChatAsync()
         {
-            await chatService.CloseChatAsync(chat.Id);
+            if (chat != null)
+            {
+                await chatService.CloseChatAsync(chat.Id);
+            }
         }
 
         private async Task LoadChatHistoryAsync()
