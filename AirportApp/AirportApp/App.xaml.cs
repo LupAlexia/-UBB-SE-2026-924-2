@@ -1,4 +1,5 @@
 using System;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
@@ -13,6 +14,7 @@ using AirportApp.ClassLibrary.Repository;
 using AirportApp.ClassLibrary.Repository.Interfaces;
 using AirportApp.ClassLibrary.Entity.Repository.Database;
 using AirportApp.Src.Service;
+using AirportApp.Src.Proxy;
 using AirportApp.Src.Service.Bot.Strategy;
 using AirportApp.Src.Service.Implementation;
 using AirportApp.Src.Service.Interfaces;
@@ -162,13 +164,17 @@ namespace AirportApp
             services.AddTransient<FAQViewModel>();
 
             // --- Servicii CloudSpritzers (Flight Tickets) ---
+            services.AddSingleton(new HttpClient
+            {
+                BaseAddress = new Uri("http://localhost:5253/")
+            });
             //services.AddSingleton<IDatabaseConnectionFactory, DatabaseConnectionFactory>();
             services.AddSingleton<IFlightRepository, FlightRepository>();
             services.AddSingleton<IFlightTicketRepository, FlightTicketRepository>();
             services.AddSingleton<IAddOnRepository, AddOnRepository>();
             services.AddSingleton<IMembershipRepository, MembershipRepository>();
             services.AddSingleton<ICustomerRepository, CustomerRepository>();
-            services.AddSingleton<IAuthService, AuthService>();
+            services.AddSingleton<IAuthService, AuthServiceProxy>();
             services.AddSingleton<IFlightSearchService, FlightSearchService>();
             services.AddSingleton<IBookingService, BookingService>();
             services.AddSingleton<IPricingService, PricingService>();
