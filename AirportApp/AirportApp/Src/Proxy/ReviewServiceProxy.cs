@@ -1,5 +1,6 @@
 ﻿using AirportApp.ClassLibrary.Entity.Domain;
 using AirportApp.ClassLibrary.Entity.Domain.Review;
+using AirportApp.ClassLibrary.Entity.Dto;
 using AirportApp.Src.Service;
 using System;
 using System.Collections.Generic;
@@ -24,11 +25,18 @@ namespace AirportApp.Src.Proxy
 
         public async Task<int> AddAsync(Review review)
         {
-            var response = await httpClient.PostAsJsonAsync(BaseUrl, review);
+            var dto = new CreateReviewDTO(
+                UserId: review.UserId,
+                Message: review.Message,
+                DutyFreeRating: review.DutyFreeRating,
+                FlightExperienceRating: review.FlightExperienceRating,
+                StaffFriendlinessRating: review.StaffFriendlinessRating,
+                CleanlinessRating: review.CleanlinessRating
+            );
+            var response = await httpClient.PostAsJsonAsync(BaseUrl, dto);
             response.EnsureSuccessStatusCode();
             return review.Id;
         }
-
         public async Task UpdateByIdAsync(int identificationNumber, Review review)
         {
             var response = await httpClient.PutAsJsonAsync($"{BaseUrl}/{identificationNumber}", review);
