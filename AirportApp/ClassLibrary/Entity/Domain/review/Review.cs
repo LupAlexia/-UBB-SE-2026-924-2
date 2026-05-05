@@ -63,7 +63,7 @@ namespace AirportApp.ClassLibrary.Entity.Domain.Review
                       int flightExperienceRating, int staffFriendlinessRating, int cleanlinessRating)
         {
             Id = id;
-            User = user;
+            User = user ?? throw new ArgumentException("User cannot be null");
             UserId = user.UserId;
             Message = message;
             DutyFreeRating = dutyFreeRating;

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -70,13 +70,13 @@ namespace AirportApp.ClassLibrary.Entity.Domain.Ticket
         public Ticket(int ticketId, User ticketCreator, TicketStatusEnum initialStatus, TicketCategory category, TicketSubcategory subcategory, string ticketSubject, string description, DateTime creationTimestamp, TicketUrgencyLevelEnum? initialUrgencyLevel = null)
         {
             Id = ticketId;
-            Creator = ticketCreator;
+            Creator = ticketCreator ?? throw new ArgumentNullException(nameof(ticketCreator));
             CreatorId = ticketCreator.UserId;
+            Category = category ?? throw new ArgumentNullException(nameof(category));
             UrgencyLevel = initialUrgencyLevel ?? category.CategoryUrgencyLevel;
             CurrentStatus = initialStatus;
-            Category = category;
             CategoryId = category.Id;
-            Subcategory = subcategory;
+            Subcategory = subcategory ?? throw new ArgumentNullException(nameof(subcategory));
             SubcategoryId = subcategory.Id;
             Subject = ticketSubject;
             Description = description;

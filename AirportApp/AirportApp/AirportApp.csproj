@@ -55,6 +55,7 @@
 		<PackageReference Include="AutoMapper" Version="16.1.1" />
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
 		<PackageReference Include="DotNetEnv" Version="3.2.0" />
+		<PackageReference Include="FluentAssertions" Version="8.9.0" />
 		<PackageReference Include="Microsoft.Data.SqlClient" Version="7.0.1" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.26">
 		  <PrivateAssets>all</PrivateAssets>
@@ -67,6 +68,8 @@
 		<PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.28000.1839" />
 		<PackageReference Include="Microsoft.WindowsAppSDK" Version="2.0.1" />
 		<PackageReference Include="Microsoft.WindowsAppSDK.Runtime" Version="2.0.1" />
+		<PackageReference Include="Moq" Version="4.20.72" />
+		<PackageReference Include="NSubstitute" Version="5.3.0" />
 		<PackageReference Include="QuestPDF" Version="2026.2.4" />
 		<PackageReference Include="Sprache" Version="2.3.1" />
 	</ItemGroup>
