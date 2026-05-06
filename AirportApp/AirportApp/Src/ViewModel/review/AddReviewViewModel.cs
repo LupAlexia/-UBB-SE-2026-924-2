@@ -10,7 +10,7 @@ namespace AirportApp.Src.ViewModel.Review
 {
     public partial class AddReviewViewModel : ObservableObject
     {
-        private readonly ReviewService reviewService;
+        private readonly IReviewService reviewService;
 
         public event EventHandler<(string Title, string Message)>? AlertRequested;
 
@@ -44,7 +44,7 @@ namespace AirportApp.Src.ViewModel.Review
         private string reviewMessage = string.Empty;
         public string CharCountText => $"{ReviewMessage?.Length ?? 0} characters";
 
-        public AddReviewViewModel(ReviewService reviewService)
+        public AddReviewViewModel(IReviewService reviewService)
         {
             this.reviewService = reviewService;
         }
