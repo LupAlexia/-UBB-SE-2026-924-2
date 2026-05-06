@@ -51,6 +51,30 @@ namespace AirportApp.ClassLibrary.Repository
             await dataBaseContext.SaveChangesAsync();
         }
 
+        public async Task UpdateStatusByIdAsync(int id, TicketStatusEnum newStatus)
+        {
+            var ticket = await dataBaseContext.tickets.FindAsync(id);
+            if (ticket == null)
+            {
+                throw new KeyNotFoundException($"Ticket with id {id} not found.");
+            }
+
+            ticket.CurrentStatus = newStatus;
+            await dataBaseContext.SaveChangesAsync();
+        }
+
+        public async Task UpdateUrgencyLevelByIdAsync(int id, TicketUrgencyLevelEnum newUrgencyLevel)
+        {
+            var ticket = await dataBaseContext.tickets.FindAsync(id);
+            if (ticket == null)
+            {
+                throw new KeyNotFoundException($"Ticket with id {id} not found.");
+            }
+
+            ticket.UrgencyLevel = newUrgencyLevel;
+            await dataBaseContext.SaveChangesAsync();
+        }
+
         public async Task DeleteByIdAsync(int id)
         {
             var ticket = await dataBaseContext.tickets.FindAsync(id);

@@ -12,7 +12,7 @@ namespace AirportApp.Src.ViewModel.Review
 {
     public partial class AllReviewsViewModel : ObservableObject
     {
-        private readonly ReviewService reviewService;
+        private readonly IReviewService reviewService;
         private readonly IMapper mapper;
 
         public ObservableCollection<ReviewDTO> Reviews { get; } = new ();
@@ -40,7 +40,7 @@ namespace AirportApp.Src.ViewModel.Review
         private double averageCleanliness;
         public string FormattedAverageCleanliness => AverageCleanliness.ToString("0.0");
 
-        public AllReviewsViewModel(ReviewService reviewService, IMapper mapper)
+        public AllReviewsViewModel(IReviewService reviewService, IMapper mapper)
         {
             this.reviewService = reviewService;
             this.mapper = mapper;

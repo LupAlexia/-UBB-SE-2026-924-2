@@ -23,6 +23,7 @@
 		<ApplicationDefinition Remove="App.xaml" />
 		<Page Remove="App.xaml" />
 		<Compile Remove="App.xaml.cs" />
+		<None Remove="appsetings.json" />
 
 		<!-- Re-include App.xaml o singura data ca ApplicationDefinition -->
 		<ApplicationDefinition Include="App.xaml">

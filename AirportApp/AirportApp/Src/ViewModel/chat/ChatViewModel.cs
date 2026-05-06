@@ -22,15 +22,15 @@ namespace AirportApp.Src.ViewModel.Chats
         public ObservableCollection<FAQOption> CurrentOptions { get; } = new ();
         public ObservableCollection<MessageDTO> ChatHistory { get; } = new ();
 
-        private MessageService messageService;
-        private ChatService chatService;
+        private IMessageService messageService;
+        private IChatService chatService;
         private IUserService userService;
         private IMapper mapper;
         private Chat chat;
         private User user;
         private const int FIRST_OPTION = 1;
 
-        public ChatViewModel(MessageService msgService, ChatService chatService, IMapper mapper, IUserService userService, User testUser = null)
+        public ChatViewModel(IMessageService msgService, IChatService chatService, IMapper mapper, IUserService userService, User testUser = null)
         {
             messageService = msgService;
             this.chatService = chatService;
@@ -64,7 +64,10 @@ namespace AirportApp.Src.ViewModel.Chats
 
         public async Task CloseChatAsync()
         {
-            await chatService.CloseChatAsync(chat.Id);
+            if (chat != null)
+            {
+                await chatService.CloseChatAsync(chat.Id);
+            }
         }
 
         private async Task LoadChatHistoryAsync()
@@ -75,7 +78,7 @@ namespace AirportApp.Src.ViewModel.Chats
             foreach (var message in messages)
             {
                 var dataTransferObject = mapper.Map<MessageDTO>(message);
-
+                System.Diagnostics.Debug.WriteLine($"Message: {dataTransferObject.MessageText}, SenderId: {dataTransferObject.SenderId}, SenderUserId: {(message as Message)?.SenderUserId}");
                 if (dataTransferObject.SenderId == BotEngineIdentity.CONSTANT_IDENTIFIER_FOR_DEFAULT_BOT_SYSTEM_USER)
                 {
                     dataTransferObject.SenderName = "Carlos";

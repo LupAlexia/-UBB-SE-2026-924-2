@@ -42,6 +42,7 @@ namespace Airport.Web
                 {
                     options.SuppressAsyncSuffixInActionNames = false;
                 })
+
                 .AddJsonOptions(options =>
                 {
                     options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
