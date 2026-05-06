@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Airport.Web.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/[controller]")] 
     public class FAQController : ControllerBase
     {
         private readonly IFAQRepository faqRepository;
