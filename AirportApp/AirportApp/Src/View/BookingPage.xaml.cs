@@ -153,8 +153,11 @@ namespace AirportApp.Src.View
 
         private void Passengers_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs eventArguments)
         {
-            EnsureSeatTargetPassenger();
-            RefreshSeatMapVisuals();
+            this.DispatcherQueue.TryEnqueue(() =>
+            {
+                EnsureSeatTargetPassenger();
+                RefreshSeatMapVisuals();
+            });
         }
 
         private void SeatPassengerSelector_SelectionChanged(object? sender, SelectionChangedEventArgs eventArguments)

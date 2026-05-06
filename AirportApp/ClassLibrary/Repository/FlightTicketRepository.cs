@@ -102,22 +102,60 @@ namespace AirportApp.ClassLibrary.Repository
             return count == 0;
         }
 
-        public async Task<bool> SaveTicketsWithAddOnsAsync(List<FlightTicket> tickets)
+        public async Task<bool> SaveTicketsWithAddOnsAsync(List<FlightTicket> tickets, List<List<int>> addOnIds = null)
         {
             try
             {
-                foreach (var ticket in tickets)
+                for (int ticketIndex = 0; ticketIndex < tickets.Count; ticketIndex++)
                 {
+                    var ticket = tickets[ticketIndex];
+                    
+                    // Reset navigation properties to null to prevent EF re-insertion errors
+                    ticket.User = null;
+                    ticket.Flight = null;
+
+                    // Get add-on IDs for this ticket
+                    var currentAddOnIds = (addOnIds != null && ticketIndex < addOnIds.Count) 
+                        ? addOnIds[ticketIndex] 
+                        : new List<int>();
+
+                    if (currentAddOnIds.Any())
+                    {
+                        var attachedAddOns = new List<AddOn>();
+                        foreach (var addOnId in currentAddOnIds)
+                        {
+                            // Fetch the tracked entity from the database
+                            var existing = await dataBaseContext.addOns.FindAsync(addOnId);
+                            if (existing != null)
+                            {
+                                attachedAddOns.Add(existing);
+                            }
+                        }
+                        ticket.SelectedAddOns = attachedAddOns;
+                    }
+                    else
+                    {
+                        ticket.SelectedAddOns = new List<AddOn>();
+                    }
+
                     this.dataBaseContext.flightTickets.Add(ticket);
                 }
 
                 await this.dataBaseContext.SaveChangesAsync();
                 return true;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                // Log the exception for debugging
+                System.Diagnostics.Debug.WriteLine($"Error saving tickets: {ex.Message}");
+                return false;
             }
         }
+    }
+
+    public class SaveTicketsRequest
+    {
+        public List<FlightTicket> Tickets { get; set; } = new List<FlightTicket>();
+        public List<List<int>> AddOnIds { get; set; } = new List<List<int>>();
     }
 }
