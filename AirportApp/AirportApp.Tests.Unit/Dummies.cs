@@ -6,27 +6,21 @@ namespace AirportApp.Src.View
     public class FlightSearchPage
     {
     }
-
     public class BookingPage
     {
     }
-
     public class AuthPage
     {
     }
-
     public class RegisterPage
     {
     }
-
     public class LoginPage
     {
     }
-
     public class DashboardPage
     {
     }
-
     public class MembershipsPage
     {
     }

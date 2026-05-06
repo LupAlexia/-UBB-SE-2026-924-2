@@ -1,5 +1,4 @@
 using System.Net.Http;
-using Airport.Web;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
@@ -30,7 +29,8 @@ public abstract class BaseApiIntegrationTest : IDisposable
                         services.Remove(descriptor);
                     }
 
-                    // Add the test DbContext using In-Memory provider
+                    // Use a unique in-memory database per test class instance so tests
+                    // are fully isolated and run on any machine without a SQL Server dependency
                     services.AddDbContext<AirportDbContext>(options =>
                     {
                         options.UseInMemoryDatabase("AirportApiTestDb_" + Guid.NewGuid().ToString());

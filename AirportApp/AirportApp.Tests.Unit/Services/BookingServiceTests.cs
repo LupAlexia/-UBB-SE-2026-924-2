@@ -149,7 +149,7 @@ public class BookingServiceTests
     public async Task SaveTicketsAsynchronous_ValidTickets_ReturnsTrue()
     {
         mockTicketRepository.Setup(repo => repo.IsSeatAvailableAsync(It.IsAny<int>(), It.IsAny<string>())).ReturnsAsync(true);
-        mockTicketRepository.Setup(repo => repo.SaveTicketsWithAddOnsAsync(It.IsAny<List<FlightTicket>>(), It.IsAny<List<List<int>>>())).ReturnsAsync(true);
+        mockTicketRepository.Setup(repo => repo.SaveTicketsWithAddOnsAsync(It.IsAny<List<FlightTicket>>())).ReturnsAsync(true);
 
         var ticket1 = new FlightTicket { Seat = Seat1A, Price = StandardTicketPrice, Status = ActiveStatus };
         var ticket2 = new FlightTicket { Seat = Seat1B, Price = StandardTicketPrice, Status = ActiveStatus };
@@ -158,7 +158,7 @@ public class BookingServiceTests
         var saveTicketsSucceeded = await bookingService.SaveTicketsAsync(tickets);
 
         saveTicketsSucceeded.Should().BeTrue();
-        mockTicketRepository.Verify(repo => repo.SaveTicketsWithAddOnsAsync(It.IsAny<List<FlightTicket>>(), It.IsAny<List<List<int>>>()), Times.Once);
+        mockTicketRepository.Verify(repo => repo.SaveTicketsWithAddOnsAsync(It.IsAny<List<FlightTicket>>()), Times.Once);
     }
 
     [TestMethod]
