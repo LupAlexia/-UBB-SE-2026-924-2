@@ -1,39 +1,55 @@
+using System.Net.Http;
+using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using AirportApp.ClassLibrary.DataAccess;
-using System;
-using System.Linq;
 
 namespace AirportApp.Tests.Integration;
 
-public abstract class BaseIntegrationTest
+public abstract class BaseApiIntegrationTest : IDisposable
 {
-    protected AirportDbContext CreateDbContext()
+    protected readonly WebApplicationFactory<Airport.Web.Controllers.UserController> Factory;
+    protected readonly HttpClient Client;
+
+    protected BaseApiIntegrationTest()
     {
-        var optionsBuilder = new DbContextOptionsBuilder<AirportDbContext>();
-        // Use In-Memory database for tests instead of a real SQL Server
-        optionsBuilder.UseInMemoryDatabase("AirportTestDb_" + Guid.NewGuid().ToString());
-        
-        var context = new AirportDbContext(optionsBuilder.Options);
-        
-        // Ensure the database is created and seeded (seeds are defined in OnModelCreating)
-        context.Database.EnsureCreated();
-        
-        return context;
+        Factory = new WebApplicationFactory<Airport.Web.Controllers.UserController>()
+            .WithWebHostBuilder(builder =>
+            {
+                builder.ConfigureServices(services =>
+                {
+                    // Remove the real DbContext registration
+                    var descriptor = services.SingleOrDefault(
+                        d => d.ServiceType == typeof(DbContextOptions<AirportDbContext>));
+
+                    if (descriptor != null)
+                    {
+                        services.Remove(descriptor);
+                    }
+
+                    // Use a unique in-memory database per test class instance so tests
+                    // are fully isolated and run on any machine without a SQL Server dependency
+                    var dbName = $"AirportTestDb_{Guid.NewGuid()}";
+                    services.AddDbContext<AirportDbContext>(options =>
+                    {
+                        options.UseInMemoryDatabase(dbName);
+                    });
+
+                    // Build a temporary service provider to seed the in-memory database
+                    // using the same HasData seed already defined in AirportDbContext.OnModelCreating
+                    var serviceProvider = services.BuildServiceProvider();
+                    using var scope = serviceProvider.CreateScope();
+                    var dbContext = scope.ServiceProvider.GetRequiredService<AirportDbContext>();
+                    dbContext.Database.EnsureCreated();
+                });
+            });
+
+        Client = Factory.CreateClient();
     }
 
-    protected int GetFirstAvailableFlightId()
+    public void Dispose()
     {
-        using var dbContext = CreateDbContext();
-        var flight = dbContext.flights
-            .OrderBy(f => f.Date > DateTime.Now ? 0 : 1)
-            .ThenBy(f => f.Date)
-            .FirstOrDefault();
-
-        if (flight == null)
-        {
-            throw new Exception("No flights found in the test database.");
-        }
-
-        return flight.Id;
+        Client.Dispose();
+        Factory.Dispose();
     }
 }
