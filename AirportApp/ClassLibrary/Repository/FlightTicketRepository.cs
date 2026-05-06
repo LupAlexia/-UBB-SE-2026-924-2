@@ -152,10 +152,4 @@ namespace AirportApp.ClassLibrary.Repository
             }
         }
     }
-
-    public class SaveTicketsRequest
-    {
-        public List<FlightTicket> Tickets { get; set; } = new List<FlightTicket>();
-        public List<List<int>> AddOnIds { get; set; } = new List<List<int>>();
-    }
 }
