@@ -39,7 +39,7 @@ namespace AirportApp.Tests.Unit.ViewModel
         }
 
         [TestMethod]
-        public async Task SearchCommand_ValidLocationAndDate_PopulatesAvailableFlightsCollection()
+        public async Task SearchCommand_ValidLocationAndDate_PopulatesAvailableFlightsCollectionAsync()
         {
             const string ValidLocation = "Cluj-Napoca";
             const int ExpectedPassengerCount = 2;
@@ -75,7 +75,7 @@ namespace AirportApp.Tests.Unit.ViewModel
         }
 
         [TestMethod]
-        public async Task SearchCommand_EmptyResults_SetsSearchResultMessageToNoFlightsFound()
+        public async Task SearchCommand_EmptyResults_SetsSearchResultMessageToNoFlightsFoundAsync()
         {
             const string ValidLocation = "Bucuresti";
             const string ExpectedNoResultsMessage = "No flights found for the selected criteria.";

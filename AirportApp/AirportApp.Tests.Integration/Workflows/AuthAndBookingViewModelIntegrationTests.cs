@@ -45,7 +45,7 @@ public class AuthAndBookingViewModelIntegrationTests : BaseIntegrationTest
     }
 
     [TestMethod]
-    public async Task AuthenticationViewModel_RegisterAndLogin_Succeeds()
+    public async Task AuthenticationViewModelAsync_RegisterAndLogin_Succeeds()
     {
         var authViewModel = new AuthViewModel(authentificationService, navigationService);
         string uniqueCode = Guid.NewGuid().ToString().Substring(0, 4);
@@ -78,7 +78,7 @@ public class AuthAndBookingViewModelIntegrationTests : BaseIntegrationTest
     }
 
     [TestMethod]
-    public async Task AuthenticationViewModel_InvalidPassword_LoginFails()
+    public async Task AuthenticationViewModelAsync_InvalidPassword_LoginFails()
     {
         var authViewModel = new AuthViewModel(authentificationService, navigationService);
         string uniqueCode = Guid.NewGuid().ToString().Substring(0, 4);
@@ -99,7 +99,7 @@ public class AuthAndBookingViewModelIntegrationTests : BaseIntegrationTest
     }
 
     [TestMethod]
-    public async Task BookingViewModel_Initialization_UpdatesPrices()
+    public async Task BookingViewModelAsync_Initialization_UpdatesPrices()
     {
         var bookingViewModel = new BookingViewModel(bookingService, pricingService, navigationService);
 
@@ -115,7 +115,7 @@ public class AuthAndBookingViewModelIntegrationTests : BaseIntegrationTest
     }
 
     [TestMethod]
-    public async Task BookingViewModel_AddPassenger_UpdatesState()
+    public async Task BookingViewModelAsync_AddPassenger_UpdatesState()
     {
         var bookingViewModel = new BookingViewModel(bookingService, pricingService, navigationService);
 
@@ -129,7 +129,7 @@ public class AuthAndBookingViewModelIntegrationTests : BaseIntegrationTest
     }
 
     [TestMethod]
-    public async Task BookingViewModel_RemovePassenger_UpdatesCapacity()
+    public async Task BookingViewModelAsync_RemovePassenger_UpdatesCapacity()
     {
         var bookingViewModel = new BookingViewModel(bookingService, pricingService, navigationService);
 
@@ -149,7 +149,7 @@ public class AuthAndBookingViewModelIntegrationTests : BaseIntegrationTest
     }
 
     [TestMethod]
-    public async Task DashboardViewModel_AfterBooking_LoadsTickets()
+    public async Task DashboardViewModelAsync_AfterBooking_LoadsTickets()
     {
         string uniqueCode = Guid.NewGuid().ToString().Substring(0, 4);
         string email = $"cosmin.tudor_{uniqueCode}@gmail.com";

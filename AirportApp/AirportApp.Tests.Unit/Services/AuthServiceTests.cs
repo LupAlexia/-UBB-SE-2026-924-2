@@ -5,6 +5,9 @@ using Microsoft.AspNetCore.Identity;
 using AirportApp.ClassLibrary.Entity.Domain;
 using AirportApp.ClassLibrary.Repository.Interfaces;
 using AirportApp.Src.Service;
+using System;
+using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace AirportApp.Tests.Unit
 {
@@ -20,143 +23,140 @@ namespace AirportApp.Tests.Unit
         private const string ValidEmail = "test@gmail.com";
         private const string ValidUsername = "user123";
 
-        private ICustomerRepository _mockRepository;
-        private AuthService _authService;
-        private PasswordHasher<Customer> _passwordHasher;
+        private ICustomerRepository mockRepository;
+        private AuthService authService;
+        private PasswordHasher<Customer> passwordHasher;
 
         [TestInitialize]
         public void Setup()
         {
-            _mockRepository = Substitute.For<ICustomerRepository>();
-            _authService = new AuthService(_mockRepository);
-            _passwordHasher = new PasswordHasher<Customer>();
+            mockRepository = Substitute.For<ICustomerRepository>();
+            authService = new AuthService(mockRepository);
+            passwordHasher = new PasswordHasher<Customer>();
         }
 
         [TestMethod]
-        public async Task Login_ValidUser_ReturnsCustomer()
+        public async Task LoginAsync_ValidUser_ReturnsCustomer()
         {
             var customer = new Customer { Email = "andrei.ionescu@gmail.com" };
-            customer.PasswordHash = _passwordHasher.HashPassword(customer, ValidPassword);
-            _mockRepository.GetByEmailAsync(customer.Email).Returns(customer);
+            customer.PasswordHash = passwordHasher.HashPassword(customer, ValidPassword);
+            mockRepository.GetByEmailAsync(customer.Email).Returns(customer);
 
-            var result = await _authService.LoginAsync(customer.Email, ValidPassword);
+            var result = await authService.LoginAsync(customer.Email, ValidPassword);
 
             Assert.IsNotNull(result);
             Assert.AreEqual(customer.Email, result.Email);
         }
 
         [TestMethod]
-        public async Task Login_InvalidPassword_ThrowsException()
+        public async Task LoginAsync_InvalidPassword_ThrowsException()
         {
             var customer = new Customer { Email = "george.popa@yahoo.ro" };
-            customer.PasswordHash = _passwordHasher.HashPassword(customer, ValidSecretPassword);
-            _mockRepository.GetByEmailAsync(customer.Email).Returns(customer);
+            customer.PasswordHash = passwordHasher.HashPassword(customer, ValidSecretPassword);
+            mockRepository.GetByEmailAsync(customer.Email).Returns(customer);
 
             await Assert.ThrowsExceptionAsync<InvalidOperationException>(
-                () => _authService.LoginAsync(customer.Email, InvalidPassword));
+                () => authService.LoginAsync(customer.Email, InvalidPassword));
         }
 
         [TestMethod]
-        public async Task Login_UserNotFound_ThrowsException()
+        public async Task LoginAsync_UserNotFound_ThrowsException()
         {
-            _mockRepository.GetByEmailAsync(Arg.Any<string>()).Returns((Customer?)null);
+            mockRepository.GetByEmailAsync(Arg.Any<string>()).Returns((Customer?)null);
 
             await Assert.ThrowsExceptionAsync<InvalidOperationException>(
-                () => _authService.LoginAsync("nonexistent@gmail.com", ValidPassword));
+                () => authService.LoginAsync("nonexistent@gmail.com", ValidPassword));
         }
 
         [TestMethod]
-        public async Task Login_NullEmail_ThrowsException()
+        public async Task LoginAsync_NullEmail_ThrowsException()
         {
             await Assert.ThrowsExceptionAsync<ArgumentException>(
-                () => _authService.LoginAsync(null!, ValidPassword));
+                () => authService.LoginAsync(null!, ValidPassword));
         }
 
         [TestMethod]
-        public async Task Login_EmptyEmail_ThrowsException()
+        public async Task LoginAsync_EmptyEmail_ThrowsException()
         {
             await Assert.ThrowsExceptionAsync<ArgumentException>(
-                () => _authService.LoginAsync(string.Empty, ValidPassword));
+                () => authService.LoginAsync(string.Empty, ValidPassword));
         }
 
         [TestMethod]
-        public async Task Login_NullPassword_ThrowsException()
+        public async Task LoginAsync_NullPassword_ThrowsException()
         {
             await Assert.ThrowsExceptionAsync<ArgumentException>(
-                () => _authService.LoginAsync(ValidEmail, null!));
+                () => authService.LoginAsync(ValidEmail, null!));
         }
 
         [TestMethod]
-        public async Task Login_EmptyPassword_ThrowsException()
+        public async Task LoginAsync_EmptyPassword_ThrowsException()
         {
             await Assert.ThrowsExceptionAsync<ArgumentException>(
-                () => _authService.LoginAsync(ValidEmail, string.Empty));
+                () => authService.LoginAsync(ValidEmail, string.Empty));
         }
 
         [TestMethod]
-        public async Task Register_DuplicateEmail_ThrowsException()
+        public async Task RegisterAsync_DuplicateEmail_ThrowsException()
         {
             string email = "bogdan.stefan@gmail.com";
-            _mockRepository.GetByEmailAsync(email).Returns(new Customer { Email = email });
+            mockRepository.GetByEmailAsync(email).Returns(new Customer { Email = email });
 
             await Assert.ThrowsExceptionAsync<InvalidOperationException>(
-                () => _authService.RegisterAsync(email, ValidPhoneNumber, "bogdan_s", "ParolaBogdan!"));
+                () => authService.RegisterAsync(email, ValidPhoneNumber, "bogdan_s", "ParolaBogdan!"));
         }
 
         [TestMethod]
-        public async Task Register_InvalidEmailFormat_ThrowsException()
+        public async Task RegisterAsync_InvalidEmailFormat_ThrowsException()
         {
             await Assert.ThrowsExceptionAsync<ArgumentException>(
-                () => _authService.RegisterAsync("mariusPaguba", ValidPhoneNumber, "marius", "Parola1"));
+                () => authService.RegisterAsync("mariusPaguba", ValidPhoneNumber, "marius", "Parola1"));
         }
 
         [TestMethod]
-        public async Task Register_ValidUser_CreatesNewUser()
+        public async Task RegisterAsync_ValidUser_CreatesNewUser()
         {
             string email = "gabriela.stan@yahoo.ro";
-            _mockRepository.GetByEmailAsync(email).Returns((Customer?)null);
+            mockRepository.GetByEmailAsync(email).Returns((Customer?)null);
 
-            await _authService.RegisterAsync(email, ValidAlternatePhone, "gabriela_s", "ParolaGabriela123!");
+            await authService.RegisterAsync(email, ValidAlternatePhone, "gabriela_s", "ParolaGabriela123!");
 
-            await _mockRepository.Received(1).AddUserAsync(Arg.Is<Customer>(c => c.Email == email));
+            await mockRepository.Received(1).AddUserAsync(Arg.Is<Customer>(c => c.Email == email));
         }
 
         [TestMethod]
-        public async Task Register_PasswordTooShort_ThrowsException()
+        public async Task RegisterAsync_PasswordTooShort_ThrowsException()
         {
             await Assert.ThrowsExceptionAsync<ArgumentException>(
-                () => _authService.RegisterAsync(ValidEmail, ValidPhoneNumber, ValidUsername, "12345"));
+                () => authService.RegisterAsync(ValidEmail, ValidPhoneNumber, ValidUsername, "12345"));
         }
 
         [TestMethod]
-        public async Task Register_UsernameTooShort_ThrowsException()
+        public async Task RegisterAsync_UsernameTooShort_ThrowsException()
         {
             await Assert.ThrowsExceptionAsync<ArgumentException>(
-                () => _authService.RegisterAsync(ValidEmail, ValidPhoneNumber, "ab", "ValidPass1"));
+                () => authService.RegisterAsync(ValidEmail, ValidPhoneNumber, "ab", "ValidPass1"));
         }
 
         [TestMethod]
-        public async Task Register_InvalidUsername_ThrowsException()
+        public async Task RegisterAsync_InvalidUsername_ThrowsException()
         {
             await Assert.ThrowsExceptionAsync<ArgumentException>(
-                () => _authService.RegisterAsync(ValidEmail, ValidPhoneNumber, "user@#$", "ValidPass1"));
+                () => authService.RegisterAsync(ValidEmail, ValidPhoneNumber, "user@#$", "ValidPass1"));
         }
 
         [TestMethod]
-        public async Task Register_NullPhone_ThrowsException()
+        public async Task RegisterAsync_NullPhone_ThrowsException()
         {
             await Assert.ThrowsExceptionAsync<ArgumentException>(
-                () => _authService.RegisterAsync(ValidEmail, null!, ValidUsername, "ValidPass1"));
+                () => authService.RegisterAsync(ValidEmail, null!, ValidUsername, "ValidPass1"));
         }
 
         [TestMethod]
-        public async Task Register_InvalidPhone_ThrowsException()
+        public async Task RegisterAsync_InvalidPhone_ThrowsException()
         {
             await Assert.ThrowsExceptionAsync<ArgumentException>(
-                () => _authService.RegisterAsync(ValidEmail, InvalidPhoneFormat, ValidUsername, "ValidPass1"));
+                () => authService.RegisterAsync(ValidEmail, InvalidPhoneFormat, ValidUsername, "ValidPass1"));
         }
     }
 }
-
-
-
