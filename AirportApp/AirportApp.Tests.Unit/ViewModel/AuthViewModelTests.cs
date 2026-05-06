@@ -22,6 +22,7 @@ namespace AirportApp.Tests.Unit.ViewModel
             mockAuthService = Substitute.For<IAuthService>();
             mockNavigationService = Substitute.For<INavigationService>();
             authViewModel = new AuthViewModel(mockAuthService, mockNavigationService);
+            UserSession.PendingBookingParameters = null; // Add this line
         }
 
         [TestMethod]

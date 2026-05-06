@@ -45,14 +45,16 @@ public class BookingAndCancellationWorkflowIntegrationTests : BaseIntegrationTes
     private readonly PricingService pricingService;
     private readonly CancellationService cancellationService;
 
+    private readonly AirportDbContext _dbContext;
+
     public BookingAndCancellationWorkflowIntegrationTests()
     {
-        var dbContext = CreateDbContext();
-        var membershipRepository = new MembershipRepository(dbContext);
-        userRepository = new CustomerRepository(dbContext, membershipRepository);
-        ticketRepository = new FlightTicketRepository(dbContext);
-        flightRepository = new FlightRepository(dbContext);
-        addOnRepository = new AddOnRepository(dbContext);
+        _dbContext = CreateDbContext(); 
+        var membershipRepository = new MembershipRepository(_dbContext);
+        userRepository = new CustomerRepository(_dbContext, membershipRepository);
+        ticketRepository = new FlightTicketRepository(_dbContext);
+        flightRepository = new FlightRepository(_dbContext);
+        addOnRepository = new AddOnRepository(_dbContext);
         authentificationService = new AuthService(userRepository);
         bookingService = new BookingService(ticketRepository, addOnRepository);
         pricingService = new PricingService();
@@ -69,7 +71,7 @@ public class BookingAndCancellationWorkflowIntegrationTests : BaseIntegrationTes
         await authentificationService.RegisterAsync(email, ReservationPhone, $"Utilizator_{uniqueCode}", password);
         var user = await authentificationService.LoginAsync(email, password);
 
-        var flightId = GetFirstAvailableFlightId();
+        var flightId = GetFirstAvailableFlightId(_dbContext);
         var flight = await flightRepository.GetFlightByIdAsync(flightId);
         var passengers = PassengerDataFixture.CreateValidPassengerList(TwoPassengers);
 
@@ -78,6 +80,12 @@ public class BookingAndCancellationWorkflowIntegrationTests : BaseIntegrationTes
 
         var tickets = bookingService.CreateTickets(flight!, user, passengers, BasePrice);
         tickets.Should().HaveCount(TwoPassengers);
+
+        foreach (var ticket in tickets)
+        {
+            ticket.UserId = user.Id;
+            ticket.FlightId = flight!.Id;
+        }
 
         var saveResult = await bookingService.SaveTicketsAsync(tickets);
         saveResult.Should().BeTrue();
@@ -94,7 +102,7 @@ public class BookingAndCancellationWorkflowIntegrationTests : BaseIntegrationTes
         await authentificationService.RegisterAsync(email, ReservationPhone, $"{GigelUsername}_{uniqueCode}", GigelPassword);
         var user = await authentificationService.LoginAsync(email, GigelPassword);
 
-        var flightId = GetFirstAvailableFlightId();
+        var flightId = GetFirstAvailableFlightId(_dbContext);
         var flight = await flightRepository.GetFlightByIdAsync(flightId);
         var ticket1 = new FlightTicket { Flight = flight!, User = user, Seat = Seat1A, Price = BasePrice, Status = ActiveStatus, PassengerFirstName = GigelFirstName, PassengerLastName = GigelLastName };
         var ticket2 = new FlightTicket { Flight = flight!, User = user, Seat = Seat1A, Price = BasePrice, Status = ActiveStatus, PassengerFirstName = VasileFirstName, PassengerLastName = VasileLastName };
@@ -112,7 +120,7 @@ public class BookingAndCancellationWorkflowIntegrationTests : BaseIntegrationTes
         await authentificationService.RegisterAsync(email, ReservationPhone, $"Anulare_{uniqueCode}", CancellationPassword);
         var user = await authentificationService.LoginAsync(email, CancellationPassword);
 
-        var flightId = GetFirstAvailableFlightId();
+        var flightId = GetFirstAvailableFlightId(_dbContext);
         var flight = await flightRepository.GetFlightByIdAsync(flightId);
         var ticket = new FlightTicket
         {

@@ -26,10 +26,13 @@ namespace AirportApp.View
     }
 }
 
-namespace AirportApp.Service
+namespace AirportApp.Src.Service
 {
     public class NavigationService : INavigationService
     {
+        public void Initialize(Microsoft.UI.Xaml.Controls.Frame frame)
+        {
+        }
         public void NavigateTo(Type pageType, object? parameter = null)
         {
         }
@@ -39,6 +42,5 @@ namespace AirportApp.Service
         public bool CanGoBack => false;
     }
 }
-
 
 
