@@ -82,10 +82,10 @@ public class BookingViewModelTests
     }
 
     [TestMethod]
-    public async Task ConfirmBookingCommand_Invoked_CallsServiceAndRaisesEvent()
+    public async Task ConfirmBookingCommand_Invoked_CallsServiceAndRaisesEventAsync()
     {
         var flight = new Flight { Id = TestFlightId, Route = new Route { Capacity = DefaultFlightCapacity } };
-        var Customer = new Customer { Id = TestUserId, Email = TestEmail };
+        var customer = new Customer { Id = TestUserId, Email = TestEmail };
 
         mockBookingService.Setup(bookingServiceReturningEmptyAddOns => bookingServiceReturningEmptyAddOns.GetAvailableAddOnsAsync()).ReturnsAsync(new List<AddOn>());
         mockBookingService.Setup(bookingServiceReturningEmptyOccupiedSeats => bookingServiceReturningEmptyOccupiedSeats.GetOccupiedSeatsAsync(It.IsAny<int>())).ReturnsAsync(new List<string>());
@@ -97,7 +97,7 @@ public class BookingViewModelTests
         mockPricingService.Setup(pricingServiceReturningBreakdown => pricingServiceReturningBreakdown.CalculatePriceBreakdown(It.IsAny<Flight>(), It.IsAny<Customer>(), It.IsAny<List<FlightTicket>>()))
             .Returns(new PriceBreakdown { FinalTotal = BaseTicketPrice });
 
-        await viewModel.InitializeAsync(flight, Customer, DefaultRequestedPassengers);
+        await viewModel.InitializeAsync(flight, customer, DefaultRequestedPassengers);
 
         var passenger = viewModel.Passengers[0];
         passenger.FirstName = "Andrei";
@@ -105,24 +105,24 @@ public class BookingViewModelTests
         passenger.Email = TestAlternateEmail;
         passenger.SelectedSeat = "1A";
 
-        var bookingConfirmedRaised = false;
-        viewModel.BookingConfirmed += (sender, eventArgs) => bookingConfirmedRaised = true;
+        var isBookingConfirmedRaised = false;
+        viewModel.BookingConfirmed += (sender, eventArgs) => isBookingConfirmedRaised = true;
 
         viewModel.ConfirmBookingCommand.Execute(null);
 
         int retries = MaxEventWaitRetries;
-        while (!bookingConfirmedRaised && retries > 0)
+        while (!isBookingConfirmedRaised && retries > 0)
         {
             await Task.Delay(EventWaitDelayMs);
             retries--;
         }
 
         mockBookingService.Verify(bookingServiceToVerifySave => bookingServiceToVerifySave.SaveTicketsAsync(It.IsAny<List<FlightTicket>>()), Times.Once);
-        bookingConfirmedRaised.Should().BeTrue();
+        isBookingConfirmedRaised.Should().BeTrue();
     }
 
     [TestMethod]
-    public async Task OnNavigatedToAsynchronous_NotAuthenticated_RedirectsToAuthentication()
+    public async Task OnNavigatedToAsync_NotAuthenticated_RedirectsToAuthenticationAsync()
     {
         UserSession.CurrentUser = null;
         var flight = new Flight
@@ -137,7 +137,7 @@ public class BookingViewModelTests
     }
 
     [TestMethod]
-    public async Task OnNavigatedToAsynchronous_NoFlight_ReturnsFalse()
+    public async Task OnNavigatedToAsync_NoFlight_ReturnsFalseAsync()
     {
         var navigationResult = await viewModel.OnNavigatedToAsync(new object?[] { null });
 

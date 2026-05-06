@@ -73,7 +73,7 @@ public class DashboardViewModelTests
     }
 
     [TestMethod]
-    public async Task ConfirmCancellation_Invoked_CallsServiceAndClearsState()
+    public async Task ConfirmCancellation_Invoked_CallsServiceAndClearsStateAsync()
     {
         UserSession.CurrentUser = new Customer { Id = TestUserId, Email = TestEmail };
         var FlightTicket = new FlightTicket { Id = TargetTicketIdToCancel, Status = ActiveStatus };
@@ -99,7 +99,7 @@ public class DashboardViewModelTests
     }
 
     [TestMethod]
-    public async Task OnNavigatedTo_NotAuthenticated_RedirectsToAuthentication()
+    public async Task OnNavigatedToAsync_NotAuthenticated_RedirectsToAuthenticationAsync()
     {
         UserSession.CurrentUser = null;
 

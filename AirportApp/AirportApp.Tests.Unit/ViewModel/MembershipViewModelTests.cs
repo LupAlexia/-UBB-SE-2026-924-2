@@ -28,7 +28,7 @@ namespace AirportApp.Tests.Unit.ViewModel
         }
 
         [TestMethod]
-        public async Task Initialization_ValidServiceCall_PopulatesMembershipsCollection()
+        public async Task Initialization_ValidServiceCall_PopulatesMembershipsCollectionAsync()
         {
             const int ExpectedMembershipId = 1;
             const string ExpectedMembershipName = "Gold";
@@ -62,7 +62,7 @@ namespace AirportApp.Tests.Unit.ViewModel
         }
 
         [TestMethod]
-        public async Task PurchaseCommand_ValidMembershipPurchase_SetsPurchaseSucceededToTrue()
+        public async Task PurchaseCommand_ValidMembershipPurchase_SetsPurchaseSucceededToTrueAsync()
         {
             const int ExpectedUserId = 1;
             const int ExpectedMembershipId = 2;

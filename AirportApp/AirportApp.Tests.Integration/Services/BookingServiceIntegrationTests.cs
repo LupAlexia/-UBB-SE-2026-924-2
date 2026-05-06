@@ -31,7 +31,7 @@ public class BookingServiceIntegrationTests : BaseIntegrationTest
     }
 
     [TestMethod]
-    public async Task CreateAndSaveTickets_ValidTickets_Succeeds()
+    public async Task CreateAndSaveTickets_ValidTickets_SucceedsAsync()
     {
         var uniqueCode = Guid.NewGuid().ToString().Substring(UniqueCodeStartIndex, UniqueCodeLength);
         var user = new Customer { Email = $"{MihaiEmail}_{uniqueCode}@gmail.com", Username = $"{MihaiUsername}_{uniqueCode}", Phone = MihaiPhone, PasswordHash = MihaiPassword };
