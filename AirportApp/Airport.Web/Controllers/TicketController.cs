@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using AirportApp.ClassLibrary.Entity.Domain.Ticket;
 using AirportApp.ClassLibrary.Repository.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using AirportApp.ClassLibrary.Entity.Dto;
 
 namespace Airport.Web.Controllers
 {
@@ -11,6 +12,7 @@ namespace Airport.Web.Controllers
     public class TicketController : ControllerBase
     {
         private readonly ITicketRepository ticketRepository;
+
 
         public TicketController(ITicketRepository ticketRepository)
         {
@@ -39,11 +41,44 @@ namespace Airport.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> CreateAsync([FromBody] Ticket ticket)
+        public async Task<ActionResult> CreateAsync([FromBody] CreateTicketDTO dto)
         {
+
+            var ticket = new Ticket
+            {
+                CreatorId = dto.CreatorId,
+                CategoryId = dto.CategoryId,
+                SubcategoryId = dto.SubcategoryId,
+                Subject = dto.Subject,
+                Description = dto.Description,
+                CreationTimestamp = dto.CreationTimestamp,
+                CurrentStatus = dto.CurrentStatus,
+                UrgencyLevel = dto.UrgencyLevel
+            };
+
             int createdId = await ticketRepository.CreateNewEntityAsync(ticket);
             return CreatedAtAction(nameof(GetByIdAsync), new { id = createdId }, ticket);
         }
+
+        //[HttpPut("{id}")]
+        //public async Task<ActionResult> UpdateAsync(int id, [FromBody] Ticket ticket)
+        //{
+        //    if (id != ticket.Id)
+        //    {
+        //        return BadRequest("ID in URL does not match ID in body.");
+        //    }
+
+        //    await ticketRepository.UpdateByIdAsync(id, ticket);
+        //    return NoContent();
+        //}
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeleteAsync(int id)
+        {
+            await ticketRepository.DeleteByIdAsync(id);
+            return NoContent();
+        }
+
 
         [HttpPut("{id}")]
         public async Task<ActionResult> UpdateAsync(int id, [FromBody] Ticket ticket)
@@ -57,11 +92,28 @@ namespace Airport.Web.Controllers
             return NoContent();
         }
 
-        [HttpDelete("{id}")]
-        public async Task<ActionResult> DeleteAsync(int id)
+        [HttpPut("{id}/status")]
+        public async Task<ActionResult> UpdateStatusAsync(int id, [FromBody] UpdateStatusRequest request)
         {
-            await ticketRepository.DeleteByIdAsync(id);
+            await ticketRepository.UpdateStatusByIdAsync(id, request.CurrentStatus);
             return NoContent();
         }
+
+        [HttpPut("{id}/urgency")]
+        public async Task<ActionResult> UpdateUrgencyAsync(int id, [FromBody] UpdateUrgencyRequest request)
+        {
+            await ticketRepository.UpdateUrgencyLevelByIdAsync(id, request.UrgencyLevel);
+            return NoContent();
+        }
+    }
+
+    public class UpdateStatusRequest
+    {
+        public TicketStatusEnum CurrentStatus { get; set; }
+    }
+
+    public class UpdateUrgencyRequest
+    {
+        public TicketUrgencyLevelEnum UrgencyLevel { get; set; }
     }
 }

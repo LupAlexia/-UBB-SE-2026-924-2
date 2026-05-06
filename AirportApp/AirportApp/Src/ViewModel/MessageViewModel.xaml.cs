@@ -14,7 +14,7 @@ namespace AirportApp.Src.ViewModel
 {
     public partial class MessageViewModel : ObservableObject
     {
-        private readonly MessageService messageService;
+        private readonly IMessageService messageService;
         private readonly IUserService userService;
         private readonly IMapper mapper;
 
@@ -24,7 +24,7 @@ namespace AirportApp.Src.ViewModel
         public ObservableCollection<MessageDTO> Messages { get; } = new ();
 
         public MessageViewModel(
-            MessageService messageService,
+            IMessageService messageService,
             IUserService userService,
             IMapper mapper,
             int chatId,

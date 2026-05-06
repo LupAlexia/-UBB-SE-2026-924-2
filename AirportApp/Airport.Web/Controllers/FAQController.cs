@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Airport.Web.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/[controller]")] 
     public class FAQController : ControllerBase
     {
         private readonly IFAQRepository faqRepository;
@@ -63,6 +63,32 @@ namespace Airport.Web.Controllers
         public async Task<ActionResult> IncrementNotHelpfulAsync(int id)
         {
             await faqRepository.IncrementWasNotHelpfulVotesAsync(id);
+            return NoContent();
+        }
+
+        //adaugate de dede pentru proxy 
+        [HttpPost]
+        public async Task<ActionResult> CreateAsync([FromBody] FAQEntry entry)
+        {
+            int createdId = await faqRepository.CreateNewEntityAsync(entry);
+            return CreatedAtAction(nameof(GetByIdAsync), new { id = createdId }, entry);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<ActionResult> UpdateAsync(int id, [FromBody] FAQEntry entry)
+        {
+            if (id != entry.Id)
+            {
+                return BadRequest("ID in URL does not match ID in body.");
+            }
+            await faqRepository.UpdateByIdAsync(id, entry);
+            return NoContent();
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeleteAsync(int id)
+        {
+            await faqRepository.DeleteByIdAsync(id);
             return NoContent();
         }
     }

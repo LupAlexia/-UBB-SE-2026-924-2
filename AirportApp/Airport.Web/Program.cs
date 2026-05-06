@@ -17,6 +17,7 @@ namespace Airport.Web
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+            builder.WebHost.UseUrls("http://localhost:5253");
 
             builder.Services.AddDbContext<AirportDbContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -42,6 +43,7 @@ namespace Airport.Web
                 {
                     options.SuppressAsyncSuffixInActionNames = false;
                 })
+
                 .AddJsonOptions(options =>
                 {
                     options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;

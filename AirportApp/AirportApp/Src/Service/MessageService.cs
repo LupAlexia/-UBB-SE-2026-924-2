@@ -9,7 +9,7 @@ using AirportApp.ClassLibrary.Repository.Interfaces;
 
 namespace AirportApp.Src.Service
 {
-    public class MessageService
+    public class MessageService : IMessageService
     {
         private readonly IRepository<int, Chat> chatRepository;
         private readonly IRepository<int, Message> messageRepository;

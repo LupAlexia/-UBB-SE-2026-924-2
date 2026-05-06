@@ -9,12 +9,12 @@ namespace AirportApp.Src.ViewModel
 {
     public partial class LandingViewModel : ObservableObject
     {
-        private readonly ReviewService reviewService;
+        private readonly IReviewService reviewService;
         private readonly IMapper mapper;
 
         public ObservableCollection<ReviewDTO> Reviews { get; } = new ();
 
-        public LandingViewModel(ReviewService reviewService, IMapper mapper)
+        public LandingViewModel(IReviewService reviewService, IMapper mapper)
         {
             this.reviewService = reviewService;
             this.mapper = mapper;

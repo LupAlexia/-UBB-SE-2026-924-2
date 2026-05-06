@@ -8,7 +8,7 @@ using AirportApp.ClassLibrary.Repository.Interfaces;
 
 namespace AirportApp.Src.Service
 {
-    public class ReviewService
+    public class ReviewService : IReviewService
     {
         private readonly IRepository<int, Review> reviewRepository;
 

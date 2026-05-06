@@ -1,8 +1,9 @@
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using AirportApp.ClassLibrary.Entity.Domain.Message;
+using AirportApp.ClassLibrary.Entity.Dto;
 using AirportApp.ClassLibrary.Repository.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Airport.Web.Controllers
 {
@@ -76,6 +77,22 @@ namespace Airport.Web.Controllers
         {
             IEnumerable<Message> messages = await messageRepository.GetMessagesSinceAsync(chatId, firstMessageId);
             return Ok(messages);
+        }
+
+        [HttpGet("chat/{chatId}/with-senders")]
+        public async Task<ActionResult<IEnumerable<MessageWithSenderDTO>>> GetByChatIdWithSendersAsync(int chatId)
+        {
+            var messages = await messageRepository.GetByChatIdAsync(chatId);
+            var result = messages.Select(m => new MessageWithSenderDTO
+            {
+                Id = m.Id,
+                Text = m.Text,
+                Timestamp = m.Timestamp,
+                ChatId = m.ChatId,
+                SenderUserId = m.SenderUserId,
+                SenderEmployeeId = m.SenderEmployeeId
+            });
+            return Ok(result);
         }
     }
 }
