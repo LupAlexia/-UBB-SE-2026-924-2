@@ -60,9 +60,14 @@ namespace Airport.Web.Controllers
         }
 
         [HttpPost("batch")]
-        public async Task<ActionResult<bool>> SaveTicketsWithAddOnsAsync([FromBody] List<FlightTicket> tickets)
+        public async Task<ActionResult<bool>> SaveTicketsWithAddOnsAsync([FromBody] SaveTicketsRequest request)
         {
-            bool isSuccess = await flightTicketRepository.SaveTicketsWithAddOnsAsync(tickets);
+            if (request?.Tickets == null)
+            {
+                return BadRequest();
+            }
+
+            bool isSuccess = await flightTicketRepository.SaveTicketsWithAddOnsAsync(request.Tickets, request.AddOnIds);
             if (!isSuccess)
             {
                 return BadRequest();
