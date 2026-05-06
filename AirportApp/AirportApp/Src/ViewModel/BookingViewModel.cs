@@ -471,11 +471,9 @@ namespace AirportApp.Src.ViewModel
 
         public void UpdatePassengerAddOns(PassengerFormViewModel passenger, IEnumerable<AddOn> addedAddOns, IEnumerable<AddOn> removedAddOns)
         {
-            // Convert ObservableCollection<AddOn> to IList<AddOn> before passing to ApplyAddOnUpdates
-            IList<AddOn> currentAddOns = passenger.SelectedAddOns.ToList();
-            bookingService.ApplyAddOnUpdates(currentAddOns, addedAddOns, removedAddOns);
-
-            bookingService.ApplyAddOnUpdates(currentAddOns, addedAddOns, removedAddOns);
+            // Update the existing collection directly so that the CollectionChanged event fires
+            // and triggers UpdatePrices() automatically.
+            bookingService.ApplyAddOnUpdates(passenger.SelectedAddOns, addedAddOns, removedAddOns);
         }
     }
 }

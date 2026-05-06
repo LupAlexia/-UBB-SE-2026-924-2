@@ -47,7 +47,7 @@ namespace AirportApp
         public static IDashboardService DashboardService { get; private set; } = null!;
         public static ICancellationService CancellationService { get; private set; } = null!;
         public static IMembershipService MembershipService { get; private set; } = null!;
-        public static INavigationService NavigationService { get; private set; } = null!;
+        public static NavigationService NavigationService { get; private set; } = null!;
 
         public App()
         {
@@ -117,7 +117,7 @@ namespace AirportApp
             {
                 var conn = configuration.GetConnectionString("DefaultConnection");
                 options.UseSqlServer(conn);
-            }, contextLifetime: Microsoft.Extensions.DependencyInjection.ServiceLifetime.Singleton, optionsLifetime: Microsoft.Extensions.DependencyInjection.ServiceLifetime.Singleton);
+            }, contextLifetime: Microsoft.Extensions.DependencyInjection.ServiceLifetime.Transient, optionsLifetime: Microsoft.Extensions.DependencyInjection.ServiceLifetime.Transient);
 
             services.AddSingleton<DecisionTreeRepository>();
             services.AddSingleton<IRepository<int, FAQNode>>(p => p.GetRequiredService<DecisionTreeRepository>());
@@ -143,7 +143,7 @@ namespace AirportApp
             services.AddSingleton<IUserRepository>(p => p.GetRequiredService<UserRepository>());
             services.AddSingleton<AirportApp.ClassLibrary.Repository.Interfaces.IRepository<int, AirportApp.ClassLibrary.Entity.Domain.User>>(p => p.GetRequiredService<UserRepository>());
             //services.AddSingleton<IRepository<int, User>>(p => p.GetRequiredService<UserRepository>());
-            services.AddSingleton<IUserService, UserServiceProxy>();
+            services.AddSingleton<IUserService, UserService>();
 
             services.AddTransient<LandingViewModel>();
             services.AddTransient<AllReviewsViewModel>();
@@ -182,7 +182,6 @@ namespace AirportApp
             services.AddSingleton<ICancellationService, CancellationServiceProxy>();
             services.AddSingleton<IMembershipService, MembershipServiceProxy>();
             services.AddSingleton<NavigationService>();
-            services.AddSingleton<INavigationService, NavigationServiceProxy>();
 
             var provider = services.BuildServiceProvider();
 
@@ -194,7 +193,7 @@ namespace AirportApp
             DashboardService = provider.GetRequiredService<IDashboardService>();
             CancellationService = provider.GetRequiredService<ICancellationService>();
             MembershipService = provider.GetRequiredService<IMembershipService>();
-            NavigationService = provider.GetRequiredService<INavigationService>();
+            NavigationService = provider.GetRequiredService<NavigationService>();
 
             return provider;
         }

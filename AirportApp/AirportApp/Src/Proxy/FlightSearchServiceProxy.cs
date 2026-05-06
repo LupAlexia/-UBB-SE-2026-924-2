@@ -11,8 +11,8 @@ namespace AirportApp.Src.Proxy
 {
     public class FlightSearchServiceProxy : IFlightSearchService
     {
-        private const string DepartureRouteType = "DEP";
-        private const string ArrivalRouteType = "ARR";
+        private const string DepartureRouteType = "Departure";
+        private const string ArrivalRouteType = "Arrival";
         private const string FlightBaseUrl = "api/flight";
 
         private readonly HttpClient httpClient;

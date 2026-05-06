@@ -6,6 +6,7 @@ using System.Net.Http.Json;
 using System.Threading.Tasks;
 using AirportApp.ClassLibrary.Entity.Domain;
 using AirportApp.ClassLibrary.Repository;
+using AirportApp.ClassLibrary.Repository.Interfaces;
 using AirportApp.Src.Service;
 
 namespace AirportApp.Src.Proxy
@@ -130,26 +131,35 @@ namespace AirportApp.Src.Proxy
                 return false;
             }
 
-            // HTTP calls replace: ticketRepository.IsSeatAvailableAsync
-            foreach (var ticket in tickets)
+            // Extract add-on IDs BEFORE clearing the tickets
+            var addOnIds = tickets.Select(t => 
+                t.SelectedAddOns?.Select(a => a.Id).ToList() ?? new List<int>()
+            ).ToList();
+
+            // Prepare clean versions of tickets for the API (with EMPTY add-ons)
+            var preparedTickets = tickets.Select(t => new FlightTicket
             {
-                if (!string.IsNullOrWhiteSpace(ticket.Seat))
-                {
-                    int flightId = ticket.Flight?.Id ?? 0;
-                    bool isSeatAvailable = await this.httpClient
-                        .GetFromJsonAsync<bool>(
-                            $"{FlightTicketBaseUrl}/flight/{flightId}/seat-available/{ticket.Seat}");
+                UserId = t.UserId != 0 ? t.UserId : (t.User?.Id ?? 0),
+                FlightId = t.FlightId != 0 ? t.FlightId : (t.Flight?.Id ?? 0),
+                Seat = t.Seat,
+                Price = t.Price,
+                Status = t.Status,
+                PassengerFirstName = t.PassengerFirstName,
+                PassengerLastName = t.PassengerLastName,
+                PassengerEmail = t.PassengerEmail,
+                PassengerPhone = t.PassengerPhone,
+                SelectedAddOns = new List<AddOn>()  // Send empty list
+            }).ToList();
 
-                    if (!isSeatAvailable)
-                    {
-                        return false;
-                    }
-                }
-            }
+            // Send request with both tickets and add-on IDs
+            var request = new SaveTicketsRequest 
+            { 
+                Tickets = preparedTickets, 
+                AddOnIds = addOnIds 
+            };
 
-            // HTTP call replaces: ticketRepository.SaveTicketsWithAddOnsAsync
             HttpResponseMessage response = await this.httpClient
-                .PostAsJsonAsync($"{FlightTicketBaseUrl}/batch", tickets);
+                .PostAsJsonAsync($"{FlightTicketBaseUrl}/batch", request);
 
             return response.IsSuccessStatusCode;
         }
