@@ -16,16 +16,16 @@ namespace AirportApp.Tests.Unit.src.dto.mappingprofiles;
 [TestClass]
 public class UserMappingProfileTests
 {
-    private IMapper _mapper;
-    private ILoggerFactory _loggerFactory;
+    private IMapper mapper;
+    private ILoggerFactory loggerFactory;
 
     [TestInitialize]
     public void Setup()
     {
-        _loggerFactory = Substitute.For<ILoggerFactory>();
-        var configuration = new AutoMapper.MapperConfiguration(cfg => cfg.AddProfile<UserMappingProfile>(), _loggerFactory);
+        loggerFactory = Substitute.For<ILoggerFactory>();
+        var configuration = new AutoMapper.MapperConfiguration(cfg => cfg.AddProfile<UserMappingProfile>(), loggerFactory);
 
-        _mapper = configuration.CreateMapper();
+        mapper = configuration.CreateMapper();
     }
 
     [TestMethod]
@@ -33,7 +33,7 @@ public class UserMappingProfileTests
     {
         var userEntity = new User(1, "Alex", "alex@mail.com");
 
-        var resultedDataTransferObject = _mapper.Map<UserDTO>(userEntity);
+        var resultedDataTransferObject = mapper.Map<UserDTO>(userEntity);
 
         Assert.AreEqual(userEntity.RetrieveConfiguredDisplayFullNameForBot(), resultedDataTransferObject.name);
     }
@@ -43,7 +43,7 @@ public class UserMappingProfileTests
     {
         var userEntity = new User(1, "Alex", "alex@mail.com");
 
-        var resultedDataTransferObject = _mapper.Map<UserDTO>(userEntity);
+        var resultedDataTransferObject = mapper.Map<UserDTO>(userEntity);
 
         Assert.AreEqual(userEntity.RetrieveConfiguredEmailAddressForBotContact(), resultedDataTransferObject.email);
     }
@@ -51,7 +51,7 @@ public class UserMappingProfileTests
     [TestMethod]
     public void Map_UserToUserDTO_ValidConfiguration()
     {
-        var configuration = new AutoMapper.MapperConfiguration(cfg => cfg.AddProfile<UserMappingProfile>(), _loggerFactory);
+        var configuration = new AutoMapper.MapperConfiguration(cfg => cfg.AddProfile<UserMappingProfile>(), loggerFactory);
 
         configuration.AssertConfigurationIsValid();
     }

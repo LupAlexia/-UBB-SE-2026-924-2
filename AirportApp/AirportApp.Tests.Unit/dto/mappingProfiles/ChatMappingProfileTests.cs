@@ -12,58 +12,57 @@ namespace AirportApp.Tests.Unit.src.dto.mappingprofiles;
 [TestClass]
 public class ChatMappingProfileTests
 {
-    private IMapper _mapper;
-    private Chat _chat;
-    private User _testUser;
-    private ILoggerFactory _loggerFactory;
+    private IMapper mapper;
+    private Chat chat;
+    private User testUser;
+    private ILoggerFactory loggerFactory;
 
     [TestInitialize]
     public void Setup()
     {
-        _loggerFactory = Substitute.For<ILoggerFactory>();
-        var configuration = new AutoMapper.MapperConfiguration(cfg => cfg.AddProfile<ChatMappingProfile>(), _loggerFactory);
+        loggerFactory = Substitute.For<ILoggerFactory>();
+        var configuration = new AutoMapper.MapperConfiguration(cfg => cfg.AddProfile<ChatMappingProfile>(), loggerFactory);
 
-        _mapper = configuration.CreateMapper();
-        _testUser = new User(10, "Test User", "test@test.com");
-        _chat = new Chat(1, _testUser, ChatStatus.Active);
+        mapper = configuration.CreateMapper();
+        testUser = new User(10, "Test User", "test@test.com");
+        chat = new Chat(1, testUser, ChatStatus.Active);
     }
 
     [TestMethod]
     public void Map_ChatToChatDTO_MapsChatIdCorrectly()
     {
-        var resultedDataTransferObject = _mapper.Map<ChatDTO>(_chat);
+        var resultedDataTransferObject = mapper.Map<ChatDTO>(chat);
 
-        Assert.AreEqual(_chat.Id, resultedDataTransferObject.chatId);
+        Assert.AreEqual(chat.Id, resultedDataTransferObject.chatId);
     }
 
     [TestMethod]
     public void Map_ChatToChatDTO_MapsUserIdCorrectly()
     {
-        var resultedDataTransferObject = _mapper.Map<ChatDTO>(_chat);
+        var resultedDataTransferObject = mapper.Map<ChatDTO>(chat);
 
-        Assert.AreEqual(_chat.UserId, resultedDataTransferObject.userId);
+        Assert.AreEqual(chat.UserId, resultedDataTransferObject.userId);
     }
 
     [TestMethod]
     public void Map_ChatToChatDTO_MapsStatusCorrectly()
     {
-        var resultedDataTransferObject = _mapper.Map<ChatDTO>(_chat);
+        var resultedDataTransferObject = mapper.Map<ChatDTO>(chat);
 
-        Assert.AreEqual(_chat.Status, resultedDataTransferObject.status);
+        Assert.AreEqual(chat.Status, resultedDataTransferObject.status);
     }
 
     [TestMethod]
     public void Map_ChatToChatDTO_MapsMessageCountCorrectly()
     {
-        var resultedDataTransferObject = _mapper.Map<ChatDTO>(_chat);   
-
-        Assert.AreEqual(0, resultedDataTransferObject.messageCount); 
+        var resultedDataTransferObject = mapper.Map<ChatDTO>(chat);
+        Assert.AreEqual(0, resultedDataTransferObject.messageCount);
     }
 
     [TestMethod]
     public void Map_ChatToChatDTO_ValidConfiguration()
     {
-        var configuration = new AutoMapper.MapperConfiguration(cfg => cfg.AddProfile<ChatMappingProfile>(), _loggerFactory);
+        var configuration = new AutoMapper.MapperConfiguration(cfg => cfg.AddProfile<ChatMappingProfile>(), loggerFactory);
 
         configuration.AssertConfigurationIsValid();
     }
