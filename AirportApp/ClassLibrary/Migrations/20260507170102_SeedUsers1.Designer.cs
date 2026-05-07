@@ -4,6 +4,7 @@ using AirportApp.ClassLibrary.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AirportApp.ClassLibrary.Migrations
 {
     [DbContext(typeof(AirportDbContext))]
-    partial class AirportDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260507170102_SeedUsers1")]
+    partial class SeedUsers1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -247,7 +250,7 @@ namespace AirportApp.ClassLibrary.Migrations
                             Id = 1,
                             Email = "alice@bot.com",
                             MembershipId = 1,
-                            PasswordHash = "AQAAAAIAAYagAAAAEI8DQJ8c6E7I7Z+pyUP0ianpOzmRoTCf45gXzPw34WPUT9ad+8pkg4R3q4LpwC4tGA==",
+                            PasswordHash = "passhash",
                             Phone = "",
                             Username = "alice"
                         },
@@ -256,7 +259,7 @@ namespace AirportApp.ClassLibrary.Migrations
                             Id = 2,
                             Email = "bob@chat.com",
                             MembershipId = 2,
-                            PasswordHash = "AQAAAAIAAYagAAAAEO6TmleYFEq86ASriOSZZBse/92WKkFnlxHJ3XjPXpAGS+60rKv4t2hPXIH4HPDT4w==",
+                            PasswordHash = "passhash2",
                             Phone = "",
                             Username = "bob"
                         },
@@ -265,7 +268,7 @@ namespace AirportApp.ClassLibrary.Migrations
                             Id = 3,
                             Email = "mia@example.com",
                             MembershipId = 3,
-                            PasswordHash = "AQAAAAIAAYagAAAAEO6cunSJet2Y5zhA5WsI3toMUd70WoG1Vft6r+W9qGYHMv57vTUtxaEB8+SAX7iPKw==",
+                            PasswordHash = "passhash3",
                             Phone = "",
                             Username = "mia"
                         });

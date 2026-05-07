@@ -234,14 +234,16 @@ namespace AirportApp.ClassLibrary.DataAccess
                 new Route { Id = 1, CompanyId = 1, AirportId = 1, RouteType = "Departure", DepartureTime = new DateTime(2026,5,4,8,0,0), ArrivalTime = new DateTime(2026,5,4,11,0,0), Capacity = 180 },
                 new Route { Id = 2, CompanyId = 2, AirportId = 2, RouteType = "Arrival", DepartureTime = new DateTime(2026,5,5,9,30,0), ArrivalTime = new DateTime(2026,5,5,12,45,0), Capacity = 150 },
                 new Route { Id = 3, CompanyId = 3, AirportId = 3, RouteType = "Departure", DepartureTime = new DateTime(2026,5,6,7,15,0), ArrivalTime = new DateTime(2026,5,6,10,5,0), Capacity = 220 },
-                new Route { Id = 4, CompanyId = 1, AirportId = 1, RouteType = "Arrival", DepartureTime = new DateTime(2026,5,7,14,0,0), ArrivalTime = new DateTime(2026,5,7,17,10,0), Capacity = 160 }
+                new Route { Id = 4, CompanyId = 1, AirportId = 1, RouteType = "Arrival", DepartureTime = new DateTime(2026,5,7,14,0,0), ArrivalTime = new DateTime(2026,5,7,17,10,0), Capacity = 160 },
+                new Route { Id = 5, CompanyId = 2, AirportId = 3, RouteType = "Arrival", DepartureTime = new DateTime(2026,5,20,13,0,0), ArrivalTime = new DateTime(2026,5,20,15,12,0), Capacity = 50 }
             );
 
             modelBuilder.Entity<Flight>().HasData(
                 new Flight { Id = 1, RouteId = 1, GateId = 1, Date = new DateTime(2026,5,4,8,0,0), FlightNumber = "AC100" },
                 new Flight { Id = 2, RouteId = 2, GateId = 2, Date = new DateTime(2026,5,5,9,30,0), FlightNumber = "CT200" },
                 new Flight { Id = 3, RouteId = 3, GateId = 3, Date = new DateTime(2026,5,6,7,15,0), FlightNumber = "SK300" },
-                new Flight { Id = 4, RouteId = 4, GateId = 4, Date = new DateTime(2026,5,7,14,0,0), FlightNumber = "AC400" }
+                new Flight { Id = 4, RouteId = 4, GateId = 4, Date = new DateTime(2026,5,7,14,0,0), FlightNumber = "AC400" },
+                new Flight { Id = 5, RouteId = 5, GateId = 4, Date = new DateTime(2026,5,20,13,0,0), FlightNumber = "CT500" }
             );
 
             modelBuilder.Entity<AddOn>().HasData(
@@ -257,10 +259,37 @@ namespace AirportApp.ClassLibrary.DataAccess
                 new Membership { Id = 3, Name = "Platinum", FlightDiscountPercentage = 25f }
             );
 
+            // Instantiate the hasher
+            var hasher = new Microsoft.AspNetCore.Identity.PasswordHasher<Customer>();
+
             modelBuilder.Entity<Customer>().HasData(
-                new Customer { Id = 1, Email = "user1@example.com", Phone = "", Username = "user1", PasswordHash = "passhash1", MembershipId = 1 },
-                new Customer { Id = 2, Email = "user2@example.com", Phone = "", Username = "user2", PasswordHash = "passhash2", MembershipId = 2 },
-                new Customer { Id = 3, Email = "user3@example.com", Phone = "", Username = "user3", PasswordHash = "passhash3", MembershipId = 3 }
+                new Customer 
+                { 
+                    Id = 1, 
+                    Email = "alice@bot.com", 
+                    Phone = "", 
+                    Username = "alice", 
+                    PasswordHash = hasher.HashPassword(null!, "alice123"), 
+                    MembershipId = 1 
+                },
+                new Customer 
+                { 
+                    Id = 2, 
+                    Email = "bob@chat.com", 
+                    Phone = "", 
+                    Username = "bob", 
+                    PasswordHash = hasher.HashPassword(null!, "bob123"), 
+                    MembershipId = 2 
+                },
+                new Customer 
+                { 
+                    Id = 3, 
+                    Email = "mia@example.com", 
+                    Phone = "", 
+                    Username = "mia", 
+                    PasswordHash = hasher.HashPassword(null!, "mia123"), 
+                    MembershipId = 3 
+                }
             );
 
             modelBuilder.Entity<Employee>().HasData(
