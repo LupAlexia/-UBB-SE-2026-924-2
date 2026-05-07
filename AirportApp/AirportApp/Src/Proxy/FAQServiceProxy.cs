@@ -1,6 +1,4 @@
-﻿using AirportApp.ClassLibrary.Entity.Domain.Faq;
-using AirportApp.Src.Service.Interfaces;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -8,6 +6,8 @@ using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using AirportApp.ClassLibrary.Entity.Domain.Faq;
+using AirportApp.Src.Service.Interfaces;
 
 namespace AirportApp.Src.Proxy
 {

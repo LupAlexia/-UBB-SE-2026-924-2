@@ -132,9 +132,8 @@ namespace AirportApp.Src.Proxy
             }
 
             // Extract add-on IDs BEFORE clearing the tickets
-            var addOnIds = tickets.Select(t => 
-                t.SelectedAddOns?.Select(a => a.Id).ToList() ?? new List<int>()
-            ).ToList();
+            var addOnIds = tickets.Select(t =>
+                t.SelectedAddOns?.Select(a => a.Id).ToList() ?? new List<int>()).ToList();
 
             // Prepare clean versions of tickets for the API (with EMPTY add-ons)
             var preparedTickets = tickets.Select(t => new FlightTicket
@@ -148,14 +147,14 @@ namespace AirportApp.Src.Proxy
                 PassengerLastName = t.PassengerLastName,
                 PassengerEmail = t.PassengerEmail,
                 PassengerPhone = t.PassengerPhone,
-                SelectedAddOns = new List<AddOn>()  // Send empty list
+                SelectedAddOns = new List<AddOn>() // Send empty list
             }).ToList();
 
             // Send request with both tickets and add-on IDs
-            var request = new SaveTicketsRequest 
-            { 
-                Tickets = preparedTickets, 
-                AddOnIds = addOnIds 
+            var request = new SaveTicketsRequest
+            {
+                Tickets = preparedTickets,
+                AddOnIds = addOnIds
             };
 
             HttpResponseMessage response = await this.httpClient

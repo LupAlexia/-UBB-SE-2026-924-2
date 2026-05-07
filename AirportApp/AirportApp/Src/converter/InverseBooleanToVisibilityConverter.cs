@@ -10,14 +10,6 @@ namespace AirportApp.Src.Converter
 {
     public class InverseBooleanToVisibilityConverter : IValueConverter
     {
-        // public object Convert(object value, Type targetType, object parameter, string language)
-        // {
-        //    return value is bool b && !b ? Visibility.Visible : Visibility.Collapsed;
-        // }
-        // public object ConvertBack(object value, Type targetType, object parameter, string language)
-        // {
-        //    return value is Visibility v && v != Visibility.Visible;
-        // }
         public object Convert(object value, Type targetType, object parameter, string language)
         {
             return value is bool isFalse && !isFalse

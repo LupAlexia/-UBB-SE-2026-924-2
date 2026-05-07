@@ -32,7 +32,7 @@ namespace AirportApp.Src.Proxy
 
             string flightType = isDeparture ? DepartureRouteType : ArrivalRouteType;
             string dateQuery = date.HasValue ? $"&date={date.Value:yyyy-MM-ddTHH:mm:ss}" : string.Empty;
-            
+
             // HTTP GET replaces flightRepository.GetFlightsByRouteAsync
             var flights = await this.httpClient
                 .GetFromJsonAsync<IEnumerable<Flight>>(
@@ -53,7 +53,7 @@ namespace AirportApp.Src.Proxy
                     // HTTP GET replaces flightRepository.GetOccupiedSeatCountAsync
                     int occupiedSeats = await this.httpClient
                         .GetFromJsonAsync<int>($"{FlightBaseUrl}/{flight.Id}/occupied-seat-count");
-                        
+
                     int availableSeats = (flight.Route?.Capacity ?? 0) - occupiedSeats;
                     if (availableSeats >= passengers.Value)
                     {

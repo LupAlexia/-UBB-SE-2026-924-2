@@ -49,7 +49,7 @@ namespace AirportApp.Src.Service
 
         public async Task CreateReviewAsync(int identificationNumber, User user, string message, int dutyFreeRating, int flightExperienceRating, int staffFriendlinessRating, int cleanlinessRating)
         {
-            Review review = new(identificationNumber, user, message, dutyFreeRating, flightExperienceRating, staffFriendlinessRating, cleanlinessRating);
+            Review review = new (identificationNumber, user, message, dutyFreeRating, flightExperienceRating, staffFriendlinessRating, cleanlinessRating);
             await ValidateReviewAsync(review);
             await AddAsync(review);
         }

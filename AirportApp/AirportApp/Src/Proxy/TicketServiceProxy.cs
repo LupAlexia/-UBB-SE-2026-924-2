@@ -1,13 +1,13 @@
-﻿using AirportApp.ClassLibrary.Entity.Domain;
-using AirportApp.ClassLibrary.Entity.Domain.Ticket;
-using AirportApp.ClassLibrary.Entity.Dto;
-using AirportApp.Src.Service.Interfaces;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
+using AirportApp.ClassLibrary.Entity.Domain;
+using AirportApp.ClassLibrary.Entity.Domain.Ticket;
+using AirportApp.ClassLibrary.Entity.Dto;
+using AirportApp.Src.Service.Interfaces;
 using User = AirportApp.ClassLibrary.Entity.Domain.User; // alias ca in service, pentru a evita confuzia cu User-ul din ViewModel parca
 using AirportApp.Src.ViewModel;
 namespace AirportApp.Src.Proxy
@@ -42,8 +42,7 @@ namespace AirportApp.Src.Proxy
                 Description: ticketEntity.Description,
                 CreationTimestamp: ticketEntity.CreationTimestamp,
                 CurrentStatus: ticketEntity.CurrentStatus,
-                UrgencyLevel: ticketEntity.UrgencyLevel
-            );
+                UrgencyLevel: ticketEntity.UrgencyLevel);
 
             var response = await httpClient.PostAsJsonAsync(BaseUrl, dto);
             response.EnsureSuccessStatusCode();
@@ -54,7 +53,6 @@ namespace AirportApp.Src.Proxy
             string subject, string description, DateTime creationTimestamp,
             TicketUrgencyLevelEnum? initialUrgencyLevel = null)
         {
-
             var ticket = new Ticket(ticketId, ticketCreator, initialStatus, category,
                 subcategory, subject, description, creationTimestamp, initialUrgencyLevel);
             await AddTicketAsync(ticket);
@@ -97,6 +95,5 @@ namespace AirportApp.Src.Proxy
                 _ => tickets
             };
         }
-
     }
 }
