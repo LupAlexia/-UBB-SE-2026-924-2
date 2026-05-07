@@ -155,7 +155,7 @@
 
                     <ItemsControl.ItemTemplate>
                         <DataTemplate x:DataType="bot:FAQOption">
-                            <Button Content="{x:Bind Label}" 
+                            <Button Content="{x:Bind label}" 
                     Margin="4"
                     HorizontalAlignment="Stretch" 
                     VerticalAlignment="Center"
