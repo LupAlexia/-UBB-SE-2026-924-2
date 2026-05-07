@@ -1,10 +1,11 @@
-using FluentAssertions;
+using AirportApp.ClassLibrary.DataAccess;
 using AirportApp.ClassLibrary.Entity.Domain;
 using AirportApp.ClassLibrary.Repository;
 using AirportApp.ClassLibrary.Repository.Interfaces;
 using AirportApp.Src.Service;
 using AirportApp.Tests.Unit.Fixtures;
-using AirportApp.ClassLibrary.DataAccess;
+using FluentAssertions;
+using Microsoft.EntityFrameworkCore;
 
 namespace AirportApp.Tests.Integration.Workflows;
 
@@ -122,9 +123,14 @@ public class BookingAndCancellationWorkflowIntegrationTests : BaseIntegrationTes
 
         var flightId = GetFirstAvailableFlightId(dbContext);
         var flight = await flightRepository.GetFlightByIdAsync(flightId);
+
+        flight!.Date = DateTime.Now.AddDays(10);
+        dbContext.Update(flight);
+        await dbContext.SaveChangesAsync();
+
         var ticket = new FlightTicket
         {
-            Flight = flight!,
+            Flight = flight,
             User = user,
             Seat = $"{uniqueCode}{CancellationSeatSuffix}",
             Price = CancellationPrice,
@@ -143,6 +149,8 @@ public class BookingAndCancellationWorkflowIntegrationTests : BaseIntegrationTes
         reason.Should().BeEmpty();
 
         await cancellationService.CancelTicketAsync(createdTicket.Id);
+
+        dbContext.ChangeTracker.Clear();
 
         userTickets = await ticketRepository.GetTicketsByUserIdAsync(user.Id);
         var cancelledTicket = userTickets.First();
