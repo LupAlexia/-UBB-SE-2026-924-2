@@ -1,3 +1,6 @@
+using System;
+using System.Threading.Tasks;
+using System.Collections.Generic;
 using AirportApp.Src.ViewModel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
@@ -5,9 +8,6 @@ using Microsoft.AspNetCore.Identity;
 using AirportApp.ClassLibrary.Entity.Domain;
 using AirportApp.ClassLibrary.Repository.Interfaces;
 using AirportApp.Src.Service;
-using System;
-using System.Threading.Tasks;
-using System.Collections.Generic;
 
 namespace AirportApp.Tests.Unit
 {

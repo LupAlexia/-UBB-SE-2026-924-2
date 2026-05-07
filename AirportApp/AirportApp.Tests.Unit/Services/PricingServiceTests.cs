@@ -1,10 +1,10 @@
+using System;
+using System.Collections.Generic;
 using AirportApp.ClassLibrary.Entity.Domain.Ticket;
 using AirportApp.Src.ViewModel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using AirportApp.ClassLibrary.Entity.Domain;
 using AirportApp.Src.Service;
-using System;
-using System.Collections.Generic;
 
 namespace AirportApp.Tests.Unit.Src.Service
 {
@@ -28,7 +28,7 @@ namespace AirportApp.Tests.Unit.Src.Service
         private const int UnmatchedAddOnId = 99;
         private const float ExpectedDefaultBreakdownValue = 0f;
 
-        private readonly PricingService _pricingService = new PricingService();
+        private readonly PricingService pricingService = new PricingService();
 
         private static Route CreateRoute(int durationMinutes)
         {
@@ -80,8 +80,8 @@ namespace AirportApp.Tests.Unit.Src.Service
         {
             var flightWithNoRoute = new Flight { Route = null! };
 
-            var resultForNullFlight = _pricingService.CalculateBasePrice(null!);
-            var resultForNullRoute = _pricingService.CalculateBasePrice(flightWithNoRoute);
+            var resultForNullFlight = pricingService.CalculateBasePrice(null!);
+            var resultForNullRoute = pricingService.CalculateBasePrice(flightWithNoRoute);
 
             Assert.AreEqual(ZeroPrice, resultForNullFlight);
             Assert.AreEqual(ZeroPrice, resultForNullRoute);
@@ -92,7 +92,7 @@ namespace AirportApp.Tests.Unit.Src.Service
         {
             var flight = CreateFlightWithDuration(ShortFlightDurationMinutes);
 
-            var price = _pricingService.CalculateBasePrice(flight);
+            var price = pricingService.CalculateBasePrice(flight);
 
             Assert.AreEqual(MinimumFlightPrice, price);
         }
@@ -102,7 +102,7 @@ namespace AirportApp.Tests.Unit.Src.Service
         {
             var flight = CreateFlightWithDuration(LongFlightDurationMinutes);
 
-            var price = _pricingService.CalculateBasePrice(flight);
+            var price = pricingService.CalculateBasePrice(flight);
 
             Assert.AreEqual(LongFlightDurationMinutes * PricePerMinuteMultiplier, price);
         }
@@ -122,7 +122,7 @@ namespace AirportApp.Tests.Unit.Src.Service
                 }
             };
 
-            var totalPrice = _pricingService.CalculateTotalPrice(ticket);
+            var totalPrice = pricingService.CalculateTotalPrice(ticket);
 
             Assert.AreEqual(StandardFlightPrice + StandardAddOnPrice1 + StandardAddOnPrice2, totalPrice);
         }
@@ -139,7 +139,7 @@ namespace AirportApp.Tests.Unit.Src.Service
                 SelectedAddOns = new List<AddOn>()
             };
 
-            var totalPrice = _pricingService.CalculateTotalPrice(ticket);
+            var totalPrice = pricingService.CalculateTotalPrice(ticket);
 
             float expectedPrice = StandardFlightPrice - (StandardFlightPrice * (StandardFlightDiscountPercentage / PercentageDivisor));
             Assert.AreEqual(expectedPrice, totalPrice);
@@ -161,7 +161,7 @@ namespace AirportApp.Tests.Unit.Src.Service
                 SelectedAddOns = new List<AddOn> { addon1, addon2 }
             };
 
-            var totalPrice = _pricingService.CalculateTotalPrice(ticket);
+            var totalPrice = pricingService.CalculateTotalPrice(ticket);
 
             float expectedFlightPrice = StandardFlightPrice - (StandardFlightPrice * (StandardFlightDiscountPercentage / PercentageDivisor));
             float expectedAddon1Price = StandardAddOnPrice1 - (StandardAddOnPrice1 * (StandardAddOnDiscountPercentage / PercentageDivisor));
@@ -176,7 +176,7 @@ namespace AirportApp.Tests.Unit.Src.Service
             var customer = CreateBasicCustomer();
             var tickets = new List<FlightTicket> { new FlightTicket { Price = StandardFlightPrice } };
 
-            var breakdown = _pricingService.CalculatePriceBreakdown(flight, customer, tickets);
+            var breakdown = pricingService.CalculatePriceBreakdown(flight, customer, tickets);
 
             Assert.AreEqual(StandardFlightPrice, breakdown.FinalTotal);
             Assert.AreEqual(ZeroPrice, breakdown.MembershipSavings);
@@ -190,7 +190,7 @@ namespace AirportApp.Tests.Unit.Src.Service
             var customer = CreateCustomerWithMembership(membership);
             var tickets = new List<FlightTicket> { new FlightTicket { Price = StandardFlightPrice } };
 
-            var breakdown = _pricingService.CalculatePriceBreakdown(flight, customer, tickets);
+            var breakdown = pricingService.CalculatePriceBreakdown(flight, customer, tickets);
 
             float expectedDiscount = StandardFlightPrice * (StandardFlightDiscountPercentage / PercentageDivisor);
             Assert.AreEqual(expectedDiscount, breakdown.MembershipSavings);
@@ -206,7 +206,7 @@ namespace AirportApp.Tests.Unit.Src.Service
             ticket.SelectedAddOns.Add(new AddOn { Name = "Bagaj", BasePrice = StandardAddOnPrice1 });
             var tickets = new List<FlightTicket> { ticket };
 
-            var breakdown = _pricingService.CalculatePriceBreakdown(flight, customer, tickets);
+            var breakdown = pricingService.CalculatePriceBreakdown(flight, customer, tickets);
 
             Assert.AreEqual(StandardAddOnPrice1, breakdown.AddOnsTotal);
             Assert.AreEqual(StandardFlightPrice + StandardAddOnPrice1, breakdown.FinalTotal);
@@ -223,7 +223,7 @@ namespace AirportApp.Tests.Unit.Src.Service
                 new FlightTicket { Price = StandardFlightPrice }
             };
 
-            var breakdown = _pricingService.CalculatePriceBreakdown(flight, customer, tickets);
+            var breakdown = pricingService.CalculatePriceBreakdown(flight, customer, tickets);
 
             Assert.AreEqual(StandardFlightPrice * tickets.Count, breakdown.BasePriceTotal);
             Assert.AreEqual(StandardFlightPrice * tickets.Count, breakdown.FinalTotal);
@@ -241,7 +241,7 @@ namespace AirportApp.Tests.Unit.Src.Service
                 new FlightTicket { Price = StandardFlightPrice }
             };
 
-            var breakdown = _pricingService.CalculatePriceBreakdown(flight, customer, tickets);
+            var breakdown = pricingService.CalculatePriceBreakdown(flight, customer, tickets);
 
             float expectedSavings = (StandardFlightPrice * (StandardFlightDiscountPercentage / PercentageDivisor)) * tickets.Count;
             Assert.AreEqual(expectedSavings, breakdown.MembershipSavings);
@@ -255,9 +255,9 @@ namespace AirportApp.Tests.Unit.Src.Service
             var customer = CreateBasicCustomer();
             var emptyTickets = new List<FlightTicket>();
 
-            var breakdownNullFlight = _pricingService.CalculatePriceBreakdown(null!, customer, emptyTickets);
-            var breakdownNullTickets = _pricingService.CalculatePriceBreakdown(flight, customer, null!);
-            var breakdownEmptyTickets = _pricingService.CalculatePriceBreakdown(flight, customer, emptyTickets);
+            var breakdownNullFlight = pricingService.CalculatePriceBreakdown(null!, customer, emptyTickets);
+            var breakdownNullTickets = pricingService.CalculatePriceBreakdown(flight, customer, null!);
+            var breakdownEmptyTickets = pricingService.CalculatePriceBreakdown(flight, customer, emptyTickets);
 
             Assert.AreEqual(ExpectedDefaultBreakdownValue, breakdownNullFlight.FinalTotal);
             Assert.AreEqual(ExpectedDefaultBreakdownValue, breakdownNullTickets.FinalTotal);
@@ -278,7 +278,7 @@ namespace AirportApp.Tests.Unit.Src.Service
                 SelectedAddOns = new List<AddOn> { addon }
             };
 
-            var totalPrice = _pricingService.CalculateTotalPrice(ticket);
+            var totalPrice = pricingService.CalculateTotalPrice(ticket);
 
             float expectedFlightPrice = StandardFlightPrice - (StandardFlightPrice * (StandardFlightDiscountPercentage / PercentageDivisor));
             Assert.AreEqual(expectedFlightPrice + StandardAddOnPrice1, totalPrice);
@@ -300,7 +300,7 @@ namespace AirportApp.Tests.Unit.Src.Service
                 SelectedAddOns = new List<AddOn> { selectedAddon }
             };
 
-            var totalPrice = _pricingService.CalculateTotalPrice(ticket);
+            var totalPrice = pricingService.CalculateTotalPrice(ticket);
 
             float expectedFlightPrice = StandardFlightPrice - (StandardFlightPrice * (StandardFlightDiscountPercentage / PercentageDivisor));
             Assert.AreEqual(expectedFlightPrice + StandardAddOnPrice1, totalPrice);
@@ -319,7 +319,7 @@ namespace AirportApp.Tests.Unit.Src.Service
             var ticket2 = new FlightTicket { Price = StandardFlightPrice, SelectedAddOns = new List<AddOn> { addon } };
             var tickets = new List<FlightTicket> { ticket1, ticket2 };
 
-            var breakdown = _pricingService.CalculatePriceBreakdown(flight, customer, tickets);
+            var breakdown = pricingService.CalculatePriceBreakdown(flight, customer, tickets);
 
             Assert.AreEqual(StandardFlightPrice * tickets.Count, breakdown.BasePriceTotal);
             Assert.AreEqual(StandardAddOnPrice1 * tickets.Count, breakdown.AddOnsTotal);

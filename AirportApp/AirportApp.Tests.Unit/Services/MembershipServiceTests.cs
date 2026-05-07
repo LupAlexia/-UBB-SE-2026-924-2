@@ -1,8 +1,8 @@
-using AirportApp.Src.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AirportApp.Src.ViewModel;
 using FluentAssertions;
 using Moq;
 using AirportApp.ClassLibrary.Entity.Domain;
