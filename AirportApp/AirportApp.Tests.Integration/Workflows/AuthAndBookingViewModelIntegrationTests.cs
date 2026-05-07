@@ -1,11 +1,12 @@
-using FluentAssertions;
+using AirportApp.ClassLibrary.DataAccess;
 using AirportApp.ClassLibrary.Entity.Domain;
 using AirportApp.ClassLibrary.Repository;
 using AirportApp.ClassLibrary.Repository.Interfaces;
 using AirportApp.Src.Service;
 using AirportApp.Src.ViewModel;
-using AirportApp.ClassLibrary.DataAccess;
-using AirportApp.Service;
+using FluentAssertions;
+using Microsoft.EntityFrameworkCore;
+
 
 namespace AirportApp.Tests.Integration.Workflows;
 
@@ -27,21 +28,22 @@ public class AuthAndBookingViewModelIntegrationTests : BaseIntegrationTest
     private readonly AuthService authentificationService;
     private readonly BookingService bookingService;
     private readonly PricingService pricingService;
-    private readonly AirportApp.Service.NavigationService navigationService;
+    private readonly AirportApp.Src.Service.NavigationService navigationService;
+    private readonly AirportDbContext _dbContext;
 
     public AuthAndBookingViewModelIntegrationTests()
     {
-        var dbContext = CreateDbContext();
-        membershipRepository = new MembershipRepository(dbContext);
-        userRepository = new CustomerRepository(dbContext, membershipRepository);
-        flightRepository = new FlightRepository(dbContext);
-        ticketRepository = new FlightTicketRepository(dbContext);
-        addOnRepository = new AddOnRepository(dbContext);
+        _dbContext = CreateDbContext();
+        membershipRepository = new MembershipRepository(_dbContext);
+        userRepository = new CustomerRepository(_dbContext, membershipRepository);
+        flightRepository = new FlightRepository(_dbContext);
+        ticketRepository = new FlightTicketRepository(_dbContext);
+        addOnRepository = new AddOnRepository(_dbContext);
 
         authentificationService = new AuthService(userRepository);
         bookingService = new BookingService(ticketRepository, addOnRepository);
         pricingService = new PricingService();
-        navigationService = new AirportApp.Service.NavigationService();
+        navigationService = new AirportApp.Src.Service.NavigationService();
     }
 
     [TestMethod]
@@ -104,7 +106,7 @@ public class AuthAndBookingViewModelIntegrationTests : BaseIntegrationTest
         var bookingViewModel = new BookingViewModel(bookingService, pricingService, navigationService);
 
         var user = new Customer { Id = 1, Email = "test@gmail.com", Username = "test" };
-        var flightId = GetFirstAvailableFlightId();
+        var flightId = GetFirstAvailableFlightId(_dbContext);
         var flight = await flightRepository.GetFlightByIdAsync(flightId);
 
         await bookingViewModel.InitializeAsync(flight!, user);
@@ -120,7 +122,7 @@ public class AuthAndBookingViewModelIntegrationTests : BaseIntegrationTest
         var bookingViewModel = new BookingViewModel(bookingService, pricingService, navigationService);
 
         var user = new Customer { Id = 1, Email = "rares.ionescu@gmail.com", Username = "rares" };
-        var flightId = GetFirstAvailableFlightId();
+        var flightId = GetFirstAvailableFlightId(_dbContext);
         var flight = await flightRepository.GetFlightByIdAsync(flightId);
 
         await bookingViewModel.InitializeAsync(flight!, user, 3);
@@ -134,7 +136,7 @@ public class AuthAndBookingViewModelIntegrationTests : BaseIntegrationTest
         var bookingViewModel = new BookingViewModel(bookingService, pricingService, navigationService);
 
         var user = new Customer { Id = 1, Email = "adrian.stefan@gmail.com", Username = "adrian" };
-        var flightId = GetFirstAvailableFlightId();
+        var flightId = GetFirstAvailableFlightId(_dbContext);
         var flight = await flightRepository.GetFlightByIdAsync(flightId);
 
         await bookingViewModel.InitializeAsync(flight!, user, 2);

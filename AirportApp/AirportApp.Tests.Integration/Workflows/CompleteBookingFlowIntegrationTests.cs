@@ -1,10 +1,11 @@
-using FluentAssertions;
+using AirportApp.ClassLibrary.DataAccess;
 using AirportApp.ClassLibrary.Entity.Domain;
 using AirportApp.ClassLibrary.Repository;
 using AirportApp.ClassLibrary.Repository.Interfaces;
 using AirportApp.Src.Service;
 using AirportApp.Tests.Unit.Fixtures;
-using AirportApp.ClassLibrary.DataAccess;
+using FluentAssertions;
+using Microsoft.EntityFrameworkCore;
 
 namespace AirportApp.Tests.Integration.Workflows;
 
@@ -30,22 +31,23 @@ public class CompleteBookingFlowIntegrationTests : BaseIntegrationTest
     private readonly AuthService authentificationService;
     private readonly BookingService bookingService;
     private readonly PricingService pricingService;
+    private readonly AirportDbContext _dbContext;
 
     public CompleteBookingFlowIntegrationTests()
     {
-        var dbContext = CreateDbContext();
-        var membershipRepository = new MembershipRepository(dbContext);
-        userRepository = new CustomerRepository(dbContext, membershipRepository);
-        ticketRepository = new FlightTicketRepository(dbContext);
-        flightRepository = new FlightRepository(dbContext);
+        _dbContext = CreateDbContext();
+        var membershipRepository = new MembershipRepository(_dbContext);
+        userRepository = new CustomerRepository(_dbContext, membershipRepository);
+        ticketRepository = new FlightTicketRepository(_dbContext);
+        flightRepository = new FlightRepository(_dbContext);
         authentificationService = new AuthService(userRepository);
-        bookingService = new BookingService(ticketRepository, new AddOnRepository(dbContext));
+        bookingService = new BookingService(ticketRepository, new AddOnRepository(_dbContext));
         pricingService = new PricingService();
     }
 
     private async Task<Flight> GetTestFlightAsync()
     {
-        var flightId = GetFirstAvailableFlightId();
+        var flightId = GetFirstAvailableFlightId(_dbContext);
         return (await flightRepository.GetFlightByIdAsync(flightId))!;
     }
 

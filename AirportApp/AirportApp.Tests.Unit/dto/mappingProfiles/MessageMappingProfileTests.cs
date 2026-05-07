@@ -26,10 +26,10 @@ namespace AirportApp.Tests.Unit.Src.Dto.MappingProfiles
             _loggerFactory = Substitute.For<ILoggerFactory>();
             var configuration = new AutoMapper.MapperConfiguration(cfg => cfg.AddProfile<MessageMappingProfile>(), _loggerFactory);
             _autoMapperInstance = configuration.CreateMapper();
-
             _testUser = new User(1, "Alex", "alex@mail.com");
             _testChat = new Chat(10, _testUser, ChatStatus.Active);
             _testMessage = new Message(_testUser, _testChat, "Hello");
+            _testMessage.SenderUserId = _testUser.Id; // Add this line
         }
 
         [TestMethod]
@@ -61,7 +61,7 @@ namespace AirportApp.Tests.Unit.Src.Dto.MappingProfiles
         {
             var resultMessageDataTransferObject = _autoMapperInstance.Map<MessageDTO>(_testMessage);
 
-            Assert.AreEqual(_testUser.RetrieveUniqueDatabaseIdentifierForBot(), resultMessageDataTransferObject.SenderId);
+            Assert.AreEqual(_testUser.UserId, resultMessageDataTransferObject.SenderId);
         }
 
         [TestMethod]
