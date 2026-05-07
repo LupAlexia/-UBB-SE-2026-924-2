@@ -1,11 +1,11 @@
+using System;
+using System.Threading.Tasks;
 using AirportApp.Src.ViewModel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using AirportApp.ClassLibrary.Entity.Domain;
 using AirportApp.Src.Service;
 using FluentAssertions;
-using System.Threading.Tasks;
-using System;
 
 namespace AirportApp.Tests.Unit.ViewModel
 {
@@ -79,9 +79,9 @@ namespace AirportApp.Tests.Unit.ViewModel
 
             // Assert
             await mockAuthService.Received(1).RegisterAsync(
-                authViewModel.EmailText, 
-                authViewModel.PhoneText, 
-                authViewModel.UsernameText, 
+                authViewModel.EmailText,
+                authViewModel.PhoneText,
+                authViewModel.UsernameText,
                 authViewModel.PasswordText);
             authViewModel.SuccessMessage.Should().Contain("Registration successful");
         }
@@ -91,8 +91,8 @@ namespace AirportApp.Tests.Unit.ViewModel
         {
             // Arrange
             authViewModel.IsLoginMode = true;
-            authViewModel.EmailText = "";
-            authViewModel.PasswordText = "";
+            authViewModel.EmailText = string.Empty;
+            authViewModel.PasswordText = string.Empty;
 
             // Assert
             authViewModel.IsFormValid.Should().BeFalse();

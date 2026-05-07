@@ -1,12 +1,12 @@
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using System;
 using AirportApp.ClassLibrary.Entity.Domain;
 using FluentAssertions;
 using Moq;
 using AirportApp.Src.Service;
 using AirportApp.Src.ViewModel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using System;
 
 namespace AirportApp.Tests.Unit.ViewModel;
 
@@ -41,22 +41,22 @@ public class DashboardViewModelTests
     [TestMethod]
     public void CancelTicketCommand_CancelableTicket_SetsPending()
     {
-        var FlightTicket = new FlightTicket { Id = ActiveId, Status = ActiveStatus };
-        mockCancellationService.Setup(serviceAllowingCancel => serviceAllowingCancel.CanCancelTicket(FlightTicket)).Returns((true, string.Empty));
+        var flightTicket = new FlightTicket { Id = ActiveId, Status = ActiveStatus };
+        mockCancellationService.Setup(serviceAllowingCancel => serviceAllowingCancel.CanCancelTicket(flightTicket)).Returns((true, string.Empty));
 
-        viewModel.CancelTicketCommand.Execute(FlightTicket);
+        viewModel.CancelTicketCommand.Execute(flightTicket);
 
-        viewModel.PendingCancelTicket.Should().Be(FlightTicket);
+        viewModel.PendingCancelTicket.Should().Be(flightTicket);
     }
 
     [TestMethod]
     public void CancelTicketCommand_NotCancelableTicket_SetsCancellationFailed()
     {
-        var FlightTicket = new FlightTicket { Id = ActiveId, Status = ActiveStatus };
-        mockCancellationService.Setup(serviceDenyingCancel => serviceDenyingCancel.CanCancelTicket(FlightTicket))
+        var flightTicket = new FlightTicket { Id = ActiveId, Status = ActiveStatus };
+        mockCancellationService.Setup(serviceDenyingCancel => serviceDenyingCancel.CanCancelTicket(flightTicket))
             .Returns((false, CancellationReasonMessage));
 
-        viewModel.CancelTicketCommand.Execute(FlightTicket);
+        viewModel.CancelTicketCommand.Execute(flightTicket);
 
         viewModel.CancellationSucceeded.Should().BeFalse();
         viewModel.PendingCancelTicket.Should().BeNull();
@@ -65,9 +65,9 @@ public class DashboardViewModelTests
     [TestMethod]
     public void CancelTicketCommand_CancelledTicket_Ignores()
     {
-        var FlightTicket = new FlightTicket { Id = CancelledId, Status = CancelledStatus };
+        var flightTicket = new FlightTicket { Id = CancelledId, Status = CancelledStatus };
 
-        viewModel.CancelTicketCommand.Execute(FlightTicket);
+        viewModel.CancelTicketCommand.Execute(flightTicket);
 
         viewModel.PendingCancelTicket.Should().BeNull();
     }
@@ -76,8 +76,8 @@ public class DashboardViewModelTests
     public async Task ConfirmCancellation_Invoked_CallsServiceAndClearsStateAsync()
     {
         UserSession.CurrentUser = new Customer { Id = TestUserId, Email = TestEmail };
-        var FlightTicket = new FlightTicket { Id = TargetTicketIdToCancel, Status = ActiveStatus };
-        viewModel.PendingCancelTicket = FlightTicket;
+        var flightTicket = new FlightTicket { Id = TargetTicketIdToCancel, Status = ActiveStatus };
+        viewModel.PendingCancelTicket = flightTicket;
         mockDashboardService.Setup(dashboardServiceReturningNoTickets => dashboardServiceReturningNoTickets.GetUserTicketsAsync(It.IsAny<int>(), It.IsAny<string>())).ReturnsAsync(new List<FlightTicket>());
 
         await viewModel.ConfirmCancellationAsync();
@@ -90,8 +90,8 @@ public class DashboardViewModelTests
     [TestMethod]
     public void DeclineCancellation_Invoked_ClearsPendingTicket()
     {
-        var FlightTicket = new FlightTicket { Id = PendingId, Status = ActiveStatus };
-        viewModel.PendingCancelTicket = FlightTicket;
+        var flightTicket = new FlightTicket { Id = PendingId, Status = ActiveStatus };
+        viewModel.PendingCancelTicket = flightTicket;
 
         viewModel.DeclineCancellation();
 

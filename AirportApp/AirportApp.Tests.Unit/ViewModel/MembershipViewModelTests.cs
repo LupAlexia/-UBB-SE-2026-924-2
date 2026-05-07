@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Moq;
@@ -5,7 +6,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using AirportApp.ClassLibrary.Entity.Domain;
 using AirportApp.Src.Service;
 using AirportApp.Src.ViewModel;
-using System;
 
 namespace AirportApp.Tests.Unit.ViewModel
 {
@@ -43,7 +43,7 @@ namespace AirportApp.Tests.Unit.ViewModel
 
             var viewModel = new MembershipViewModel(mockMembershipService.Object, mockNavigationService.Object);
             // Assuming the ViewModel loads memberships in constructor, we might need a small delay or a public Load method
-            await Task.Delay(100); 
+            await Task.Delay(100);
 
             Assert.IsTrue(viewModel.Memberships.Count > 0, "Memberships collection should be populated on initialization.");
             Assert.AreEqual(ExpectedMembershipName, viewModel.Memberships[0].Name);

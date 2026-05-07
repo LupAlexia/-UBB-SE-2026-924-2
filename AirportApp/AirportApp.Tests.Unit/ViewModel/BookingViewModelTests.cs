@@ -1,5 +1,5 @@
-using AirportApp.ClassLibrary.Entity.Domain;
 using System.Collections.ObjectModel;
+using AirportApp.ClassLibrary.Entity.Domain;
 using FluentAssertions;
 using Moq;
 using AirportApp.ClassLibrary.Entity.Domain;
