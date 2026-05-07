@@ -13,7 +13,6 @@ namespace Airport.Web.Controllers
     {
         private readonly ITicketRepository ticketRepository;
 
-
         public TicketController(ITicketRepository ticketRepository)
         {
             this.ticketRepository = ticketRepository;
@@ -43,7 +42,6 @@ namespace Airport.Web.Controllers
         [HttpPost]
         public async Task<ActionResult> CreateAsync([FromBody] CreateTicketDTO dto)
         {
-
             var ticket = new ComplaintTicket
             {
                 CreatorId = dto.creatorId,
@@ -60,25 +58,12 @@ namespace Airport.Web.Controllers
             return CreatedAtAction(nameof(GetByIdAsync), new { id = createdId }, ticket);
         }
 
-        //[HttpPut("{id}")]
-        //public async Task<ActionResult> UpdateAsync(int id, [FromBody] Ticket ticket)
-        //{
-        //    if (id != ticket.Id)
-        //    {
-        //        return BadRequest("ID in URL does not match ID in body.");
-        //    }
-
-        //    await ticketRepository.UpdateByIdAsync(id, ticket);
-        //    return NoContent();
-        //}
-
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteAsync(int id)
         {
             await ticketRepository.DeleteByIdAsync(id);
             return NoContent();
         }
-
 
         [HttpPut("{id}")]
         public async Task<ActionResult> UpdateAsync(int id, [FromBody] ComplaintTicket ticket)
