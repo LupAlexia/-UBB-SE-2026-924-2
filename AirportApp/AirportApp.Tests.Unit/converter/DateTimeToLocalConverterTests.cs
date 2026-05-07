@@ -10,12 +10,12 @@ namespace AirportApp.Tests.Unit.src.converter;
 [TestClass]
 public class DateTimeToLocalConverterTests
 {
-    private DateTimeToLocalConverter _converter;
+    private DateTimeToLocalConverter converter;
 
     [TestInitialize]
     public void Setup()
     {
-        _converter = new DateTimeToLocalConverter();
+        converter = new DateTimeToLocalConverter();
     }
 
     [TestMethod]
@@ -23,7 +23,7 @@ public class DateTimeToLocalConverterTests
     {
         var input = new DateTimeOffset(2024, 1, 10, 12, 30, 0, TimeSpan.Zero);
 
-        var result = _converter.Convert(input, typeof(string), null, null);
+        var result = converter.Convert(input, typeof(string), null, null);
 
         Assert.IsInstanceOfType(result, typeof(string));
     }
@@ -33,7 +33,7 @@ public class DateTimeToLocalConverterTests
     {
         var input = new DateTimeOffset(2024, 1, 10, 12, 30, 0, TimeSpan.Zero);
 
-        var result = _converter.Convert(input, typeof(string), null, null) as string;
+        var result = converter.Convert(input, typeof(string), null, null) as string;
 
         Assert.IsTrue(result.Contains("Jan") || result.Contains("Feb") || result.Contains("Mar")
             || result.Contains("Apr") || result.Contains("May") || result.Contains("Jun")
@@ -46,7 +46,7 @@ public class DateTimeToLocalConverterTests
     {
         var input = "not a date";
 
-        var result = _converter.Convert(input, typeof(string), null, null);
+        var result = converter.Convert(input, typeof(string), null, null);
 
         Assert.AreEqual(input, result);
     }
@@ -54,7 +54,7 @@ public class DateTimeToLocalConverterTests
     [TestMethod]
     public void Convert_NullValue_ReturnsNull()
     {
-        var result = _converter.Convert(null, typeof(string), null, null);
+        var result = converter.Convert(null, typeof(string), null, null);
 
         Assert.IsNull(result);
     }
@@ -63,7 +63,7 @@ public class DateTimeToLocalConverterTests
     public void ConvertBack_WhenCalled_ThrowsNotImplementedException()
     {
         Assert.ThrowsException<NotImplementedException>(() =>
-            _converter.ConvertBack("Jan 10, 12:30", typeof(DateTimeOffset), null, null));
+            converter.ConvertBack("Jan 10, 12:30", typeof(DateTimeOffset), null, null));
     }
 }
 

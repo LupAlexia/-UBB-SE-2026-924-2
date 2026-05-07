@@ -6,19 +6,18 @@ namespace AirportApp.Tests.Unit.Src.Converter;
 [TestClass]
 public class HelpfulBorderConverterTests
 {
-    private HelpfulBorderConverter _converter;
+    private HelpfulBorderConverter converter;
 
     [TestInitialize]
     public void Setup()
     {
-        _converter = new HelpfulBorderConverter();
+        converter = new HelpfulBorderConverter();
     }
 
     [TestMethod()]
     public void ConvertBack_WhenCalled_ThrowsNotImplementedException()
     {
-
-        Assert.ThrowsException<NotImplementedException>(() => _converter.ConvertBack(Color.FromArgb(255, 248, 249, 251), typeof(bool), null, null));
+        Assert.ThrowsException<NotImplementedException>(() => converter.ConvertBack(Color.FromArgb(255, 248, 249, 251), typeof(bool), null, null));
     }
 }
 
