@@ -12,7 +12,7 @@ namespace AirportApp.ClassLibrary.Entity.Dto.MappingProfiles
     {
         public TicketMappingProfile()
         {
-            CreateMap<Ticket, TicketDTO>()
+            CreateMap<ComplaintTicket, TicketDTO>()
                 .ConstructUsing(ticket => new TicketDTO(
                     ticket.Id,
                     ticket.Creator.UserId,

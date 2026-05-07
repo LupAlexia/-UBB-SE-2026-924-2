@@ -14,10 +14,10 @@ namespace AirportApp.Src.ViewModel
 {
     public class TicketsViewModel
     {
-        private readonly ITicketService ticketService;
+        private readonly IComplaintTicketService ticketService;
         private readonly IMapper mapper;
-        private readonly ITicketCategoryService categoryService;
-        private readonly ITicketSubcategoryService subcategoryService;
+        private readonly IComplaintTicketCategoryService categoryService;
+        private readonly IComplaintTicketSubcategoryService subcategoryService;
         private readonly IUserService userService;
 
         public ObservableCollection<TicketDTO> AllTickets { get; } = new ();
@@ -27,10 +27,10 @@ namespace AirportApp.Src.ViewModel
 
         private TicketFilterStatusEnum selectedFilter = TicketFilterStatusEnum.ALL;
 
-        public ObservableCollection<TicketCategory> Categories { get; } = new ();
-        public ObservableCollection<TicketSubcategory> Subcategories { get; } = new ();
+        public ObservableCollection<ComplaintTicketCategory> Categories { get; } = new ();
+        public ObservableCollection<ComplaintTicketSubcategory> Subcategories { get; } = new ();
 
-        public TicketsViewModel(ITicketService ticketService, ITicketCategoryService categoryService, ITicketSubcategoryService subcategoryService, IUserService userService, IMapper mapper)
+        public TicketsViewModel(IComplaintTicketService ticketService, IComplaintTicketCategoryService categoryService, IComplaintTicketSubcategoryService subcategoryService, IUserService userService, IMapper mapper)
         {
             this.ticketService = ticketService;
             this.categoryService = categoryService;
@@ -118,7 +118,7 @@ namespace AirportApp.Src.ViewModel
         // =================================
         // UPDATE STATUS
         // =================================
-        public async Task UpdateStatusAsync(int ticketId, TicketStatusEnum newStatus)
+        public async Task UpdateStatusAsync(int ticketId, ComplaintTicketStatusEnum newStatus)
         {
             await ticketService.UpdateStatusAsync(ticketId, newStatus);
             await LoadTicketsAsync();
@@ -127,7 +127,7 @@ namespace AirportApp.Src.ViewModel
         // =================================
         // UPDATE URGENCY
         // =================================
-        public async Task UpdateUrgencyLevelAsync(int ticketId, TicketUrgencyLevelEnum newUrgencyLevel)
+        public async Task UpdateUrgencyLevelAsync(int ticketId, ComplaintTicketUrgencyLevelEnum newUrgencyLevel)
         {
             await ticketService.UpdateUrgencyLevelAsync(ticketId, newUrgencyLevel);
             await LoadTicketsAsync();
@@ -143,7 +143,7 @@ namespace AirportApp.Src.ViewModel
             var category = await categoryService.GetCategoryByIdAsync(ticketDataTransferObject.categoryId);
             var subcategory = await subcategoryService.GetSubcategoryByIdAsync(ticketDataTransferObject.subcategoryId);
 
-            var ticket = new Ticket(
+            var ticket = new ComplaintTicket(
                 ticketDataTransferObject.ticketId,
                 creator,
                 ticketDataTransferObject.currentStatus,

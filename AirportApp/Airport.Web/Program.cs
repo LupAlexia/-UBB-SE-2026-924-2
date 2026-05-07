@@ -29,9 +29,9 @@ namespace Airport.Web
             builder.Services.AddScoped<IFlightRepository, FlightRepository>();
             builder.Services.AddScoped<IFlightTicketRepository, FlightTicketRepository>();
             builder.Services.AddScoped<IMembershipRepository, MembershipRepository>();
-            builder.Services.AddScoped<ITicketRepository, TicketRepository>();
-            builder.Services.AddScoped<ITicketCategoryRepository, TicketCategoryRepository>();
-            builder.Services.AddScoped<ITicketSubcategoryRepository, TicketSubcategoryRepository>();
+            builder.Services.AddScoped<ITicketRepository, ComplaintTicketRepository>();
+            builder.Services.AddScoped<ITicketCategoryRepository, ComplaintTicketCategoryRepository>();
+            builder.Services.AddScoped<ITicketSubcategoryRepository, ComplaintTicketSubcategoryRepository>();
             builder.Services.AddScoped<IUserRepository, UserRepository>();
 
             builder.Services.AddScoped<IRepository<int, Chat>, ChatDatabaseRepository>();

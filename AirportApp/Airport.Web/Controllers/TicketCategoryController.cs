@@ -18,18 +18,18 @@ namespace Airport.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TicketCategory>>> GetAllAsync()
+        public async Task<ActionResult<IEnumerable<ComplaintTicketCategory>>> GetAllAsync()
         {
-            IEnumerable<TicketCategory> categories = await ticketCategoryRepository.GetAllAsync();
+            IEnumerable<ComplaintTicketCategory> categories = await ticketCategoryRepository.GetAllAsync();
             return Ok(categories);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<TicketCategory>> GetByIdAsync(int id)
+        public async Task<ActionResult<ComplaintTicketCategory>> GetByIdAsync(int id)
         {
             try
             {
-                TicketCategory category = await ticketCategoryRepository.GetByIdAsync(id);
+                ComplaintTicketCategory category = await ticketCategoryRepository.GetByIdAsync(id);
                 return Ok(category);
             }
             catch (KeyNotFoundException)

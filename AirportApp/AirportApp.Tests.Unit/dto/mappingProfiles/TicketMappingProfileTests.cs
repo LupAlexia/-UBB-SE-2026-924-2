@@ -15,9 +15,9 @@ namespace AirportApp.Tests.Unit.Src.Dto.MappingProfiles
     {
         private IMapper mapper;
         private User testUser;
-        private TicketCategory testCategory;
-        private TicketSubcategory testSubcategory;
-        private Ticket testTicket;
+        private ComplaintTicketCategory testCategory;
+        private ComplaintTicketSubcategory testSubcategory;
+        private ComplaintTicket testTicket;
         private ILoggerFactory loggerFactory;
 
         [TestInitialize]
@@ -28,19 +28,19 @@ namespace AirportApp.Tests.Unit.Src.Dto.MappingProfiles
             mapper = configuration.CreateMapper();
 
             testUser = new User(101, "Jane Doe", "jane@example.com");
-            testCategory = new TicketCategory(1, "Billing", TicketUrgencyLevelEnum.HIGH);
-            testSubcategory = new TicketSubcategory(10, "Refund", 99, testCategory);
+            testCategory = new ComplaintTicketCategory(1, "Billing", ComplaintTicketUrgencyLevelEnum.HIGH);
+            testSubcategory = new ComplaintTicketSubcategory(10, "Refund", 99, testCategory);
 
-            testTicket = new Ticket(
+            testTicket = new ComplaintTicket(
                 5,
                 testUser,
-                TicketStatusEnum.OPEN,
+                ComplaintTicketStatusEnum.OPEN,
                 testCategory,
                 testSubcategory,
                 "Refund Request",
                 "I want a refund for my delayed flight.",
                 new DateTime(2026, 1, 1),
-                TicketUrgencyLevelEnum.HIGH);
+                ComplaintTicketUrgencyLevelEnum.HIGH);
         }
 
         [TestMethod]

@@ -177,9 +177,9 @@ namespace AirportApp
             //services.AddSingleton<ITicketService, TicketService>();
             //services.AddSingleton<ITicketCategoryService, TicketCategoryService>();
             //services.AddSingleton<ITicketSubcategoryService, TicketSubcategoryService>();
-            services.AddSingleton<ITicketService, TicketServiceProxy>();
-            services.AddSingleton<ITicketCategoryService, TicketCategoryServiceProxy>();
-            services.AddSingleton<ITicketSubcategoryService, TicketSubcategoryServiceProxy>();
+            services.AddSingleton<IComplaintTicketService, ComplaintTicketServiceProxy>();
+            services.AddSingleton<IComplaintTicketCategoryService, ComplaintTicketCategoryServiceProxy>();
+            services.AddSingleton<IComplaintTicketSubcategoryService, ComplaintTicketSubcategoryServiceProxy>();
 
             services.AddTransient<TicketsViewModel>();
 

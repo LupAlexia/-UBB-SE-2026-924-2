@@ -63,7 +63,7 @@
             <Button Style="{StaticResource TextBlockButtonStyle}" Foreground="{ThemeResource PrimaryTextBrush}" Click="OnTicketsRequested">
                 <StackPanel Orientation="Horizontal" Spacing="8">
                     <FontIcon Glyph="&#xE8A1;" FontSize="16" Foreground="{ThemeResource PrimaryBrush}"/>
-                    <TextBlock Text="Tickets" VerticalAlignment="Center" Foreground="{ThemeResource PrimaryTextBrush}"/>
+                    <TextBlock Text="Complaint Tickets" VerticalAlignment="Center" Foreground="{ThemeResource PrimaryTextBrush}"/>
                 </StackPanel>
             </Button>
 

@@ -14,19 +14,19 @@ namespace AirportApp.Tests.Unit.Src.Service
     public class TicketCategoryServiceTests
     {
         private ITicketCategoryRepository categoryRepositoryMock;
-        private TicketCategoryService categoryService;
+        private ComplaintTicketCategoryService categoryService;
 
         [TestInitialize]
         public void Setup()
         {
             categoryRepositoryMock = Substitute.For<ITicketCategoryRepository>();
-            categoryService = new TicketCategoryService(categoryRepositoryMock);
+            categoryService = new ComplaintTicketCategoryService(categoryRepositoryMock);
         }
 
         [TestMethod]
         public async Task GetCategoryById_WhenCalled_ReturnsCategoryFromRepository()
         {
-            var expectedCategory = new TicketCategory(1, "Technical", TicketUrgencyLevelEnum.HIGH);
+            var expectedCategory = new ComplaintTicketCategory(1, "Technical", ComplaintTicketUrgencyLevelEnum.HIGH);
             categoryRepositoryMock.GetByIdAsync(1).Returns(Task.FromResult(expectedCategory));
 
             var resultedCategory = await categoryService.GetCategoryByIdAsync(1);
@@ -39,12 +39,12 @@ namespace AirportApp.Tests.Unit.Src.Service
         [TestMethod]
         public async Task GetAllCategories_WhenCalled_ReturnsAllCategoriesFromRepository()
         {
-            var categories = new List<TicketCategory>
+            var categories = new List<ComplaintTicketCategory>
             {
-                new TicketCategory(1, "IT", TicketUrgencyLevelEnum.MEDIUM),
-                new TicketCategory(2, "HR", TicketUrgencyLevelEnum.LOW)
+                new ComplaintTicketCategory(1, "IT", ComplaintTicketUrgencyLevelEnum.MEDIUM),
+                new ComplaintTicketCategory(2, "HR", ComplaintTicketUrgencyLevelEnum.LOW)
             };
-            categoryRepositoryMock.GetAllAsync().Returns(Task.FromResult((IEnumerable<TicketCategory>)categories));
+            categoryRepositoryMock.GetAllAsync().Returns(Task.FromResult((IEnumerable<ComplaintTicketCategory>)categories));
 
             var resultedCategories = (await categoryService.GetAllCategoriesAsync()).ToList();
 
@@ -55,7 +55,7 @@ namespace AirportApp.Tests.Unit.Src.Service
         [TestMethod]
         public async Task GetCategoryById_WhenRepositoryThrows_ServicePropagatesException()
         {
-            categoryRepositoryMock.GetByIdAsync(Arg.Any<int>()).Returns(x => Task.FromException<TicketCategory>(new KeyNotFoundException()));
+            categoryRepositoryMock.GetByIdAsync(Arg.Any<int>()).Returns(x => Task.FromException<ComplaintTicketCategory>(new KeyNotFoundException()));
 
             await Assert.ThrowsExceptionAsync<KeyNotFoundException>(async () => await categoryService.GetCategoryByIdAsync(999));
         }

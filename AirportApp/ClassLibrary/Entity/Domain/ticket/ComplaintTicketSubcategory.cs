@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace AirportApp.ClassLibrary.Entity.Domain.Ticket
 {
     [Table("TicketSubcategories")]
-    public class TicketSubcategory
+    public class ComplaintTicketSubcategory
     {
         [Key]
         [Column("Subcategory_Id")]
@@ -28,11 +28,13 @@ namespace AirportApp.ClassLibrary.Entity.Domain.Ticket
         public int ParentCategoryId { get; set; }
 
         [ForeignKey(nameof(ParentCategoryId))]
-        public TicketCategory ParentCategory { get; set; } = null!;
+        public ComplaintTicketCategory ParentCategory { get; set; } = null!;
 
-        public TicketSubcategory() { }
+        public ComplaintTicketSubcategory()
+        {
+        }
 
-        public TicketSubcategory(int subcategoryId, string subcategoryName, int externalId, TicketCategory parentCategory)
+        public ComplaintTicketSubcategory(int subcategoryId, string subcategoryName, int externalId, ComplaintTicketCategory parentCategory)
         {
             Id = subcategoryId;
             SubcategoryName = subcategoryName;

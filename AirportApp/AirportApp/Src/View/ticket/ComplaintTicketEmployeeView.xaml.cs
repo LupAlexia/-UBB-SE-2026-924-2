@@ -82,7 +82,7 @@ namespace AirportApp.Src.View.Ticket
                 };
 
                 // Add enum items as strings
-                foreach (var status in Enum.GetValues(typeof(TicketStatusEnum)).Cast<TicketStatusEnum>())
+                foreach (var status in Enum.GetValues(typeof(ComplaintTicketStatusEnum)).Cast<ComplaintTicketStatusEnum>())
                 {
                     combo.Items.Add(status.ToString());
                 }
@@ -95,7 +95,7 @@ namespace AirportApp.Src.View.Ticket
                 var result = await dialog.ShowAsync();
                 if (result == ContentDialogResult.Primary && combo.SelectedItem is string selectedStr)
                 {
-                    if (Enum.TryParse<TicketStatusEnum>(selectedStr, out var newStatus))
+                    if (Enum.TryParse<ComplaintTicketStatusEnum>(selectedStr, out var newStatus))
                     {
                         await ViewModel.UpdateStatusAsync(ticket.ticketId, newStatus);
                     }

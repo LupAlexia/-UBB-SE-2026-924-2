@@ -8,16 +8,16 @@ using AirportApp.ClassLibrary.Repository.Interfaces;
 
 namespace AirportApp.ClassLibrary.Repository
 {
-    public class TicketRepository : ITicketRepository
+    public class ComplaintTicketRepository : ITicketRepository
     {
         private readonly AirportDbContext dataBaseContext;
 
-        public TicketRepository(AirportDbContext context)
+        public ComplaintTicketRepository(AirportDbContext context)
         {
             dataBaseContext = context ?? throw new ArgumentNullException(nameof(dataBaseContext));
         }
 
-        public async Task<IEnumerable<Ticket>> GetAllAsync()
+        public async Task<IEnumerable<ComplaintTicket>> GetAllAsync()
         {
             return await dataBaseContext.tickets
                 .Include(t => t.Creator)
@@ -26,7 +26,7 @@ namespace AirportApp.ClassLibrary.Repository
                 .ToListAsync();
         }
 
-        public async Task<Ticket> GetByIdAsync(int id)
+        public async Task<ComplaintTicket> GetByIdAsync(int id)
         {
             return await dataBaseContext.tickets
                 .Include(t => t.Creator)
@@ -36,14 +36,14 @@ namespace AirportApp.ClassLibrary.Repository
                 ?? throw new KeyNotFoundException($"Ticket with id {id} not found.");
         }
 
-        public async Task<int> CreateNewEntityAsync(Ticket ticket)
+        public async Task<int> CreateNewEntityAsync(ComplaintTicket ticket)
         {
             dataBaseContext.tickets.Add(ticket);
             await dataBaseContext.SaveChangesAsync();
             return ticket.Id;
         }
 
-        public async Task UpdateByIdAsync(int id, Ticket ticket)
+        public async Task UpdateByIdAsync(int id, ComplaintTicket ticket)
         {
             
 
@@ -51,7 +51,7 @@ namespace AirportApp.ClassLibrary.Repository
             await dataBaseContext.SaveChangesAsync();
         }
 
-        public async Task UpdateStatusByIdAsync(int id, TicketStatusEnum newStatus)
+        public async Task UpdateStatusByIdAsync(int id, ComplaintTicketStatusEnum newStatus)
         {
             var ticket = await dataBaseContext.tickets.FindAsync(id);
             if (ticket == null)
@@ -63,7 +63,7 @@ namespace AirportApp.ClassLibrary.Repository
             await dataBaseContext.SaveChangesAsync();
         }
 
-        public async Task UpdateUrgencyLevelByIdAsync(int id, TicketUrgencyLevelEnum newUrgencyLevel)
+        public async Task UpdateUrgencyLevelByIdAsync(int id, ComplaintTicketUrgencyLevelEnum newUrgencyLevel)
         {
             var ticket = await dataBaseContext.tickets.FindAsync(id);
             if (ticket == null)

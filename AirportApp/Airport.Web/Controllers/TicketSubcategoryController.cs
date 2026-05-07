@@ -18,18 +18,18 @@ namespace Airport.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TicketSubcategory>>> GetAllAsync()
+        public async Task<ActionResult<IEnumerable<ComplaintTicketSubcategory>>> GetAllAsync()
         {
-            IEnumerable<TicketSubcategory> subcategories = await ticketSubcategoryRepository.GetAllAsync();
+            IEnumerable<ComplaintTicketSubcategory> subcategories = await ticketSubcategoryRepository.GetAllAsync();
             return Ok(subcategories);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<TicketSubcategory>> GetByIdAsync(int id)
+        public async Task<ActionResult<ComplaintTicketSubcategory>> GetByIdAsync(int id)
         {
             try
             {
-                TicketSubcategory subcategory = await ticketSubcategoryRepository.GetByIdAsync(id);
+                ComplaintTicketSubcategory subcategory = await ticketSubcategoryRepository.GetByIdAsync(id);
                 return Ok(subcategory);
             }
             catch (KeyNotFoundException)
@@ -39,9 +39,9 @@ namespace Airport.Web.Controllers
         }
 
         [HttpGet("by-category/{categoryId}")]
-        public async Task<ActionResult<IEnumerable<TicketSubcategory>>> GetByCategoryIdAsync(int categoryId)
+        public async Task<ActionResult<IEnumerable<ComplaintTicketSubcategory>>> GetByCategoryIdAsync(int categoryId)
         {
-            IEnumerable<TicketSubcategory> subcategories = await ticketSubcategoryRepository.GetByCategoryIdAsync(categoryId);
+            IEnumerable<ComplaintTicketSubcategory> subcategories = await ticketSubcategoryRepository.GetByCategoryIdAsync(categoryId);
             return Ok(subcategories);
         }
     }

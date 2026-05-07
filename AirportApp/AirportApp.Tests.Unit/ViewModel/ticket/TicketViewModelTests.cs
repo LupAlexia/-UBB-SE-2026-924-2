@@ -16,39 +16,39 @@ namespace AirportApp.Tests.Unit.Src.ViewModel
     [TestClass]
     public class TicketsViewModelTests
     {
-        private ITicketService ticketService;
-        private ITicketCategoryService categoryService;
-        private ITicketSubcategoryService subcategoryService;
+        private IComplaintTicketService ticketService;
+        private IComplaintTicketCategoryService categoryService;
+        private IComplaintTicketSubcategoryService subcategoryService;
         private IUserService userService;
         private IMapper mapper;
         private TicketsViewModel ticketsViewModel;
 
-        private TicketCategory testCategory;
-        private TicketSubcategory testSubcategory;
+        private ComplaintTicketCategory testCategory;
+        private ComplaintTicketSubcategory testSubcategory;
         private User testUser;
 
         [TestInitialize]
         public void Setup()
         {
-            ticketService = Substitute.For<ITicketService>();
-            categoryService = Substitute.For<ITicketCategoryService>();
-            subcategoryService = Substitute.For<ITicketSubcategoryService>();
+            ticketService = Substitute.For<IComplaintTicketService>();
+            categoryService = Substitute.For<IComplaintTicketCategoryService>();
+            subcategoryService = Substitute.For<IComplaintTicketSubcategoryService>();
             userService = Substitute.For<IUserService>();
             mapper = Substitute.For<IMapper>();
 
-            testCategory = new TicketCategory(1, "Hardware", TicketUrgencyLevelEnum.MEDIUM);
-            testSubcategory = new TicketSubcategory(10, "Monitor", 100, testCategory);
+            testCategory = new ComplaintTicketCategory(1, "Hardware", ComplaintTicketUrgencyLevelEnum.MEDIUM);
+            testSubcategory = new ComplaintTicketSubcategory(10, "Monitor", 100, testCategory);
             testUser = new User(42, "Dede", "dedeee@airport.com");
 
-            mapper.Map<TicketDTO>(Arg.Any<Ticket>()).Returns(callInfo => MapToDto((Ticket)callInfo[0]));
+            mapper.Map<TicketDTO>(Arg.Any<ComplaintTicket>()).Returns(callInfo => MapToDto((ComplaintTicket)callInfo[0]));
 
-            var initialTickets = new List<Ticket>
+            var initialTickets = new List<ComplaintTicket>
             {
-                new Ticket(1, testUser, TicketStatusEnum.OPEN, testCategory, testSubcategory, "Issue 1", "Desc 1", DateTime.Now)
+                new ComplaintTicket(1, testUser, ComplaintTicketStatusEnum.OPEN, testCategory, testSubcategory, "Issue 1", "Desc 1", DateTime.Now)
             };
 
-            ticketService.GetAllTicketsAsync().Returns(Task.FromResult((IEnumerable<Ticket>)initialTickets));
-            categoryService.GetAllCategoriesAsync().Returns(Task.FromResult((IEnumerable<TicketCategory>)new List<TicketCategory> { testCategory }));
+            ticketService.GetAllTicketsAsync().Returns(Task.FromResult((IEnumerable<ComplaintTicket>)initialTickets));
+            categoryService.GetAllCategoriesAsync().Returns(Task.FromResult((IEnumerable<ComplaintTicketCategory>)new List<ComplaintTicketCategory> { testCategory }));
 
             ticketsViewModel = new TicketsViewModel(ticketService, categoryService, subcategoryService, userService, mapper);
         }
@@ -82,7 +82,7 @@ namespace AirportApp.Tests.Unit.Src.ViewModel
         {
             var ticketDataTransferObject = new TicketDTO(
                 101, 42, "dede_the_racoon@gmail.com",
-                TicketUrgencyLevelEnum.HIGH, TicketStatusEnum.OPEN,
+                ComplaintTicketUrgencyLevelEnum.HIGH, ComplaintTicketStatusEnum.OPEN,
                 1, "Hardware", 10, "Monitor",
                 "Broken Screen", "The screen is crackedddd", DateTime.Now);
 
@@ -92,7 +92,7 @@ namespace AirportApp.Tests.Unit.Src.ViewModel
 
             await ticketsViewModel.CreateTicketAsync(ticketDataTransferObject);
 
-            await ticketService.Received(1).AddTicketAsync(Arg.Is<Ticket>(ticket =>
+            await ticketService.Received(1).AddTicketAsync(Arg.Is<ComplaintTicket>(ticket =>
                 ticket.Id == 101 &&
                 ticket.Subject == "Broken Screen" &&
                 ticket.Creator.Id == 42));
@@ -103,9 +103,9 @@ namespace AirportApp.Tests.Unit.Src.ViewModel
         [TestMethod]
         public async Task UpdateStatus_WhenCalled_ShouldTriggerServiceUpdate()
         {
-            await ticketsViewModel.UpdateStatusAsync(1, TicketStatusEnum.RESOLVED);
+            await ticketsViewModel.UpdateStatusAsync(1, ComplaintTicketStatusEnum.RESOLVED);
 
-            await ticketService.Received(1).UpdateStatusAsync(1, TicketStatusEnum.RESOLVED);
+            await ticketService.Received(1).UpdateStatusAsync(1, ComplaintTicketStatusEnum.RESOLVED);
             await ticketService.Received(2).GetAllTicketsAsync();
         }
 
@@ -113,7 +113,7 @@ namespace AirportApp.Tests.Unit.Src.ViewModel
         public async Task UpdateUrgencyLevel_WhenCalled_ShouldCallServiceAndUpdateLocalList()
         {
             int targetId = 1;
-            var newUrgency = TicketUrgencyLevelEnum.HIGH;
+            var newUrgency = ComplaintTicketUrgencyLevelEnum.HIGH;
 
             await ticketsViewModel.UpdateUrgencyLevelAsync(targetId, newUrgency);
             await ticketService.Received(1).UpdateUrgencyLevelAsync(targetId, newUrgency);
@@ -135,8 +135,8 @@ namespace AirportApp.Tests.Unit.Src.ViewModel
         [TestMethod]
         public async Task LoadSubcategories_WhenCalled_ShouldPopulateCorrectCategory()
         {
-            var subcategoriesList = new List<TicketSubcategory> { testSubcategory };
-            subcategoryService.GetSubcategoriesByCategoryIdAsync(1).Returns(Task.FromResult((IEnumerable<TicketSubcategory>)subcategoriesList));
+            var subcategoriesList = new List<ComplaintTicketSubcategory> { testSubcategory };
+            subcategoryService.GetSubcategoriesByCategoryIdAsync(1).Returns(Task.FromResult((IEnumerable<ComplaintTicketSubcategory>)subcategoriesList));
 
             await ticketsViewModel.LoadSubcategoriesAsync(1);
 
@@ -144,7 +144,7 @@ namespace AirportApp.Tests.Unit.Src.ViewModel
             Assert.AreEqual("Monitor", ticketsViewModel.Subcategories[0].SubcategoryName);
         }
 
-        private static TicketDTO MapToDto(Ticket ticket)
+        private static TicketDTO MapToDto(ComplaintTicket ticket)
         {
             return new TicketDTO(
                 ticket.Id,

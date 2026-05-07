@@ -12,24 +12,24 @@ using AirportApp.ClassLibrary.Repository.Interfaces;
 
 namespace AirportApp.Src.Service
 {
-    public class TicketService : ITicketService
+    public class ComplaintTicketService : IComplaintTicketService
     {
         private readonly ITicketRepository ticketRepository;
 
-        public TicketService(ITicketRepository ticketRepository)
+        public ComplaintTicketService(ITicketRepository ticketRepository)
         {
             this.ticketRepository = ticketRepository;
         }
 
-        public async Task CreateTicketAsync(int ticketId, User ticketCreator, TicketStatusEnum initialStatus, TicketCategory category, TicketSubcategory subcategory, string subject, string description, DateTime creationTimestamp, TicketUrgencyLevelEnum? initialUrgencyLevel = null)
+        public async Task CreateTicketAsync(int ticketId, User ticketCreator, ComplaintTicketStatusEnum initialStatus, ComplaintTicketCategory category, ComplaintTicketSubcategory subcategory, string subject, string description, DateTime creationTimestamp, ComplaintTicketUrgencyLevelEnum? initialUrgencyLevel = null)
         {
-            Ticket newTicket = new Ticket(ticketId, ticketCreator, initialStatus, category, subcategory, subject, description, creationTimestamp, initialUrgencyLevel);
+            ComplaintTicket newTicket = new ComplaintTicket(ticketId, ticketCreator, initialStatus, category, subcategory, subject, description, creationTimestamp, initialUrgencyLevel);
 
             ValidateTicket(newTicket);
             await AddTicketAsync(newTicket);
         }
 
-        public async Task AddTicketAsync(Ticket ticketEntity)
+        public async Task AddTicketAsync(ComplaintTicket ticketEntity)
         {
             await ticketRepository.CreateNewEntityAsync(ticketEntity);
         }
@@ -39,22 +39,22 @@ namespace AirportApp.Src.Service
             await ticketRepository.DeleteByIdAsync(ticketId);
         }
 
-        public async Task<Ticket> GetTicketByIdAsync(int ticketId)
+        public async Task<ComplaintTicket> GetTicketByIdAsync(int ticketId)
         {
             return await ticketRepository.GetByIdAsync(ticketId);
         }
 
-        public async Task<IEnumerable<Ticket>> GetAllTicketsAsync()
+        public async Task<IEnumerable<ComplaintTicket>> GetAllTicketsAsync()
         {
             return await ticketRepository.GetAllAsync();
         }
 
-        public async Task UpdateTicketByIdAsync(int identificationNumber, Ticket ticket)
+        public async Task UpdateTicketByIdAsync(int identificationNumber, ComplaintTicket ticket)
         {
             await ticketRepository.UpdateByIdAsync(identificationNumber, ticket);
         }
 
-        public void ValidateTicket(Ticket ticket)
+        public void ValidateTicket(ComplaintTicket ticket)
         {
             if (ticket == null)
             {
@@ -86,16 +86,16 @@ namespace AirportApp.Src.Service
             }
         }
 
-        public async Task UpdateUrgencyLevelAsync(int ticketId, TicketUrgencyLevelEnum newUrgencyLevel)
+        public async Task UpdateUrgencyLevelAsync(int ticketId, ComplaintTicketUrgencyLevelEnum newUrgencyLevel)
         {
-            Ticket targetTicket = await ticketRepository.GetByIdAsync(ticketId);
+            ComplaintTicket targetTicket = await ticketRepository.GetByIdAsync(ticketId);
             targetTicket.UpdateUrgencyLevel(newUrgencyLevel);
             await ticketRepository.UpdateByIdAsync(ticketId, targetTicket);
         }
 
-        public async Task UpdateStatusAsync(int ticketId, TicketStatusEnum newStatus)
+        public async Task UpdateStatusAsync(int ticketId, ComplaintTicketStatusEnum newStatus)
         {
-            Ticket targetTicket = await ticketRepository.GetByIdAsync(ticketId);
+            ComplaintTicket targetTicket = await ticketRepository.GetByIdAsync(ticketId);
             targetTicket.UpdateStatus(newStatus);
             await ticketRepository.UpdateByIdAsync(ticketId, targetTicket);
         }
@@ -115,8 +115,8 @@ namespace AirportApp.Src.Service
             }
         }
 
-        private bool IsStatusOpen(TicketDTO ticket) => ticket.currentStatus == TicketStatusEnum.OPEN;
-        private bool IsStatusInProgress(TicketDTO ticket) => ticket.currentStatus == TicketStatusEnum.IN_PROGRESS;
-        private bool IsStatusResolved(TicketDTO ticket) => ticket.currentStatus == TicketStatusEnum.RESOLVED;
+        private bool IsStatusOpen(TicketDTO ticket) => ticket.currentStatus == ComplaintTicketStatusEnum.OPEN;
+        private bool IsStatusInProgress(TicketDTO ticket) => ticket.currentStatus == ComplaintTicketStatusEnum.IN_PROGRESS;
+        private bool IsStatusResolved(TicketDTO ticket) => ticket.currentStatus == ComplaintTicketStatusEnum.RESOLVED;
     }
 }

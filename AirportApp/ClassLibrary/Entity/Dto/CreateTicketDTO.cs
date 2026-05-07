@@ -14,7 +14,7 @@ namespace AirportApp.ClassLibrary.Entity.Dto
         string Subject,
         string Description,
         DateTime CreationTimestamp,
-        TicketStatusEnum CurrentStatus,
-        TicketUrgencyLevelEnum UrgencyLevel
+        ComplaintTicketStatusEnum CurrentStatus,
+        ComplaintTicketUrgencyLevelEnum UrgencyLevel
     );
 }

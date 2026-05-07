@@ -24,7 +24,7 @@ namespace AirportApp.ClassLibrary.DataAccess
         public DbSet<Employee> employees { get; set; }
         public DbSet<FAQEntry> faqs { get; set; }
         public DbSet<Review> reviews { get; set; }
-        public DbSet<Ticket> tickets { get; set; }
+        public DbSet<ComplaintTicket> tickets { get; set; }
         public DbSet<AddOn> addOns { get; set; }
         public DbSet<Airport> airports { get; set; }
         public DbSet<Customer> customers { get; set; }
@@ -33,8 +33,8 @@ namespace AirportApp.ClassLibrary.DataAccess
         public DbSet<Membership> memberships { get; set; }
         public DbSet<MembershipAddonDiscount> membershipAddonDiscounts { get; set; }
         public DbSet<Message> messages { get; set; }
-        public DbSet<TicketCategory> ticketCategories { get; set; }
-        public DbSet<TicketSubcategory> ticketSubcategories { get; set; }
+        public DbSet<ComplaintTicketCategory> ticketCategories { get; set; }
+        public DbSet<ComplaintTicketSubcategory> ticketSubcategories { get; set; }
         public DbSet<User> users { get; set; }
         public DbSet<Company> companies { get; set; }
         public DbSet<Gate> gates { get; set; }
@@ -159,19 +159,19 @@ namespace AirportApp.ClassLibrary.DataAccess
                 .HasForeignKey(r => r.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity<Ticket>()
+            modelBuilder.Entity<ComplaintTicket>()
                 .HasOne(t => t.Creator)
                 .WithMany()
                 .HasForeignKey(t => t.CreatorId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity<Ticket>()
+            modelBuilder.Entity<ComplaintTicket>()
                 .HasOne(t => t.Category)
                 .WithMany()
                 .HasForeignKey(t => t.CategoryId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            modelBuilder.Entity<Ticket>()
+            modelBuilder.Entity<ComplaintTicket>()
                 .HasOne(t => t.Subcategory)
                 .WithMany()
                 .HasForeignKey(t => t.SubcategoryId)
@@ -298,27 +298,27 @@ namespace AirportApp.ClassLibrary.DataAccess
             );
 
             // Seed TicketCategory data
-            modelBuilder.Entity<TicketCategory>().HasData(
-                new TicketCategory { Id = 1, CategoryName = "Booking Issues", CategoryUrgencyLevel = TicketUrgencyLevelEnum.HIGH },
-                new TicketCategory { Id = 2, CategoryName = "General Inquiry", CategoryUrgencyLevel = TicketUrgencyLevelEnum.LOW },
-                new TicketCategory { Id = 3, CategoryName = "Payment Problems", CategoryUrgencyLevel = TicketUrgencyLevelEnum.HIGH }
+            modelBuilder.Entity<ComplaintTicketCategory>().HasData(
+                new ComplaintTicketCategory { Id = 1, CategoryName = "Booking Issues", CategoryUrgencyLevel = ComplaintTicketUrgencyLevelEnum.HIGH },
+                new ComplaintTicketCategory { Id = 2, CategoryName = "General Inquiry", CategoryUrgencyLevel = ComplaintTicketUrgencyLevelEnum.LOW },
+                new ComplaintTicketCategory { Id = 3, CategoryName = "Payment Problems", CategoryUrgencyLevel = ComplaintTicketUrgencyLevelEnum.HIGH }
             );
 
             // Seed TicketSubcategory data
-            modelBuilder.Entity<TicketSubcategory>().HasData(
-                new TicketSubcategory { Id = 1, SubcategoryName = "Booking Error", SubcategoryExternalReferenceId = 101, ParentCategoryId = 1 },
-                new TicketSubcategory { Id = 2, SubcategoryName = "Cancellation", SubcategoryExternalReferenceId = 102, ParentCategoryId = 1 },
-                new TicketSubcategory { Id = 3, SubcategoryName = "Flight Info", SubcategoryExternalReferenceId = 201, ParentCategoryId = 2 },
-                new TicketSubcategory { Id = 4, SubcategoryName = "Card Declined", SubcategoryExternalReferenceId = 301, ParentCategoryId = 3 },
-                new TicketSubcategory { Id = 5, SubcategoryName = "Refund Status", SubcategoryExternalReferenceId = 302, ParentCategoryId = 3 }
+            modelBuilder.Entity<ComplaintTicketSubcategory>().HasData(
+                new ComplaintTicketSubcategory { Id = 1, SubcategoryName = "Booking Error", SubcategoryExternalReferenceId = 101, ParentCategoryId = 1 },
+                new ComplaintTicketSubcategory { Id = 2, SubcategoryName = "Cancellation", SubcategoryExternalReferenceId = 102, ParentCategoryId = 1 },
+                new ComplaintTicketSubcategory { Id = 3, SubcategoryName = "Flight Info", SubcategoryExternalReferenceId = 201, ParentCategoryId = 2 },
+                new ComplaintTicketSubcategory { Id = 4, SubcategoryName = "Card Declined", SubcategoryExternalReferenceId = 301, ParentCategoryId = 3 },
+                new ComplaintTicketSubcategory { Id = 5, SubcategoryName = "Refund Status", SubcategoryExternalReferenceId = 302, ParentCategoryId = 3 }
             );
 
             // Seed Ticket data (depends on User, TicketCategory, TicketSubcategory)
-            modelBuilder.Entity<Ticket>().HasData(
-                new Ticket { Id = 1, Subject = "Cannot book flight", Description = "System error when attempting to book", CreationTimestamp = new DateTime(2026, 5, 4, 10, 0, 0), UrgencyLevel = TicketUrgencyLevelEnum.HIGH, CurrentStatus = TicketStatusEnum.RESOLVED, CreatorId = 1, CategoryId = 1, SubcategoryId = 1 },
-                new Ticket { Id = 2, Subject = "Question about baggage", Description = "What is the baggage allowance?", CreationTimestamp = new DateTime(2026, 5, 4, 11, 0, 0), UrgencyLevel = TicketUrgencyLevelEnum.LOW, CurrentStatus = TicketStatusEnum.OPEN, CreatorId = 2, CategoryId = 2, SubcategoryId = 3 },
-                new Ticket { Id = 3, Subject = "Payment failed", Description = "My card was declined during checkout", CreationTimestamp = new DateTime(2026, 5, 4, 12, 0, 0), UrgencyLevel = TicketUrgencyLevelEnum.HIGH, CurrentStatus = TicketStatusEnum.OPEN, CreatorId = 3, CategoryId = 3, SubcategoryId = 4 },
-                new Ticket { Id = 4, Subject = "Refund pending", Description = "How long until my refund appears?", CreationTimestamp = new DateTime(2026, 5, 4, 12, 30, 0), UrgencyLevel = TicketUrgencyLevelEnum.MEDIUM, CurrentStatus = TicketStatusEnum.RESOLVED, CreatorId = 1, CategoryId = 3, SubcategoryId = 5 }
+            modelBuilder.Entity<ComplaintTicket>().HasData(
+                new ComplaintTicket { Id = 1, Subject = "Cannot book flight", Description = "System error when attempting to book", CreationTimestamp = new DateTime(2026, 5, 4, 10, 0, 0), UrgencyLevel = ComplaintTicketUrgencyLevelEnum.HIGH, CurrentStatus = ComplaintTicketStatusEnum.RESOLVED, CreatorId = 1, CategoryId = 1, SubcategoryId = 1 },
+                new ComplaintTicket { Id = 2, Subject = "Question about baggage", Description = "What is the baggage allowance?", CreationTimestamp = new DateTime(2026, 5, 4, 11, 0, 0), UrgencyLevel = ComplaintTicketUrgencyLevelEnum.LOW, CurrentStatus = ComplaintTicketStatusEnum.OPEN, CreatorId = 2, CategoryId = 2, SubcategoryId = 3 },
+                new ComplaintTicket { Id = 3, Subject = "Payment failed", Description = "My card was declined during checkout", CreationTimestamp = new DateTime(2026, 5, 4, 12, 0, 0), UrgencyLevel = ComplaintTicketUrgencyLevelEnum.HIGH, CurrentStatus = ComplaintTicketStatusEnum.OPEN, CreatorId = 3, CategoryId = 3, SubcategoryId = 4 },
+                new ComplaintTicket { Id = 4, Subject = "Refund pending", Description = "How long until my refund appears?", CreationTimestamp = new DateTime(2026, 5, 4, 12, 30, 0), UrgencyLevel = ComplaintTicketUrgencyLevelEnum.MEDIUM, CurrentStatus = ComplaintTicketStatusEnum.RESOLVED, CreatorId = 1, CategoryId = 3, SubcategoryId = 5 }
             );
 
             // Seed FAQEntry data

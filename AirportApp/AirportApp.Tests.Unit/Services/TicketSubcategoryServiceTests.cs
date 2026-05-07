@@ -14,22 +14,22 @@ namespace AirportApp.Tests.Unit.Src.Service
     public class TicketSubcategoryServiceTests
     {
         private ITicketSubcategoryRepository subcategoryRepositoryMock;
-        private TicketSubcategoryService subcategoryService;
-        private TicketCategory testCategory;
+        private ComplaintTicketSubcategoryService subcategoryService;
+        private ComplaintTicketCategory testCategory;
 
         [TestInitialize]
         public void Setup()
         {
             subcategoryRepositoryMock = Substitute.For<ITicketSubcategoryRepository>();
-            subcategoryService = new TicketSubcategoryService(subcategoryRepositoryMock);
+            subcategoryService = new ComplaintTicketSubcategoryService(subcategoryRepositoryMock);
 
-            testCategory = new TicketCategory(1, "IT", TicketUrgencyLevelEnum.HIGH);
+            testCategory = new ComplaintTicketCategory(1, "IT", ComplaintTicketUrgencyLevelEnum.HIGH);
         }
 
         [TestMethod]
         public async Task GetSubcategoryById_WhenCalled_ReturnsEntityFromRepository()
         {
-            var expectedSub = new TicketSubcategory(10, "Software", 500, testCategory);
+            var expectedSub = new ComplaintTicketSubcategory(10, "Software", 500, testCategory);
             subcategoryRepositoryMock.GetByIdAsync(10).Returns(Task.FromResult(expectedSub));
 
             var resultedCategory = await subcategoryService.GetSubcategoryByIdAsync(10);
@@ -41,12 +41,12 @@ namespace AirportApp.Tests.Unit.Src.Service
         [TestMethod]
         public async Task GetSubcategoriesByCategoryId_WhenCalled_ReturnsFilteredList()
         {
-            var expectedSubcategoryList = new List<TicketSubcategory>
+            var expectedSubcategoryList = new List<ComplaintTicketSubcategory>
             {
-                new TicketSubcategory(10, "Software", 500, testCategory),
-                new TicketSubcategory(11, "Hardware", 501, testCategory)
+                new ComplaintTicketSubcategory(10, "Software", 500, testCategory),
+                new ComplaintTicketSubcategory(11, "Hardware", 501, testCategory)
             };
-            subcategoryRepositoryMock.GetByCategoryIdAsync(1).Returns(Task.FromResult((IEnumerable<TicketSubcategory>)expectedSubcategoryList));
+            subcategoryRepositoryMock.GetByCategoryIdAsync(1).Returns(Task.FromResult((IEnumerable<ComplaintTicketSubcategory>)expectedSubcategoryList));
 
             var resultedSubcategories = (await subcategoryService.GetSubcategoriesByCategoryIdAsync(1)).ToList();
 
@@ -58,7 +58,7 @@ namespace AirportApp.Tests.Unit.Src.Service
         [TestMethod]
         public async Task GetSubcategoryById_WhenIdIsInvalid_PropagatesException()
         {
-            subcategoryRepositoryMock.GetByIdAsync(999).Returns(x => Task.FromException<TicketSubcategory>(new KeyNotFoundException()));
+            subcategoryRepositoryMock.GetByIdAsync(999).Returns(x => Task.FromException<ComplaintTicketSubcategory>(new KeyNotFoundException()));
             await Assert.ThrowsExceptionAsync<KeyNotFoundException>(async () => await subcategoryService.GetSubcategoryByIdAsync(999));
         }
     }
