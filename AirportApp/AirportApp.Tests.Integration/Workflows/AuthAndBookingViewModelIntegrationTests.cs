@@ -7,7 +7,6 @@ using AirportApp.Src.ViewModel;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 
-
 namespace AirportApp.Tests.Integration.Workflows;
 
 [TestClass]
@@ -29,16 +28,16 @@ public class AuthAndBookingViewModelIntegrationTests : BaseIntegrationTest
     private readonly BookingService bookingService;
     private readonly PricingService pricingService;
     private readonly AirportApp.Src.Service.NavigationService navigationService;
-    private readonly AirportDbContext _dbContext;
+    private readonly AirportDbContext dbContext;
 
     public AuthAndBookingViewModelIntegrationTests()
     {
-        _dbContext = CreateDbContext();
-        membershipRepository = new MembershipRepository(_dbContext);
-        userRepository = new CustomerRepository(_dbContext, membershipRepository);
-        flightRepository = new FlightRepository(_dbContext);
-        ticketRepository = new FlightTicketRepository(_dbContext);
-        addOnRepository = new AddOnRepository(_dbContext);
+        dbContext = CreateDbContext();
+        membershipRepository = new MembershipRepository(dbContext);
+        userRepository = new CustomerRepository(dbContext, membershipRepository);
+        flightRepository = new FlightRepository(dbContext);
+        ticketRepository = new FlightTicketRepository(dbContext);
+        addOnRepository = new AddOnRepository(dbContext);
 
         authentificationService = new AuthService(userRepository);
         bookingService = new BookingService(ticketRepository, addOnRepository);
@@ -63,7 +62,7 @@ public class AuthAndBookingViewModelIntegrationTests : BaseIntegrationTest
         authViewModel.ActionCommand.Execute(null);
         // Wait for async void
         await Task.Delay(1000);
-        
+
         authViewModel.SuccessMessage.Should().Contain("Registration successful");
 
         authViewModel.IsLoginMode = true;
@@ -106,7 +105,7 @@ public class AuthAndBookingViewModelIntegrationTests : BaseIntegrationTest
         var bookingViewModel = new BookingViewModel(bookingService, pricingService, navigationService);
 
         var user = new Customer { Id = 1, Email = "test@gmail.com", Username = "test" };
-        var flightId = GetFirstAvailableFlightId(_dbContext);
+        var flightId = GetFirstAvailableFlightId(dbContext);
         var flight = await flightRepository.GetFlightByIdAsync(flightId);
 
         await bookingViewModel.InitializeAsync(flight!, user);
@@ -122,7 +121,7 @@ public class AuthAndBookingViewModelIntegrationTests : BaseIntegrationTest
         var bookingViewModel = new BookingViewModel(bookingService, pricingService, navigationService);
 
         var user = new Customer { Id = 1, Email = "rares.ionescu@gmail.com", Username = "rares" };
-        var flightId = GetFirstAvailableFlightId(_dbContext);
+        var flightId = GetFirstAvailableFlightId(dbContext);
         var flight = await flightRepository.GetFlightByIdAsync(flightId);
 
         await bookingViewModel.InitializeAsync(flight!, user, 3);
@@ -136,7 +135,7 @@ public class AuthAndBookingViewModelIntegrationTests : BaseIntegrationTest
         var bookingViewModel = new BookingViewModel(bookingService, pricingService, navigationService);
 
         var user = new Customer { Id = 1, Email = "adrian.stefan@gmail.com", Username = "adrian" };
-        var flightId = GetFirstAvailableFlightId(_dbContext);
+        var flightId = GetFirstAvailableFlightId(dbContext);
         var flight = await flightRepository.GetFlightByIdAsync(flightId);
 
         await bookingViewModel.InitializeAsync(flight!, user, 2);

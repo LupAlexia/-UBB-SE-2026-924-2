@@ -1,8 +1,8 @@
+using System.Linq;
+using System;
 using Microsoft.EntityFrameworkCore;
 using AirportApp.ClassLibrary.DataAccess;
 using AirportApp.ClassLibrary.Entity.Domain;
-using System.Linq;
-using System;
 
 namespace AirportApp.Tests.Integration;
 

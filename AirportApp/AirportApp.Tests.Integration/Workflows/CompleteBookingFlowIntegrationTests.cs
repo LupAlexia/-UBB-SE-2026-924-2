@@ -31,24 +31,24 @@ public class CompleteBookingFlowIntegrationTests : BaseIntegrationTest
     private readonly AuthService authentificationService;
     private readonly BookingService bookingService;
     private readonly PricingService pricingService;
-    private readonly AirportDbContext _dbContext;
+    private readonly AirportDbContext dbContext;
 
     public CompleteBookingFlowIntegrationTests()
     {
-        _dbContext = CreateDbContext();
-        var membershipRepository = new MembershipRepository(_dbContext);
-        userRepository = new CustomerRepository(_dbContext, membershipRepository);
-        ticketRepository = new FlightTicketRepository(_dbContext);
-        flightRepository = new FlightRepository(_dbContext);
+        dbContext = CreateDbContext();
+        var membershipRepository = new MembershipRepository(dbContext);
+        userRepository = new CustomerRepository(dbContext, membershipRepository);
+        ticketRepository = new FlightTicketRepository(dbContext);
+        flightRepository = new FlightRepository(dbContext);
         authentificationService = new AuthService(userRepository);
-        bookingService = new BookingService(ticketRepository, new AddOnRepository(_dbContext));
+        bookingService = new BookingService(ticketRepository, new AddOnRepository(dbContext));
         pricingService = new PricingService();
     }
 
     private async Task<Flight> GetTestFlightAsync()
     {
-        var flightId = GetFirstAvailableFlightId(_dbContext);
-        return (await flightRepository.GetFlightByIdAsync(flightId))!;
+        var flightId = GetFirstAvailableFlightId(dbContext);
+        return (await flightRepository.GetFlightByIdAsync(flightId)) !;
     }
 
     [TestMethod]
@@ -76,7 +76,7 @@ public class CompleteBookingFlowIntegrationTests : BaseIntegrationTest
         var user = UserFixture.CreateValidTestUser(membership: membership);
         user.Membership = membership;
         user.MembershipId = membership.Id;
-        
+
         var flight = await GetTestFlightAsync();
         var tickets = new List<FlightTicket> { new FlightTicket { Price = TicketPrice } };
 
