@@ -20,7 +20,7 @@ namespace AirportApp.ClassLibrary.Repository
 
         public async Task<FAQEntry> GetByIdAsync(int askedQuestionId)
         {
-            var faqEntry = await this.dataBaseContext.faqs.FirstOrDefaultAsync(f => f.Id == askedQuestionId);
+            var faqEntry = await this.dataBaseContext.Faqs.FirstOrDefaultAsync(f => f.Id == askedQuestionId);
             if (faqEntry == null)
             {
                 throw new KeyNotFoundException($"FAQ with id {askedQuestionId} was not found.");
@@ -36,7 +36,7 @@ namespace AirportApp.ClassLibrary.Repository
                 throw new ArgumentNullException(nameof(questionEntity), "FAQ entry cannot be null.");
             }
 
-            this.dataBaseContext.faqs.Add(questionEntity);
+            this.dataBaseContext.Faqs.Add(questionEntity);
             await this.dataBaseContext.SaveChangesAsync();
             return questionEntity.Id;
         }
@@ -48,7 +48,7 @@ namespace AirportApp.ClassLibrary.Repository
                 throw new ArgumentNullException(nameof(questionEntity), "FAQ entry cannot be null.");
             }
 
-            var faqEntry = await this.dataBaseContext.faqs.FirstOrDefaultAsync(f => f.Id == identificationNumber);
+            var faqEntry = await this.dataBaseContext.Faqs.FirstOrDefaultAsync(f => f.Id == identificationNumber);
             if (faqEntry != null)
             {
                 faqEntry.Question = questionEntity.Question;
@@ -63,34 +63,34 @@ namespace AirportApp.ClassLibrary.Repository
 
         public async Task DeleteByIdAsync(int identificationNumber)
         {
-            var faqEntry = await this.dataBaseContext.faqs.FirstOrDefaultAsync(f => f.Id == identificationNumber);
+            var faqEntry = await this.dataBaseContext.Faqs.FirstOrDefaultAsync(f => f.Id == identificationNumber);
             if (faqEntry != null)
             {
-                this.dataBaseContext.faqs.Remove(faqEntry);
+                this.dataBaseContext.Faqs.Remove(faqEntry);
                 await this.dataBaseContext.SaveChangesAsync();
             }
         }
 
         public async Task<IEnumerable<FAQEntry>> GetAllAsync()
         {
-            return await this.dataBaseContext.faqs.ToListAsync();
+            return await this.dataBaseContext.Faqs.ToListAsync();
         }
 
         public async Task<List<FAQEntry>> GetByCategoryAsync(FAQCategoryEnum category)
         {
             if (category == FAQCategoryEnum.All)
             {
-                return await this.dataBaseContext.faqs.ToListAsync();
+                return await this.dataBaseContext.Faqs.ToListAsync();
             }
 
-            return await this.dataBaseContext.faqs
+            return await this.dataBaseContext.Faqs
                 .Where(f => f.Category == category)
                 .ToListAsync();
         }
 
         public async Task IncrementViewCountAsync(int identificationNumber)
         {
-            var faqEntry = await this.dataBaseContext.faqs.FirstOrDefaultAsync(f => f.Id == identificationNumber);
+            var faqEntry = await this.dataBaseContext.Faqs.FirstOrDefaultAsync(f => f.Id == identificationNumber);
             if (faqEntry != null)
             {
                 faqEntry.ViewCount++;
@@ -100,7 +100,7 @@ namespace AirportApp.ClassLibrary.Repository
 
         public async Task IncrementWasHelpfulVotesAsync(int identificationNumber)
         {
-            var faqEntry = await this.dataBaseContext.faqs.FirstOrDefaultAsync(f => f.Id == identificationNumber);
+            var faqEntry = await this.dataBaseContext.Faqs.FirstOrDefaultAsync(f => f.Id == identificationNumber);
             if (faqEntry != null)
             {
                 faqEntry.HelpfulVotesCount++;
@@ -110,7 +110,7 @@ namespace AirportApp.ClassLibrary.Repository
 
         public async Task IncrementWasNotHelpfulVotesAsync(int identificationNumber)
         {
-            var faqEntry = await this.dataBaseContext.faqs.FirstOrDefaultAsync(f => f.Id == identificationNumber);
+            var faqEntry = await this.dataBaseContext.Faqs.FirstOrDefaultAsync(f => f.Id == identificationNumber);
             if (faqEntry != null)
             {
                 faqEntry.NotHelpfulVotesCount++;

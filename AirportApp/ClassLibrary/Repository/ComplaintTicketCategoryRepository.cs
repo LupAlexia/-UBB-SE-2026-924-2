@@ -19,12 +19,12 @@ namespace AirportApp.ClassLibrary.Repository
 
         public async Task<IEnumerable<ComplaintTicketCategory>> GetAllAsync()
         {
-            return await dataBaseContext.ticketCategories.ToListAsync();
+            return await dataBaseContext.TicketCategories.ToListAsync();
         }
 
         public async Task<ComplaintTicketCategory> GetByIdAsync(int categoryId)
         {
-            return await dataBaseContext.ticketCategories.FindAsync(categoryId)
+            return await dataBaseContext.TicketCategories.FindAsync(categoryId)
                    ?? throw new KeyNotFoundException($"Category with id {categoryId} not found.");
         }
     }

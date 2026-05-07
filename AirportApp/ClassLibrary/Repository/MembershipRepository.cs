@@ -20,18 +20,18 @@ namespace AirportApp.ClassLibrary.Repository
 
         public async Task<Membership?> GetMembershipByIdAsync(int id)
         {
-            return await this.dataBaseContext.memberships
+            return await this.dataBaseContext.Memberships
                 .FirstOrDefaultAsync(m => m.Id == id);
         }
 
         public async Task<IEnumerable<Membership>> GetAllMembershipsAsync()
         {
-            return await this.dataBaseContext.memberships.ToListAsync();
+            return await this.dataBaseContext.Memberships.ToListAsync();
         }
 
         public async Task<IEnumerable<MembershipAddonDiscount>> GetAddonDiscountsAsync(int membershipId)
         {
-            return await this.dataBaseContext.membershipAddonDiscounts
+            return await this.dataBaseContext.MembershipAddonDiscounts
                 .Include(d => d.AddOn)
                 .Where(d => d.MembershipId == membershipId)
                 .ToListAsync();

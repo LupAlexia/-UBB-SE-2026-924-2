@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using MessageEntity = AirportApp.ClassLibrary.Entity.Domain.Message.Message;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using MessageEntity = AirportApp.ClassLibrary.Entity.Domain.Message.Message;
 
 namespace AirportApp.ClassLibrary.Entity.Domain.Chats
 {
@@ -25,14 +25,14 @@ namespace AirportApp.ClassLibrary.Entity.Domain.Chats
         [Column("Chat_Status")]
         public ChatStatus Status { get; set; }
 
-        //public List<IMessage> Messages { get; set; }
-
+        // public List<IMessage> Messages { get; set; }
         // 3. ICollection for better EF compatibility
         public ICollection<MessageEntity> Messages { get; set; } = new List<MessageEntity>();
 
         // 4. Parameterless constructor for EF Core
-        public Chat() { }
-
+        public Chat()
+        {
+        }
 
         public Chat(int id, User user, ChatStatus chatStatus)
         {

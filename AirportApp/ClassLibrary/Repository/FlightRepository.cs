@@ -20,7 +20,7 @@ namespace AirportApp.ClassLibrary.Repository
 
         public async Task<Flight?> GetFlightByIdAsync(int id)
         {
-            return await this.dataBaseContext.flights
+            return await this.dataBaseContext.Flights
                 .Include(flight => flight.Route)
                     .ThenInclude(route => route.Company)
                 .Include(flight => flight.Route)
@@ -31,7 +31,7 @@ namespace AirportApp.ClassLibrary.Repository
 
         public async Task<IEnumerable<Flight>> GetFlightsByRouteAsync(string location, string routeType, DateTime? date)
         {
-            var query = this.dataBaseContext.flights
+            var query = this.dataBaseContext.Flights
                 .Include(flight => flight.Route)
                     .ThenInclude(route => route.Company)
                 .Include(flight => flight.Route)
@@ -55,7 +55,7 @@ namespace AirportApp.ClassLibrary.Repository
 
         public async Task<int> GetOccupiedSeatCountAsync(int flightId)
         {
-            return await this.dataBaseContext.flightTickets
+            return await this.dataBaseContext.FlightTickets
                 .Where(flightTicket => flightTicket.Status != "canceled" && flightTicket.Status != "Cancelled")
                 .Where(flightTicket => flightTicket.Flight.Id == flightId)
                 .CountAsync();

@@ -28,7 +28,6 @@ namespace AirportApp.ClassLibrary.Entity.Domain.Message
         public DateTimeOffset Timestamp { get; set; }
 
         // 2. Navigation Properties
-
         [Required]
         [Column("Chat_Id")]
         public int ChatId { get; set; }
@@ -44,20 +43,12 @@ namespace AirportApp.ClassLibrary.Entity.Domain.Message
         [NotMapped]
         public ISender Sender { get; set; } = null!;
 
-       
-        public List<FAQOption> FAQOptions { get; set; } = new();
+        public List<FAQOption> FAQOptions { get; set; } = new ();
 
-        public BotMessage() { }
+        public BotMessage()
+        {
+        }
 
-        //private BotMessage(int messageId, ISender sender, Chat chat, string messageText, IEnumerable<FAQOption> options)
-        //{
-        //    this.messageId = messageId;
-        //    this.sender = sender;
-        //    this.chat = chat;
-        //    this.messageText = messageText;
-        //    this.timestamp = DateTimeOffset.UtcNow;
-        //    this.faqOptions = options;
-        //}
         public BotMessage(int id, ISender sender, Chat chat, string text, List<FAQOption> options, DateTimeOffset timestamp)
         {
             Id = id;
@@ -69,12 +60,6 @@ namespace AirportApp.ClassLibrary.Entity.Domain.Message
             FAQOptions = options;
             Timestamp = timestamp;
         }
-
-        //private BotMessage(int messageId, ISender sender, Chat chat, string messageText, IEnumerable<FAQOption> options, DateTimeOffset timestamp) : this(messageId, sender, chat, messageText, options)
-        //{
-        //    this.Timestamp = timestamp;
-        //}
-       
 
         public Chat GetChat()
         {
@@ -102,99 +87,56 @@ namespace AirportApp.ClassLibrary.Entity.Domain.Message
         {
             return Timestamp;
         }
-        //public class BotMessageBuilder
-        //{
-        //    private int messageId;
-        //    private int senderId;
-        //    private Chat chat = null!;
-        //    private string messageText = string.Empty;
-        //    private List<FAQOption> faqOptions = new();
-        //    private DateTimeOffset timestamp = DateTimeOffset.UtcNow;
 
-        //    public BotMessageBuilder(int senderId, Chat chat, int messageId, FAQNode nodeToMessage)
-        //        : this(senderId, chat, messageId)
-        //    {
-        //        this.messageText = nodeToMessage.questionText;
-        //        this.faqOptions = nodeToMessage.options.ToList();
-        //    }
-
-        //    public BotMessageBuilder(ISender sender, Chat chat, int messageId)
-        //    {
-        //        this.messageText = string.Empty;
-        //        this.messageId = messageId;
-        //        this.sender = sender;
-        //        this.chat = chat;
-        //        this.faqOptions = new List<FAQOption>();
-        //        this.timestamp = DateTimeOffset.UtcNow;
-        //    }
-
-        //    public BotMessageBuilder WithTimestamp(DateTimeOffset timestamp)
-        //    {
-        //        this.timestamp = timestamp;
-        //        return this;
-        //    }
-
-        //    public BotMessageBuilder WithMessage(string setMessage)
-        //    {
-        //        this.messageText = setMessage;
-        //        return this;
-        //    }
-
-        //    public BotMessageBuilder WithId(int setId)
-        //    {
-        //        this.messageId = setId;
-        //        return this;
-        //    }
         public class BotMessageBuilder
         {
             // These private fields hold the state during the building process
-            private int _id;
-            private ISender _sender = new BotEngineIdentity(null!);
-            private Chat _chat = null!;
-            private string _messageText = string.Empty;
-            private List<FAQOption> _faqOptions = new();
-            private DateTimeOffset _timestamp = DateTimeOffset.UtcNow;
+            private int id;
+            private ISender sender = new BotEngineIdentity(null!);
+            private Chat chat = null!;
+            private string messageText = string.Empty;
+            private List<FAQOption> faqOptions = new ();
+            private DateTimeOffset timestamp = DateTimeOffset.UtcNow;
 
             // Primary constructor: expects the identifiers EF needs
             public BotMessageBuilder(ISender sender, Chat chat, int id)
             {
-                _sender = sender;
-                _chat = chat;
-                _id = id;
+                this.sender = sender;
+                this.chat = chat;
+                this.id = id;
             }
 
-           
             // Fluent method: Set Timestamp
             public BotMessageBuilder WithTimestamp(DateTimeOffset timestamp)
             {
-                _timestamp = timestamp;
+                this.timestamp = timestamp;
                 return this;
             }
 
             // Fluent method: Set Message text
             public BotMessageBuilder WithMessage(string setMessage)
             {
-                _messageText = setMessage;
+                messageText = setMessage;
                 return this;
             }
 
             // Fluent method: Set ID
             public BotMessageBuilder WithId(int setId)
             {
-                _id = setId;
+                id = setId;
                 return this;
             }
 
             public BotMessageBuilder AddOption(FAQOption addedOption)
             {
-                _faqOptions.Add(addedOption);
+                faqOptions.Add(addedOption);
                 return this;
             }
 
             public BotMessageBuilder AddOptions(IEnumerable<FAQOption> setOptions)
             {
-                _faqOptions.Clear();
-                _faqOptions.AddRange(setOptions);
+                faqOptions.Clear();
+                faqOptions.AddRange(setOptions);
                 return this;
             }
 
@@ -202,13 +144,13 @@ namespace AirportApp.ClassLibrary.Entity.Domain.Message
         : this(sender, chat, id) // Calls your existing 3-argument constructor
             {
                 // Automatically set the text and options from the node
-                this._messageText = nodeToMessage.QuestionText; // Ensure property name matches FAQNode
-                this._faqOptions = nodeToMessage.Options.ToList();
+                this.messageText = nodeToMessage.questionText; // Ensure property name matches FAQNode
+                this.faqOptions = nodeToMessage.options.ToList();
             }
 
             public BotMessage Build()
             {
-                return new BotMessage(_id, _sender, _chat, _messageText, _faqOptions, _timestamp);
+                return new BotMessage(id, sender, chat, messageText, faqOptions, timestamp);
             }
         }
     }

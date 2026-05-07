@@ -21,14 +21,14 @@ namespace AirportApp.ClassLibrary.Entity.Domain
 
         public async Task<Customer?> GetByIdAsync(int id)
         {
-            return await this.dataBaseContext.customers
+            return await this.dataBaseContext.Customers
                 .Include(customer => customer.Membership)
                 .FirstOrDefaultAsync(customer => customer.Id == id);
         }
 
         public async Task<Customer?> GetByEmailAsync(string email)
         {
-            return await this.dataBaseContext.customers
+            return await this.dataBaseContext.Customers
                 .Include(customer => customer.Membership)
                 .FirstOrDefaultAsync(customer => customer.Email == email);
         }
@@ -41,7 +41,7 @@ namespace AirportApp.ClassLibrary.Entity.Domain
 
         public async Task UpdateUserMembershipAsync(int userId, int newMembershipId)
         {
-            var userToUpdate = await this.dataBaseContext.customers
+            var userToUpdate = await this.dataBaseContext.Customers
                 .Include(customer => customer.Membership)
                 .FirstOrDefaultAsync(customer => customer.Id == userId);
 

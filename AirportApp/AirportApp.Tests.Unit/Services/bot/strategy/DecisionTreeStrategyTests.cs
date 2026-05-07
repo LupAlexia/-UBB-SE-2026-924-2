@@ -71,7 +71,7 @@ namespace AirportApp.Tests.Unit.Src.Service.Bot.Strategy
             var mockBotEngine = new BotEngineIdentity(strategy);
             var resultedSelectedNode = await strategy.ProcessIncomingUserMessageAndDetermineNextDecisionTreeNodeAsync(mockBotEngine, mockMessage);
 
-            Assert.AreEqual(fakeDatabase[restartId].QuestionText, resultedSelectedNode.GetMessage());
+            Assert.AreEqual(fakeDatabase[restartId].questionText, resultedSelectedNode.GetMessage());
         }
 
         [TestMethod]

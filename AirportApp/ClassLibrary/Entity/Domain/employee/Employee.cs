@@ -7,13 +7,7 @@ namespace AirportApp.ClassLibrary.Entity.Domain.Employee
     [Table("Employees")]
     public class Employee : ISender
     {
-        //private int employeeId;
-        //private string fullName;
-        //private string emailAddress;
-        //private EmployeeDepartment assignedDepartment;
-
         // 1. EF Core Auto-Properties
-
         [Key]
         [Column("Employee_Id")]
         public int Id { get; set; }
@@ -33,7 +27,9 @@ namespace AirportApp.ClassLibrary.Entity.Domain.Employee
         public EmployeeDepartment AssignedDepartment { get; set; }
 
         // 2. Required Parameterless Constructor
-        public Employee() { }
+        public Employee()
+        {
+        }
 
         public Employee(int employeeIdentificationNumber, string fullName, string emailAddress, EmployeeDepartment assignedDepartment)
         {
@@ -43,7 +39,6 @@ namespace AirportApp.ClassLibrary.Entity.Domain.Employee
             AssignedDepartment = assignedDepartment;
         }
 
-        //public int EmployeeId => EmployeeId;
         public string GetDepartmentName() => AssignedDepartment.ToString();
 
         public string RetrieveConfiguredDisplayFullNameForBot() => FullName;

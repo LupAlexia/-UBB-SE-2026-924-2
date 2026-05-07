@@ -19,35 +19,35 @@ namespace AirportApp.ClassLibrary.Repository
 
         public async Task<int> CreateNewEntityAsync(User userEntity)
         {
-            dataBaseContext.users.Add(userEntity);
+            dataBaseContext.Users.Add(userEntity);
             await dataBaseContext.SaveChangesAsync();
             return userEntity.Id;
         }
 
         public async Task DeleteByIdAsync(int identificationNumber)
         {
-            var user = await dataBaseContext.users.FindAsync(identificationNumber);
+            var user = await dataBaseContext.Users.FindAsync(identificationNumber);
             if (user != null)
             {
-                dataBaseContext.users.Remove(user);
+                dataBaseContext.Users.Remove(user);
                 await dataBaseContext.SaveChangesAsync();
             }
         }
 
         public async Task<IEnumerable<User>> GetAllAsync()
         {
-            return await dataBaseContext.users.ToListAsync();
+            return await dataBaseContext.Users.ToListAsync();
         }
 
         public async Task<User> GetByIdAsync(int identificationNumber)
         {
-            return await dataBaseContext.users.FindAsync(identificationNumber)
+            return await dataBaseContext.Users.FindAsync(identificationNumber)
                    ?? throw new KeyNotFoundException($"User with id {identificationNumber} was not found.");
         }
 
         public async Task UpdateByIdAsync(int identificationNumber, User userEntity)
         {
-            dataBaseContext.users.Update(userEntity);
+            dataBaseContext.Users.Update(userEntity);
             await dataBaseContext.SaveChangesAsync();
         }
     }

@@ -25,29 +25,29 @@ namespace AirportApp.ClassLibrary.Repository
                 throw new ArgumentNullException(nameof(employeeEntity), "Employee cannot be null.");
             }
 
-            this.dataBaseContext.employees.Add(employeeEntity);
+            this.dataBaseContext.Employees.Add(employeeEntity);
             await this.dataBaseContext.SaveChangesAsync();
             return employeeEntity.Id;
         }
 
         public async Task DeleteByIdAsync(int identificationNumber)
         {
-            var employee = await this.dataBaseContext.employees.FirstOrDefaultAsync(e => e.Id == identificationNumber);
+            var employee = await this.dataBaseContext.Employees.FirstOrDefaultAsync(e => e.Id == identificationNumber);
             if (employee != null)
             {
-                this.dataBaseContext.employees.Remove(employee);
+                this.dataBaseContext.Employees.Remove(employee);
                 await this.dataBaseContext.SaveChangesAsync();
             }
         }
 
         public async Task<IEnumerable<Employee>> GetAllAsync()
         {
-            return await this.dataBaseContext.employees.ToListAsync();
+            return await this.dataBaseContext.Employees.ToListAsync();
         }
 
         public async Task<Employee> GetByIdAsync(int identificationNumber)
         {
-            var employee = await this.dataBaseContext.employees.FirstOrDefaultAsync(e => e.Id == identificationNumber);
+            var employee = await this.dataBaseContext.Employees.FirstOrDefaultAsync(e => e.Id == identificationNumber);
             if (employee == null)
             {
                 throw new KeyNotFoundException($"Employee with id {identificationNumber} was not found.");
@@ -63,7 +63,7 @@ namespace AirportApp.ClassLibrary.Repository
                 throw new ArgumentNullException(nameof(employeeEntity), "Employee cannot be null.");
             }
 
-            var employee = await this.dataBaseContext.employees.FirstOrDefaultAsync(e => e.Id == identificationNumber);
+            var employee = await this.dataBaseContext.Employees.FirstOrDefaultAsync(e => e.Id == identificationNumber);
             if (employee != null)
             {
                 employee.FullName = employeeEntity.FullName;

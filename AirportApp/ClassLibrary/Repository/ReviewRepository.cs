@@ -19,7 +19,7 @@ namespace AirportApp.ClassLibrary.Repository
 
         public async Task<Review> GetByIdAsync(int id)
         {
-            return await dataBaseContext.reviews
+            return await dataBaseContext.Reviews
                 .Include(r => r.User)
                 .FirstOrDefaultAsync(r => r.Id == id)
                 ?? throw new KeyNotFoundException($"Review with id {id} was not found.");
@@ -27,7 +27,7 @@ namespace AirportApp.ClassLibrary.Repository
 
         public async Task<IEnumerable<Review>> GetAllAsync()
         {
-            return await dataBaseContext.reviews
+            return await dataBaseContext.Reviews
                 .Include(r => r.User)
                 .ToListAsync();
         }
@@ -39,7 +39,7 @@ namespace AirportApp.ClassLibrary.Repository
                 throw new ArgumentNullException(nameof(reviewElement));
             }
 
-            dataBaseContext.reviews.Add(reviewElement);
+            dataBaseContext.Reviews.Add(reviewElement);
             await dataBaseContext.SaveChangesAsync();
             return reviewElement.Id;
         }
@@ -51,16 +51,16 @@ namespace AirportApp.ClassLibrary.Repository
                 throw new ArgumentNullException(nameof(reviewElement));
             }
 
-            dataBaseContext.reviews.Update(reviewElement);
+            dataBaseContext.Reviews.Update(reviewElement);
             await dataBaseContext.SaveChangesAsync();
         }
 
         public async Task DeleteByIdAsync(int id)
         {
-            var review = await dataBaseContext.reviews.FindAsync(id);
+            var review = await dataBaseContext.Reviews.FindAsync(id);
             if (review != null)
             {
-                dataBaseContext.reviews.Remove(review);
+                dataBaseContext.Reviews.Remove(review);
                 await dataBaseContext.SaveChangesAsync();
             }
         }
