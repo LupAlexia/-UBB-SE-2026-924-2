@@ -1,15 +1,15 @@
-using AirportApp.ClassLibrary.Entity.Domain;
-using AirportApp.Src.ViewModel;
-using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Linq;
+using System;
+using System.Collections.Generic;
+using AirportApp.Src.ViewModel;
+using AirportApp.ClassLibrary.Entity.Domain;
 using FluentAssertions;
 using Moq;
 using AirportApp.ClassLibrary.Repository.Interfaces;
 using AirportApp.Src.Service;
 using AirportApp.Tests.Unit.Fixtures;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Linq;
-using System;
 
 namespace AirportApp.Tests.Unit.Services;
 
@@ -150,7 +150,6 @@ public class BookingServiceTests
     {
         mockTicketRepository.Setup(repo => repo.IsSeatAvailableAsync(It.IsAny<int>(), It.IsAny<string>())).ReturnsAsync(true);
         mockTicketRepository.Setup(repo => repo.SaveTicketsWithAddOnsAsync(It.IsAny<List<FlightTicket>>(), It.IsAny<List<List<int>>>())).ReturnsAsync(true);
-
 
         var ticket1 = new FlightTicket { Seat = Seat1A, Price = StandardTicketPrice, Status = ActiveStatus };
         var ticket2 = new FlightTicket { Seat = Seat1B, Price = StandardTicketPrice, Status = ActiveStatus };
