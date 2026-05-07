@@ -1,20 +1,19 @@
-﻿using AirportApp.ClassLibrary.Entity.Domain.Ticket;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AirportApp.ClassLibrary.Entity.Domain.Ticket;
 
 namespace AirportApp.ClassLibrary.Entity.Dto
 {
     public record CreateTicketDTO(
-        int CreatorId,
-        int CategoryId,
-        int SubcategoryId,
-        string Subject,
-        string Description,
-        DateTime CreationTimestamp,
-        ComplaintTicketStatusEnum CurrentStatus,
-        ComplaintTicketUrgencyLevelEnum UrgencyLevel
-    );
+        int creatorId,
+        int categoryId,
+        int subcategoryId,
+        string subject,
+        string description,
+        DateTime creationTimestamp,
+        ComplaintTicketStatusEnum currentStatus,
+        ComplaintTicketUrgencyLevelEnum urgencyLevel);
 }

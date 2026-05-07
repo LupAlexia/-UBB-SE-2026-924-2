@@ -7,11 +7,10 @@ using System.Threading.Tasks;
 namespace AirportApp.ClassLibrary.Entity.Dto
 {
     public record CreateReviewDTO(
-        int UserId,
-        string Message,
-        int DutyFreeRating,
-        int FlightExperienceRating,
-        int StaffFriendlinessRating,
-        int CleanlinessRating
-    );
+        int userId,
+        string message,
+        int dutyFreeRating,
+        int flightExperienceRating,
+        int staffFriendlinessRating,
+        int cleanlinessRating);
 }

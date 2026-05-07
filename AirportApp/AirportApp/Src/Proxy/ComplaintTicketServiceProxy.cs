@@ -35,14 +35,14 @@ namespace AirportApp.Src.Proxy
         public async Task AddTicketAsync(ComplaintTicket ticketEntity)
         {
             var dto = new CreateTicketDTO(
-                CreatorId: ticketEntity.CreatorId,
-                CategoryId: ticketEntity.CategoryId,
-                SubcategoryId: ticketEntity.SubcategoryId,
-                Subject: ticketEntity.Subject,
-                Description: ticketEntity.Description,
-                CreationTimestamp: ticketEntity.CreationTimestamp,
-                CurrentStatus: ticketEntity.CurrentStatus,
-                UrgencyLevel: ticketEntity.UrgencyLevel);
+                creatorId: ticketEntity.CreatorId,
+                categoryId: ticketEntity.CategoryId,
+                subcategoryId: ticketEntity.SubcategoryId,
+                subject: ticketEntity.Subject,
+                description: ticketEntity.Description,
+                creationTimestamp: ticketEntity.CreationTimestamp,
+                currentStatus: ticketEntity.CurrentStatus,
+                urgencyLevel: ticketEntity.UrgencyLevel);
 
             var response = await httpClient.PostAsJsonAsync(BaseUrl, dto);
             response.EnsureSuccessStatusCode();

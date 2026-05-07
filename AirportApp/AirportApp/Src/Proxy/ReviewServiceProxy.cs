@@ -26,12 +26,12 @@ namespace AirportApp.Src.Proxy
         public async Task<int> AddAsync(Review review)
         {
             var dto = new CreateReviewDTO(
-                UserId: review.UserId,
-                Message: review.Message,
-                DutyFreeRating: review.DutyFreeRating,
-                FlightExperienceRating: review.FlightExperienceRating,
-                StaffFriendlinessRating: review.StaffFriendlinessRating,
-                CleanlinessRating: review.CleanlinessRating);
+                userId: review.UserId,
+                message: review.Message,
+                dutyFreeRating: review.DutyFreeRating,
+                flightExperienceRating: review.FlightExperienceRating,
+                staffFriendlinessRating: review.StaffFriendlinessRating,
+                cleanlinessRating: review.CleanlinessRating);
             var response = await httpClient.PostAsJsonAsync(BaseUrl, dto);
             response.EnsureSuccessStatusCode();
             return review.Id;

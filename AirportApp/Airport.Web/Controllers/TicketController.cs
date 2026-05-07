@@ -46,14 +46,14 @@ namespace Airport.Web.Controllers
 
             var ticket = new ComplaintTicket
             {
-                CreatorId = dto.CreatorId,
-                CategoryId = dto.CategoryId,
-                SubcategoryId = dto.SubcategoryId,
-                Subject = dto.Subject,
-                Description = dto.Description,
-                CreationTimestamp = dto.CreationTimestamp,
-                CurrentStatus = dto.CurrentStatus,
-                UrgencyLevel = dto.UrgencyLevel
+                CreatorId = dto.creatorId,
+                CategoryId = dto.categoryId,
+                SubcategoryId = dto.subcategoryId,
+                Subject = dto.subject,
+                Description = dto.description,
+                CreationTimestamp = dto.creationTimestamp,
+                CurrentStatus = dto.currentStatus,
+                UrgencyLevel = dto.urgencyLevel
             };
 
             int createdId = await ticketRepository.CreateNewEntityAsync(ticket);
