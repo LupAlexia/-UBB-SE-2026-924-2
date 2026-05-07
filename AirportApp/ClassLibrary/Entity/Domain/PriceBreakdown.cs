@@ -2,7 +2,6 @@
 
 namespace AirportApp.ClassLibrary.Entity.Domain
 {
-
     [NotMapped]
     public class PriceBreakdown
     {

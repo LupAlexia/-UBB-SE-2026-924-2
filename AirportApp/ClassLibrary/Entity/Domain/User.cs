@@ -22,7 +22,9 @@ namespace AirportApp.ClassLibrary.Entity.Domain
         [Column("Email_Address")]
         public string EmailAddress { get; set; } = string.Empty;
 
-        public User() { }
+        public User()
+        {
+        }
         public User(int id, string fullName, string emailAddress)
         {
             Id = id;
