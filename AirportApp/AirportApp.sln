@@ -1,4 +1,4 @@
-
+﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.14.36603.0
@@ -11,7 +11,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Airport.Web", "Airport.Web\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AirportApp.Tests.Unit", "AirportApp.Tests.Unit\AirportApp.Tests.Unit.csproj", "{2D1F9017-6E4B-48FF-AC9C-F8171596A320}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AirportApp.Tests.Integration", "AirportApp.Tests.Integration\AirportApp.Tests.Integration.csproj", "{3481D752-1DC3-4324-9AFE-3163DBE4C820}"
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "AirportApp.Tests.Integration", "AirportApp.Tests.Integration\AirportApp.Tests.Integration.vbproj", "{3481D752-1DC3-4324-9AFE-3163DBE4C820}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AirportAppGUI", "AirportAppGUI\AirportAppGUI.csproj", "{816CA189-8D77-432C-8C7E-FA07B9E3EBA9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -111,6 +113,22 @@ Global
 		{3481D752-1DC3-4324-9AFE-3163DBE4C820}.Release|x64.Build.0 = Release|Any CPU
 		{3481D752-1DC3-4324-9AFE-3163DBE4C820}.Release|x86.ActiveCfg = Release|Any CPU
 		{3481D752-1DC3-4324-9AFE-3163DBE4C820}.Release|x86.Build.0 = Release|Any CPU
+		{816CA189-8D77-432C-8C7E-FA07B9E3EBA9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{816CA189-8D77-432C-8C7E-FA07B9E3EBA9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{816CA189-8D77-432C-8C7E-FA07B9E3EBA9}.Debug|ARM64.ActiveCfg = Debug|Any CPU
+		{816CA189-8D77-432C-8C7E-FA07B9E3EBA9}.Debug|ARM64.Build.0 = Debug|Any CPU
+		{816CA189-8D77-432C-8C7E-FA07B9E3EBA9}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{816CA189-8D77-432C-8C7E-FA07B9E3EBA9}.Debug|x64.Build.0 = Debug|Any CPU
+		{816CA189-8D77-432C-8C7E-FA07B9E3EBA9}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{816CA189-8D77-432C-8C7E-FA07B9E3EBA9}.Debug|x86.Build.0 = Debug|Any CPU
+		{816CA189-8D77-432C-8C7E-FA07B9E3EBA9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{816CA189-8D77-432C-8C7E-FA07B9E3EBA9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{816CA189-8D77-432C-8C7E-FA07B9E3EBA9}.Release|ARM64.ActiveCfg = Release|Any CPU
+		{816CA189-8D77-432C-8C7E-FA07B9E3EBA9}.Release|ARM64.Build.0 = Release|Any CPU
+		{816CA189-8D77-432C-8C7E-FA07B9E3EBA9}.Release|x64.ActiveCfg = Release|Any CPU
+		{816CA189-8D77-432C-8C7E-FA07B9E3EBA9}.Release|x64.Build.0 = Release|Any CPU
+		{816CA189-8D77-432C-8C7E-FA07B9E3EBA9}.Release|x86.ActiveCfg = Release|Any CPU
+		{816CA189-8D77-432C-8C7E-FA07B9E3EBA9}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
