@@ -109,14 +109,14 @@ namespace AirportApp.ClassLibrary.Repository
                 for (int ticketIndex = 0; ticketIndex < tickets.Count; ticketIndex++)
                 {
                     var ticket = tickets[ticketIndex];
-                    
+
                     // Reset navigation properties to null to prevent EF re-insertion errors
                     ticket.User = null;
                     ticket.Flight = null;
 
                     // Get add-on IDs for this ticket
-                    var currentAddOnIds = (addOnIds != null && ticketIndex < addOnIds.Count) 
-                        ? addOnIds[ticketIndex] 
+                    var currentAddOnIds = (addOnIds != null && ticketIndex < addOnIds.Count)
+                        ? addOnIds[ticketIndex]
                         : new List<int>();
 
                     if (currentAddOnIds.Any())

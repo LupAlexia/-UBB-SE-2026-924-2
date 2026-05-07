@@ -45,8 +45,6 @@ namespace AirportApp.ClassLibrary.Repository
 
         public async Task UpdateByIdAsync(int id, ComplaintTicket ticket)
         {
-            
-
             dataBaseContext.Tickets.Update(ticket);
             await dataBaseContext.SaveChangesAsync();
         }
