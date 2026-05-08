@@ -2,7 +2,7 @@
 using AutoMapper;
 using AirportApp.ClassLibrary.Entity.Domain;
 
-namespace AirportApp.ClassLibrary.Entity.Dto.MappingProfiles
+namespace AirportApp.ClassLibrary.Entity.Dto
 {
     public class MessageMappingProfile : Profile
     {
@@ -11,7 +11,7 @@ namespace AirportApp.ClassLibrary.Entity.Dto.MappingProfiles
             CreateMap<IMessage, MessageDTO>()
                 .ForMember(destination => destination.MessageText, option => option.MapFrom(source => source.Text))
                 .ForMember(destination => destination.Timestamp, option => option.MapFrom(source =>
-                    new DateTimeOffset(((IMessage)source).Timestamp.Ticks, TimeSpan.Zero)))
+                    new DateTimeOffset(source.Timestamp.Ticks, TimeSpan.Zero)))
                 .ForMember(destination => destination.FaqOptions, option => option.MapFrom(source => source.GetNextOptions()))
                 .ForMember(destination => destination.ChatId, option => option.MapFrom(source => source.GetChat().Id))
                 .ForMember(destination => destination.SenderName, option => option.MapFrom(source => source.GetSender().RetrieveConfiguredDisplayFullNameForBot()))

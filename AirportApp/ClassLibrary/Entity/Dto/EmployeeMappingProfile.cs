@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using AirportApp.ClassLibrary.Entity.Domain;
 
-namespace AirportApp.ClassLibrary.Entity.Dto.MappingProfiles
+namespace AirportApp.ClassLibrary.Entity.Dto
 {
     public class EmployeeMappingProfile : Profile
     {

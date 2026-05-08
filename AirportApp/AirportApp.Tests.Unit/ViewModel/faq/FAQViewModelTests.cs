@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using AirportApp.Src.ViewModel;
 using AutoMapper;
 using AirportApp.ClassLibrary.Entity.Dto;
-using AirportApp.ClassLibrary.Entity.Dto.MappingProfiles;
 using AirportApp.ClassLibrary.Repository.Interfaces;
 using AirportApp.Src.Service.Implementation;
 using AirportApp.Src.Service.Interfaces;

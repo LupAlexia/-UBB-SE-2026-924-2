@@ -4,10 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AirportApp.ClassLibrary.Entity.Domain;
-using AirportApp.ClassLibrary.Entity.Dto;
 using AutoMapper;
 
-namespace AirportApp.ClassLibrary.Entity.Dto.MappingProfiles
+namespace AirportApp.ClassLibrary.Entity.Dto
 {
     public class ChatMappingProfile : Profile
     {

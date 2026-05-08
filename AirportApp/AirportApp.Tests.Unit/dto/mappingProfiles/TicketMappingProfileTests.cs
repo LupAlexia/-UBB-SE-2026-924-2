@@ -1,7 +1,6 @@
 using System;
 using AutoMapper;
 using AirportApp.ClassLibrary.Entity.Dto;
-using AirportApp.ClassLibrary.Entity.Dto.MappingProfiles;
 using AirportApp.ClassLibrary.Entity.Domain;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.Extensions.Logging;

@@ -7,7 +7,7 @@ using System.Formats.Tar;
 using AutoMapper;
 using AirportApp.ClassLibrary.Entity.Domain;
 
-namespace AirportApp.ClassLibrary.Entity.Dto.MappingProfiles
+namespace AirportApp.ClassLibrary.Entity.Dto
 {
     public class FAQEntryMappingProfile : Profile
     {

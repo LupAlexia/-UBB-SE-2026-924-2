@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using System.Net.Http;
 using AirportApp.ClassLibrary.DataAccess;
 using AirportApp.ClassLibrary.Entity.Domain;
-using AirportApp.ClassLibrary.Entity.Dto.MappingProfiles;
 using AirportApp.ClassLibrary.Entity.Repository.Database;
 using AirportApp.ClassLibrary.Repository;
 using AirportApp.ClassLibrary.Repository.Interfaces;
@@ -19,6 +18,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using AirportApp.ClassLibrary.Entity.Dto;
 
 namespace AirportApp
 {

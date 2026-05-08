@@ -5,7 +5,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using AirportApp.Src.Service;
 using AirportApp.ClassLibrary.Repository.Interfaces;
 using AirportApp.ClassLibrary.Entity.Dto;
-using AirportApp.ClassLibrary.Entity.Dto.MappingProfiles;
 using AutoMapper;
 using NSubstitute;
 using Microsoft.Extensions.Logging;

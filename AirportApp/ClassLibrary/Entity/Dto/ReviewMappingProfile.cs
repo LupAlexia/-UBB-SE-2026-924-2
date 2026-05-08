@@ -2,7 +2,7 @@
 using Microsoft.IdentityModel.Tokens;
 using AirportApp.ClassLibrary.Entity.Domain;
 
-namespace AirportApp.ClassLibrary.Entity.Dto.MappingProfiles
+namespace AirportApp.ClassLibrary.Entity.Dto
 {
     public class ReviewMappingProfile : Profile
     {
