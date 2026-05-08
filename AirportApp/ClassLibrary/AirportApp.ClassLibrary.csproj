@@ -30,13 +30,4 @@
     </PackageReference>
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Entity\Domain\chat\" />
-    <Folder Include="Entity\Domain\employee\" />
-    <Folder Include="Entity\Domain\faq\bot\" />
-    <Folder Include="Entity\Domain\message\" />
-    <Folder Include="Entity\Domain\review\" />
-    <Folder Include="Entity\Domain\ticket\" />
-  </ItemGroup>
-
 </Project>
