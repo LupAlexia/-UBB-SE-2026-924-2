@@ -8,7 +8,7 @@ using AirportApp.ClassLibrary.Entity.Domain.Message;
 using AirportApp.ClassLibrary.Entity.Dto;
 using AirportApp.ClassLibrary.Repository.Interfaces;
 
-namespace AirportApp.Src.Proxy
+namespace AirportApp.Src.GoodProxy
 {
     public class MessageRepositoryProxy : IMessageRepository
     {
