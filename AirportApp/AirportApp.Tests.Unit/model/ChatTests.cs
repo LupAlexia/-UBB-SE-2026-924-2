@@ -2,8 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using AirportApp.ClassLibrary.Entity.Domain;
-using AirportApp.ClassLibrary.Entity.Domain.Chats;
-using AirportApp.ClassLibrary.Entity.Domain.Message;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace AirportApp.Tests.Unit;

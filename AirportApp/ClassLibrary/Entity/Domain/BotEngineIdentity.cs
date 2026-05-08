@@ -4,11 +4,9 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using AirportApp.ClassLibrary.Entity.Domain.Faq.Bot;
-using AirportApp.ClassLibrary.Entity.Domain.Message;
 using AirportApp.ClassLibrary.Entity.Domain;
 
-namespace AirportApp.ClassLibrary.Entity.Domain.Message
+namespace AirportApp.ClassLibrary.Entity.Domain
 {
     public class BotEngineIdentity : ISender
     {
@@ -17,7 +15,7 @@ namespace AirportApp.ClassLibrary.Entity.Domain.Message
 
         public BotEngineIdentity(IBotStrategy responseStrategy)
         {
-            this.activeStrategyForFormulatingBotResponses = responseStrategy;
+            activeStrategyForFormulatingBotResponses = responseStrategy;
         }
 
         public async Task<BotMessage> GenerateAppropriateResponseBasedOnCurrentStrategyAsync(IMessage message)

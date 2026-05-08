@@ -3,11 +3,10 @@ using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using AutoMapper;
 using AirportApp.ClassLibrary.Entity.Dto;
-using AirportApp.ClassLibrary.Entity.Domain.Faq.Bot;
-using AirportApp.ClassLibrary.Entity.Domain.Message;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using AirportApp.Src.Service.Interfaces;
+using AirportApp.ClassLibrary.Entity.Domain;
 
 namespace AirportApp.Src.ViewModel
 {

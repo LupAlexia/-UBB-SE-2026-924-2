@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AirportApp.ClassLibrary.Entity.Domain.Message
+namespace AirportApp.ClassLibrary.Entity.Domain
 {
     public interface IBotStrategy
     {

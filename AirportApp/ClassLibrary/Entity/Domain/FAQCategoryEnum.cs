@@ -1,4 +1,4 @@
-namespace AirportApp.ClassLibrary.Entity.Domain.Faq
+namespace AirportApp.ClassLibrary.Entity.Domain
 {
     public enum FAQCategoryEnum
     {

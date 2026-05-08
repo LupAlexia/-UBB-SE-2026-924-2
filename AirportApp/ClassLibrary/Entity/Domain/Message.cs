@@ -5,11 +5,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using AirportApp.ClassLibrary.Entity.Domain.Chats;
-using AirportApp.ClassLibrary.Entity.Domain.Faq.Bot;
 using EmpNamespace = AirportApp.ClassLibrary.Entity.Domain.Employee;
 
-namespace AirportApp.ClassLibrary.Entity.Domain.Message
+namespace AirportApp.ClassLibrary.Entity.Domain
 {
     [Table("Messages")]
     public class Message : IMessage
@@ -47,10 +45,10 @@ namespace AirportApp.ClassLibrary.Entity.Domain.Message
         public int? SenderEmployeeId { get; set; }
 
         [ForeignKey(nameof(SenderEmployeeId))]
-        public EmpNamespace.Employee? SenderEmployee { get; set; }
+        public EmpNamespace? SenderEmployee { get; set; }
         [NotMapped]
         [System.Text.Json.Serialization.JsonIgnore]
-        public ISender? Sender => (ISender?)SenderUser ?? (ISender?)SenderEmployee;
+        public ISender? Sender => (ISender?)SenderUser ?? SenderEmployee;
 
         public Message()
         {
@@ -62,14 +60,14 @@ namespace AirportApp.ClassLibrary.Entity.Domain.Message
             {
                 SenderUser = user;
             }
-            else if (sender is EmpNamespace.Employee emp)
+            else if (sender is EmpNamespace emp)
             {
                 SenderEmployee = emp;
             }
 
-            this.Chat = chat;
-            this.Text = messageText;
-            this.Timestamp = DateTimeOffset.UtcNow;
+            Chat = chat;
+            Text = messageText;
+            Timestamp = DateTimeOffset.UtcNow;
         }
 
         public Message(Chat chat, string text, ISender sender)
@@ -81,7 +79,7 @@ namespace AirportApp.ClassLibrary.Entity.Domain.Message
             {
                 SenderUser = user;
             }
-            else if (sender is EmpNamespace.Employee emp)
+            else if (sender is EmpNamespace emp)
             {
                 SenderEmployee = emp;
             }
@@ -97,7 +95,7 @@ namespace AirportApp.ClassLibrary.Entity.Domain.Message
             {
                 SenderUser = user;
             }
-            else if (sender is EmpNamespace.Employee emp)
+            else if (sender is EmpNamespace emp)
             {
                 SenderEmployee = emp;
             }

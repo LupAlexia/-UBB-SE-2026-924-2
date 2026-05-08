@@ -5,6 +5,7 @@ using AirportApp.ClassLibrary.Repository.Interfaces;
 using AirportApp.Src.Service;
 using AirportApp.Tests.Unit.Fixtures;
 using AirportApp.ClassLibrary.DataAccess;
+using AirportApp.Src.Service.Interfaces;
 
 namespace AirportApp.Tests.Integration.Services;
 

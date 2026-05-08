@@ -1,5 +1,5 @@
 using AirportApp.ClassLibrary.Entity.Dto;
-using AirportApp.ClassLibrary.Entity.Domain.Faq;
+using AirportApp.ClassLibrary.Entity.Domain;
 
 namespace AirportApp.Tests.Unit.Dto;
 

@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using AirportApp.ClassLibrary.Entity.Domain.Faq.Bot;
+using AirportApp.ClassLibrary.Entity.Domain;
 
 namespace AirportApp.ClassLibrary.Entity.Dto
 {

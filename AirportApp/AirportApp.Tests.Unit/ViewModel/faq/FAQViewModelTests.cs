@@ -2,18 +2,17 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using AirportApp.ClassLibrary.Entity.Domain.Ticket;
 using AirportApp.Src.ViewModel;
 using AutoMapper;
 using AirportApp.ClassLibrary.Entity.Dto;
 using AirportApp.ClassLibrary.Entity.Dto.MappingProfiles;
-using AirportApp.ClassLibrary.Entity.Domain.Faq;
 using AirportApp.ClassLibrary.Repository.Interfaces;
 using AirportApp.Src.Service.Implementation;
 using AirportApp.Src.Service.Interfaces;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using NSubstitute.Core;
+using AirportApp.ClassLibrary.Entity.Domain;
 
 namespace AirportApp.Tests.Unit.Src.ViewModel.Faq
 {

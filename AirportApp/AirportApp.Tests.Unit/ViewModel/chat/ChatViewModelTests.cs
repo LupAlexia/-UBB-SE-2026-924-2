@@ -7,15 +7,11 @@ using AirportApp.Src.ViewModel;
 using AutoMapper;
 using AirportApp.ClassLibrary.Entity.Dto;
 using AirportApp.ClassLibrary.Entity.Domain;
-using AirportApp.ClassLibrary.Entity.Domain.Chats;
-using AirportApp.ClassLibrary.Entity.Domain.Faq.Bot;
-using AirportApp.ClassLibrary.Entity.Domain.Message;
 using AirportApp.ClassLibrary.Repository.Interfaces;
 using AirportApp.Src.Service;
 using AirportApp.Src.Service.Bot;
 using AirportApp.Src.Service.Bot.Strategy;
 using AirportApp.Src.Service.Interfaces;
-using AirportApp.Src.ViewModel.Chats;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 

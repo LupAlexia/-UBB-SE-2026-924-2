@@ -6,12 +6,11 @@ using AirportApp.Src.Service;
 using AirportApp.ClassLibrary.Repository.Interfaces;
 using AirportApp.ClassLibrary.Entity.Dto;
 using AirportApp.ClassLibrary.Entity.Dto.MappingProfiles;
-using AirportApp.Src.ViewModel.Review;
 using AutoMapper;
 using NSubstitute;
 using Microsoft.Extensions.Logging;
 
-using ReviewEntity = AirportApp.ClassLibrary.Entity.Domain.Review.Review;
+using ReviewEntity = AirportApp.ClassLibrary.Entity.Domain.Review;
 using UserEntity = AirportApp.ClassLibrary.Entity.Domain.User;
 
 namespace AirportApp.Src.ViewModel

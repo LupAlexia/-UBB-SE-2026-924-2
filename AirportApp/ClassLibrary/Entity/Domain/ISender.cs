@@ -1,4 +1,4 @@
-namespace AirportApp.ClassLibrary.Entity.Domain.Message
+namespace AirportApp.ClassLibrary.Entity.Domain
 {
     public interface ISender
     {

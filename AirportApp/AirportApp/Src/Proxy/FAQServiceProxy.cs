@@ -6,7 +6,7 @@ using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
-using AirportApp.ClassLibrary.Entity.Domain.Faq;
+using AirportApp.ClassLibrary.Entity.Domain;
 using AirportApp.Src.Service.Interfaces;
 
 namespace AirportApp.Src.Proxy

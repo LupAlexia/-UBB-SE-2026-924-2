@@ -7,8 +7,8 @@ using Microsoft.UI;
 using Microsoft.Extensions.DependencyInjection;
 using AirportApp.Src.ViewModel;
 using AirportApp.ClassLibrary.Entity.Dto;
-using AirportApp.ClassLibrary.Entity.Domain.Ticket;
 using Microsoft.UI.Xaml.Media;
+using AirportApp.ClassLibrary.Entity.Domain;
 
 namespace AirportApp.Src.View.Ticket
 {

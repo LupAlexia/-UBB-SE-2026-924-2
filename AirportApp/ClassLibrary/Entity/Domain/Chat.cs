@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using MessageEntity = AirportApp.ClassLibrary.Entity.Domain.Message.Message;
+using MessageEntity = AirportApp.ClassLibrary.Entity.Domain.Message;
 
-namespace AirportApp.ClassLibrary.Entity.Domain.Chats
+namespace AirportApp.ClassLibrary.Entity.Domain
 {
     [Table("Chats")]
     public class Chat

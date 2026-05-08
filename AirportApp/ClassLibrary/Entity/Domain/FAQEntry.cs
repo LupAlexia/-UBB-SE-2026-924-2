@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace AirportApp.ClassLibrary.Entity.Domain.Faq
+namespace AirportApp.ClassLibrary.Entity.Domain
 {
     [Table("FAQs")]
     public class FAQEntry

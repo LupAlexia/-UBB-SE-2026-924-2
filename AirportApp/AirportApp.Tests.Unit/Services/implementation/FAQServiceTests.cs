@@ -4,8 +4,8 @@ using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using AirportApp.Src.Service.Implementation;
 using AirportApp.ClassLibrary.Repository.Interfaces;
-using AirportApp.ClassLibrary.Entity.Domain.Faq;
 using NSubstitute;
+using AirportApp.ClassLibrary.Entity.Domain;
 
 namespace AirportApp.Tests.Unit.Src.Service
 {

@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using AirportApp.ClassLibrary.Entity.Domain.Review;
 using Microsoft.IdentityModel.Tokens;
+using AirportApp.ClassLibrary.Entity.Domain;
 
 namespace AirportApp.ClassLibrary.Entity.Dto.MappingProfiles
 {

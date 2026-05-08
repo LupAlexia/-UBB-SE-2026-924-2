@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using AirportApp.ClassLibrary.Entity.Dto;
 using CommunityToolkit.Mvvm.ComponentModel;
-using ReviewEntity = AirportApp.ClassLibrary.Entity.Domain.Review.Review;
+using ReviewEntity = AirportApp.ClassLibrary.Entity.Domain.Review;
 using AirportApp.Src.Service.Interfaces;
 
 namespace AirportApp.Src.ViewModel

@@ -1,7 +1,6 @@
 using System.Net;
 using System.Net.Http.Json;
 using AirportApp.ClassLibrary.Entity.Domain;
-using AirportApp.ClassLibrary.Entity.Domain.Review;
 using FluentAssertions;
 
 namespace AirportApp.Tests.Integration.Controllers;

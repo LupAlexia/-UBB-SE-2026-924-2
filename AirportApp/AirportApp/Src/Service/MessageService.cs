@@ -2,11 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using AirportApp.ClassLibrary.Entity.Domain.Chats;
-using AirportApp.ClassLibrary.Entity.Domain.Message;
-using AirportApp.ClassLibrary.Entity.Domain.Faq.Bot;
 using AirportApp.ClassLibrary.Repository.Interfaces;
 using AirportApp.Src.Service.Interfaces;
+using AirportApp.ClassLibrary.Entity.Domain;
 
 namespace AirportApp.Src.Service
 {

@@ -2,13 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using AirportApp.ClassLibrary.Entity.Domain.Ticket;
 using AirportApp.ClassLibrary.Entity.Dto;
 using AirportApp.Src.Service.Interfaces;
 
 using User = AirportApp.ClassLibrary.Entity.Domain.User;
 using AirportApp.Src.ViewModel;
 using AirportApp.ClassLibrary.Repository.Interfaces;
+using AirportApp.ClassLibrary.Entity.Domain;
 
 namespace AirportApp.Src.Service
 {

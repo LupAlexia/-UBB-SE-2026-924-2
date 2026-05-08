@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Formats.Tar;
 using AutoMapper;
-using AirportApp.ClassLibrary.Entity.Domain.Faq;
+using AirportApp.ClassLibrary.Entity.Domain;
 
 namespace AirportApp.ClassLibrary.Entity.Dto.MappingProfiles
 {

@@ -2,7 +2,7 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace AirportApp.ClassLibrary.Entity.Domain.Ticket
+namespace AirportApp.ClassLibrary.Entity.Domain
 {
     [Table("Tickets")]
     public class ComplaintTicket

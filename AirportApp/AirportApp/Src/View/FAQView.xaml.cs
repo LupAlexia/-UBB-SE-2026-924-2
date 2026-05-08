@@ -3,7 +3,6 @@ using System.Linq;
 using System.Runtime.Intrinsics.X86;
 using AutoMapper;
 using AirportApp.ClassLibrary.Entity.Dto;
-using AirportApp.ClassLibrary.Entity.Domain.Faq;
 using AirportApp.ClassLibrary.Repository;
 using AirportApp.Src.Service;
 using AirportApp.Src.ViewModel;
@@ -11,6 +10,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using Microsoft.Extensions.DependencyInjection;
+using AirportApp.ClassLibrary.Entity.Domain;
 
 namespace AirportApp.Src.View.Faq
 {

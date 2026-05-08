@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace AirportApp.ClassLibrary.Entity.Domain.Faq.Bot
+namespace AirportApp.ClassLibrary.Entity.Domain
 {
     public class FAQNodeEntity
     {

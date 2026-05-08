@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 
-namespace AirportApp.ClassLibrary.Entity.Domain.Review
+namespace AirportApp.ClassLibrary.Entity.Domain
 {
     [Table("Reviews")]
     public class Review

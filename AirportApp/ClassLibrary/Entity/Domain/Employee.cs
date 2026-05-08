@@ -1,8 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using AirportApp.ClassLibrary.Entity.Domain.Message;
 
-namespace AirportApp.ClassLibrary.Entity.Domain.Employee
+namespace AirportApp.ClassLibrary.Entity.Domain
 {
     [Table("Employees")]
     public class Employee : ISender

@@ -4,9 +4,8 @@ using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using AirportApp.ClassLibrary.Entity.Domain.Faq.Bot;
 
-namespace AirportApp.ClassLibrary.Entity.Domain.Faq.Bot
+namespace AirportApp.ClassLibrary.Entity.Domain
 {
     public record FAQNode(
         int faqNodeId,

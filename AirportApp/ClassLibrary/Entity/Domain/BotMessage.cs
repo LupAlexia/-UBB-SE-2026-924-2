@@ -5,12 +5,10 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
-using AirportApp.ClassLibrary.Entity.Domain.Chats;
-using AirportApp.ClassLibrary.Entity.Domain.Faq.Bot;
 
 // TODO : Maybe merge this with the regular message or pull general data in IMessage and make it abstract class instead of interface
 // At this point it is not a contract of functionality but an identity
-namespace AirportApp.ClassLibrary.Entity.Domain.Message
+namespace AirportApp.ClassLibrary.Entity.Domain
 {
     [Table("BotMessages")]
     public class BotMessage : IMessage
@@ -144,8 +142,8 @@ namespace AirportApp.ClassLibrary.Entity.Domain.Message
         : this(sender, chat, id) // Calls your existing 3-argument constructor
             {
                 // Automatically set the text and options from the node
-                this.messageText = nodeToMessage.questionText; // Ensure property name matches FAQNode
-                this.faqOptions = nodeToMessage.options.ToList();
+                messageText = nodeToMessage.questionText; // Ensure property name matches FAQNode
+                faqOptions = nodeToMessage.options.ToList();
             }
 
             public BotMessage Build()

@@ -2,11 +2,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AirportApp.Src.ViewModel;
-using AirportApp.ClassLibrary.Entity.Domain.Ticket;
 using AirportApp.ClassLibrary.Repository.Interfaces;
 using AirportApp.Src.Service;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
+using AirportApp.ClassLibrary.Entity.Domain;
 
 namespace AirportApp.Tests.Unit.Src.Service
 {

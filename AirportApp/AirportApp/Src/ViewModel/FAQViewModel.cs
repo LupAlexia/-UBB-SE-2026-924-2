@@ -6,11 +6,10 @@ using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using AutoMapper;
 using AirportApp.ClassLibrary.Entity.Dto;
-using AirportApp.ClassLibrary.Entity.Domain.Faq;
-using AirportApp.ClassLibrary.Entity.Domain.Faq.Bot;
 using AirportApp.Src.Service.Interfaces;
 using AirportApp.Src.View.Faq;
 using AirportApp.Src.View;
+using AirportApp.ClassLibrary.Entity.Domain;
 
 namespace AirportApp.Src.ViewModel
 {

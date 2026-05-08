@@ -1,5 +1,3 @@
-using AirportApp.ClassLibrary.Entity.Domain.Chats;
-using AirportApp.ClassLibrary.Entity.Domain.Message;
 using AirportApp.ClassLibrary.Entity.Domain;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;

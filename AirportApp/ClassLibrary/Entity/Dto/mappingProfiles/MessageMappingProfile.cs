@@ -1,6 +1,6 @@
 ﻿using System;
 using AutoMapper;
-using AirportApp.ClassLibrary.Entity.Domain.Message;
+using AirportApp.ClassLibrary.Entity.Domain;
 
 namespace AirportApp.ClassLibrary.Entity.Dto.MappingProfiles
 {
