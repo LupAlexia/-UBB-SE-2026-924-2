@@ -43,25 +43,32 @@ namespace AirportApp.Src.View
                 string tag = item.Tag?.ToString() ?? string.Empty;
                 bool isSearchItem = tag.EndsWith("FlightSearchPage", StringComparison.OrdinalIgnoreCase);
                 bool isHomeItem = tag == HomeNavTag;
-                
+
                 // Allow home or search items, and only enable other options if authenticated
                 item.IsEnabled = isAuthenticated || isHomeItem;
             }
             if (AccountMenuItem != null)
+            {
                 AccountMenuItem.IsEnabled = true;
+            }
         }
 
         private void NavigateTo(Type pageType)
         {
             if (ContentFrame.CurrentSourcePageType != pageType)
+            {
                 ContentFrame.Navigate(pageType);
+            }
         }
 
         private void NavigateToSearch() => NavigateTo(typeof(FlightSearchPage));
 
         private void ContentFrame_Navigated(object sender, NavigationEventArgs e)
         {
-            if (TopNav?.MenuItems == null) return;
+            if (TopNav?.MenuItems == null)
+            {
+                return;
+            }
             UpdateNavigationAvailability();
 
             bool itemFound = false;
@@ -77,7 +84,9 @@ namespace AirportApp.Src.View
             }
             // If they are on AuthPage, don't select any menu items
             if (!itemFound || pageName == "AuthPage")
+            {
                 TopNav.SelectedItem = null;
+            }
         }
 
         private async void TopNav_ItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs e)
@@ -143,7 +152,9 @@ namespace AirportApp.Src.View
         private void TopNav_BackRequested(NavigationView sender, NavigationViewBackRequestedEventArgs e)
         {
             if (ContentFrame.CanGoBack)
+            {
                 ContentFrame.GoBack();
+            }
         }
     }
 }
