@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using AirportApp.ClassLibrary.Entity.Domain;
 using AirportApp.ClassLibrary.Repository;
-using AirportApp.Src.Service;
+using AirportApp.Src.Service.Interfaces;
 
 namespace AirportApp.Src.Proxy
 {

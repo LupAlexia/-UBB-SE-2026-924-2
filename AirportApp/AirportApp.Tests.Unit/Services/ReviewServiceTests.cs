@@ -6,7 +6,6 @@ using AirportApp.Src.ViewModel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using AirportApp.Src.Service;
 using AirportApp.ClassLibrary.Repository.Interfaces;
-using AirportApp.ClassLibrary.Entity.Domain.Review;
 using AirportApp.ClassLibrary.Entity.Domain;
 using NSubstitute;
 

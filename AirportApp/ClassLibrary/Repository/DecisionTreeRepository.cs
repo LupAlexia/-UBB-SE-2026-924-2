@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using AirportApp.ClassLibrary.DataAccess;
-using AirportApp.ClassLibrary.Entity.Domain.Faq.Bot;
+using AirportApp.ClassLibrary.Entity.Domain;
 using AirportApp.ClassLibrary.Repository.Interfaces;
 
 namespace AirportApp.ClassLibrary.Entity.Repository.Database

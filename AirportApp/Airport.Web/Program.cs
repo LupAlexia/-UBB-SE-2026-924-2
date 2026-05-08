@@ -1,10 +1,6 @@
 using System.Text.Json.Serialization;
 using AirportApp.ClassLibrary.DataAccess;
 using AirportApp.ClassLibrary.Entity.Domain;
-using AirportApp.ClassLibrary.Entity.Domain.Chats;
-using AirportApp.ClassLibrary.Entity.Domain.Faq.Bot;
-using AirportApp.ClassLibrary.Entity.Domain.Message;
-using AirportApp.ClassLibrary.Entity.Domain.Review;
 using AirportApp.ClassLibrary.Entity.Repository.Database;
 using AirportApp.ClassLibrary.Repository;
 using AirportApp.ClassLibrary.Repository.Interfaces;
