@@ -1,4 +1,4 @@
-using AirportApp.Src.ViewModel.Review;
+using AirportApp.Src.ViewModel;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Controls;
 

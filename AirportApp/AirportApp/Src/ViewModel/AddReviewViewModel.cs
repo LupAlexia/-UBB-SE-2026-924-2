@@ -6,7 +6,7 @@ using AirportApp.Src.Service.Interfaces;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
-namespace AirportApp.Src.ViewModel.Review
+namespace AirportApp.Src.ViewModel
 {
     public partial class AddReviewViewModel : ObservableObject
     {

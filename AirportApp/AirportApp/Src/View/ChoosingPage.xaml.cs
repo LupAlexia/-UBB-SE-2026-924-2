@@ -14,7 +14,7 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
-using AirportApp.Src.ViewModel.General;
+using AirportApp.Src.ViewModel;
 
 namespace AirportApp.Src.View.General
 {

@@ -1,7 +1,5 @@
 using System;
 using AirportApp.Src.ViewModel;
-using AirportApp.Src.ViewModel.Chats;
-using AirportApp.Src.ViewModel.General;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;

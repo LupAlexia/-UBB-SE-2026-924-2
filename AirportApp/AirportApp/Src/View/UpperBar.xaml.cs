@@ -1,4 +1,4 @@
-﻿using AirportApp.Src.ViewModel.General;
+﻿using AirportApp.Src.ViewModel;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -7,13 +7,13 @@ namespace AirportApp.Src.View.General
 {
     public sealed partial class UpperBar : UserControl
     {
-        public AirportApp.Src.ViewModel.General.UpperBarViewModel ViewModel { get; }
+        public AirportApp.Src.ViewModel.UpperBarViewModel ViewModel { get; }
 
         public UpperBar()
         {
             this.InitializeComponent();
 
-            ViewModel = (App.Current as App).Services.GetService<AirportApp.Src.ViewModel.General.UpperBarViewModel>();
+            ViewModel = (App.Current as App).Services.GetService<AirportApp.Src.ViewModel.UpperBarViewModel>();
             this.DataContext = ViewModel;
         }
 

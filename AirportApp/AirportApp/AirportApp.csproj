@@ -18,25 +18,7 @@
 		<EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
 	</PropertyGroup>
 
-	<ItemGroup>
-		<!-- Elimina App2 si MainWindow2 din build -->
-		<Compile Remove="App2.xaml.cs" />
-		<Compile Remove="MainWindow2.xaml.cs" />
-
-		<!-- Previne duplicarea App.xaml -->
-		<ApplicationDefinition Remove="App.xaml" />
-		<Page Remove="App.xaml" />
-		<Compile Remove="App.xaml.cs" />
-		<None Remove="appsetings.json" />
-
-		<!-- Re-include App.xaml o singura data ca ApplicationDefinition -->
-		<ApplicationDefinition Include="App.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</ApplicationDefinition>
-		<Compile Include="App.xaml.cs">
-			<DependentUpon>App.xaml</DependentUpon>
-		</Compile>
-	</ItemGroup>
+	
 
 	<ItemGroup>
 		<Content Include="Assets\SplashScreen.scale-200.png" />
@@ -94,6 +76,10 @@
 	  <None Update="appsettings.json">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </None>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Src\View\chat\" />
 	</ItemGroup>
 
 	<PropertyGroup Condition="'$(DisableHasPackageAndPublishMenuAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">

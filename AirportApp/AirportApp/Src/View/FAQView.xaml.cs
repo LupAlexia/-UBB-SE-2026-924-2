@@ -7,7 +7,6 @@ using AirportApp.ClassLibrary.Entity.Domain.Faq;
 using AirportApp.ClassLibrary.Repository;
 using AirportApp.Src.Service;
 using AirportApp.Src.ViewModel;
-using AirportApp.Src.ViewModel.Faq;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;

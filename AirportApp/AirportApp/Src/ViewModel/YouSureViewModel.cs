@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 
-namespace AirportApp.Src.ViewModel.General
+namespace AirportApp.Src.ViewModel
 {
     /// <summary>
     /// ViewModel for confirmation dialogs.

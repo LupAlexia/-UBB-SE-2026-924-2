@@ -1,4 +1,4 @@
-﻿using AirportApp.Src.ViewModel.General;
+﻿using AirportApp.Src.ViewModel;
 using Microsoft.UI.Xaml.Controls;
 
 namespace AirportApp.Src.View.General

@@ -1,6 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 
-namespace AirportApp.Src.ViewModel.General
+namespace AirportApp.Src.ViewModel
 {
     /// <summary>
     /// ViewModel for the MaiBoule dialog.

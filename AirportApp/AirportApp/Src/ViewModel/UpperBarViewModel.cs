@@ -4,7 +4,7 @@ using AirportApp.ClassLibrary.Entity.Domain;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml;
 
-namespace AirportApp.Src.ViewModel.General
+namespace AirportApp.Src.ViewModel
 {
     public sealed partial class UpperBarViewModel : ObservableObject
     {

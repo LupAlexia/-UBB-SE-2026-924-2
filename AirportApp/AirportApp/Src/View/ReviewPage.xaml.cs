@@ -2,7 +2,7 @@
 using AirportApp.Src.View.Faq;
 using AirportApp.Src.View.General;
 using AirportApp.Src.View.Ticket;
-using AirportApp.Src.ViewModel.Review;
+using AirportApp.Src.ViewModel;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;

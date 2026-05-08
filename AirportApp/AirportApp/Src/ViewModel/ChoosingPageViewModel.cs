@@ -8,10 +8,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using AirportApp;
 using CommunityToolkit.Mvvm.ComponentModel;
 
-namespace AirportApp.Src.ViewModel.General
+namespace AirportApp.Src.ViewModel
 {
 	public class ChoosingPageViewModel
 	{
@@ -19,7 +18,7 @@ namespace AirportApp.Src.ViewModel.General
         {
             bool isEmployee = roleTag == "Employee";
 
-            var application = (App)App.Current;
+            var application = (App)Microsoft.UI.Xaml.Application.Current;
             application.IsEmployee = isEmployee;
         }
     }

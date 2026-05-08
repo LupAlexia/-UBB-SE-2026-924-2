@@ -8,7 +8,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using ReviewEntity = AirportApp.ClassLibrary.Entity.Domain.Review.Review;
 using AirportApp.Src.Service.Interfaces;
 
-namespace AirportApp.Src.ViewModel.Review
+namespace AirportApp.Src.ViewModel
 {
     public partial class AllReviewsViewModel : ObservableObject
     {

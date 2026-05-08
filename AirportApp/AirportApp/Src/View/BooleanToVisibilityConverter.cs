@@ -2,7 +2,7 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Data;
 
-namespace AirportApp.Src.View.Faq
+namespace AirportApp.Src.View
 {
     public class BooleanToVisibilityConverter : IValueConverter
     {

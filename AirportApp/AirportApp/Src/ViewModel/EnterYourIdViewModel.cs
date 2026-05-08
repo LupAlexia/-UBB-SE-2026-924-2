@@ -6,7 +6,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 /// Handles user identification input and authentication logic.
 /// </summary>
 ///
-namespace AirportApp.Src.ViewModel.General
+namespace AirportApp.Src.ViewModel
 {
     public sealed partial class EnterYourIdViewModel : ObservableObject
     {

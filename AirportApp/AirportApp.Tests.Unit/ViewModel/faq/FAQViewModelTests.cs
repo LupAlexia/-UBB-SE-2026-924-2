@@ -11,7 +11,6 @@ using AirportApp.ClassLibrary.Entity.Domain.Faq;
 using AirportApp.ClassLibrary.Repository.Interfaces;
 using AirportApp.Src.Service.Implementation;
 using AirportApp.Src.Service.Interfaces;
-using AirportApp.Src.ViewModel.Faq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using NSubstitute.Core;

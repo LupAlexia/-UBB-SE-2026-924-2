@@ -14,7 +14,7 @@ using CommunityToolkit.Mvvm.Input;
 using Microsoft.UI.Xaml.Controls;
 using AirportApp.Src.Service.Interfaces;
 
-namespace AirportApp.Src.ViewModel.Chats
+namespace AirportApp.Src.ViewModel
 {
     public sealed partial class ChatViewModel : ObservableObject
     {

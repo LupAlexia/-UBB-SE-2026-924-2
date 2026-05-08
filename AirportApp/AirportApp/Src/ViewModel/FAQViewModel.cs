@@ -10,8 +10,9 @@ using AirportApp.ClassLibrary.Entity.Domain.Faq;
 using AirportApp.ClassLibrary.Entity.Domain.Faq.Bot;
 using AirportApp.Src.Service.Interfaces;
 using AirportApp.Src.View.Faq;
+using AirportApp.Src.View;
 
-namespace AirportApp.Src.ViewModel.Faq
+namespace AirportApp.Src.ViewModel
 {
     public class FAQViewModel : INotifyPropertyChanged
     {
@@ -91,8 +92,8 @@ namespace AirportApp.Src.ViewModel.Faq
 
         public FAQViewModel(IFAQService faqService, IMapper faqMapper)
         {
-            this.questionsService = faqService;
-            this.mapper = faqMapper;
+            questionsService = faqService;
+            mapper = faqMapper;
 
             frequentlyAskedQuestions = new ObservableCollection<FAQEntryDTO>();
             filteredQuestions = new ObservableCollection<FAQEntryDTO>();
