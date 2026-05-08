@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using AirportApp.ClassLibrary.Entity.Domain.Faq.Bot;
 using AirportApp.ClassLibrary.Entity.Domain.Message;
 
-namespace AirportApp.Src.Service
+namespace AirportApp.Src.Service.Interfaces
 {
     public interface IMessageService
     {

@@ -1,6 +1,6 @@
 using System;
 
-namespace AirportApp.Src.Service
+namespace AirportApp.Src.Service.Interfaces
 {
     /// <summary>
     /// Allows ViewModels to request page navigation without depending on WinUI Frame directly.

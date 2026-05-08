@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using AirportApp.ClassLibrary.Entity.Domain;
 using AirportApp.ClassLibrary.Entity.Domain.Review;
 
-namespace AirportApp.Src.Service
+namespace AirportApp.Src.Service.Interfaces
 {
     public interface IReviewService
     {

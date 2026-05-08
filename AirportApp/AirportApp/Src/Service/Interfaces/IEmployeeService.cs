@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using AirportApp.ClassLibrary.Entity.Domain.Employee;
 
-namespace AirportApp.Src.Service
+namespace AirportApp.Src.Service.Interfaces
 {
     public interface IEmployeeService
     {

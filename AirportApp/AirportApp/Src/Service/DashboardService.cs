@@ -8,6 +8,7 @@ using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
 using AirportApp.ClassLibrary.Entity.Domain;
 using AirportApp.ClassLibrary.Repository.Interfaces;
+using AirportApp.Src.Service.Interfaces;
 
 namespace AirportApp.Src.Service
 {

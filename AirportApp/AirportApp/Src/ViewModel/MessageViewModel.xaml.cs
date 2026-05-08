@@ -3,7 +3,6 @@ using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using AutoMapper;
 using AirportApp.ClassLibrary.Entity.Dto;
-using AirportApp.Src.Service;
 using AirportApp.ClassLibrary.Entity.Domain.Faq.Bot;
 using AirportApp.ClassLibrary.Entity.Domain.Message;
 using CommunityToolkit.Mvvm.ComponentModel;

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using AirportApp.ClassLibrary.Entity.Domain.Chats;
 
-namespace AirportApp.Src.Service
+namespace AirportApp.Src.Service.Interfaces
 {
     public interface IChatService
     {

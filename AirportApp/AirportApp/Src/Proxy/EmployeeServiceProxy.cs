@@ -4,7 +4,7 @@ using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 using AirportApp.ClassLibrary.Entity.Domain.Employee;
-using AirportApp.Src.Service;
+using AirportApp.Src.Service.Interfaces;
 
 namespace AirportApp.Src.Proxy
 {

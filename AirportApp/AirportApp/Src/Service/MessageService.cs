@@ -6,6 +6,7 @@ using AirportApp.ClassLibrary.Entity.Domain.Chats;
 using AirportApp.ClassLibrary.Entity.Domain.Message;
 using AirportApp.ClassLibrary.Entity.Domain.Faq.Bot;
 using AirportApp.ClassLibrary.Repository.Interfaces;
+using AirportApp.Src.Service.Interfaces;
 
 namespace AirportApp.Src.Service
 {

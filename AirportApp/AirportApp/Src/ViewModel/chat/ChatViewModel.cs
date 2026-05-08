@@ -9,7 +9,6 @@ using AirportApp.ClassLibrary.Entity.Domain.Chats;
 using AirportApp.ClassLibrary.Entity.Domain.Faq.Bot;
 using AirportApp.ClassLibrary.Entity.Domain.Message;
 using AirportApp.ClassLibrary.Entity.Dto;
-using AirportApp.Src.Service;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.UI.Xaml.Controls;

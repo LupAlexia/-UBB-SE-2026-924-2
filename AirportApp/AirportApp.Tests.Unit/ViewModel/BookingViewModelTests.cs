@@ -3,8 +3,8 @@ using AirportApp.ClassLibrary.Entity.Domain;
 using FluentAssertions;
 using Moq;
 using AirportApp.ClassLibrary.Entity.Domain;
-using AirportApp.Src.Service;
 using AirportApp.Src.ViewModel;
+using AirportApp.Src.Service.Interfaces;
 
 namespace AirportApp.Tests.Unit.ViewModel;
 
