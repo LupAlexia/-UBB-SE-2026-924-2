@@ -21,20 +21,6 @@ namespace AirportApp.Src.View.Faq
 
         private int currentPersonId;
 
-        //private bool IsEmployee(int id)
-        //{
-        //    try
-        //    {
-        //        var employeeRepository = new EmployeeRepository();
-        //        var employee = employeeRepository.GetById(id);
-        //        return employee != null;
-        //    }
-        //    catch
-        //    {
-        //        return false;
-        //    }
-        //}
-
         public FAQView()
         {
             ViewModel = (App.Current as App).Services.GetService<FAQViewModel>();

@@ -26,7 +26,7 @@ namespace AirportApp.ClassLibrary.Entity.Domain
         public string Username { get; set; } = string.Empty;
 
         [Required]
-        [MaxLength(255)] 
+        [MaxLength(255)]
         [Column("Password_Hash")]
         public string PasswordHash { get; set; } = string.Empty;
 

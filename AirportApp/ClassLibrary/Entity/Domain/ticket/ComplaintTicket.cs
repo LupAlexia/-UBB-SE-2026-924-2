@@ -5,18 +5,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace AirportApp.ClassLibrary.Entity.Domain.Ticket
 {
     [Table("Tickets")]
-    public class Ticket
+    public class ComplaintTicket
     {
-        //public int Id { get; set; }
-        //public User Creator { get; }
-        //public TicketUrgencyLevelEnum UrgencyLevel { get; set; }
-        //public TicketStatusEnum CurrentStatus { get; set; }
-        //public TicketCategory Category { get; }
-        //public TicketSubcategory Subcategory { get; }
-        //public string Subject { get; set; } = string.Empty;
-        //public string Description { get; set; } = string.Empty;
-        //public DateTime CreationTimestamp { get; set; }
-
         // 1. EF Core Auto-Properties
         [Key]
         [Column("Ticket_Id")]
@@ -37,14 +27,13 @@ namespace AirportApp.ClassLibrary.Entity.Domain.Ticket
 
         [Required]
         [Column("Urgency_Level")]
-        public TicketUrgencyLevelEnum UrgencyLevel { get; set; }
+        public ComplaintTicketUrgencyLevelEnum UrgencyLevel { get; set; }
 
         [Required]
         [Column("Status")]
-        public TicketStatusEnum CurrentStatus { get; set; }
+        public ComplaintTicketStatusEnum CurrentStatus { get; set; }
 
         // 2. Navigation Properties & Foreign Keys
-
         [Required]
         [Column("Creator_Id")]
         public int CreatorId { get; set; }
@@ -57,17 +46,19 @@ namespace AirportApp.ClassLibrary.Entity.Domain.Ticket
         public int CategoryId { get; set; }
 
         [ForeignKey(nameof(CategoryId))]
-        public TicketCategory Category { get; set; } = null!;
+        public ComplaintTicketCategory Category { get; set; } = null!;
 
         [Required]
         [Column("Subcategory_Id")]
         public int SubcategoryId { get; set; }
 
         [ForeignKey(nameof(SubcategoryId))]
-        public TicketSubcategory Subcategory { get; set; } = null!;
+        public ComplaintTicketSubcategory Subcategory { get; set; } = null!;
 
-        public Ticket() { }
-        public Ticket(int ticketId, User ticketCreator, TicketStatusEnum initialStatus, TicketCategory category, TicketSubcategory subcategory, string ticketSubject, string description, DateTime creationTimestamp, TicketUrgencyLevelEnum? initialUrgencyLevel = null)
+        public ComplaintTicket()
+        {
+        }
+        public ComplaintTicket(int ticketId, User ticketCreator, ComplaintTicketStatusEnum initialStatus, ComplaintTicketCategory category, ComplaintTicketSubcategory subcategory, string ticketSubject, string description, DateTime creationTimestamp, ComplaintTicketUrgencyLevelEnum? initialUrgencyLevel = null)
         {
             Id = ticketId;
             Creator = ticketCreator ?? throw new ArgumentNullException(nameof(ticketCreator));
@@ -82,12 +73,12 @@ namespace AirportApp.ClassLibrary.Entity.Domain.Ticket
             Description = description;
             CreationTimestamp = creationTimestamp;
         }
-        public void UpdateStatus(TicketStatusEnum newStatus)
+        public void UpdateStatus(ComplaintTicketStatusEnum newStatus)
         {
             CurrentStatus = newStatus;
         }
 
-        public void UpdateUrgencyLevel(TicketUrgencyLevelEnum newUrgencyLevel)
+        public void UpdateUrgencyLevel(ComplaintTicketUrgencyLevelEnum newUrgencyLevel)
         {
            UrgencyLevel = newUrgencyLevel;
         }

@@ -23,8 +23,8 @@ public class SupportAndFaqApiTests : BaseApiIntegrationTest
         // DecisionTreeController.GetNextNodeAsync(parentId, choice)
         // Testing the "NotFound" logic I spotted earlier
         var response = await client.GetAsync("/api/DecisionTree/next/1/InvalidChoiceThatDoesNotExist");
-        
-        // Even if parent 1 doesn't exist, the repo returns empty list, 
+
+        // Even if parent 1 doesn't exist, the repo returns empty list,
         // and FirstOrDefault returns null -> 404.
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }

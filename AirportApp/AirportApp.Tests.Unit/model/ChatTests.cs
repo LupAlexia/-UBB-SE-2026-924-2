@@ -11,12 +11,12 @@ namespace AirportApp.Tests.Unit;
 [TestClass]
 public class ChatTests
 {
-    private User _testUser;
+    private User testUser;
 
     [TestInitialize]
     public void Setup()
     {
-        _testUser = new User(1, "John Doe", "johndoe.example@com");
+        testUser = new User(1, "John Doe", "johndoe.example@com");
     }
 
     [TestMethod]
@@ -25,10 +25,10 @@ public class ChatTests
         int chatId = 1;
         ChatStatus status = ChatStatus.Active;
 
-        Chat newChat = new Chat(chatId, _testUser, status);
+        Chat newChat = new Chat(chatId, testUser, status);
 
         Assert.AreEqual(chatId, newChat.Id);
-        Assert.AreEqual(_testUser.UserId, newChat.UserId);
+        Assert.AreEqual(testUser.UserId, newChat.UserId);
         Assert.AreEqual(status, newChat.Status);
         Assert.AreEqual(0, newChat.Messages.Count);
     }
@@ -36,8 +36,8 @@ public class ChatTests
     [TestMethod]
     public void AddMessage_WithValidMessage_AddsMessage()
     {
-        Chat chat = new Chat(1, _testUser, ChatStatus.Active);
-        var newMessage = new Message(1, _testUser, chat, "Hello", DateTimeOffset.UtcNow);
+        Chat chat = new Chat(1, testUser, ChatStatus.Active);
+        var newMessage = new Message(1, testUser, chat, "Hello", DateTimeOffset.UtcNow);
 
         chat.AddMessage(newMessage);
 
@@ -48,7 +48,7 @@ public class ChatTests
     [TestMethod]
     public void AddMessage_WithNullMessage_ThrowsArgumentNullException()
     {
-        Chat chat = new Chat(1, _testUser, ChatStatus.Active);
+        Chat chat = new Chat(1, testUser, ChatStatus.Active);
 
         Assert.ThrowsException<ArgumentNullException>(() => chat.AddMessage(null!));
     }
@@ -56,7 +56,7 @@ public class ChatTests
     [TestMethod]
     public void CloseChat_WhenCalled_UpdatesChatStatusToClosed()
     {
-        Chat chat = new Chat(1, _testUser, ChatStatus.Active);
+        Chat chat = new Chat(1, testUser, ChatStatus.Active);
 
         chat.CloseChat();
 

@@ -8,27 +8,27 @@ using AirportApp.ClassLibrary.Repository.Interfaces;
 
 namespace AirportApp.ClassLibrary.Repository
 {
-    public class TicketRepository : ITicketRepository
+    public class ComplaintTicketRepository : ITicketRepository
     {
         private readonly AirportDbContext dataBaseContext;
 
-        public TicketRepository(AirportDbContext context)
+        public ComplaintTicketRepository(AirportDbContext context)
         {
             dataBaseContext = context ?? throw new ArgumentNullException(nameof(dataBaseContext));
         }
 
-        public async Task<IEnumerable<Ticket>> GetAllAsync()
+        public async Task<IEnumerable<ComplaintTicket>> GetAllAsync()
         {
-            return await dataBaseContext.tickets
+            return await dataBaseContext.Tickets
                 .Include(t => t.Creator)
                 .Include(t => t.Category)
                 .Include(t => t.Subcategory)
                 .ToListAsync();
         }
 
-        public async Task<Ticket> GetByIdAsync(int id)
+        public async Task<ComplaintTicket> GetByIdAsync(int id)
         {
-            return await dataBaseContext.tickets
+            return await dataBaseContext.Tickets
                 .Include(t => t.Creator)
                 .Include(t => t.Category)
                 .Include(t => t.Subcategory)
@@ -36,24 +36,22 @@ namespace AirportApp.ClassLibrary.Repository
                 ?? throw new KeyNotFoundException($"Ticket with id {id} not found.");
         }
 
-        public async Task<int> CreateNewEntityAsync(Ticket ticket)
+        public async Task<int> CreateNewEntityAsync(ComplaintTicket ticket)
         {
-            dataBaseContext.tickets.Add(ticket);
+            dataBaseContext.Tickets.Add(ticket);
             await dataBaseContext.SaveChangesAsync();
             return ticket.Id;
         }
 
-        public async Task UpdateByIdAsync(int id, Ticket ticket)
+        public async Task UpdateByIdAsync(int id, ComplaintTicket ticket)
         {
-            
-
-            dataBaseContext.tickets.Update(ticket);
+            dataBaseContext.Tickets.Update(ticket);
             await dataBaseContext.SaveChangesAsync();
         }
 
-        public async Task UpdateStatusByIdAsync(int id, TicketStatusEnum newStatus)
+        public async Task UpdateStatusByIdAsync(int id, ComplaintTicketStatusEnum newStatus)
         {
-            var ticket = await dataBaseContext.tickets.FindAsync(id);
+            var ticket = await dataBaseContext.Tickets.FindAsync(id);
             if (ticket == null)
             {
                 throw new KeyNotFoundException($"Ticket with id {id} not found.");
@@ -63,9 +61,9 @@ namespace AirportApp.ClassLibrary.Repository
             await dataBaseContext.SaveChangesAsync();
         }
 
-        public async Task UpdateUrgencyLevelByIdAsync(int id, TicketUrgencyLevelEnum newUrgencyLevel)
+        public async Task UpdateUrgencyLevelByIdAsync(int id, ComplaintTicketUrgencyLevelEnum newUrgencyLevel)
         {
-            var ticket = await dataBaseContext.tickets.FindAsync(id);
+            var ticket = await dataBaseContext.Tickets.FindAsync(id);
             if (ticket == null)
             {
                 throw new KeyNotFoundException($"Ticket with id {id} not found.");
@@ -77,10 +75,10 @@ namespace AirportApp.ClassLibrary.Repository
 
         public async Task DeleteByIdAsync(int id)
         {
-            var ticket = await dataBaseContext.tickets.FindAsync(id);
+            var ticket = await dataBaseContext.Tickets.FindAsync(id);
             if (ticket != null)
             {
-                dataBaseContext.tickets.Remove(ticket);
+                dataBaseContext.Tickets.Remove(ticket);
                 await dataBaseContext.SaveChangesAsync();
             }
         }

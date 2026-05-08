@@ -6,7 +6,6 @@ namespace AirportApp.ClassLibrary.Entity.Domain
     [Table("Membership_Addon_Discounts")]
     public class MembershipAddonDiscount
     {
-
         [Key, Column(Order = 0)]
         [ForeignKey(nameof(Membership))]
         public int MembershipId { get; set; }

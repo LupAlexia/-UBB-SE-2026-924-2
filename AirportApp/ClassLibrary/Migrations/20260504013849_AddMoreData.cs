@@ -103,7 +103,7 @@ namespace AirportApp.ClassLibrary.Migrations
             migrationBuilder.InsertData(
                 table: "Customers",
                 columns: new[] { "Customer_Id", "Email", "Membership_Id", "Password_Hash", "Phone", "Username" },
-                values: new object[] { 3, "user3@example.com", 3, "passhash3", "", "user3" });
+                values: new object[] { 3, "user3@example.com", 3, "passhash3", string.Empty, "user3" });
 
             migrationBuilder.InsertData(
                 table: "Flights",
@@ -143,7 +143,7 @@ namespace AirportApp.ClassLibrary.Migrations
             migrationBuilder.InsertData(
                 table: "FlightTickets",
                 columns: new[] { "Ticket_Id", "Flight_Id", "Passenger_Email", "Passenger_First_Name", "Passenger_Last_Name", "Passenger_Phone", "Price", "Seat", "Status", "User_Id" },
-                values: new object[] { 4, 4, "liamstone@example.com", "Liam", "Stone", "", 179f, "5B", "Booked", 1 });
+                values: new object[] { 4, 4, "liamstone@example.com", "Liam", "Stone", string.Empty, 179f, "5B", "Booked", 1 });
 
             migrationBuilder.InsertData(
                 table: "Flights",
@@ -171,7 +171,7 @@ namespace AirportApp.ClassLibrary.Migrations
             migrationBuilder.InsertData(
                 table: "FlightTickets",
                 columns: new[] { "Ticket_Id", "Flight_Id", "Passenger_Email", "Passenger_First_Name", "Passenger_Last_Name", "Passenger_Phone", "Price", "Seat", "Status", "User_Id" },
-                values: new object[] { 3, 3, "mialane@example.com", "Mia", "Lane", "", 249f, "8F", "Booked", 3 });
+                values: new object[] { 3, 3, "mialane@example.com", "Mia", "Lane", string.Empty, 249f, "8F", "Booked", 3 });
         }
 
         /// <inheritdoc />

@@ -1,12 +1,12 @@
-﻿using AirportApp.ClassLibrary.Entity.Domain.Message;
-using AirportApp.ClassLibrary.Entity.Dto;
-using AirportApp.ClassLibrary.Repository.Interfaces;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
+using AirportApp.ClassLibrary.Entity.Domain.Message;
+using AirportApp.ClassLibrary.Entity.Dto;
+using AirportApp.ClassLibrary.Repository.Interfaces;
 
 namespace AirportApp.Src.Proxy
 {
@@ -14,7 +14,6 @@ namespace AirportApp.Src.Proxy
     {
         private readonly HttpClient httpClient;
         private const string BaseUrl = "api/message";
-
         public MessageRepositoryProxy(HttpClient httpClient)
         {
             this.httpClient = httpClient;
@@ -58,8 +57,7 @@ namespace AirportApp.Src.Proxy
 
         public async Task<IEnumerable<Message>> GetByChatIdAsync(int chatId)
         {
-            var dtos = await httpClient.GetFromJsonAsync<IEnumerable<MessageWithSenderDTO>>
-                ($"{BaseUrl}/chat/{chatId}/with-senders");
+            var dtos = await httpClient.GetFromJsonAsync<IEnumerable<MessageWithSenderDTO>>($"{BaseUrl}/chat/{chatId}/with-senders");
 
             return dtos.Select(dto => new Message
             {

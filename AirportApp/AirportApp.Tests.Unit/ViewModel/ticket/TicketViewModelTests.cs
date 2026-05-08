@@ -16,64 +16,64 @@ namespace AirportApp.Tests.Unit.Src.ViewModel
     [TestClass]
     public class TicketsViewModelTests
     {
-        private ITicketService _ticketService;
-        private ITicketCategoryService _categoryService;
-        private ITicketSubcategoryService _subcategoryService;
-        private IUserService _userService;
-        private IMapper _mapper;
-        private TicketsViewModel _ticketsViewModel;
+        private IComplaintTicketService ticketService;
+        private IComplaintTicketCategoryService categoryService;
+        private IComplaintTicketSubcategoryService subcategoryService;
+        private IUserService userService;
+        private IMapper mapper;
+        private TicketsViewModel ticketsViewModel;
 
-        private TicketCategory _testCategory;
-        private TicketSubcategory _testSubcategory;
-        private User _testUser;
+        private ComplaintTicketCategory testCategory;
+        private ComplaintTicketSubcategory testSubcategory;
+        private User testUser;
 
         [TestInitialize]
         public void Setup()
         {
-            _ticketService = Substitute.For<ITicketService>();
-            _categoryService = Substitute.For<ITicketCategoryService>();
-            _subcategoryService = Substitute.For<ITicketSubcategoryService>();
-            _userService = Substitute.For<IUserService>();
-            _mapper = Substitute.For<IMapper>();
+            ticketService = Substitute.For<IComplaintTicketService>();
+            categoryService = Substitute.For<IComplaintTicketCategoryService>();
+            subcategoryService = Substitute.For<IComplaintTicketSubcategoryService>();
+            userService = Substitute.For<IUserService>();
+            mapper = Substitute.For<IMapper>();
 
-            _testCategory = new TicketCategory(1, "Hardware", TicketUrgencyLevelEnum.MEDIUM);
-            _testSubcategory = new TicketSubcategory(10, "Monitor", 100, _testCategory);
-            _testUser = new User(42, "Dede", "dedeee@airport.com");
+            testCategory = new ComplaintTicketCategory(1, "Hardware", ComplaintTicketUrgencyLevelEnum.MEDIUM);
+            testSubcategory = new ComplaintTicketSubcategory(10, "Monitor", 100, testCategory);
+            testUser = new User(42, "Dede", "dedeee@airport.com");
 
-            _mapper.Map<TicketDTO>(Arg.Any<Ticket>()).Returns(callInfo => MapToDto((Ticket)callInfo[0]));
+            mapper.Map<TicketDTO>(Arg.Any<ComplaintTicket>()).Returns(callInfo => MapToDto((ComplaintTicket)callInfo[0]));
 
-            var initialTickets = new List<Ticket>
+            var initialTickets = new List<ComplaintTicket>
             {
-                new Ticket(1, _testUser, TicketStatusEnum.OPEN, _testCategory, _testSubcategory, "Issue 1", "Desc 1", DateTime.Now)
+                new ComplaintTicket(1, testUser, ComplaintTicketStatusEnum.OPEN, testCategory, testSubcategory, "Issue 1", "Desc 1", DateTime.Now)
             };
 
-            _ticketService.GetAllTicketsAsync().Returns(Task.FromResult((IEnumerable<Ticket>)initialTickets));
-            _categoryService.GetAllCategoriesAsync().Returns(Task.FromResult((IEnumerable<TicketCategory>)new List<TicketCategory> { _testCategory }));
+            ticketService.GetAllTicketsAsync().Returns(Task.FromResult((IEnumerable<ComplaintTicket>)initialTickets));
+            categoryService.GetAllCategoriesAsync().Returns(Task.FromResult((IEnumerable<ComplaintTicketCategory>)new List<ComplaintTicketCategory> { testCategory }));
 
-            _ticketsViewModel = new TicketsViewModel(_ticketService, _categoryService, _subcategoryService, _userService, _mapper);
+            ticketsViewModel = new TicketsViewModel(ticketService, categoryService, subcategoryService, userService, mapper);
         }
 
         [TestMethod]
         public void Constructor_WhenCalled_ShouldInitializeCollectionsAndLoadData()
         {
-            Assert.AreEqual(1, _ticketsViewModel.AllTickets.Count);
-            Assert.AreEqual(1, _ticketsViewModel.Categories.Count);
-            _ticketService.Received(1).GetAllTicketsAsync();
+            Assert.AreEqual(1, ticketsViewModel.AllTickets.Count);
+            Assert.AreEqual(1, ticketsViewModel.Categories.Count);
+            ticketService.Received(1).GetAllTicketsAsync();
         }
 
         [TestMethod]
         public void GetAllTickets_WhenCalled_ShouldReturnAllTickets()
         {
-            var resultedTickets = _ticketsViewModel.GetAllTickets();
+            var resultedTickets = ticketsViewModel.GetAllTickets();
             Assert.IsNotNull(resultedTickets);
             Assert.AreEqual(1, resultedTickets.Count());
-            Assert.AreEqual(_ticketsViewModel.AllTickets.First(), resultedTickets.First());
+            Assert.AreEqual(ticketsViewModel.AllTickets.First(), resultedTickets.First());
         }
 
         [TestMethod]
         public void GetTotalTicketCount_WhenCalled_ShouldReturnCountOfAllTickets()
         {
-            var ticketsCount = _ticketsViewModel.GetTotalTicketCount();
+            var ticketsCount = ticketsViewModel.GetTotalTicketCount();
             Assert.AreEqual(1, ticketsCount);
         }
 
@@ -82,69 +82,69 @@ namespace AirportApp.Tests.Unit.Src.ViewModel
         {
             var ticketDataTransferObject = new TicketDTO(
                 101, 42, "dede_the_racoon@gmail.com",
-                TicketUrgencyLevelEnum.HIGH, TicketStatusEnum.OPEN,
+                ComplaintTicketUrgencyLevelEnum.HIGH, ComplaintTicketStatusEnum.OPEN,
                 1, "Hardware", 10, "Monitor",
                 "Broken Screen", "The screen is crackedddd", DateTime.Now);
 
-            _userService.GetByIdAsync(42).Returns(Task.FromResult(_testUser));
-            _categoryService.GetCategoryByIdAsync(1).Returns(Task.FromResult(_testCategory));
-            _subcategoryService.GetSubcategoryByIdAsync(10).Returns(Task.FromResult(_testSubcategory));
+            userService.GetByIdAsync(42).Returns(Task.FromResult(testUser));
+            categoryService.GetCategoryByIdAsync(1).Returns(Task.FromResult(testCategory));
+            subcategoryService.GetSubcategoryByIdAsync(10).Returns(Task.FromResult(testSubcategory));
 
-            await _ticketsViewModel.CreateTicketAsync(ticketDataTransferObject);
+            await ticketsViewModel.CreateTicketAsync(ticketDataTransferObject);
 
-            await _ticketService.Received(1).AddTicketAsync(Arg.Is<Ticket>(ticket =>
+            await ticketService.Received(1).AddTicketAsync(Arg.Is<ComplaintTicket>(ticket =>
                 ticket.Id == 101 &&
                 ticket.Subject == "Broken Screen" &&
                 ticket.Creator.Id == 42));
 
-            await _ticketService.Received(2).GetAllTicketsAsync();
+            await ticketService.Received(2).GetAllTicketsAsync();
         }
 
         [TestMethod]
         public async Task UpdateStatus_WhenCalled_ShouldTriggerServiceUpdate()
         {
-            await _ticketsViewModel.UpdateStatusAsync(1, TicketStatusEnum.RESOLVED);
+            await ticketsViewModel.UpdateStatusAsync(1, ComplaintTicketStatusEnum.RESOLVED);
 
-            await _ticketService.Received(1).UpdateStatusAsync(1, TicketStatusEnum.RESOLVED);
-            await _ticketService.Received(2).GetAllTicketsAsync();
+            await ticketService.Received(1).UpdateStatusAsync(1, ComplaintTicketStatusEnum.RESOLVED);
+            await ticketService.Received(2).GetAllTicketsAsync();
         }
 
         [TestMethod]
         public async Task UpdateUrgencyLevel_WhenCalled_ShouldCallServiceAndUpdateLocalList()
         {
             int targetId = 1;
-            var newUrgency = TicketUrgencyLevelEnum.HIGH;
+            var newUrgency = ComplaintTicketUrgencyLevelEnum.HIGH;
 
-            await _ticketsViewModel.UpdateUrgencyLevelAsync(targetId, newUrgency);
-            await _ticketService.Received(1).UpdateUrgencyLevelAsync(targetId, newUrgency);
-            await _ticketService.Received(2).GetAllTicketsAsync();
+            await ticketsViewModel.UpdateUrgencyLevelAsync(targetId, newUrgency);
+            await ticketService.Received(1).UpdateUrgencyLevelAsync(targetId, newUrgency);
+            await ticketService.Received(2).GetAllTicketsAsync();
         }
 
         [TestMethod]
         public void FilterByStatus_WhenCalled_ShouldUpdateFilteredDisplayCollection()
         {
-            var filteredResults = new List<TicketDTO> { _ticketsViewModel.AllTickets[0] };
-            _ticketService.FilterTicketsByStatus(Arg.Any<IEnumerable<TicketDTO>>(), TicketFilterStatusEnum.OPEN).Returns(filteredResults);
+            var filteredResults = new List<TicketDTO> { ticketsViewModel.AllTickets[0] };
+            ticketService.FilterTicketsByStatus(Arg.Any<IEnumerable<TicketDTO>>(), TicketFilterStatusEnum.OPEN).Returns(filteredResults);
 
-            _ticketsViewModel.SelectedFilterStatus = AirportApp.Src.ViewModel.TicketFilterStatusEnum.OPEN;
+            ticketsViewModel.SelectedFilterStatus = AirportApp.Src.ViewModel.TicketFilterStatusEnum.OPEN;
 
-            Assert.AreEqual(1, _ticketsViewModel.FilteredTicketsForDisplay.Count);
-            _ticketService.Received().FilterTicketsByStatus(Arg.Any<IEnumerable<TicketDTO>>(), AirportApp.Src.ViewModel.TicketFilterStatusEnum.OPEN);
+            Assert.AreEqual(1, ticketsViewModel.FilteredTicketsForDisplay.Count);
+            ticketService.Received().FilterTicketsByStatus(Arg.Any<IEnumerable<TicketDTO>>(), AirportApp.Src.ViewModel.TicketFilterStatusEnum.OPEN);
         }
 
         [TestMethod]
         public async Task LoadSubcategories_WhenCalled_ShouldPopulateCorrectCategory()
         {
-            var subcategoriesList = new List<TicketSubcategory> { _testSubcategory };
-            _subcategoryService.GetSubcategoriesByCategoryIdAsync(1).Returns(Task.FromResult((IEnumerable<TicketSubcategory>)subcategoriesList));
+            var subcategoriesList = new List<ComplaintTicketSubcategory> { testSubcategory };
+            subcategoryService.GetSubcategoriesByCategoryIdAsync(1).Returns(Task.FromResult((IEnumerable<ComplaintTicketSubcategory>)subcategoriesList));
 
-            await _ticketsViewModel.LoadSubcategoriesAsync(1);
+            await ticketsViewModel.LoadSubcategoriesAsync(1);
 
-            Assert.AreEqual(1, _ticketsViewModel.Subcategories.Count);
-            Assert.AreEqual("Monitor", _ticketsViewModel.Subcategories[0].SubcategoryName);
+            Assert.AreEqual(1, ticketsViewModel.Subcategories.Count);
+            Assert.AreEqual("Monitor", ticketsViewModel.Subcategories[0].SubcategoryName);
         }
 
-        private static TicketDTO MapToDto(Ticket ticket)
+        private static TicketDTO MapToDto(ComplaintTicket ticket)
         {
             return new TicketDTO(
                 ticket.Id,
@@ -158,8 +158,7 @@ namespace AirportApp.Tests.Unit.Src.ViewModel
                 ticket.Subcategory.SubcategoryName,
                 ticket.Subject,
                 ticket.Description,
-                ticket.CreationTimestamp
-            );
+                ticket.CreationTimestamp);
         }
     }
 }

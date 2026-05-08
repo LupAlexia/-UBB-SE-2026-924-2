@@ -11,7 +11,7 @@ namespace AirportApp.ClassLibrary.Entity.Domain
         public int Id { get; set; }
 
         [Required]
-        [StringLength(3, MinimumLength = 3)] //codes are strictly 3 characters
+        [StringLength(3, MinimumLength = 3)] // codes are strictly 3 characters
         [Column("Airport_Code")]
         public string AirportCode { get; set; } = string.Empty;
 

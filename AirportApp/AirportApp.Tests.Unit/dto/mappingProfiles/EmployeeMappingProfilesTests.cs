@@ -16,15 +16,15 @@ namespace AirportApp.Tests.Unit.src.dto.mappingprofiles;
 [TestClass]
 public class EmployeeMappingProfileTests
 {
-    private IMapper _mapper;
-    private ILoggerFactory _loggerFactory;
+    private IMapper mapper;
+    private ILoggerFactory loggerFactory;
 
     [TestInitialize]
     public void Setup()
     {
-        _loggerFactory = Substitute.For<ILoggerFactory>();
-        var configuration = new AutoMapper.MapperConfiguration(cfg => cfg.AddProfile<EmployeeMappingProfile>(), _loggerFactory);
-        _mapper = configuration.CreateMapper();
+        loggerFactory = Substitute.For<ILoggerFactory>();
+        var configuration = new AutoMapper.MapperConfiguration(cfg => cfg.AddProfile<EmployeeMappingProfile>(), loggerFactory);
+        mapper = configuration.CreateMapper();
     }
 
     [TestMethod]
@@ -32,7 +32,7 @@ public class EmployeeMappingProfileTests
     {
         var employeeEntity = new Employee(1, "Alex", "alex@mail.com", EmployeeDepartment.HR);
 
-        var resultedDataTransferObject = _mapper.Map<EmployeeDTO>(employeeEntity);
+        var resultedDataTransferObject = mapper.Map<EmployeeDTO>(employeeEntity);
 
         Assert.AreEqual(employeeEntity.RetrieveConfiguredDisplayFullNameForBot(), resultedDataTransferObject.name);
     }
@@ -42,7 +42,7 @@ public class EmployeeMappingProfileTests
     {
         var employeeEntity = new Employee(1, "Alex", "alex@mail.com", EmployeeDepartment.HR);
 
-        var resultedDataTransferObject = _mapper.Map<EmployeeDTO>(employeeEntity);
+        var resultedDataTransferObject = mapper.Map<EmployeeDTO>(employeeEntity);
 
         Assert.AreEqual(employeeEntity.RetrieveConfiguredEmailAddressForBotContact(), resultedDataTransferObject.email);
     }
@@ -50,7 +50,7 @@ public class EmployeeMappingProfileTests
     [TestMethod]
     public void Map_EmployeeToEmployeeDTO_ValidConfiguration()
     {
-        var configuration = new AutoMapper.MapperConfiguration(cfg => cfg.AddProfile<EmployeeMappingProfile>(), _loggerFactory);
+        var configuration = new AutoMapper.MapperConfiguration(cfg => cfg.AddProfile<EmployeeMappingProfile>(), loggerFactory);
         configuration.AssertConfigurationIsValid();
     }
 }

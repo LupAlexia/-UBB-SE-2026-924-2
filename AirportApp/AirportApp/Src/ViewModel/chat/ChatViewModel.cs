@@ -103,7 +103,7 @@ namespace AirportApp.Src.ViewModel.Chats
             }
 
             BotMessage botReply = await messageService.SendMessageAsync(chat.Id, user, option);
-            System.Diagnostics.Debug.WriteLine($"User selected: {option.Label}");
+            System.Diagnostics.Debug.WriteLine($"User selected: {option.label}");
 
             await LoadChatHistoryAsync();
             UpdateAvailableOptions(botReply);

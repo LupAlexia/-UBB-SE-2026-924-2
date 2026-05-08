@@ -1,9 +1,9 @@
-using AirportApp.Src.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using AirportApp.Src.ViewModel;
 using AutoMapper;
 using AirportApp.ClassLibrary.Entity.Dto;
 using AirportApp.ClassLibrary.Entity.Domain;
@@ -24,42 +24,42 @@ namespace AirportApp.Tests.Unit.Src.ViewModel.Chats
     [TestClass]
     public class ChatViewModelTests
     {
-        private IRepository<int, Chat> _chatRepositoryMock;
-        private IRepository<int, Message> _msgRepositoryMock;
-        private IRepository<int, User> _userRepositoryMock;
-        private IBotStrategy _strategyMock;
-        private IUserService _userService;
-        private IMapper _mapper;
+        private IRepository<int, Chat> chatRepositoryMock;
+        private IRepository<int, Message> msgRepositoryMock;
+        private IRepository<int, User> userRepositoryMock;
+        private IBotStrategy strategyMock;
+        private IUserService userService;
+        private IMapper mapper;
 
-        private BotEngineIdentity _botEngine;
-        private MessageService _messageService;
-        private ChatService _chatService;
+        private BotEngineIdentity botEngine;
+        private MessageService messageService;
+        private ChatService chatService;
 
-        private User _testUser;
-        private Chat _testChat;
+        private User testUser;
+        private Chat testChat;
 
         [TestInitialize]
         public void Setup()
         {
-            _chatRepositoryMock = Substitute.For<IRepository<int, Chat>>();
-            _msgRepositoryMock = Substitute.For<IRepository<int, Message>>();
-            _userRepositoryMock = Substitute.For<IRepository<int, User>>();
-            _strategyMock = Substitute.For<IBotStrategy>();
-            _userService = Substitute.For<IUserService>();
-            _mapper = Substitute.For<IMapper>();
+            chatRepositoryMock = Substitute.For<IRepository<int, Chat>>();
+            msgRepositoryMock = Substitute.For<IRepository<int, Message>>();
+            userRepositoryMock = Substitute.For<IRepository<int, User>>();
+            strategyMock = Substitute.For<IBotStrategy>();
+            userService = Substitute.For<IUserService>();
+            mapper = Substitute.For<IMapper>();
 
-            _botEngine = new BotEngineIdentity(_strategyMock);
-            _messageService = new MessageService(_chatRepositoryMock, _msgRepositoryMock, _botEngine);
-            _chatService = new ChatService(_chatRepositoryMock, _userRepositoryMock);
+            botEngine = new BotEngineIdentity(strategyMock);
+            messageService = new MessageService(chatRepositoryMock, msgRepositoryMock, botEngine);
+            chatService = new ChatService(chatRepositoryMock, userRepositoryMock);
 
-            _testUser = new User(42, "Test User", "test@test.com");
-            _testChat = new Chat(1, _testUser, ChatStatus.Active);
+            testUser = new User(42, "Test User", "test@test.com");
+            testChat = new Chat(1, testUser, ChatStatus.Active);
 
-            _chatRepositoryMock.CreateNewEntityAsync(Arg.Any<Chat>()).Returns(Task.FromResult(1));
-            _chatRepositoryMock.GetByIdAsync(1).Returns(Task.FromResult(_testChat));
-            _userRepositoryMock.GetByIdAsync(42).Returns(Task.FromResult(_testUser));
+            chatRepositoryMock.CreateNewEntityAsync(Arg.Any<Chat>()).Returns(Task.FromResult(1));
+            chatRepositoryMock.GetByIdAsync(1).Returns(Task.FromResult(testChat));
+            userRepositoryMock.GetByIdAsync(42).Returns(Task.FromResult(testUser));
 
-            _mapper.Map<MessageDTO>(Arg.Any<IMessage>()).Returns(callInfo =>
+            mapper.Map<MessageDTO>(Arg.Any<IMessage>()).Returns(callInfo =>
             {
                 var messageEntity = (IMessage)callInfo[0];
                 var dataTransferObject = new MessageDTO();
@@ -71,37 +71,37 @@ namespace AirportApp.Tests.Unit.Src.ViewModel.Chats
                 return dataTransferObject;
             });
 
-            var defaultBotReply = new BotMessage.BotMessageBuilder(_testUser, _testChat, 2).Build();
-            _strategyMock.ProcessIncomingUserMessageAndDetermineNextDecisionTreeNodeAsync(Arg.Any<BotEngineIdentity>(), Arg.Any<IMessage>())
+            var defaultBotReply = new BotMessage.BotMessageBuilder(testUser, testChat, 2).Build();
+            strategyMock.ProcessIncomingUserMessageAndDetermineNextDecisionTreeNodeAsync(Arg.Any<BotEngineIdentity>(), Arg.Any<IMessage>())
                 .Returns(Task.FromResult(defaultBotReply));
 
-            _userService.GetByIdAsync(42).Returns(Task.FromResult(_testUser));
+            userService.GetByIdAsync(42).Returns(Task.FromResult(testUser));
         }
 
         private ChatViewModel CreateViewModel(List<Message> initialMessages = null)
         {
             if (initialMessages != null)
             {
-                _msgRepositoryMock.GetAllAsync().Returns(Task.FromResult((IEnumerable<Message>)initialMessages));
+                msgRepositoryMock.GetAllAsync().Returns(Task.FromResult((IEnumerable<Message>)initialMessages));
             }
             else
             {
-                _msgRepositoryMock.GetAllAsync().Returns(Task.FromResult(Enumerable.Empty<Message>()));
+                msgRepositoryMock.GetAllAsync().Returns(Task.FromResult(Enumerable.Empty<Message>()));
             }
 
-            return new ChatViewModel(_messageService, _chatService, _mapper, _userService, _testUser);
+            return new ChatViewModel(messageService, chatService, mapper, userService, testUser);
         }
 
         [TestMethod]
         public async Task Constructor_HistoryIsEmpty_LoadsFirstMessage()
         {
-            _strategyMock.ClearReceivedCalls();
+            strategyMock.ClearReceivedCalls();
 
             var newViewModel = CreateViewModel(new List<Message>());
             // Give some time for background tasks if any, though constructor starts them
-            await Task.Delay(100); 
+            await Task.Delay(100);
 
-            await _strategyMock.ReceivedWithAnyArgs(1).ProcessIncomingUserMessageAndDetermineNextDecisionTreeNodeAsync(Arg.Any<BotEngineIdentity>(), Arg.Any<IMessage>());
+            await strategyMock.ReceivedWithAnyArgs(1).ProcessIncomingUserMessageAndDetermineNextDecisionTreeNodeAsync(Arg.Any<BotEngineIdentity>(), Arg.Any<IMessage>());
         }
 
         [TestMethod]
@@ -119,39 +119,39 @@ namespace AirportApp.Tests.Unit.Src.ViewModel.Chats
 
             await newViewModel.CloseChatAsync();
 
-            await _chatRepositoryMock.Received(1).UpdateByIdAsync(1, Arg.Any<Chat>());
+            await chatRepositoryMock.Received(1).UpdateByIdAsync(1, Arg.Any<Chat>());
         }
 
         [TestMethod]
         public void HandleOptionClick_NullOption_DoesNothing()
         {
-            var mockMessage = new Message(1, _testUser, _testChat, "Init", DateTimeOffset.UtcNow);
+            var mockMessage = new Message(1, testUser, testChat, "Init", DateTimeOffset.UtcNow);
             var newViewModel = CreateViewModel(new List<Message> { mockMessage });
-            _strategyMock.ClearReceivedCalls();
+            strategyMock.ClearReceivedCalls();
 
             newViewModel.HandleOptionClickCommand.Execute(null);
 
-            _strategyMock.DidNotReceiveWithAnyArgs().ProcessIncomingUserMessageAndDetermineNextDecisionTreeNodeAsync(default, default);
+            strategyMock.DidNotReceiveWithAnyArgs().ProcessIncomingUserMessageAndDetermineNextDecisionTreeNodeAsync(default, default);
         }
 
         [TestMethod]
         public async Task HandleOptionClick_ValidOption_SendsMessage()
         {
-            var mockMessage = new Message(1, _testUser, _testChat, "Init", DateTimeOffset.UtcNow);
+            var mockMessage = new Message(1, testUser, testChat, "Init", DateTimeOffset.UtcNow);
             var mockViewModel = CreateViewModel(new List<Message> { mockMessage });
-            _msgRepositoryMock.ClearReceivedCalls();
+            msgRepositoryMock.ClearReceivedCalls();
             var selectedChatOption = new FAQOption("Test", 2);
 
             mockViewModel.HandleOptionClickCommand.Execute(selectedChatOption);
             await Task.Delay(100);
 
-            await _msgRepositoryMock.Received(2).CreateNewEntityAsync(Arg.Any<Message>());
+            await msgRepositoryMock.Received(2).CreateNewEntityAsync(Arg.Any<Message>());
         }
 
         [TestMethod]
         public void LoadChatHistory_OutgoingMessage_SetsIsOutgoingTrue()
         {
-            var mockMessage = new Message(1, _testUser, _testChat, "Test", DateTimeOffset.UtcNow);
+            var mockMessage = new Message(1, testUser, testChat, "Test", DateTimeOffset.UtcNow);
 
             var mockViewModel = CreateViewModel(new List<Message> { mockMessage });
 
@@ -162,7 +162,7 @@ namespace AirportApp.Tests.Unit.Src.ViewModel.Chats
         public void LoadChatHistory_IncomingMessage_SetsIsOutgoingFalse()
         {
             var otherUser = new User(99, "Other", "other@other.com");
-            var mockMessage = new Message(1, otherUser, _testChat, "Test", DateTimeOffset.UtcNow);
+            var mockMessage = new Message(1, otherUser, testChat, "Test", DateTimeOffset.UtcNow);
 
             var mockViewModel = CreateViewModel(new List<Message> { mockMessage });
 

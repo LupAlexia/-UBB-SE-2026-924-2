@@ -88,7 +88,7 @@ namespace AirportApp.Src.ViewModel
         {
             if (parameter is User user)
             {
-                //UserSession.CurrentUser = user;
+                // UserSession.CurrentUser = user;
             }
         }
 

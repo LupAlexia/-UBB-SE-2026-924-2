@@ -1,5 +1,5 @@
-using AirportApp.Src.ViewModel;
 using System;
+using AirportApp.Src.ViewModel;
 using FluentAssertions;
 using Moq;
 using AirportApp.ClassLibrary.Entity.Domain;

@@ -12,18 +12,18 @@ namespace AirportApp.Src.Service
     public class ChatService : IChatService
     {
         private IRepository<int, Chat> chatRepository;
-        private readonly IRepository<int, User> _userRepository;
+        private readonly IRepository<int, User> userRepository;
         public const int UNASSIGNED_CHAT_ID = 0;
 
         public ChatService(IRepository<int, Chat> chatRepository, IRepository<int, User> userRepository)
         {
             this.chatRepository = chatRepository;
-            _userRepository = userRepository;
+            this.userRepository = userRepository;
         }
 
         public async Task<Chat> OpenChatAsync(int userId)
         {
-            User user = await _userRepository.GetByIdAsync(userId);
+            User user = await userRepository.GetByIdAsync(userId);
             try
             {
                 Chat newChat = new Chat(UNASSIGNED_CHAT_ID, user, ChatStatus.Active);

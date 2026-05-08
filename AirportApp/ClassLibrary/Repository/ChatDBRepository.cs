@@ -25,17 +25,17 @@ namespace AirportApp.ClassLibrary.Repository
                 throw new ArgumentNullException(nameof(incomingChatEntityToBeSaved));
             }
 
-            this.dataBaseContext.chats.Add(incomingChatEntityToBeSaved);
+            this.dataBaseContext.Chats.Add(incomingChatEntityToBeSaved);
             await this.dataBaseContext.SaveChangesAsync();
             return incomingChatEntityToBeSaved.Id;
         }
 
         public async Task DeleteByIdAsync(int identifierForChatToBeDeleted)
         {
-            var chat = await this.dataBaseContext.chats.FirstOrDefaultAsync(c => c.Id == identifierForChatToBeDeleted);
+            var chat = await this.dataBaseContext.Chats.FirstOrDefaultAsync(c => c.Id == identifierForChatToBeDeleted);
             if (chat != null)
             {
-                this.dataBaseContext.chats.Remove(chat);
+                this.dataBaseContext.Chats.Remove(chat);
                 await this.dataBaseContext.SaveChangesAsync();
             }
         }
@@ -47,7 +47,7 @@ namespace AirportApp.ClassLibrary.Repository
                 throw new ArgumentNullException(nameof(updatedChatEntityData));
             }
 
-            var chatFound = await this.dataBaseContext.chats.FirstOrDefaultAsync(c => c.Id == identifierForChatToBeUpdated);
+            var chatFound = await this.dataBaseContext.Chats.FirstOrDefaultAsync(c => c.Id == identifierForChatToBeUpdated);
             if (chatFound != null)
             {
                 chatFound.Status = updatedChatEntityData.Status;
@@ -57,12 +57,12 @@ namespace AirportApp.ClassLibrary.Repository
 
         public async Task<IEnumerable<Chat>> GetAllAsync()
         {
-            return await this.dataBaseContext.chats.ToListAsync();
+            return await this.dataBaseContext.Chats.ToListAsync();
         }
 
         public async Task<Chat> GetByIdAsync(int identifierForRequestedChat)
         {
-            var chat = await this.dataBaseContext.chats.FirstOrDefaultAsync(c => c.Id == identifierForRequestedChat);
+            var chat = await this.dataBaseContext.Chats.FirstOrDefaultAsync(c => c.Id == identifierForRequestedChat);
             return chat ?? throw new KeyNotFoundException($"Chat with id {identifierForRequestedChat} not found.");
         }
     }

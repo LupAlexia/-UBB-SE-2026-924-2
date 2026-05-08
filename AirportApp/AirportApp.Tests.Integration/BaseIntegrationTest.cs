@@ -1,8 +1,8 @@
+using System.Linq;
+using System;
 using Microsoft.EntityFrameworkCore;
 using AirportApp.ClassLibrary.DataAccess;
 using AirportApp.ClassLibrary.Entity.Domain;
-using System.Linq;
-using System;
 
 namespace AirportApp.Tests.Integration;
 
@@ -25,7 +25,7 @@ public abstract class BaseIntegrationTest
     // Overload used by workflow tests that already hold a dbContext reference
     protected int GetFirstAvailableFlightId(AirportDbContext dbContext)
     {
-        var flight = dbContext.flights
+        var flight = dbContext.Flights
             .OrderBy(f => f.Date > DateTime.Now ? 0 : 1)
             .ThenBy(f => f.Date)
             .FirstOrDefault();

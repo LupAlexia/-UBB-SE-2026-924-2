@@ -9,33 +9,33 @@ using AirportApp.ClassLibrary.Repository.Interfaces;
 
 namespace AirportApp.ClassLibrary.Repository
 {
-    public class TicketSubcategoryRepository : ITicketSubcategoryRepository
+    public class ComplaintTicketSubcategoryRepository : ITicketSubcategoryRepository
     {
         private readonly AirportDbContext dataBaseContext;
 
-        public TicketSubcategoryRepository(AirportDbContext context)
+        public ComplaintTicketSubcategoryRepository(AirportDbContext context)
         {
             dataBaseContext = context ?? throw new ArgumentNullException(nameof(dataBaseContext));
         }
 
-        public async Task<IEnumerable<TicketSubcategory>> GetAllAsync()
+        public async Task<IEnumerable<ComplaintTicketSubcategory>> GetAllAsync()
         {
-            return await dataBaseContext.ticketSubcategories
+            return await dataBaseContext.TicketSubcategories
                            .Include(s => s.ParentCategory)
                            .ToListAsync();
         }
 
-        public async Task<TicketSubcategory> GetByIdAsync(int subcategoryId)
+        public async Task<ComplaintTicketSubcategory> GetByIdAsync(int subcategoryId)
         {
-            return await dataBaseContext.ticketSubcategories
+            return await dataBaseContext.TicketSubcategories
                            .Include(s => s.ParentCategory)
                            .FirstOrDefaultAsync(s => s.Id == subcategoryId)
                    ?? throw new KeyNotFoundException($"Subcategory with id {subcategoryId} not found.");
         }
 
-        public async Task<IEnumerable<TicketSubcategory>> GetByCategoryIdAsync(int categoryId)
+        public async Task<IEnumerable<ComplaintTicketSubcategory>> GetByCategoryIdAsync(int categoryId)
         {
-            return await dataBaseContext.ticketSubcategories
+            return await dataBaseContext.TicketSubcategories
                            .Include(s => s.ParentCategory)
                            .Where(s => s.ParentCategory.Id == categoryId)
                            .ToListAsync();

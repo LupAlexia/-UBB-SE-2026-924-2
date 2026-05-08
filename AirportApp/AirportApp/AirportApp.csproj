@@ -13,6 +13,9 @@
 		<UseWinUI>true</UseWinUI>
 		<EnableMsixTooling>true</EnableMsixTooling>
 		<Nullable>enable</Nullable>
+		<CodeAnalysisRuleSet>SE.ruleset</CodeAnalysisRuleSet>
+		<RunAnalyzersDuringBuild>true</RunAnalyzersDuringBuild>
+		<EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -74,6 +77,10 @@
 		<PackageReference Include="NSubstitute" Version="5.3.0" />
 		<PackageReference Include="QuestPDF" Version="2026.2.4" />
 		<PackageReference Include="Sprache" Version="2.3.1" />
+		<PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
+		  <PrivateAssets>all</PrivateAssets>
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
 	</ItemGroup>
 
 	<ItemGroup>

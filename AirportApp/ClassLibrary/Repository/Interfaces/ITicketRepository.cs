@@ -2,11 +2,10 @@ using AirportApp.ClassLibrary.Entity.Domain.Ticket;
 
 namespace AirportApp.ClassLibrary.Repository.Interfaces
 {
-    public interface ITicketRepository : IRepository<int, Ticket>
+    public interface ITicketRepository : IRepository<int, ComplaintTicket>
     {
+        Task UpdateStatusByIdAsync(int id, ComplaintTicketStatusEnum newStatus);
 
-        Task UpdateStatusByIdAsync(int id, TicketStatusEnum newStatus);
-
-        Task UpdateUrgencyLevelByIdAsync(int id, TicketUrgencyLevelEnum newUrgencyLevel);
+        Task UpdateUrgencyLevelByIdAsync(int id, ComplaintTicketUrgencyLevelEnum newUrgencyLevel);
     }
 }

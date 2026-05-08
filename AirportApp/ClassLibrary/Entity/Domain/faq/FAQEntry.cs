@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-namespace AirportApp.ClassLibrary.Entity.Domain.Faq
 
+namespace AirportApp.ClassLibrary.Entity.Domain.Faq
 {
     [Table("FAQs")]
     public class FAQEntry
@@ -32,7 +32,9 @@ namespace AirportApp.ClassLibrary.Entity.Domain.Faq
         public int NotHelpfulVotesCount { get; set; }
 
         // 2. Required Parameterless Constructor
-        public FAQEntry() { }
+        public FAQEntry()
+        {
+        }
 
         public FAQEntry(int id, string question, string answer, FAQCategoryEnum category, int viewCount, int wasHelpfulVotes, int wasNotHelpfulVotes)
         {

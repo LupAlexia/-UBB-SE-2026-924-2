@@ -21,14 +21,14 @@ public class BookingServiceIntegrationTests : BaseIntegrationTest
     private readonly IBookingService bookingService;
     private readonly IFlightTicketRepository ticketRepository;
     private readonly IFlightRepository flightRepository;
-    private readonly AirportDbContext _dbContext; 
+    private readonly AirportDbContext dbContext;
 
     public BookingServiceIntegrationTests()
     {
-        _dbContext = CreateDbContext();
-        ticketRepository = new FlightTicketRepository(_dbContext);
-        flightRepository = new FlightRepository(_dbContext);
-        bookingService = new BookingService(ticketRepository, new AddOnRepository(_dbContext));
+        dbContext = CreateDbContext();
+        ticketRepository = new FlightTicketRepository(dbContext);
+        flightRepository = new FlightRepository(dbContext);
+        bookingService = new BookingService(ticketRepository, new AddOnRepository(dbContext));
     }
 
     [TestMethod]
@@ -37,7 +37,7 @@ public class BookingServiceIntegrationTests : BaseIntegrationTest
         var uniqueCode = Guid.NewGuid().ToString().Substring(UniqueCodeStartIndex, UniqueCodeLength);
         var user = new Customer { Email = $"{MihaiEmail}_{uniqueCode}@gmail.com", Username = $"{MihaiUsername}_{uniqueCode}", Phone = MihaiPhone, PasswordHash = MihaiPassword };
 
-        var flightId = GetFirstAvailableFlightId(_dbContext);
+        var flightId = GetFirstAvailableFlightId(dbContext);
         var flight = await flightRepository.GetFlightByIdAsync(flightId);
 
         var tickets = new List<FlightTicket>

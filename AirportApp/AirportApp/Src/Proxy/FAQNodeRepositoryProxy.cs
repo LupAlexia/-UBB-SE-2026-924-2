@@ -27,7 +27,7 @@ namespace AirportApp.Src.Proxy
         {
             var response = await httpClient.PostAsJsonAsync(BaseUrl, elem);
             response.EnsureSuccessStatusCode();
-            return elem.FaqNodeId;
+            return elem.faqNodeId;
         }
 
         public async Task UpdateByIdAsync(int id, FAQNode elem)

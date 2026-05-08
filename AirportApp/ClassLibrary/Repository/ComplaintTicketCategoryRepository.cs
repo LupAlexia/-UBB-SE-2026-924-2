@@ -8,23 +8,23 @@ using AirportApp.ClassLibrary.Repository.Interfaces;
 
 namespace AirportApp.ClassLibrary.Repository
 {
-    public class TicketCategoryRepository : ITicketCategoryRepository
+    public class ComplaintTicketCategoryRepository : ITicketCategoryRepository
     {
         private readonly AirportDbContext dataBaseContext;
 
-        public TicketCategoryRepository(AirportDbContext context)
+        public ComplaintTicketCategoryRepository(AirportDbContext context)
         {
             dataBaseContext = context ?? throw new ArgumentNullException(nameof(dataBaseContext));
         }
 
-        public async Task<IEnumerable<TicketCategory>> GetAllAsync()
+        public async Task<IEnumerable<ComplaintTicketCategory>> GetAllAsync()
         {
-            return await dataBaseContext.ticketCategories.ToListAsync();
+            return await dataBaseContext.TicketCategories.ToListAsync();
         }
 
-        public async Task<TicketCategory> GetByIdAsync(int categoryId)
+        public async Task<ComplaintTicketCategory> GetByIdAsync(int categoryId)
         {
-            return await dataBaseContext.ticketCategories.FindAsync(categoryId)
+            return await dataBaseContext.TicketCategories.FindAsync(categoryId)
                    ?? throw new KeyNotFoundException($"Category with id {categoryId} not found.");
         }
     }

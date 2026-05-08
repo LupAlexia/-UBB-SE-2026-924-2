@@ -4,21 +4,21 @@ using AirportApp.ClassLibrary.Entity.Domain.Ticket;
 using AirportApp.Src.Service.Interfaces;
 using AirportApp.ClassLibrary.Repository.Interfaces;
 
-public class TicketCategoryService : ITicketCategoryService
+public class ComplaintTicketCategoryService : IComplaintTicketCategoryService
 {
     private readonly ITicketCategoryRepository categoryRepository;
 
-    public TicketCategoryService(ITicketCategoryRepository categoryRepository)
+    public ComplaintTicketCategoryService(ITicketCategoryRepository categoryRepository)
     {
         this.categoryRepository = categoryRepository;
     }
 
-    public async Task<TicketCategory> GetCategoryByIdAsync(int categoryId)
+    public async Task<ComplaintTicketCategory> GetCategoryByIdAsync(int categoryId)
     {
         return await categoryRepository.GetByIdAsync(categoryId);
     }
 
-    public async Task<IEnumerable<TicketCategory>> GetAllCategoriesAsync()
+    public async Task<IEnumerable<ComplaintTicketCategory>> GetAllCategoriesAsync()
     {
         return await categoryRepository.GetAllAsync();
     }

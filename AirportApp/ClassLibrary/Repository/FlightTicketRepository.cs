@@ -22,7 +22,7 @@ namespace AirportApp.ClassLibrary.Repository
 
         public async Task<IEnumerable<FlightTicket>> GetTicketsByUserIdAsync(int userId)
         {
-            return await this.dataBaseContext.flightTickets
+            return await this.dataBaseContext.FlightTickets
                 .Where(ticket => ticket.User.Id == userId)
                 .Include(ticket => ticket.User)
                 .Include(ticket => ticket.Flight)
@@ -45,7 +45,7 @@ namespace AirportApp.ClassLibrary.Repository
 
         public async Task UpdateTicketStatusAsync(int ticketId, string status)
         {
-            var ticket = await this.dataBaseContext.flightTickets.FirstOrDefaultAsync(t => t.Id == ticketId);
+            var ticket = await this.dataBaseContext.FlightTickets.FirstOrDefaultAsync(t => t.Id == ticketId);
             if (ticket != null)
             {
                 ticket.Status = status;
@@ -60,7 +60,7 @@ namespace AirportApp.ClassLibrary.Repository
                 return;
             }
 
-            var ticket = await this.dataBaseContext.flightTickets
+            var ticket = await this.dataBaseContext.FlightTickets
                 .Include(t => t.SelectedAddOns)
                 .FirstOrDefaultAsync(t => t.Id == ticketId);
 
@@ -71,7 +71,7 @@ namespace AirportApp.ClassLibrary.Repository
 
             foreach (var addOnId in addOnIds)
             {
-                var addOn = await this.dataBaseContext.addOns.FirstOrDefaultAsync(a => a.Id == addOnId);
+                var addOn = await this.dataBaseContext.AddOns.FirstOrDefaultAsync(a => a.Id == addOnId);
                 if (addOn != null && !ticket.SelectedAddOns.Contains(addOn))
                 {
                     ticket.SelectedAddOns.Add(addOn);
@@ -83,7 +83,7 @@ namespace AirportApp.ClassLibrary.Repository
 
         public async Task<IEnumerable<string>> GetOccupiedSeatsAsync(int flightId)
         {
-            return await this.dataBaseContext.flightTickets
+            return await this.dataBaseContext.FlightTickets
                 .Where(ticket => ticket.Flight.Id == flightId
                     && ticket.Status != CancelledStatus
                     && ticket.Seat != null)
@@ -93,7 +93,7 @@ namespace AirportApp.ClassLibrary.Repository
 
         public async Task<bool> IsSeatAvailableAsync(int flightId, string seat)
         {
-            int count = await this.dataBaseContext.flightTickets
+            int count = await this.dataBaseContext.FlightTickets
                 .Where(ticket => ticket.Flight.Id == flightId
                     && ticket.Seat == seat
                     && ticket.Status != CancelledStatus)
@@ -109,14 +109,14 @@ namespace AirportApp.ClassLibrary.Repository
                 for (int ticketIndex = 0; ticketIndex < tickets.Count; ticketIndex++)
                 {
                     var ticket = tickets[ticketIndex];
-                    
+
                     // Reset navigation properties to null to prevent EF re-insertion errors
                     ticket.User = null;
                     ticket.Flight = null;
 
                     // Get add-on IDs for this ticket
-                    var currentAddOnIds = (addOnIds != null && ticketIndex < addOnIds.Count) 
-                        ? addOnIds[ticketIndex] 
+                    var currentAddOnIds = (addOnIds != null && ticketIndex < addOnIds.Count)
+                        ? addOnIds[ticketIndex]
                         : new List<int>();
 
                     if (currentAddOnIds.Any())
@@ -125,7 +125,7 @@ namespace AirportApp.ClassLibrary.Repository
                         foreach (var addOnId in currentAddOnIds)
                         {
                             // Fetch the tracked entity from the database
-                            var existing = await dataBaseContext.addOns.FindAsync(addOnId);
+                            var existing = await dataBaseContext.AddOns.FindAsync(addOnId);
                             if (existing != null)
                             {
                                 attachedAddOns.Add(existing);
@@ -138,7 +138,7 @@ namespace AirportApp.ClassLibrary.Repository
                         ticket.SelectedAddOns = new List<AddOn>();
                     }
 
-                    this.dataBaseContext.flightTickets.Add(ticket);
+                    this.dataBaseContext.FlightTickets.Add(ticket);
                 }
 
                 await this.dataBaseContext.SaveChangesAsync();

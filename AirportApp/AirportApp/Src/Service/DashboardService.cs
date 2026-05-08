@@ -35,17 +35,17 @@ namespace AirportApp.Src.Service
         {
             var now = DateTime.Now;
             var allTickets = await this.ticketRepository.GetTicketsByUserIdAsync(userId);
-            var tickets = allTickets.Where(FlightTicket => FlightTicket.Flight != null);
+            var tickets = allTickets.Where(flightTicket => flightTicket.Flight != null);
 
             return string.Equals(ticketFilter, "Past", StringComparison.OrdinalIgnoreCase)
-                ? tickets.Where(FlightTicket => FlightTicket.Flight!.Date < now).OrderByDescending(FlightTicket => FlightTicket.Flight!.Date)
-                : tickets.Where(FlightTicket => FlightTicket.Flight!.Date >= now).OrderBy(FlightTicket => FlightTicket.Flight!.Date);
+                ? tickets.Where(flightTicket => flightTicket.Flight!.Date < now).OrderByDescending(flightTicket => flightTicket.Flight!.Date)
+                : tickets.Where(flightTicket => flightTicket.Flight!.Date >= now).OrderBy(flightTicket => flightTicket.Flight!.Date);
         }
 
-        public string GenerateTicketPdf(FlightTicket FlightTicket)
+        public string GenerateTicketPdf(FlightTicket flightTicket)
         {
             string downloadsFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
-            string filePath = Path.Combine(downloadsFolder, $"WizzErr_Ticket_{FlightTicket.Id}_{DateTime.Now:yyyyMMdd_HHmmss}.pdf");
+            string filePath = Path.Combine(downloadsFolder, $"WizzErr_Ticket_{flightTicket.Id}_{DateTime.Now:yyyyMMdd_HHmmss}.pdf");
 
             Document.Create(container =>
             {
@@ -63,32 +63,32 @@ namespace AirportApp.Src.Service
                     page.Content().PaddingVertical(1, Unit.Centimetre).Column(col =>
                     {
                         col.Spacing(PdfColumnSpacing);
-                        col.Item().Text($"FlightTicket ID: {FlightTicket.Id}").FontSize(PdfTicketIdFontSize).SemiBold();
-                        col.Item().Text($"Status: {FlightTicket.Status}").FontColor(FlightTicket.Status == CancelledStatus ? Colors.Red.Medium : Colors.Green.Darken1);
+                        col.Item().Text($"FlightTicket ID: {flightTicket.Id}").FontSize(PdfTicketIdFontSize).SemiBold();
+                        col.Item().Text($"Status: {flightTicket.Status}").FontColor(flightTicket.Status == CancelledStatus ? Colors.Red.Medium : Colors.Green.Darken1);
                         col.Item().LineHorizontal(1).LineColor(Colors.Grey.Lighten2);
 
                         col.Item().PaddingTop(PdfSectionPaddingTop).Text("Flight Details").FontSize(PdfSectionHeaderFontSize).SemiBold();
-                        col.Item().Text($"Flight Number: {FlightTicket.Flight?.FlightNumber ?? "N/A"}");
-                        col.Item().Text($"Date: {FlightTicket.Flight?.Date:dd MMM yyyy HH:mm}");
-                        col.Item().Text($"Route: {FlightTicket.Flight?.Route?.Airport?.City ?? "N/A"} ({FlightTicket.Flight?.Route?.RouteType ?? "N/A"})");
-                        col.Item().Text($"Departure: {FlightTicket.Flight?.Route?.DepartureTime:HH:mm}");
-                        col.Item().Text($"Arrival: {FlightTicket.Flight?.Route?.ArrivalTime:HH:mm}");
-                        col.Item().Text($"Gate: {FlightTicket.Flight?.Gate?.GateName ?? "N/A"}");
-                        col.Item().Text($"Seat: {FlightTicket.Seat ?? "Unassigned"}");
+                        col.Item().Text($"Flight Number: {flightTicket.Flight?.FlightNumber ?? "N/A"}");
+                        col.Item().Text($"Date: {flightTicket.Flight?.Date:dd MMM yyyy HH:mm}");
+                        col.Item().Text($"Route: {flightTicket.Flight?.Route?.Airport?.City ?? "N/A"} ({flightTicket.Flight?.Route?.RouteType ?? "N/A"})");
+                        col.Item().Text($"Departure: {flightTicket.Flight?.Route?.DepartureTime:HH:mm}");
+                        col.Item().Text($"Arrival: {flightTicket.Flight?.Route?.ArrivalTime:HH:mm}");
+                        col.Item().Text($"Gate: {flightTicket.Flight?.Gate?.GateName ?? "N/A"}");
+                        col.Item().Text($"Seat: {flightTicket.Seat ?? "Unassigned"}");
 
                         col.Item().LineHorizontal(1).LineColor(Colors.Grey.Lighten2);
 
                         col.Item().PaddingTop(PdfSectionPaddingTop).Text("Passenger Information").FontSize(PdfSectionHeaderFontSize).SemiBold();
-                        col.Item().Text($"Name: {FlightTicket.PassengerFirstName} {FlightTicket.PassengerLastName}");
-                        col.Item().Text($"Email: {FlightTicket.PassengerEmail}");
-                        col.Item().Text($"Phone: {FlightTicket.PassengerPhone}");
+                        col.Item().Text($"Name: {flightTicket.PassengerFirstName} {flightTicket.PassengerLastName}");
+                        col.Item().Text($"Email: {flightTicket.PassengerEmail}");
+                        col.Item().Text($"Phone: {flightTicket.PassengerPhone}");
 
                         col.Item().LineHorizontal(1).LineColor(Colors.Grey.Lighten2);
 
                         col.Item().PaddingTop(PdfSectionPaddingTop).Text("Selected Add-Ons").FontSize(PdfSectionHeaderFontSize).SemiBold();
-                        if (FlightTicket.SelectedAddOns != null && FlightTicket.SelectedAddOns.Count > 0)
+                        if (flightTicket.SelectedAddOns != null && flightTicket.SelectedAddOns.Count > 0)
                         {
-                            foreach (var addOn in FlightTicket.SelectedAddOns)
+                            foreach (var addOn in flightTicket.SelectedAddOns)
                             {
                                 col.Item().Text($"• {addOn.Name}");
                             }
@@ -98,7 +98,7 @@ namespace AirportApp.Src.Service
                             col.Item().Text("No add-ons selected");
                         }
 
-                        col.Item().PaddingTop(PdfTotalPricePaddingTop).Text($"Total Price: {FlightTicket.Price} EUR").FontSize(PdfSectionHeaderFontSize).SemiBold();
+                        col.Item().PaddingTop(PdfTotalPricePaddingTop).Text($"Total Price: {flightTicket.Price} EUR").FontSize(PdfSectionHeaderFontSize).SemiBold();
                     });
 
                     page.Footer().AlignCenter().Text(textDescriptor =>

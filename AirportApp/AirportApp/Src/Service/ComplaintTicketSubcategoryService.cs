@@ -6,21 +6,21 @@ using AirportApp.ClassLibrary.Repository.Interfaces;
 
 namespace AirportApp.Src.Service
 {
-    public class TicketSubcategoryService : ITicketSubcategoryService
+    public class ComplaintTicketSubcategoryService : IComplaintTicketSubcategoryService
     {
         private readonly ITicketSubcategoryRepository subcategoryRepository;
 
-        public TicketSubcategoryService(ITicketSubcategoryRepository subcategoryRepository)
+        public ComplaintTicketSubcategoryService(ITicketSubcategoryRepository subcategoryRepository)
         {
             this.subcategoryRepository = subcategoryRepository;
         }
 
-        public async Task<IEnumerable<TicketSubcategory>> GetSubcategoriesByCategoryIdAsync(int categoryId)
+        public async Task<IEnumerable<ComplaintTicketSubcategory>> GetSubcategoriesByCategoryIdAsync(int categoryId)
         {
             return await subcategoryRepository.GetByCategoryIdAsync(categoryId);
         }
 
-        public async Task<TicketSubcategory> GetSubcategoryByIdAsync(int subcategoryId)
+        public async Task<ComplaintTicketSubcategory> GetSubcategoryByIdAsync(int subcategoryId)
         {
             return await subcategoryRepository.GetByIdAsync(subcategoryId);
         }

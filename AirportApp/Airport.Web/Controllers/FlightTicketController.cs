@@ -33,7 +33,7 @@ namespace Airport.Web.Controllers
 
         [HttpPut("{ticketId}/status")]
         public async Task<ActionResult> UpdateTicketStatusAsync(int ticketId, [FromBody] string status)
-        {   
+        {
             await flightTicketRepository.UpdateTicketStatusAsync(ticketId, status);
             return NoContent();
         }

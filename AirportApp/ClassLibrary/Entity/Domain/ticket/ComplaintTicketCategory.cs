@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace AirportApp.ClassLibrary.Entity.Domain.Ticket
 {
     [Table("TicketCategories")]
-    public class TicketCategory
+    public class ComplaintTicketCategory
     {
         [Key]
         [Column("Category_Id")]
@@ -22,10 +22,12 @@ namespace AirportApp.ClassLibrary.Entity.Domain.Ticket
 
         [Required]
         [Column("Default_Urgency_Level")]
-        public TicketUrgencyLevelEnum CategoryUrgencyLevel { get; set; }
+        public ComplaintTicketUrgencyLevelEnum CategoryUrgencyLevel { get; set; }
 
-        public TicketCategory() { }
-        public TicketCategory(int categoryId, string categoryName, TicketUrgencyLevelEnum categoryUrgencyLevel)
+        public ComplaintTicketCategory()
+        {
+        }
+        public ComplaintTicketCategory(int categoryId, string categoryName, ComplaintTicketUrgencyLevelEnum categoryUrgencyLevel)
         {
             Id = categoryId;
             CategoryName = categoryName;

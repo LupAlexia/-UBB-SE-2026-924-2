@@ -19,7 +19,6 @@ namespace AirportApp.ClassLibrary.Entity.Domain
         [Column("Base_Price")]
         public float BasePrice { get; set; }
 
-        //public List<FlightTicket> Tickets { get; set; } = new();
         public ICollection<FlightTicket> Tickets { get; set; } = new List<FlightTicket>();
         public AddOn()
         {

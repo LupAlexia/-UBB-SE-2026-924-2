@@ -6,10 +6,10 @@ namespace AirportApp.ClassLibrary.Repository.Interfaces
 {
     public interface ITicketSubcategoryRepository
     {
-        Task<IEnumerable<TicketSubcategory>> GetAllAsync();
+        Task<IEnumerable<ComplaintTicketSubcategory>> GetAllAsync();
 
-        Task<TicketSubcategory> GetByIdAsync(int subcategoryId);
+        Task<ComplaintTicketSubcategory> GetByIdAsync(int subcategoryId);
 
-        Task<IEnumerable<TicketSubcategory>> GetByCategoryIdAsync(int categoryId);
+        Task<IEnumerable<ComplaintTicketSubcategory>> GetByCategoryIdAsync(int categoryId);
     }
 }

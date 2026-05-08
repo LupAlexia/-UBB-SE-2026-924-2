@@ -20,12 +20,12 @@ namespace AirportApp.ClassLibrary.Repository
 
         public async Task<IEnumerable<AddOn>> GetAllAddOnsAsync()
         {
-            return await this.dataBaseContext.addOns.ToListAsync();
+            return await this.dataBaseContext.AddOns.ToListAsync();
         }
 
         public async Task<IEnumerable<AddOn>> GetAddOnsByIdsAsync(IEnumerable<int> addOnIds)
         {
-            return await this.dataBaseContext.addOns
+            return await this.dataBaseContext.AddOns
                 .Where(addOnEntity => addOnIds.Contains(addOnEntity.Id))
                 .ToListAsync();
         }

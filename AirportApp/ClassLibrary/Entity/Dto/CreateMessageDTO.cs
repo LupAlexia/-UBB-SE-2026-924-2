@@ -7,10 +7,9 @@ using System.Threading.Tasks;
 namespace AirportApp.ClassLibrary.Entity.Dto
 {
     public record CreateMessageDTO(
-        int ChatId,
-        string Text,
-        int? SenderUserId,
-        int? SenderEmployeeId,
-        DateTimeOffset Timestamp
-    );
+        int chatId,
+        string text,
+        int? senderUserId,
+        int? senderEmployeeId,
+        DateTimeOffset timestamp);
 }

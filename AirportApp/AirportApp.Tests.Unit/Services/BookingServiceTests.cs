@@ -1,15 +1,15 @@
-using AirportApp.ClassLibrary.Entity.Domain;
-using AirportApp.Src.ViewModel;
-using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Linq;
+using System;
+using System.Collections.Generic;
+using AirportApp.Src.ViewModel;
+using AirportApp.ClassLibrary.Entity.Domain;
 using FluentAssertions;
 using Moq;
 using AirportApp.ClassLibrary.Repository.Interfaces;
 using AirportApp.Src.Service;
 using AirportApp.Tests.Unit.Fixtures;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Linq;
-using System;
 
 namespace AirportApp.Tests.Unit.Services;
 

@@ -580,8 +580,8 @@ namespace AirportApp.ClassLibrary.Migrations
                 columns: new[] { "Customer_Id", "Email", "Membership_Id", "Password_Hash", "Phone", "Username" },
                 values: new object[,]
                 {
-                    { 1, "user1@example.com", 1, "passhash1", "", "user1" },
-                    { 2, "user2@example.com", 2, "passhash2", "", "user2" }
+                    { 1, "user1@example.com", 1, "passhash1", string.Empty, "user1" },
+                    { 2, "user2@example.com", 2, "passhash2", string.Empty, "user2" }
                 });
 
             migrationBuilder.InsertData(
@@ -664,8 +664,8 @@ namespace AirportApp.ClassLibrary.Migrations
                 columns: new[] { "Ticket_Id", "Flight_Id", "Passenger_Email", "Passenger_First_Name", "Passenger_Last_Name", "Passenger_Phone", "Price", "Seat", "Status", "User_Id" },
                 values: new object[,]
                 {
-                    { 1, 1, "johndoe@example.com", "John", "Doe", "", 199f, "12A", "Booked", 1 },
-                    { 2, 2, "janeroe@example.com", "Jane", "Roe", "", 149f, "14C", "Booked", 2 }
+                    { 1, 1, "johndoe@example.com", "John", "Doe", string.Empty, 199f, "12A", "Booked", 1 },
+                    { 2, 2, "janeroe@example.com", "Jane", "Roe", string.Empty, 149f, "14C", "Booked", 2 }
                 });
 
             migrationBuilder.CreateIndex(

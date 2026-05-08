@@ -1,9 +1,9 @@
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using AirportApp.ClassLibrary.Entity.Domain.Review;
 using AirportApp.ClassLibrary.Entity.Dto;
 using AirportApp.ClassLibrary.Repository.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Airport.Web.Controllers
 {
@@ -44,12 +44,12 @@ namespace Airport.Web.Controllers
         {
             var review = new Review
             {
-                UserId = dto.UserId,
-                Message = dto.Message,
-                DutyFreeRating = dto.DutyFreeRating,
-                FlightExperienceRating = dto.FlightExperienceRating,
-                StaffFriendlinessRating = dto.StaffFriendlinessRating,
-                CleanlinessRating = dto.CleanlinessRating
+                UserId = dto.userId,
+                Message = dto.message,
+                DutyFreeRating = dto.dutyFreeRating,
+                FlightExperienceRating = dto.flightExperienceRating,
+                StaffFriendlinessRating = dto.staffFriendlinessRating,
+                CleanlinessRating = dto.cleanlinessRating
             };
             int createdId = await reviewRepository.CreateNewEntityAsync(review);
             return CreatedAtAction(nameof(GetByIdAsync), new { id = createdId }, review);

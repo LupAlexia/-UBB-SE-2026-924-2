@@ -55,7 +55,7 @@ namespace AirportApp.Src.Proxy
             // HTTP PUT replaces userRepository.UpdateUserMembershipAsync
             HttpResponseMessage updateResponse = await this.httpClient
                 .PutAsJsonAsync($"{CustomerBaseUrl}/{userId}/membership", newMembershipId);
-            
+
             updateResponse.EnsureSuccessStatusCode();
 
             // HTTP GET replaces membershipRepository.GetMembershipByIdAsync

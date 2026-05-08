@@ -6,7 +6,7 @@ namespace AirportApp.Src.Service
     public interface IPricingService
     {
         float CalculateBasePrice(Flight flight);
-        float CalculateTotalPrice(FlightTicket FlightTicket);
+        float CalculateTotalPrice(FlightTicket flightTicket);
         PriceBreakdown CalculatePriceBreakdown(Flight flight, Customer user, List<FlightTicket> tickets);
     }
 }

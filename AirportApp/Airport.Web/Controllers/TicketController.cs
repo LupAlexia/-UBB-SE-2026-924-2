@@ -13,25 +13,24 @@ namespace Airport.Web.Controllers
     {
         private readonly ITicketRepository ticketRepository;
 
-
         public TicketController(ITicketRepository ticketRepository)
         {
             this.ticketRepository = ticketRepository;
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Ticket>>> GetAllAsync()
+        public async Task<ActionResult<IEnumerable<ComplaintTicket>>> GetAllAsync()
         {
-            IEnumerable<Ticket> tickets = await ticketRepository.GetAllAsync();
+            IEnumerable<ComplaintTicket> tickets = await ticketRepository.GetAllAsync();
             return Ok(tickets);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Ticket>> GetByIdAsync(int id)
+        public async Task<ActionResult<ComplaintTicket>> GetByIdAsync(int id)
         {
             try
             {
-                Ticket ticket = await ticketRepository.GetByIdAsync(id);
+                ComplaintTicket ticket = await ticketRepository.GetByIdAsync(id);
                 return Ok(ticket);
             }
             catch (KeyNotFoundException)
@@ -43,34 +42,21 @@ namespace Airport.Web.Controllers
         [HttpPost]
         public async Task<ActionResult> CreateAsync([FromBody] CreateTicketDTO dto)
         {
-
-            var ticket = new Ticket
+            var ticket = new ComplaintTicket
             {
-                CreatorId = dto.CreatorId,
-                CategoryId = dto.CategoryId,
-                SubcategoryId = dto.SubcategoryId,
-                Subject = dto.Subject,
-                Description = dto.Description,
-                CreationTimestamp = dto.CreationTimestamp,
-                CurrentStatus = dto.CurrentStatus,
-                UrgencyLevel = dto.UrgencyLevel
+                CreatorId = dto.creatorId,
+                CategoryId = dto.categoryId,
+                SubcategoryId = dto.subcategoryId,
+                Subject = dto.subject,
+                Description = dto.description,
+                CreationTimestamp = dto.creationTimestamp,
+                CurrentStatus = dto.currentStatus,
+                UrgencyLevel = dto.urgencyLevel
             };
 
             int createdId = await ticketRepository.CreateNewEntityAsync(ticket);
             return CreatedAtAction(nameof(GetByIdAsync), new { id = createdId }, ticket);
         }
-
-        //[HttpPut("{id}")]
-        //public async Task<ActionResult> UpdateAsync(int id, [FromBody] Ticket ticket)
-        //{
-        //    if (id != ticket.Id)
-        //    {
-        //        return BadRequest("ID in URL does not match ID in body.");
-        //    }
-
-        //    await ticketRepository.UpdateByIdAsync(id, ticket);
-        //    return NoContent();
-        //}
 
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteAsync(int id)
@@ -79,9 +65,8 @@ namespace Airport.Web.Controllers
             return NoContent();
         }
 
-
         [HttpPut("{id}")]
-        public async Task<ActionResult> UpdateAsync(int id, [FromBody] Ticket ticket)
+        public async Task<ActionResult> UpdateAsync(int id, [FromBody] ComplaintTicket ticket)
         {
             if (id != ticket.Id)
             {
@@ -109,11 +94,11 @@ namespace Airport.Web.Controllers
 
     public class UpdateStatusRequest
     {
-        public TicketStatusEnum CurrentStatus { get; set; }
+        public ComplaintTicketStatusEnum CurrentStatus { get; set; }
     }
 
     public class UpdateUrgencyRequest
     {
-        public TicketUrgencyLevelEnum UrgencyLevel { get; set; }
+        public ComplaintTicketUrgencyLevelEnum UrgencyLevel { get; set; }
     }
 }

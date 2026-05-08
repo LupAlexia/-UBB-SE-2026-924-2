@@ -21,7 +21,7 @@ namespace AirportApp.ClassLibrary.Entity.Repository.Database
 
         public async Task<FAQNode> GetByIdAsync(int id)
         {
-            var node = await this.dataBaseContext.faqNodes
+            var node = await this.dataBaseContext.FaqNodes
                 .Include(n => n.Options)
                 .FirstOrDefaultAsync(n => n.NodeId == id);
 
@@ -41,16 +41,16 @@ namespace AirportApp.ClassLibrary.Entity.Repository.Database
         {
             var nodeEntity = new FAQNodeEntity
             {
-                QuestionText = incomingFAQNodeEntityToBeSaved.QuestionText,
-                IsFinalAnswer = incomingFAQNodeEntityToBeSaved.IsFinalAnswer
+                QuestionText = incomingFAQNodeEntityToBeSaved.questionText,
+                IsFinalAnswer = incomingFAQNodeEntityToBeSaved.isFinalAnswer
             };
 
-            foreach (var opt in incomingFAQNodeEntityToBeSaved.Options)
+            foreach (var opt in incomingFAQNodeEntityToBeSaved.options)
             {
-                nodeEntity.Options.Add(new FAQOptionEntity { Label = opt.Label, NextOptionId = opt.NextOptionId });
+                nodeEntity.Options.Add(new FAQOptionEntity { Label = opt.label, NextOptionId = opt.nextOptionId });
             }
 
-            this.dataBaseContext.faqNodes.Add(nodeEntity);
+            this.dataBaseContext.FaqNodes.Add(nodeEntity);
             await this.dataBaseContext.SaveChangesAsync();
 
             return nodeEntity.NodeId;
@@ -58,7 +58,7 @@ namespace AirportApp.ClassLibrary.Entity.Repository.Database
 
         public async Task DeleteByIdAsync(int id)
         {
-            var node = await this.dataBaseContext.faqNodes.Include(n => n.Options).FirstOrDefaultAsync(n => n.NodeId == id);
+            var node = await this.dataBaseContext.FaqNodes.Include(n => n.Options).FirstOrDefaultAsync(n => n.NodeId == id);
             if (node == null)
             {
                 return;
@@ -66,30 +66,30 @@ namespace AirportApp.ClassLibrary.Entity.Repository.Database
 
             if (node.Options != null && node.Options.Any())
             {
-                this.dataBaseContext.faqOptions.RemoveRange(node.Options);
+                this.dataBaseContext.FaqOptions.RemoveRange(node.Options);
             }
 
-            this.dataBaseContext.faqNodes.Remove(node);
+            this.dataBaseContext.FaqNodes.Remove(node);
             await this.dataBaseContext.SaveChangesAsync();
         }
 
         public async Task UpdateByIdAsync(int id, FAQNode updatedFAQNodeEntityData)
         {
-            var node = await this.dataBaseContext.faqNodes.Include(n => n.Options).FirstOrDefaultAsync(n => n.NodeId == id);
+            var node = await this.dataBaseContext.FaqNodes.Include(n => n.Options).FirstOrDefaultAsync(n => n.NodeId == id);
             if (node == null)
             {
                 return;
             }
 
-            node.QuestionText = updatedFAQNodeEntityData.QuestionText;
-            node.IsFinalAnswer = updatedFAQNodeEntityData.IsFinalAnswer;
+            node.QuestionText = updatedFAQNodeEntityData.questionText;
+            node.IsFinalAnswer = updatedFAQNodeEntityData.isFinalAnswer;
 
-            this.dataBaseContext.faqOptions.RemoveRange(node.Options);
+            this.dataBaseContext.FaqOptions.RemoveRange(node.Options);
             node.Options.Clear();
 
-            foreach (var opt in updatedFAQNodeEntityData.Options)
+            foreach (var opt in updatedFAQNodeEntityData.options)
             {
-                node.Options.Add(new FAQOptionEntity { NodeId = id, Label = opt.Label, NextOptionId = opt.NextOptionId });
+                node.Options.Add(new FAQOptionEntity { NodeId = id, Label = opt.label, NextOptionId = opt.nextOptionId });
             }
 
             await this.dataBaseContext.SaveChangesAsync();
@@ -97,7 +97,7 @@ namespace AirportApp.ClassLibrary.Entity.Repository.Database
 
         public async Task<IEnumerable<FAQNode>> GetAllAsync()
         {
-            var nodes = await this.dataBaseContext.faqNodes
+            var nodes = await this.dataBaseContext.FaqNodes
                 .Include(n => n.Options)
                 .ToListAsync();
 

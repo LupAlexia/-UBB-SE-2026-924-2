@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using AirportApp.ClassLibrary.DataAccess;
 using AirportApp.ClassLibrary.Entity.Domain;
 using AirportApp.ClassLibrary.Entity.Domain.Chats;
@@ -8,7 +9,6 @@ using AirportApp.ClassLibrary.Entity.Repository.Database;
 using AirportApp.ClassLibrary.Repository;
 using AirportApp.ClassLibrary.Repository.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using System.Text.Json.Serialization;
 
 namespace Airport.Web
 {
@@ -29,9 +29,9 @@ namespace Airport.Web
             builder.Services.AddScoped<IFlightRepository, FlightRepository>();
             builder.Services.AddScoped<IFlightTicketRepository, FlightTicketRepository>();
             builder.Services.AddScoped<IMembershipRepository, MembershipRepository>();
-            builder.Services.AddScoped<ITicketRepository, TicketRepository>();
-            builder.Services.AddScoped<ITicketCategoryRepository, TicketCategoryRepository>();
-            builder.Services.AddScoped<ITicketSubcategoryRepository, TicketSubcategoryRepository>();
+            builder.Services.AddScoped<ITicketRepository, ComplaintTicketRepository>();
+            builder.Services.AddScoped<ITicketCategoryRepository, ComplaintTicketCategoryRepository>();
+            builder.Services.AddScoped<ITicketSubcategoryRepository, ComplaintTicketSubcategoryRepository>();
             builder.Services.AddScoped<IUserRepository, UserRepository>();
 
             builder.Services.AddScoped<IRepository<int, Chat>, ChatDatabaseRepository>();

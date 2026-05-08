@@ -6,75 +6,61 @@ using AirportApp.ClassLibrary.Repository.Interfaces;
 using AirportApp.ClassLibrary.Entity.Domain.Review;
 using NSubstitute;
 
-
-
-
 namespace AirportApp.Tests.Unit.Src.ViewModel
 {
     [TestClass]
     public class AddReviewViewModelTests
     {
-        private AddReviewViewModel _viewModel;
-        private ReviewService _reviewService;
-        private IRepository<int, Review> _mockRepository;
+        private AddReviewViewModel viewModel;
+        private ReviewService reviewService;
+        private IRepository<int, Review> mockRepository;
 
         [TestInitialize]
         public void Setup()
         {
-            
-            _mockRepository = Substitute.For<IRepository<int, Review>>();
-            _reviewService = new ReviewService(_mockRepository);
+            mockRepository = Substitute.For<IRepository<int, Review>>();
+            reviewService = new ReviewService(mockRepository);
 
-            _viewModel = new AddReviewViewModel(_reviewService);
+            viewModel = new AddReviewViewModel(reviewService);
         }
 
         [TestMethod]
         public void DutyText_WhenRatingIsZero_ReturnsNotRated()
         {
-            
-            _viewModel.DutyRating = 0;
+            viewModel.DutyRating = 0;
 
-            
-            Assert.AreEqual("Not rated", _viewModel.DutyText);
+            Assert.AreEqual("Not rated", viewModel.DutyText);
         }
 
         [TestMethod]
         public void DutyText_WhenRatingIsPositive_ReturnsFormattedString()
         {
-            
-            _viewModel.DutyRating = 4;
+            viewModel.DutyRating = 4;
 
-           
-            Assert.AreEqual("4/5", _viewModel.DutyText);
+            Assert.AreEqual("4/5", viewModel.DutyText);
         }
 
         [TestMethod]
         public void SubmitReviewCommand_WhenFieldsAreEmpty_CannotExecute()
         {
-            
-            _viewModel.ReviewMessage = "";
+            viewModel.ReviewMessage = string.Empty;
 
-           
-            bool canExecute = _viewModel.SubmitReviewCommand.CanExecute(null);
+            bool canExecute = viewModel.SubmitReviewCommand.CanExecute(null);
 
-           
             Assert.IsFalse(canExecute, "Command should be disabled if ratings are 0");
         }
 
         [TestMethod]
         public void SubmitReviewCommand_WhenAllFieldsFilled_CanExecute()
         {
-           
-            _viewModel.DutyRating = 5;
-            _viewModel.FlightRating = 5;
-            _viewModel.StaffRating = 5;
-            _viewModel.CleanRating = 5;
-            _viewModel.ReviewMessage = "Great experience!";
+            viewModel.DutyRating = 5;
+            viewModel.FlightRating = 5;
+            viewModel.StaffRating = 5;
+            viewModel.CleanRating = 5;
+            viewModel.ReviewMessage = "Great experience!";
 
-           
-            bool canExecuteCommand = _viewModel.SubmitReviewCommand.CanExecute(null);
+            bool canExecuteCommand = viewModel.SubmitReviewCommand.CanExecute(null);
 
-            
             Assert.IsTrue(canExecuteCommand, "Command should be enabled when all data is valid");
         }
 
@@ -84,13 +70,13 @@ namespace AirportApp.Tests.Unit.Src.ViewModel
             bool alertFired = false;
             string? alertTitle = null;
 
-            _viewModel.AlertRequested += (sender, arguments) =>
+            viewModel.AlertRequested += (sender, arguments) =>
             {
                 alertFired = true;
                 alertTitle = arguments.Title;
             };
 
-            _viewModel.SubmitReviewCommand.Execute(null);
+            viewModel.SubmitReviewCommand.Execute(null);
 
             Assert.IsTrue(alertFired, "The AlertRequested event should have been raised.");
             Assert.AreEqual("Not Logged In", alertTitle);
@@ -99,75 +85,64 @@ namespace AirportApp.Tests.Unit.Src.ViewModel
         [TestMethod]
         public void CharCountText_WhenMessageIsUpdated_ReturnsCorrectCount()
         {
-           
-            _viewModel.ReviewMessage = "Hello";
-           
-            Assert.AreEqual("5 characters", _viewModel.CharCountText);
+            viewModel.ReviewMessage = "Hello";
+            Assert.AreEqual("5 characters", viewModel.CharCountText);
 
-            _viewModel.ReviewMessage = "";
-           
-            Assert.AreEqual("0 characters", _viewModel.CharCountText);
+            viewModel.ReviewMessage = string.Empty;
+
+            Assert.AreEqual("0 characters", viewModel.CharCountText);
         }
 
         [TestMethod]
         public void SubmitReview_AfterAttempt_ResetsProperties()
         {
-           
-            _viewModel.DutyRating = 5;
-            _viewModel.ReviewMessage = "Excellent";
+            viewModel.DutyRating = 5;
+            viewModel.ReviewMessage = "Excellent";
 
-            
-            _viewModel.SubmitReviewCommand.Execute(null);
+            viewModel.SubmitReviewCommand.Execute(null);
 
-            Assert.AreEqual("9 characters", _viewModel.CharCountText);
+            Assert.AreEqual("9 characters", viewModel.CharCountText);
         }
 
         [TestMethod]
         public void CharCountText_WhenMessageIsNull_ReturnsZeroCharacters()
         {
-            
-            _viewModel.ReviewMessage = null!;
+            viewModel.ReviewMessage = null!;
 
-            
-            Assert.AreEqual("0 characters", _viewModel.CharCountText);
+            Assert.AreEqual("0 characters", viewModel.CharCountText);
         }
 
         [TestMethod]
         public void FlightText_WhenRatingIsZeroOrPositive_ReturnsCorrectStrings()
         {
-           
-            _viewModel.FlightRating = 0;
-            Assert.AreEqual("Not rated", _viewModel.FlightText);
+            viewModel.FlightRating = 0;
+            Assert.AreEqual("Not rated", viewModel.FlightText);
 
-            _viewModel.FlightRating = 3;
+            viewModel.FlightRating = 3;
 
-            
-            Assert.AreEqual("3/5", _viewModel.FlightText);
+            Assert.AreEqual("3/5", viewModel.FlightText);
         }
 
         [TestMethod]
         public void StaffText_WhenRatingIsZeroOrPositive_ReturnsCorrectStrings()
         {
-           
-            _viewModel.StaffRating = 0;
-            Assert.AreEqual("Not rated", _viewModel.StaffText);
+            viewModel.StaffRating = 0;
+            Assert.AreEqual("Not rated", viewModel.StaffText);
 
-            _viewModel.StaffRating = 2;
+            viewModel.StaffRating = 2;
 
-            Assert.AreEqual("2/5", _viewModel.StaffText);
+            Assert.AreEqual("2/5", viewModel.StaffText);
         }
 
         [TestMethod]
         public void CleanText_WhenRatingIsZeroOrPositive_ReturnsCorrectStrings()
         {
-            
-            _viewModel.CleanRating = 0;
-            Assert.AreEqual("Not rated", _viewModel.CleanText);
+            viewModel.CleanRating = 0;
+            Assert.AreEqual("Not rated", viewModel.CleanText);
 
-            _viewModel.CleanRating = 5;
+            viewModel.CleanRating = 5;
 
-            
-            Assert.AreEqual("5/5", _viewModel.CleanText);
+            Assert.AreEqual("5/5", viewModel.CleanText);
         }
     }
 }

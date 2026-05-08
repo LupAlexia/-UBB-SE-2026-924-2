@@ -27,10 +27,8 @@ namespace AirportApp.ClassLibrary.Entity.Domain.Message
         [Column("Timestamp")]
         public DateTimeOffset Timestamp { get; set; }
 
-
         // 2. Navigation Properties
         // This links the Message to a Chat in the database
-
         [Required]
         [Column("Chat_Id")]
         public int ChatId { get; set; }
@@ -49,17 +47,26 @@ namespace AirportApp.ClassLibrary.Entity.Domain.Message
         public int? SenderEmployeeId { get; set; }
 
         [ForeignKey(nameof(SenderEmployeeId))]
-        public EmpNamespace.Employee ? SenderEmployee { get; set; }
+        public EmpNamespace.Employee? SenderEmployee { get; set; }
         [NotMapped]
         [System.Text.Json.Serialization.JsonIgnore]
         public ISender? Sender => (ISender?)SenderUser ?? (ISender?)SenderEmployee;
 
-        public Message() { }
+        public Message()
+        {
+        }
 
         public Message(ISender sender, Chat chat, string messageText)
         {
-            if (sender is User user) SenderUser = user;
-            else if (sender is EmpNamespace.Employee emp) SenderEmployee = emp;
+            if (sender is User user)
+            {
+                SenderUser = user;
+            }
+            else if (sender is EmpNamespace.Employee emp)
+            {
+                SenderEmployee = emp;
+            }
+
             this.Chat = chat;
             this.Text = messageText;
             this.Timestamp = DateTimeOffset.UtcNow;
@@ -70,8 +77,14 @@ namespace AirportApp.ClassLibrary.Entity.Domain.Message
             Chat = chat;
             ChatId = chat.Id;
             Text = text;
-            if (sender is User user) SenderUser = user;
-            else if (sender is EmpNamespace.Employee emp) SenderEmployee = emp;
+            if (sender is User user)
+            {
+                SenderUser = user;
+            }
+            else if (sender is EmpNamespace.Employee emp)
+            {
+                SenderEmployee = emp;
+            }
             Timestamp = DateTimeOffset.UtcNow;
         }
 
@@ -80,12 +93,18 @@ namespace AirportApp.ClassLibrary.Entity.Domain.Message
         public Message(int id, ISender sender, Chat chat, string text, DateTimeOffset timestamp)
         {
             Id = id;
-            if (sender is User user) SenderUser = user;
-            else if (sender is EmpNamespace.Employee emp) SenderEmployee = emp;
+            if (sender is User user)
+            {
+                SenderUser = user;
+            }
+            else if (sender is EmpNamespace.Employee emp)
+            {
+                SenderEmployee = emp;
+            }
             Chat = chat;
             ChatId = chat.Id;
-            Text = text;        
-            Timestamp = timestamp; 
+            Text = text;
+            Timestamp = timestamp;
         }
         public string GetMessage()
         {

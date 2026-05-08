@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AirportApp.ClassLibrary.Entity.Domain.Ticket
 {
-    public enum TicketStatusEnum
+    public enum ComplaintTicketStatusEnum
     {
         OPEN,
         IN_PROGRESS,

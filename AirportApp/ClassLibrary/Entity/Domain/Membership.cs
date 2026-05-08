@@ -17,7 +17,7 @@ namespace AirportApp.ClassLibrary.Entity.Domain
         public string Name { get; set; } = string.Empty;
 
         [Required]
-        [Range(0, 100)] 
+        [Range(0, 100)]
         [Column("Flight_Discount_Percentage")]
         public float FlightDiscountPercentage { get; set; }
         public ICollection<MembershipAddonDiscount> AddonDiscounts { get; set; } = new List<MembershipAddonDiscount>();

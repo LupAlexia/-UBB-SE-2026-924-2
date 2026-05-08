@@ -99,9 +99,9 @@ namespace AirportApp.Src.ViewModel
             }
 
             var filteredTickets = await dashboardService.GetUserTicketsAsync(currentUserId.Value, SelectedTicketFilter);
-            foreach (var FlightTicket in filteredTickets)
+            foreach (var flightTicket in filteredTickets)
             {
-                MyTickets.Add(FlightTicket);
+                MyTickets.Add(flightTicket);
             }
         }
 
@@ -110,12 +110,12 @@ namespace AirportApp.Src.ViewModel
             CancellationSucceeded = null;
             CancellationMessage = string.Empty;
 
-            if (parameter is not FlightTicket FlightTicket)
+            if (parameter is not FlightTicket flightTicket)
             {
                 return;
             }
 
-            var (canCancel, reason) = cancellationService.CanCancelTicket(FlightTicket);
+            var (canCancel, reason) = cancellationService.CanCancelTicket(flightTicket);
             if (!canCancel)
             {
                 CancellationSucceeded = false;
@@ -123,7 +123,7 @@ namespace AirportApp.Src.ViewModel
                 return;
             }
 
-            PendingCancelTicket = FlightTicket;
+            PendingCancelTicket = flightTicket;
         }
 
         public async Task ConfirmCancellationAsync()
@@ -160,11 +160,11 @@ namespace AirportApp.Src.ViewModel
 
         private void ExecuteDownloadPdf(object parameter)
         {
-            if (parameter is FlightTicket FlightTicket)
+            if (parameter is FlightTicket flightTicket)
             {
                 try
                 {
-                    string generatedFilePath = dashboardService.GenerateTicketPdf(FlightTicket);
+                    string generatedFilePath = dashboardService.GenerateTicketPdf(flightTicket);
 
                     System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo()
                     {
