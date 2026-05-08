@@ -29,10 +29,4 @@
 	<ItemGroup>
 		<Using Include="Microsoft.VisualStudio.TestTools.UnitTesting" />
 	</ItemGroup>
-	<ItemGroup>
-	  <Folder Include="ViewModel\chat\" />
-	  <Folder Include="ViewModel\faq\" />
-	  <Folder Include="ViewModel\review\" />
-	  <Folder Include="ViewModel\ticket\" />
-	</ItemGroup>
 </Project>
