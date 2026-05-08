@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using AirportApp.ClassLibrary.Entity.Domain.Ticket;
 using AirportApp.ClassLibrary.Repository.Interfaces;
 
-namespace AirportApp.Src.GoodProxy
+namespace AirportApp.Src.Proxy
 {
     public class ComplaintTicketCategoryRepositoryProxy : ITicketCategoryRepository
     {

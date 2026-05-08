@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
@@ -17,23 +18,29 @@ namespace AirportApp.Src.Proxy
             this.httpClient = httpClient;
         }
 
-        public async Task<Chat> GetByIdAsync(int id)
-            => await httpClient.GetFromJsonAsync<Chat>($"{BaseUrl}/{id}");
-
         public async Task<IEnumerable<Chat>> GetAllAsync()
-            => await httpClient.GetFromJsonAsync<IEnumerable<Chat>>(BaseUrl);
-
-        public async Task<int> CreateNewEntityAsync(Chat elem)
         {
-            var response = await httpClient.PostAsJsonAsync(BaseUrl, elem);
+            return await httpClient.GetFromJsonAsync<IEnumerable<Chat>>(BaseUrl)
+                   ?? new List<Chat>();
+        }
+
+        public async Task<Chat> GetByIdAsync(int id)
+        {
+            return await httpClient.GetFromJsonAsync<Chat>($"{BaseUrl}/{id}")
+                   ?? throw new KeyNotFoundException($"Chat with id {id} not found.");
+        }
+
+        public async Task<int> CreateNewEntityAsync(Chat chat)
+        {
+            var response = await httpClient.PostAsJsonAsync(BaseUrl, chat);
             response.EnsureSuccessStatusCode();
             var created = await response.Content.ReadFromJsonAsync<Chat>();
             return created!.Id;
         }
 
-        public async Task UpdateByIdAsync(int id, Chat elem)
+        public async Task UpdateByIdAsync(int id, Chat chat)
         {
-            var response = await httpClient.PutAsJsonAsync($"{BaseUrl}/{id}", elem);
+            var response = await httpClient.PutAsJsonAsync($"{BaseUrl}/{id}", chat);
             response.EnsureSuccessStatusCode();
         }
 
