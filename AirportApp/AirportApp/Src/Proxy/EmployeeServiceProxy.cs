@@ -8,7 +8,7 @@ using AirportApp.Src.Service;
 
 namespace AirportApp.Src.Proxy
 {
-    public class EmployeeServiceProxy : IEmployeeService
+    public class EmployeeServiceProxy : IEmployeeService 
     {
         private readonly HttpClient httpClient;
         private const string BaseUrl = "api/employee";
