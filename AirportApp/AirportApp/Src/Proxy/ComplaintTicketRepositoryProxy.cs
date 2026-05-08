@@ -57,14 +57,14 @@ namespace AirportApp.Src.Proxy
 
         public async Task UpdateStatusByIdAsync(int id, ComplaintTicketStatusEnum newStatus)
         {
-            var request = new { currentStatus = newStatus };
+            var request = new { CurrentStatus = newStatus };
             var response = await httpClient.PutAsJsonAsync($"{BaseUrl}/{id}/status", request);
             response.EnsureSuccessStatusCode();
         }
 
         public async Task UpdateUrgencyLevelByIdAsync(int id, ComplaintTicketUrgencyLevelEnum newUrgencyLevel)
         {
-            var request = new { urgencyLevel = newUrgencyLevel };
+            var request = new { UrgencyLevel = newUrgencyLevel };
             var response = await httpClient.PutAsJsonAsync($"{BaseUrl}/{id}/urgency", request);
             response.EnsureSuccessStatusCode();
         }

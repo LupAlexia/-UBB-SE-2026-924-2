@@ -8,7 +8,7 @@ using AirportApp.ClassLibrary.Repository.Interfaces;
 
 namespace AirportApp.Src.Proxy
 {
-    public class UserRepositoryProxy : IUserRepository
+    public class UserRepositoryProxy : IUserRepository, IRepository<int, User>
     {
         private readonly HttpClient httpClient;
         private const string BaseUrl = "api/user";

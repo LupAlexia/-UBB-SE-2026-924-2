@@ -32,7 +32,13 @@ namespace AirportApp.Src.Proxy
 
         public async Task<int> CreateNewEntityAsync(Chat chat)
         {
-            var response = await httpClient.PostAsJsonAsync(BaseUrl, chat);
+            var dto = new
+            {
+                UserId = chat.UserId != 0 ? chat.UserId : chat.User?.Id ?? 0,
+                Status = chat.Status
+            };
+
+            var response = await httpClient.PostAsJsonAsync(BaseUrl, dto);
             response.EnsureSuccessStatusCode();
             var created = await response.Content.ReadFromJsonAsync<Chat>();
             return created!.Id;

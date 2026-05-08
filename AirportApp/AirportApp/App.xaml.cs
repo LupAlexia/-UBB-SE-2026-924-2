@@ -134,11 +134,15 @@ namespace AirportApp
             services.AddSingleton<ITicketCategoryRepository, ComplaintTicketCategoryRepositoryProxy>();
             services.AddSingleton<ITicketSubcategoryRepository, ComplaintTicketSubcategoryRepositoryProxy>();
             services.AddSingleton<ITicketRepository, ComplaintTicketRepositoryProxy>();
-            services.AddSingleton<IUserRepository, UserRepositoryProxy>();
+
+            services.AddSingleton<UserRepositoryProxy>();
+            services.AddSingleton<IUserRepository>(p => p.GetRequiredService<UserRepositoryProxy>());
+            services.AddSingleton<IRepository<int, User>>(p => p.GetRequiredService<UserRepositoryProxy>());
+
             services.AddSingleton<IEmployeeRepository, EmployeeRepositoryProxy>();
             services.AddSingleton<IFAQRepository, FAQRepositoryProxy>();
             services.AddSingleton<IRepository<int, Review>, ReviewRepositoryProxy>();
-            
+
 
             services.AddSingleton<IEmployeeService, EmployeeService>();
             services.AddSingleton<IUserService, UserService>();
