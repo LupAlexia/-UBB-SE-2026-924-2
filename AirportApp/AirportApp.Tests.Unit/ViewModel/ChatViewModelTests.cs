@@ -15,7 +15,7 @@ using AirportApp.Src.Service.Interfaces;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 
-namespace AirportApp.Tests.Unit.Src.ViewModel.Chats
+namespace AirportApp.Tests.Unit.ViewModel
 {
     [TestClass]
     public class ChatViewModelTests

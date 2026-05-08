@@ -5,7 +5,7 @@ using AirportApp.ClassLibrary.Repository.Interfaces;
 using NSubstitute;
 using AirportApp.ClassLibrary.Entity.Domain;
 
-namespace AirportApp.Tests.Unit.Src.ViewModel
+namespace AirportApp.Tests.Unit.ViewModel
 {
     [TestClass]
     public class AddReviewViewModelTests

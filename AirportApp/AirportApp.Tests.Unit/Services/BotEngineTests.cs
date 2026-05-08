@@ -2,7 +2,7 @@ using AirportApp.ClassLibrary.Entity.Domain;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 
-namespace AirportApp.Tests.Unit.Src.Service.Bot
+namespace AirportApp.Tests.Unit.Services
 {
     [TestClass]
     public class BotEngineTests

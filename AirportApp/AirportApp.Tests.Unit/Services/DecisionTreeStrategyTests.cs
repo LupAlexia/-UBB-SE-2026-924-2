@@ -9,7 +9,7 @@ using AirportApp.Src.Service.Bot.Strategy;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 
-namespace AirportApp.Tests.Unit.Src.Service.Bot.Strategy
+namespace AirportApp.Tests.Unit.Services
 {
     [TestClass]
     public class DecisionTreeStrategyTests

@@ -7,7 +7,7 @@ using AirportApp.ClassLibrary.Repository.Interfaces;
 using NSubstitute;
 using AirportApp.ClassLibrary.Entity.Domain;
 
-namespace AirportApp.Tests.Unit.Src.Service
+namespace AirportApp.Tests.Unit.Services
 {
     [TestClass]
     public class FAQServiceTests

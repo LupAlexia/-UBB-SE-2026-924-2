@@ -10,7 +10,7 @@ using AirportApp.Src.ViewModel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 
-namespace AirportApp.Tests.Unit.Src.ViewModel
+namespace AirportApp.Tests.Unit.ViewModel
 {
     [TestClass]
     public class TicketsViewModelTests
@@ -125,10 +125,10 @@ namespace AirportApp.Tests.Unit.Src.ViewModel
             var filteredResults = new List<TicketDTO> { ticketsViewModel.AllTickets[0] };
             ticketService.FilterTicketsByStatus(Arg.Any<IEnumerable<TicketDTO>>(), TicketFilterStatusEnum.OPEN).Returns(filteredResults);
 
-            ticketsViewModel.SelectedFilterStatus = AirportApp.Src.ViewModel.TicketFilterStatusEnum.OPEN;
+            ticketsViewModel.SelectedFilterStatus = TicketFilterStatusEnum.OPEN;
 
             Assert.AreEqual(1, ticketsViewModel.FilteredTicketsForDisplay.Count);
-            ticketService.Received().FilterTicketsByStatus(Arg.Any<IEnumerable<TicketDTO>>(), AirportApp.Src.ViewModel.TicketFilterStatusEnum.OPEN);
+            ticketService.Received().FilterTicketsByStatus(Arg.Any<IEnumerable<TicketDTO>>(), TicketFilterStatusEnum.OPEN);
         }
 
         [TestMethod]

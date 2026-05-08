@@ -13,7 +13,7 @@ using NSubstitute;
 using NSubstitute.Core;
 using AirportApp.ClassLibrary.Entity.Domain;
 
-namespace AirportApp.Tests.Unit.Src.ViewModel.Faq
+namespace AirportApp.Tests.Unit.ViewModel
 {
     [TestClass]
     public class FAQViewModelTests

@@ -12,7 +12,7 @@ using Microsoft.Extensions.Logging;
 using ReviewEntity = AirportApp.ClassLibrary.Entity.Domain.Review;
 using UserEntity = AirportApp.ClassLibrary.Entity.Domain.User;
 
-namespace AirportApp.Src.ViewModel
+namespace AirportApp.Tests.Unit.ViewModel
 {
     [TestClass]
     public class AllReviewsViewModelTests
@@ -27,7 +27,7 @@ namespace AirportApp.Src.ViewModel
         public void Setup()
         {
             loggerFactory = Substitute.For<ILoggerFactory>();
-            var configuration = new AutoMapper.MapperConfiguration(cfg => cfg.AddProfile<ReviewMappingProfile>(), loggerFactory);
+            var configuration = new MapperConfiguration(cfg => cfg.AddProfile<ReviewMappingProfile>(), loggerFactory);
             mapper = configuration.CreateMapper();
 
             mockRepository = Substitute.For<IRepository<int, ReviewEntity>>();
