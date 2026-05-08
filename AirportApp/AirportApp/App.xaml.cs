@@ -164,10 +164,10 @@ namespace AirportApp
                 BaseAddress = new Uri("http://localhost:5253/")
             });
             services.AddSingleton<IFlightRepository, FlightRepository>();
-            services.AddSingleton<IFlightTicketRepository, FlightTicketRepository>();
-            services.AddSingleton<IAddOnRepository, AddOnRepository>();
-            services.AddSingleton<IMembershipRepository, MembershipRepository>();
-            services.AddSingleton<ICustomerRepository, CustomerRepository>();
+            services.AddSingleton<IFlightTicketRepository, FlightTicketRepositoryProxy>();
+            services.AddSingleton<IAddOnRepository, AddOnRepositoryProxy>();
+            services.AddSingleton<IMembershipRepository, MembershipRepositoryProxy>();
+            services.AddSingleton<ICustomerRepository, CustomerRepositoryProxy>();
             services.AddSingleton<IAuthService, AuthService>();
             services.AddSingleton<IFlightSearchService, FlightSearchService>();
             services.AddSingleton<IBookingService, BookingService>();
