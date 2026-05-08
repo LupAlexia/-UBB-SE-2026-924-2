@@ -33,9 +33,8 @@ namespace AirportApp.Src.Proxy
                 id = 0,
                 text = elem.Text,
                 timestamp = elem.Timestamp == default ? DateTimeOffset.UtcNow : elem.Timestamp,
-                chatId = elem.ChatId != 0 ? elem.ChatId : elem.Chat?.Id ?? 0,
-                senderUserId = elem.SenderUserId ?? elem.SenderUser?.Id,
-                senderEmployeeId = elem.SenderEmployeeId ?? elem.SenderEmployee?.Id
+                chatId = elem.Chat.Id != 0 ? elem.Chat.Id : elem.Chat?.Id ?? 0,
+                senderId = elem.Sender.RetrieveUniqueDatabaseIdentifierForBot()
             };
 
             var response = await httpClient.PostAsJsonAsync(BaseUrl, dto);
@@ -57,17 +56,7 @@ namespace AirportApp.Src.Proxy
 
         public async Task<IEnumerable<Message>> GetByChatIdAsync(int chatId)
         {
-            var dtos = await httpClient.GetFromJsonAsync<IEnumerable<MessageWithSenderDTO>>($"{BaseUrl}/chat/{chatId}/with-senders");
-
-            return dtos.Select(dto => new Message
-            {
-                Id = dto.Id,
-                Text = dto.Text,
-                Timestamp = dto.Timestamp,
-                ChatId = dto.ChatId,
-                SenderUserId = dto.SenderUserId,
-                SenderEmployeeId = dto.SenderEmployeeId
-            });
+            return await httpClient.GetFromJsonAsync<IEnumerable<Message>>($"{BaseUrl}/chat/{chatId}/with-senders");
         }
 
         public async Task<IEnumerable<Message>> GetMessagesSinceAsync(int chatId, int firstMessageId)

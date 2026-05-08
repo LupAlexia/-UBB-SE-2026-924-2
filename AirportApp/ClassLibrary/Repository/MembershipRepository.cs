@@ -33,7 +33,7 @@ namespace AirportApp.ClassLibrary.Repository
         {
             return await this.dataBaseContext.MembershipAddonDiscounts
                 .Include(d => d.AddOn)
-                .Where(d => d.MembershipId == membershipId)
+                .Where(d => EF.Property<int>(d, "MembershipId") == membershipId)
                 .ToListAsync();
         }
     }

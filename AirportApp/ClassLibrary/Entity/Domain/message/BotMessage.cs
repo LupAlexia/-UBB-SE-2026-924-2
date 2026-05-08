@@ -15,7 +15,6 @@ namespace AirportApp.ClassLibrary.Entity.Domain.Message
     [Table("BotMessages")]
     public class BotMessage : IMessage
     {
-        // 1. EF Core Auto-Properties
         [Key]
         [Column("Message_Id")]
         public int Id { get; set; }
@@ -27,21 +26,9 @@ namespace AirportApp.ClassLibrary.Entity.Domain.Message
         [Column("Timestamp")]
         public DateTimeOffset Timestamp { get; set; }
 
-        // 2. Navigation Properties
-        [Required]
-        [Column("Chat_Id")]
-        public int ChatId { get; set; }
-
-        [ForeignKey(nameof(ChatId))]
-
         public Chat Chat { get; set; } = null!;
 
-        [Required]
-        [Column("Bot_Id")]
-        public int BotId { get; set; }
-
-        [NotMapped]
-        public ISender Sender { get; set; } = null!;
+        public Sender Sender { get; set; } = null!;
 
         public List<FAQOption> FAQOptions { get; set; } = new ();
 
@@ -49,13 +36,11 @@ namespace AirportApp.ClassLibrary.Entity.Domain.Message
         {
         }
 
-        public BotMessage(int id, ISender sender, Chat chat, string text, List<FAQOption> options, DateTimeOffset timestamp)
+        public BotMessage(int id, Sender sender, Chat chat, string text, List<FAQOption> options, DateTimeOffset timestamp)
         {
             Id = id;
             Sender = sender;
-            BotId = sender.RetrieveUniqueDatabaseIdentifierForBot();
             Chat = chat;
-            ChatId = chat.Id;
             Text = text;
             FAQOptions = options;
             Timestamp = timestamp;
@@ -90,37 +75,29 @@ namespace AirportApp.ClassLibrary.Entity.Domain.Message
 
         public class BotMessageBuilder
         {
-            // These private fields hold the state during the building process
             private int id;
-            private ISender sender = new BotEngineIdentity(null!);
+            private Sender sender = new BotEngineIdentity(null!);
             private Chat chat = null!;
             private string messageText = string.Empty;
             private List<FAQOption> faqOptions = new ();
             private DateTimeOffset timestamp = DateTimeOffset.UtcNow;
 
-            // Primary constructor: expects the identifiers EF needs
-            public BotMessageBuilder(ISender sender, Chat chat, int id)
+            public BotMessageBuilder(Sender sender, Chat chat, int id)
             {
                 this.sender = sender;
                 this.chat = chat;
                 this.id = id;
             }
-
-            // Fluent method: Set Timestamp
             public BotMessageBuilder WithTimestamp(DateTimeOffset timestamp)
             {
                 this.timestamp = timestamp;
                 return this;
             }
-
-            // Fluent method: Set Message text
             public BotMessageBuilder WithMessage(string setMessage)
             {
                 messageText = setMessage;
                 return this;
             }
-
-            // Fluent method: Set ID
             public BotMessageBuilder WithId(int setId)
             {
                 id = setId;
@@ -140,12 +117,11 @@ namespace AirportApp.ClassLibrary.Entity.Domain.Message
                 return this;
             }
 
-            public BotMessageBuilder(ISender sender, Chat chat, int id, FAQNode nodeToMessage)
-        : this(sender, chat, id) // Calls your existing 3-argument constructor
+            public BotMessageBuilder(Sender sender, Chat chat, int id, FAQNode nodeToMessage)
+        : this(sender, chat, id)
             {
-                // Automatically set the text and options from the node
-                this.messageText = nodeToMessage.questionText; // Ensure property name matches FAQNode
-                this.faqOptions = nodeToMessage.options.ToList();
+                this.messageText = nodeToMessage.QuestionText;
+                this.faqOptions = nodeToMessage.Options.ToList();
             }
 
             public BotMessage Build()

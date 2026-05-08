@@ -138,8 +138,8 @@ namespace AirportApp.Src.Proxy
             // Prepare clean versions of tickets for the API (with EMPTY add-ons)
             var preparedTickets = tickets.Select(t => new FlightTicket
             {
-                UserId = t.UserId != 0 ? t.UserId : (t.User?.Id ?? 0),
-                FlightId = t.FlightId != 0 ? t.FlightId : (t.Flight?.Id ?? 0),
+                User = t.User,
+                Flight = t.Flight,
                 Seat = t.Seat,
                 Price = t.Price,
                 Status = t.Status,

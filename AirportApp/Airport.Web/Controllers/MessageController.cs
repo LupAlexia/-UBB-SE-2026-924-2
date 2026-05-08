@@ -80,17 +80,16 @@ namespace Airport.Web.Controllers
         }
 
         [HttpGet("chat/{chatId}/with-senders")]
-        public async Task<ActionResult<IEnumerable<MessageWithSenderDTO>>> GetByChatIdWithSendersAsync(int chatId)
+        public async Task<ActionResult<IEnumerable<MessageDTO>>> GetByChatIdWithSendersAsync(int chatId)
         {
             var messages = await messageRepository.GetByChatIdAsync(chatId);
-            var result = messages.Select(m => new MessageWithSenderDTO
+            var result = messages.Select(m => new MessageDTO
             {
-                Id = m.Id,
-                Text = m.Text,
+                MessageId = m.Id,
+                MessageText = m.Text,
                 Timestamp = m.Timestamp,
-                ChatId = m.ChatId,
-                SenderUserId = m.SenderUserId,
-                SenderEmployeeId = m.SenderEmployeeId
+                ChatId = m.Chat.Id,
+                Sender = m.Sender
             });
             return Ok(result);
         }

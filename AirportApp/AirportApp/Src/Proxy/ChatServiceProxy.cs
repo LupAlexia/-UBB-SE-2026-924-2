@@ -18,13 +18,12 @@ namespace AirportApp.Src.Proxy
             this.httpClient = httpClient;
         }
 
-        public async Task<Chat> OpenChatAsync(int userId)
+        public async Task<Chat> OpenChatAsync(User userToOpenChatFor)
         {
-            // trimitem doar userId, fara obiectul User nested
             var newChat = new Chat
             {
                 Id = 0,
-                UserId = userId,
+                User = userToOpenChatFor,
                 Status = ChatStatus.Active
             };
             var response = await httpClient.PostAsJsonAsync(BaseUrl, newChat);

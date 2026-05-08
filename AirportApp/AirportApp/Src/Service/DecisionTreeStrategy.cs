@@ -38,7 +38,7 @@ namespace AirportApp.Src.Service.Bot.Strategy
 
             string extractedTextContentFromIncomingUserMessage = incomingUserMessage.Text;
 
-            FAQOption? selectedUserOptionMatchingIncomingMessageText = currentlyActiveConversationDecisionTreeNode.options.FirstOrDefault((option) => option.label.Equals(extractedTextContentFromIncomingUserMessage));
+            FAQOption? selectedUserOptionMatchingIncomingMessageText = currentlyActiveConversationDecisionTreeNode.Options.FirstOrDefault((option) => option.label.Equals(extractedTextContentFromIncomingUserMessage));
             if (selectedUserOptionMatchingIncomingMessageText == null)
             {
                 var restartNode = await repositoryForAccessingFrequentlyAskedQuestionsDecisionNodes.GetByIdAsync((int)BotStandardMessages.RestartConversation);

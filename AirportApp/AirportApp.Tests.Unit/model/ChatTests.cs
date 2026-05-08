@@ -28,7 +28,6 @@ public class ChatTests
         Chat newChat = new Chat(chatId, testUser, status);
 
         Assert.AreEqual(chatId, newChat.Id);
-        Assert.AreEqual(testUser.UserId, newChat.UserId);
         Assert.AreEqual(status, newChat.Status);
         Assert.AreEqual(0, newChat.Messages.Count);
     }

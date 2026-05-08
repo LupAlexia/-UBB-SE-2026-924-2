@@ -66,7 +66,7 @@ namespace AirportApp.Tests.Unit.Src.ViewModel.Chats
                 var messageSender = messageEntity.GetSender();
                 if (messageSender != null)
                 {
-                    dataTransferObject.SenderId = messageSender.RetrieveUniqueDatabaseIdentifierForBot();
+                    dataTransferObject.Sender = messageSender;
                 }
                 return dataTransferObject;
             });

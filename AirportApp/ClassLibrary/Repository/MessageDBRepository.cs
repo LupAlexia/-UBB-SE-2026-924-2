@@ -69,7 +69,7 @@ namespace AirportApp.ClassLibrary.Repository.Interfaces
         public async Task<IEnumerable<Message>> GetByChatIdAsync(int chatId)
         {
             return await this.dataBaseContext.Messages
-                .Where(m => m.ChatId == chatId)
+                .Where(m => m.Chat.Id == chatId)
                 .OrderBy(m => m.Timestamp)
                 .ToListAsync();
         }
@@ -77,7 +77,7 @@ namespace AirportApp.ClassLibrary.Repository.Interfaces
         public async Task<IEnumerable<Message>> GetMessagesSinceAsync(int chatId, int firstMessageId)
         {
             return await this.dataBaseContext.Messages
-                .Where(m => m.ChatId == chatId && m.Id >= firstMessageId)
+                .Where(m => m.Chat.Id == chatId && m.Id >= firstMessageId)
                 .OrderBy(m => m.Timestamp)
                 .ToListAsync();
         }

@@ -48,7 +48,6 @@ public class PricingServiceIntegrationTests : BaseIntegrationTest
             Phone = MihaiPhone,
             PasswordHash = MihaiPassword,
             Membership = membership,
-            MembershipId = membership.Id
         };
         await userRepository.AddUserAsync(user);
         var databaseUser = await userRepository.GetByEmailAsync(user.Email);

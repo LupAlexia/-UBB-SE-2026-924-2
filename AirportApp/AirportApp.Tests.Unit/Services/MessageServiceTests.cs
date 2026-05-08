@@ -24,11 +24,11 @@ namespace AirportApp.Tests.Unit.Src.Service
         private MessageService messageService = null!;
         private User testUser = null!;
 
-        private class TestSender : ISender
+        private class TestSender : Sender
         {
-            public int RetrieveUniqueDatabaseIdentifierForBot() => 1;
-            public string RetrieveConfiguredDisplayFullNameForBot() => "Test User";
-            public string RetrieveConfiguredEmailAddressForBotContact() => "user@test.com";
+            public override string RetrieveConfiguredDisplayFullNameForBot() => "Test User";
+            public override string RetrieveConfiguredEmailAddressForBotContact() => "user@test.com";
+            public override int RetrieveUniqueDatabaseIdentifierForBot() => 1;
         }
         private TestSender testSender = null!;
 

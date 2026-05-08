@@ -23,11 +23,6 @@ namespace AirportApp.ClassLibrary.Entity.Domain.Ticket
         [Column("External_Reference_Id")]
         public int SubcategoryExternalReferenceId { get; set; }
 
-        [Required]
-        [Column("Parent_Category_Id")]
-        public int ParentCategoryId { get; set; }
-
-        [ForeignKey(nameof(ParentCategoryId))]
         public ComplaintTicketCategory ParentCategory { get; set; } = null!;
 
         public ComplaintTicketSubcategory()
@@ -40,7 +35,6 @@ namespace AirportApp.ClassLibrary.Entity.Domain.Ticket
             SubcategoryName = subcategoryName;
             SubcategoryExternalReferenceId = externalId;
             ParentCategory = parentCategory;
-            ParentCategoryId = parentCategory.Id;
         }
     }
 }

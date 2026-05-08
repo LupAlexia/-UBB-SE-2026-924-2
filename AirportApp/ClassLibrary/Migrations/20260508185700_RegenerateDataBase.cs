@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace AirportApp.ClassLibrary.Migrations
 {
     /// <inheritdoc />
-    public partial class CreateTables : Migration
+    public partial class RegenerateDataBase : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -52,21 +52,6 @@ namespace AirportApp.ClassLibrary.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Companies", x => x.Company_Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Employees",
-                columns: table => new
-                {
-                    Employee_Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Full_Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Email_Address = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
-                    Department = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Employees", x => x.Employee_Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -116,6 +101,21 @@ namespace AirportApp.ClassLibrary.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Senders",
+                columns: table => new
+                {
+                    Sender_Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Full_Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Email_Address = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
+                    Discriminator = table.Column<string>(type: "nvarchar(8)", maxLength: 8, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Senders", x => x.Sender_Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "TicketCategories",
                 columns: table => new
                 {
@@ -130,34 +130,20 @@ namespace AirportApp.ClassLibrary.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Users",
-                columns: table => new
-                {
-                    User_Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Full_Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Email_Address = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Users", x => x.User_Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Gates",
                 columns: table => new
                 {
                     Gate_Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Gate_Name = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
-                    Airport_Id = table.Column<int>(type: "int", nullable: false)
+                    AirportId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Gates", x => x.Gate_Id);
                     table.ForeignKey(
-                        name: "FK_Gates_Airports_Airport_Id",
-                        column: x => x.Airport_Id,
+                        name: "FK_Gates_Airports_AirportId",
+                        column: x => x.AirportId,
                         principalTable: "Airports",
                         principalColumn: "Airport_Id",
                         onDelete: ReferentialAction.Cascade);
@@ -169,8 +155,8 @@ namespace AirportApp.ClassLibrary.Migrations
                 {
                     Route_Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Company_Id = table.Column<int>(type: "int", nullable: false),
-                    Airport_Id = table.Column<int>(type: "int", nullable: false),
+                    CompanyId = table.Column<int>(type: "int", nullable: false),
+                    AirportId = table.Column<int>(type: "int", nullable: false),
                     Route_Type = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Departure_Time = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Arrival_Time = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -180,14 +166,14 @@ namespace AirportApp.ClassLibrary.Migrations
                 {
                     table.PrimaryKey("PK_Routes", x => x.Route_Id);
                     table.ForeignKey(
-                        name: "FK_Routes_Airports_Airport_Id",
-                        column: x => x.Airport_Id,
+                        name: "FK_Routes_Airports_AirportId",
+                        column: x => x.AirportId,
                         principalTable: "Airports",
                         principalColumn: "Airport_Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Routes_Companies_Company_Id",
-                        column: x => x.Company_Id,
+                        name: "FK_Routes_Companies_CompanyId",
+                        column: x => x.CompanyId,
                         principalTable: "Companies",
                         principalColumn: "Company_Id",
                         onDelete: ReferentialAction.Restrict);
@@ -197,8 +183,8 @@ namespace AirportApp.ClassLibrary.Migrations
                 name: "FAQOption",
                 columns: table => new
                 {
-                    node_id = table.Column<int>(type: "int", nullable: false),
                     label = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    node_id = table.Column<int>(type: "int", nullable: false),
                     next_option_id = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -222,14 +208,14 @@ namespace AirportApp.ClassLibrary.Migrations
                     Phone = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
                     Username = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Password_Hash = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
-                    Membership_Id = table.Column<int>(type: "int", nullable: true)
+                    MembershipId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Customers", x => x.Customer_Id);
                     table.ForeignKey(
-                        name: "FK_Customers_Memberships_Membership_Id",
-                        column: x => x.Membership_Id,
+                        name: "FK_Customers_Memberships_MembershipId",
+                        column: x => x.MembershipId,
                         principalTable: "Memberships",
                         principalColumn: "Membership_Id",
                         onDelete: ReferentialAction.SetNull);
@@ -239,24 +225,59 @@ namespace AirportApp.ClassLibrary.Migrations
                 name: "Membership_Addon_Discounts",
                 columns: table => new
                 {
-                    MembershipId = table.Column<int>(type: "int", nullable: false),
-                    AddOnId = table.Column<int>(type: "int", nullable: false),
+                    Membership_Id = table.Column<int>(type: "int", nullable: false),
+                    AddOn_Id = table.Column<int>(type: "int", nullable: false),
                     Discount_Percentage = table.Column<float>(type: "real", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Membership_Addon_Discounts", x => new { x.MembershipId, x.AddOnId });
+                    table.PrimaryKey("PK_Membership_Addon_Discounts", x => new { x.Membership_Id, x.AddOn_Id });
                     table.ForeignKey(
-                        name: "FK_Membership_Addon_Discounts_AddOns_AddOnId",
-                        column: x => x.AddOnId,
+                        name: "FK_Membership_Addon_Discounts_AddOns_AddOn_Id",
+                        column: x => x.AddOn_Id,
                         principalTable: "AddOns",
                         principalColumn: "AddOn_Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Membership_Addon_Discounts_Memberships_MembershipId",
-                        column: x => x.MembershipId,
+                        name: "FK_Membership_Addon_Discounts_Memberships_Membership_Id",
+                        column: x => x.Membership_Id,
                         principalTable: "Memberships",
                         principalColumn: "Membership_Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Employees",
+                columns: table => new
+                {
+                    Sender_Id = table.Column<int>(type: "int", nullable: false),
+                    Department = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Employees", x => x.Sender_Id);
+                    table.ForeignKey(
+                        name: "FK_Employees_Senders_Sender_Id",
+                        column: x => x.Sender_Id,
+                        principalTable: "Senders",
+                        principalColumn: "Sender_Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Users",
+                columns: table => new
+                {
+                    Sender_Id = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Users", x => x.Sender_Id);
+                    table.ForeignKey(
+                        name: "FK_Users_Senders_Sender_Id",
+                        column: x => x.Sender_Id,
+                        principalTable: "Senders",
+                        principalColumn: "Sender_Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -268,16 +289,44 @@ namespace AirportApp.ClassLibrary.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Subcategory_Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     External_Reference_Id = table.Column<int>(type: "int", nullable: false),
-                    Parent_Category_Id = table.Column<int>(type: "int", nullable: false)
+                    ParentCategoryId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_TicketSubcategories", x => x.Subcategory_Id);
                     table.ForeignKey(
-                        name: "FK_TicketSubcategories_TicketCategories_Parent_Category_Id",
-                        column: x => x.Parent_Category_Id,
+                        name: "FK_TicketSubcategories_TicketCategories_ParentCategoryId",
+                        column: x => x.ParentCategoryId,
                         principalTable: "TicketCategories",
                         principalColumn: "Category_Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Flights",
+                columns: table => new
+                {
+                    Flight_Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    RouteId = table.Column<int>(type: "int", nullable: false),
+                    GateId = table.Column<int>(type: "int", nullable: false),
+                    Departure_Date = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Flight_Number = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Flights", x => x.Flight_Id);
+                    table.ForeignKey(
+                        name: "FK_Flights_Gates_GateId",
+                        column: x => x.GateId,
+                        principalTable: "Gates",
+                        principalColumn: "Gate_Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Flights_Routes_RouteId",
+                        column: x => x.RouteId,
+                        principalTable: "Routes",
+                        principalColumn: "Route_Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -287,17 +336,17 @@ namespace AirportApp.ClassLibrary.Migrations
                 {
                     Chat_Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    User_Id = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<int>(type: "int", nullable: false),
                     Chat_Status = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Chats", x => x.Chat_Id);
                     table.ForeignKey(
-                        name: "FK_Chats_Users_User_Id",
-                        column: x => x.User_Id,
+                        name: "FK_Chats_Users_UserId",
+                        column: x => x.UserId,
                         principalTable: "Users",
-                        principalColumn: "User_Id",
+                        principalColumn: "Sender_Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -312,44 +361,16 @@ namespace AirportApp.ClassLibrary.Migrations
                     Flight_Experience_Rating = table.Column<int>(type: "int", nullable: false),
                     Staff_Friendliness_Rating = table.Column<int>(type: "int", nullable: false),
                     Cleanliness_Rating = table.Column<int>(type: "int", nullable: false),
-                    User_Id = table.Column<int>(type: "int", nullable: false)
+                    UserId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Reviews", x => x.Review_Id);
                     table.ForeignKey(
-                        name: "FK_Reviews_Users_User_Id",
-                        column: x => x.User_Id,
+                        name: "FK_Reviews_Users_UserId",
+                        column: x => x.UserId,
                         principalTable: "Users",
-                        principalColumn: "User_Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Flights",
-                columns: table => new
-                {
-                    Flight_Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Route_Id = table.Column<int>(type: "int", nullable: false),
-                    Gate_Id = table.Column<int>(type: "int", nullable: false),
-                    Departure_Date = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Flight_Number = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Flights", x => x.Flight_Id);
-                    table.ForeignKey(
-                        name: "FK_Flights_Gates_Gate_Id",
-                        column: x => x.Gate_Id,
-                        principalTable: "Gates",
-                        principalColumn: "Gate_Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Flights_Routes_Route_Id",
-                        column: x => x.Route_Id,
-                        principalTable: "Routes",
-                        principalColumn: "Route_Id",
+                        principalColumn: "Sender_Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -364,66 +385,31 @@ namespace AirportApp.ClassLibrary.Migrations
                     Creation_Timestamp = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Urgency_Level = table.Column<int>(type: "int", nullable: false),
                     Status = table.Column<int>(type: "int", nullable: false),
-                    Creator_Id = table.Column<int>(type: "int", nullable: false),
-                    Category_Id = table.Column<int>(type: "int", nullable: false),
-                    Subcategory_Id = table.Column<int>(type: "int", nullable: false)
+                    CreatorId = table.Column<int>(type: "int", nullable: false),
+                    CategoryId = table.Column<int>(type: "int", nullable: false),
+                    SubcategoryId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Tickets", x => x.Ticket_Id);
                     table.ForeignKey(
-                        name: "FK_Tickets_TicketCategories_Category_Id",
-                        column: x => x.Category_Id,
+                        name: "FK_Tickets_TicketCategories_CategoryId",
+                        column: x => x.CategoryId,
                         principalTable: "TicketCategories",
                         principalColumn: "Category_Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Tickets_TicketSubcategories_Subcategory_Id",
-                        column: x => x.Subcategory_Id,
+                        name: "FK_Tickets_TicketSubcategories_SubcategoryId",
+                        column: x => x.SubcategoryId,
                         principalTable: "TicketSubcategories",
                         principalColumn: "Subcategory_Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Tickets_Users_Creator_Id",
-                        column: x => x.Creator_Id,
+                        name: "FK_Tickets_Users_CreatorId",
+                        column: x => x.CreatorId,
                         principalTable: "Users",
-                        principalColumn: "User_Id",
+                        principalColumn: "Sender_Id",
                         onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Messages",
-                columns: table => new
-                {
-                    Message_Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Message_Text = table.Column<string>(type: "NVARCHAR(MAX)", nullable: false),
-                    Timestamp = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
-                    Chat_Id = table.Column<int>(type: "int", nullable: false),
-                    Sender_User_Id = table.Column<int>(type: "int", nullable: true),
-                    Sender_Employee_Id = table.Column<int>(type: "int", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Messages", x => x.Message_Id);
-                    table.ForeignKey(
-                        name: "FK_Messages_Chats_Chat_Id",
-                        column: x => x.Chat_Id,
-                        principalTable: "Chats",
-                        principalColumn: "Chat_Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Messages_Employees_Sender_Employee_Id",
-                        column: x => x.Sender_Employee_Id,
-                        principalTable: "Employees",
-                        principalColumn: "Employee_Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Messages_Users_Sender_User_Id",
-                        column: x => x.Sender_User_Id,
-                        principalTable: "Users",
-                        principalColumn: "User_Id",
-                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -432,8 +418,8 @@ namespace AirportApp.ClassLibrary.Migrations
                 {
                     Ticket_Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    User_Id = table.Column<int>(type: "int", nullable: false),
-                    Flight_Id = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    FlightId = table.Column<int>(type: "int", nullable: false),
                     Seat = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
                     Price = table.Column<float>(type: "real", nullable: false),
                     Status = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
@@ -446,17 +432,73 @@ namespace AirportApp.ClassLibrary.Migrations
                 {
                     table.PrimaryKey("PK_FlightTickets", x => x.Ticket_Id);
                     table.ForeignKey(
-                        name: "FK_FlightTickets_Customers_User_Id",
-                        column: x => x.User_Id,
+                        name: "FK_FlightTickets_Customers_UserId",
+                        column: x => x.UserId,
                         principalTable: "Customers",
                         principalColumn: "Customer_Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_FlightTickets_Flights_Flight_Id",
-                        column: x => x.Flight_Id,
+                        name: "FK_FlightTickets_Flights_FlightId",
+                        column: x => x.FlightId,
                         principalTable: "Flights",
                         principalColumn: "Flight_Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "BotMessages",
+                columns: table => new
+                {
+                    Message_Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Message_Text = table.Column<string>(type: "NVARCHAR(MAX)", nullable: false),
+                    Timestamp = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
+                    ChatId = table.Column<int>(type: "int", nullable: false),
+                    SenderId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BotMessages", x => x.Message_Id);
+                    table.ForeignKey(
+                        name: "FK_BotMessages_Chats_ChatId",
+                        column: x => x.ChatId,
+                        principalTable: "Chats",
+                        principalColumn: "Chat_Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_BotMessages_Senders_SenderId",
+                        column: x => x.SenderId,
+                        principalTable: "Senders",
+                        principalColumn: "Sender_Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Messages",
+                columns: table => new
+                {
+                    Message_Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Message_Text = table.Column<string>(type: "NVARCHAR(MAX)", nullable: false),
+                    Timestamp = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
+                    ChatId = table.Column<int>(type: "int", nullable: false),
+                    SenderId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Messages", x => x.Message_Id);
+                    table.ForeignKey(
+                        name: "FK_Messages_Chats_ChatId",
+                        column: x => x.ChatId,
+                        principalTable: "Chats",
+                        principalColumn: "Chat_Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Messages_Senders_SenderId",
+                        column: x => x.SenderId,
+                        principalTable: "Senders",
+                        principalColumn: "Sender_Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -483,13 +525,34 @@ namespace AirportApp.ClassLibrary.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "BotMessageFAQOptions",
+                columns: table => new
+                {
+                    label = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    next_option_id = table.Column<int>(type: "int", nullable: false),
+                    Message_Id = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BotMessageFAQOptions", x => new { x.Message_Id, x.label, x.next_option_id });
+                    table.ForeignKey(
+                        name: "FK_BotMessageFAQOptions_BotMessages_Message_Id",
+                        column: x => x.Message_Id,
+                        principalTable: "BotMessages",
+                        principalColumn: "Message_Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.InsertData(
                 table: "AddOns",
                 columns: new[] { "AddOn_Id", "Base_Price", "Name" },
                 values: new object[,]
                 {
                     { 1, 30f, "Extra Baggage" },
-                    { 2, 15f, "Priority Boarding" }
+                    { 2, 15f, "Priority Boarding" },
+                    { 3, 12f, "Seat Selection" },
+                    { 4, 45f, "Lounge Access" }
                 });
 
             migrationBuilder.InsertData(
@@ -498,7 +561,8 @@ namespace AirportApp.ClassLibrary.Migrations
                 values: new object[,]
                 {
                     { 1, "LAX", "Los Angeles" },
-                    { 2, "JFK", "New York" }
+                    { 2, "JFK", "New York" },
+                    { 3, "ORD", "Chicago" }
                 });
 
             migrationBuilder.InsertData(
@@ -507,16 +571,8 @@ namespace AirportApp.ClassLibrary.Migrations
                 values: new object[,]
                 {
                     { 1, "Acme Airlines" },
-                    { 2, "Contoso Air" }
-                });
-
-            migrationBuilder.InsertData(
-                table: "Employees",
-                columns: new[] { "Employee_Id", "Department", "Email_Address", "Full_Name" },
-                values: new object[,]
-                {
-                    { 1, 5, "alice@acme.com", "Alice Smith" },
-                    { 2, 3, "bob@contoso.com", "Bob Johnson" }
+                    { 2, "Contoso Air" },
+                    { 3, "SkyLink Airways" }
                 });
 
             migrationBuilder.InsertData(
@@ -526,7 +582,10 @@ namespace AirportApp.ClassLibrary.Migrations
                 {
                     { 1, false, "Welcome! How can I help you today?" },
                     { 2, true, "Flights information: You can search and book flights." },
-                    { 3, true, "Membership information: View plans and discounts." }
+                    { 3, true, "Membership information: View plans and discounts." },
+                    { 4, true, "Baggage information: Learn what is included and what costs extra." },
+                    { 5, true, "Payments information: Find out which payment methods are accepted." },
+                    { 6, true, "Support information: Contact our team for help with bookings or accounts." }
                 });
 
             migrationBuilder.InsertData(
@@ -536,7 +595,9 @@ namespace AirportApp.ClassLibrary.Migrations
                 {
                     { 1, "Click on the 'Forgot Password' link on the login page.", 1, 120, 5, "How do I reset my password?", 150 },
                     { 2, "Standard baggage allowance is 2 checked bags. See add-ons for additional bags.", 2, 180, 10, "What is the baggage allowance?", 200 },
-                    { 3, "Yes, flight changes can be made up to 24 hours before departure, subject to availability.", 4, 160, 8, "Can I change my flight?", 180 }
+                    { 3, "Yes, flight changes can be made up to 24 hours before departure, subject to availability.", 4, 160, 8, "Can I change my flight?", 180 },
+                    { 4, "We accept major credit cards and selected digital wallets.", 4, 80, 2, "Which payment methods are accepted?", 95 },
+                    { 5, "Use the chat assistant or submit a support ticket from your account.", 4, 110, 3, "How do I contact support?", 120 }
                 });
 
             migrationBuilder.InsertData(
@@ -545,7 +606,23 @@ namespace AirportApp.ClassLibrary.Migrations
                 values: new object[,]
                 {
                     { 1, 5f, "Silver" },
-                    { 2, 15f, "Gold" }
+                    { 2, 15f, "Gold" },
+                    { 3, 25f, "Platinum" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Senders",
+                columns: new[] { "Sender_Id", "Discriminator", "Email_Address", "Full_Name" },
+                values: new object[,]
+                {
+                    { -1, "Bot", "customer-support@cloudspritzers.com", "Carlos" },
+                    { 1, "Employee", "alice@acme.com", "Alice Smith" },
+                    { 2, "Employee", "bob@contoso.com", "Bob Johnson" },
+                    { 3, "Employee", "clara@skylink.com", "Clara Davis" },
+                    { 4, "Employee", "daniel@acme.com", "Daniel Green" },
+                    { 101, "User", "alice@bot.com", "Alice Bot" },
+                    { 102, "User", "bob@chat.com", "Bob Chat" },
+                    { 103, "User", "mia@example.com", "Mia Passenger" }
                 });
 
             migrationBuilder.InsertData(
@@ -554,34 +631,29 @@ namespace AirportApp.ClassLibrary.Migrations
                 values: new object[,]
                 {
                     { 1, "Booking Issues", 2 },
-                    { 2, "General Inquiry", 0 }
-                });
-
-            migrationBuilder.InsertData(
-                table: "Users",
-                columns: new[] { "User_Id", "Email_Address", "Full_Name" },
-                values: new object[,]
-                {
-                    { 1, "alice@bot.com", "Alice Bot" },
-                    { 2, "bob@chat.com", "Bob Chat" }
-                });
-
-            migrationBuilder.InsertData(
-                table: "Chats",
-                columns: new[] { "Chat_Id", "Chat_Status", "User_Id" },
-                values: new object[,]
-                {
-                    { 1, 0, 1 },
-                    { 2, 0, 2 }
+                    { 2, "General Inquiry", 0 },
+                    { 3, "Payment Problems", 2 }
                 });
 
             migrationBuilder.InsertData(
                 table: "Customers",
-                columns: new[] { "Customer_Id", "Email", "Membership_Id", "Password_Hash", "Phone", "Username" },
+                columns: new[] { "Customer_Id", "Email", "MembershipId", "Password_Hash", "Phone", "Username" },
                 values: new object[,]
                 {
-                    { 1, "user1@example.com", 1, "passhash1", string.Empty, "user1" },
-                    { 2, "user2@example.com", 2, "passhash2", string.Empty, "user2" }
+                    { 101, "alice@bot.com", 1, "AQAAAAIAAYagAAAAEA7ySiw1c4fcmPM170Ml05ewK89uBQDiwVlscoOVZoPRigQGrbHWOr0TwB3iv4aXjA==", string.Empty, "alice" },
+                    { 102, "bob@chat.com", 2, "AQAAAAIAAYagAAAAEDHfFMfhC0QVQUFojeTOvH2dxW2EOO/hJTYb7VzssrGmyU8CwQRPplscaTjEC0pGpA==", string.Empty, "bob" },
+                    { 103, "mia@example.com", 3, "AQAAAAIAAYagAAAAEFV7Grxjk5rgP/uFSl6F/SYqv4Dt6S8bINBtt3Q6rvIpsDsDNkZj5lOtGRX7lWfryQ==", string.Empty, "mia" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Employees",
+                columns: new[] { "Sender_Id", "Department" },
+                values: new object[,]
+                {
+                    { 1, 5 },
+                    { 2, 3 },
+                    { 3, 0 },
+                    { 4, 2 }
                 });
 
             migrationBuilder.InsertData(
@@ -589,104 +661,170 @@ namespace AirportApp.ClassLibrary.Migrations
                 columns: new[] { "label", "node_id", "next_option_id" },
                 values: new object[,]
                 {
+                    { "Baggage", 1, 4 },
+                    { "Contact support", 1, 6 },
                     { "Flights", 1, 2 },
-                    { "Memberships", 1, 3 }
+                    { "Memberships", 1, 3 },
+                    { "Payments", 1, 5 }
                 });
 
             migrationBuilder.InsertData(
                 table: "Gates",
-                columns: new[] { "Gate_Id", "Airport_Id", "Gate_Name" },
+                columns: new[] { "Gate_Id", "AirportId", "Gate_Name" },
                 values: new object[,]
                 {
                     { 1, 1, "A1" },
-                    { 2, 2, "B2" }
+                    { 2, 2, "B2" },
+                    { 3, 3, "C3" },
+                    { 4, 1, "D4" }
                 });
 
             migrationBuilder.InsertData(
                 table: "Membership_Addon_Discounts",
-                columns: new[] { "AddOnId", "MembershipId", "Discount_Percentage" },
+                columns: new[] { "AddOn_Id", "Membership_Id", "Discount_Percentage" },
                 values: new object[,]
                 {
                     { 1, 1, 10f },
                     { 2, 1, 10f },
                     { 1, 2, 20f },
-                    { 2, 2, 20f }
+                    { 2, 2, 20f },
+                    { 1, 3, 30f },
+                    { 2, 3, 30f },
+                    { 3, 3, 30f },
+                    { 4, 3, 35f }
                 });
 
             migrationBuilder.InsertData(
                 table: "Routes",
-                columns: new[] { "Route_Id", "Airport_Id", "Arrival_Time", "Capacity", "Company_Id", "Departure_Time", "Route_Type" },
+                columns: new[] { "Route_Id", "AirportId", "Arrival_Time", "Capacity", "CompanyId", "Departure_Time", "Route_Type" },
                 values: new object[,]
                 {
                     { 1, 1, new DateTime(2026, 5, 4, 11, 0, 0, 0, DateTimeKind.Unspecified), 180, 1, new DateTime(2026, 5, 4, 8, 0, 0, 0, DateTimeKind.Unspecified), "Departure" },
-                    { 2, 2, new DateTime(2026, 5, 5, 12, 45, 0, 0, DateTimeKind.Unspecified), 150, 2, new DateTime(2026, 5, 5, 9, 30, 0, 0, DateTimeKind.Unspecified), "Arrival" }
+                    { 2, 2, new DateTime(2026, 5, 5, 12, 45, 0, 0, DateTimeKind.Unspecified), 150, 2, new DateTime(2026, 5, 5, 9, 30, 0, 0, DateTimeKind.Unspecified), "Arrival" },
+                    { 3, 3, new DateTime(2026, 5, 6, 10, 5, 0, 0, DateTimeKind.Unspecified), 220, 3, new DateTime(2026, 5, 6, 7, 15, 0, 0, DateTimeKind.Unspecified), "Departure" },
+                    { 4, 1, new DateTime(2026, 5, 7, 17, 10, 0, 0, DateTimeKind.Unspecified), 160, 1, new DateTime(2026, 5, 7, 14, 0, 0, 0, DateTimeKind.Unspecified), "Arrival" },
+                    { 5, 3, new DateTime(2026, 5, 20, 15, 12, 0, 0, DateTimeKind.Unspecified), 50, 2, new DateTime(2026, 5, 20, 13, 0, 0, 0, DateTimeKind.Unspecified), "Arrival" }
                 });
 
             migrationBuilder.InsertData(
                 table: "TicketSubcategories",
-                columns: new[] { "Subcategory_Id", "Parent_Category_Id", "External_Reference_Id", "Subcategory_Name" },
+                columns: new[] { "Subcategory_Id", "ParentCategoryId", "External_Reference_Id", "Subcategory_Name" },
                 values: new object[,]
                 {
                     { 1, 1, 101, "Booking Error" },
                     { 2, 1, 102, "Cancellation" },
-                    { 3, 2, 201, "Flight Info" }
+                    { 3, 2, 201, "Flight Info" },
+                    { 4, 3, 301, "Card Declined" },
+                    { 5, 3, 302, "Refund Status" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Users",
+                column: "Sender_Id",
+                values: new object[]
+                {
+                    101,
+                    102,
+                    103
+                });
+
+            migrationBuilder.InsertData(
+                table: "Chats",
+                columns: new[] { "Chat_Id", "Chat_Status", "UserId" },
+                values: new object[,]
+                {
+                    { 1, 0, 101 },
+                    { 2, 0, 102 },
+                    { 3, 0, 103 }
                 });
 
             migrationBuilder.InsertData(
                 table: "Flights",
-                columns: new[] { "Flight_Id", "Departure_Date", "Flight_Number", "Gate_Id", "Route_Id" },
+                columns: new[] { "Flight_Id", "Departure_Date", "Flight_Number", "GateId", "RouteId" },
                 values: new object[,]
                 {
                     { 1, new DateTime(2026, 5, 4, 8, 0, 0, 0, DateTimeKind.Unspecified), "AC100", 1, 1 },
-                    { 2, new DateTime(2026, 5, 5, 9, 30, 0, 0, DateTimeKind.Unspecified), "CT200", 2, 2 }
-                });
-
-            migrationBuilder.InsertData(
-                table: "Messages",
-                columns: new[] { "Message_Id", "Chat_Id", "Sender_Employee_Id", "Sender_User_Id", "Message_Text", "Timestamp" },
-                values: new object[,]
-                {
-                    { 1, 1, null, 1, "Hello, I need help finding flights.", new DateTimeOffset(new DateTime(2026, 5, 4, 9, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)) },
-                    { 2, 2, null, 2, "Is there a baggage allowance?", new DateTimeOffset(new DateTime(2026, 5, 4, 9, 5, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)) }
+                    { 2, new DateTime(2026, 5, 5, 9, 30, 0, 0, DateTimeKind.Unspecified), "CT200", 2, 2 },
+                    { 3, new DateTime(2026, 5, 6, 7, 15, 0, 0, DateTimeKind.Unspecified), "SK300", 3, 3 },
+                    { 4, new DateTime(2026, 5, 7, 14, 0, 0, 0, DateTimeKind.Unspecified), "AC400", 4, 4 },
+                    { 5, new DateTime(2026, 5, 20, 13, 0, 0, 0, DateTimeKind.Unspecified), "CT500", 4, 5 }
                 });
 
             migrationBuilder.InsertData(
                 table: "Tickets",
-                columns: new[] { "Ticket_Id", "Category_Id", "Creation_Timestamp", "Creator_Id", "Status", "Description", "Subcategory_Id", "Subject", "Urgency_Level" },
+                columns: new[] { "Ticket_Id", "CategoryId", "Creation_Timestamp", "CreatorId", "Status", "Description", "SubcategoryId", "Subject", "Urgency_Level" },
                 values: new object[,]
                 {
-                    { 1, 1, new DateTime(2026, 5, 4, 10, 0, 0, 0, DateTimeKind.Unspecified), 1, 2, "System error when attempting to book", 1, "Cannot book flight", 2 },
-                    { 2, 2, new DateTime(2026, 5, 4, 11, 0, 0, 0, DateTimeKind.Unspecified), 2, 0, "What is the baggage allowance?", 3, "Question about baggage", 0 }
+                    { 1, 1, new DateTime(2026, 5, 4, 10, 0, 0, 0, DateTimeKind.Unspecified), 101, 2, "System error when attempting to book", 1, "Cannot book flight", 2 },
+                    { 2, 2, new DateTime(2026, 5, 4, 11, 0, 0, 0, DateTimeKind.Unspecified), 102, 0, "What is the baggage allowance?", 3, "Question about baggage", 0 },
+                    { 3, 3, new DateTime(2026, 5, 4, 12, 0, 0, 0, DateTimeKind.Unspecified), 103, 0, "My card was declined during checkout", 4, "Payment failed", 2 },
+                    { 4, 3, new DateTime(2026, 5, 4, 12, 30, 0, 0, DateTimeKind.Unspecified), 101, 2, "How long until my refund appears?", 5, "Refund pending", 1 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "BotMessages",
+                columns: new[] { "Message_Id", "ChatId", "SenderId", "Message_Text", "Timestamp" },
+                values: new object[,]
+                {
+                    { 1, 1, -1, "Welcome! How can I help you today?", new DateTimeOffset(new DateTime(2026, 5, 4, 10, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 3, 0, 0, 0)) },
+                    { 2, 2, -1, "What would you like to know about?", new DateTimeOffset(new DateTime(2026, 5, 4, 11, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 3, 0, 0, 0)) },
+                    { 3, 3, -1, "How can I assist you?", new DateTimeOffset(new DateTime(2026, 5, 4, 12, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 3, 0, 0, 0)) }
                 });
 
             migrationBuilder.InsertData(
                 table: "FlightTickets",
-                columns: new[] { "Ticket_Id", "Flight_Id", "Passenger_Email", "Passenger_First_Name", "Passenger_Last_Name", "Passenger_Phone", "Price", "Seat", "Status", "User_Id" },
+                columns: new[] { "Ticket_Id", "FlightId", "Passenger_Email", "Passenger_First_Name", "Passenger_Last_Name", "Passenger_Phone", "Price", "Seat", "Status", "UserId" },
                 values: new object[,]
                 {
-                    { 1, 1, "johndoe@example.com", "John", "Doe", string.Empty, 199f, "12A", "Booked", 1 },
-                    { 2, 2, "janeroe@example.com", "Jane", "Roe", string.Empty, 149f, "14C", "Booked", 2 }
+                    { 1, 1, "johndoe@example.com", "John", "Doe", string.Empty, 199f, "12A", "Booked", 101 },
+                    { 2, 2, "janeroe@example.com", "Jane", "Roe", string.Empty, 149f, "14C", "Booked", 102 },
+                    { 3, 3, "mialane@example.com", "Mia", "Lane", string.Empty, 249f, "8F", "Booked", 103 },
+                    { 4, 4, "liamstone@example.com", "Liam", "Stone", string.Empty, 179f, "5B", "Booked", 101 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "BotMessageFAQOptions",
+                columns: new[] { "Message_Id", "label", "next_option_id" },
+                values: new object[,]
+                {
+                    { 1, "Baggage", 4 },
+                    { 1, "Bookings", 3 },
+                    { 1, "Flights", 2 },
+                    { 2, "Payment", 5 },
+                    { 2, "Refund", 6 },
+                    { 3, "Account", 7 },
+                    { 3, "Support", 8 }
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Chats_User_Id",
+                name: "IX_BotMessages_ChatId",
+                table: "BotMessages",
+                column: "ChatId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_BotMessages_SenderId",
+                table: "BotMessages",
+                column: "SenderId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Chats_UserId",
                 table: "Chats",
-                column: "User_Id");
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Customers_Membership_Id",
+                name: "IX_Customers_MembershipId",
                 table: "Customers",
-                column: "Membership_Id");
+                column: "MembershipId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Flights_Gate_Id",
+                name: "IX_Flights_GateId",
                 table: "Flights",
-                column: "Gate_Id");
+                column: "GateId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Flights_Route_Id",
+                name: "IX_Flights_RouteId",
                 table: "Flights",
-                column: "Route_Id");
+                column: "RouteId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_FlightTicket_AddOns_AddOn_Id",
@@ -694,79 +832,80 @@ namespace AirportApp.ClassLibrary.Migrations
                 column: "AddOn_Id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_FlightTickets_Flight_Id",
+                name: "IX_FlightTickets_FlightId",
                 table: "FlightTickets",
-                column: "Flight_Id");
+                column: "FlightId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_FlightTickets_User_Id",
+                name: "IX_FlightTickets_UserId",
                 table: "FlightTickets",
-                column: "User_Id");
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Gates_Airport_Id",
+                name: "IX_Gates_AirportId",
                 table: "Gates",
-                column: "Airport_Id");
+                column: "AirportId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Membership_Addon_Discounts_AddOnId",
+                name: "IX_Membership_Addon_Discounts_AddOn_Id",
                 table: "Membership_Addon_Discounts",
-                column: "AddOnId");
+                column: "AddOn_Id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Messages_Chat_Id",
+                name: "IX_Messages_ChatId",
                 table: "Messages",
-                column: "Chat_Id");
+                column: "ChatId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Messages_Sender_Employee_Id",
+                name: "IX_Messages_SenderId",
                 table: "Messages",
-                column: "Sender_Employee_Id");
+                column: "SenderId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Messages_Sender_User_Id",
-                table: "Messages",
-                column: "Sender_User_Id");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Reviews_User_Id",
+                name: "IX_Reviews_UserId",
                 table: "Reviews",
-                column: "User_Id");
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Routes_Airport_Id",
+                name: "IX_Routes_AirportId",
                 table: "Routes",
-                column: "Airport_Id");
+                column: "AirportId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Routes_Company_Id",
+                name: "IX_Routes_CompanyId",
                 table: "Routes",
-                column: "Company_Id");
+                column: "CompanyId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Tickets_Category_Id",
+                name: "IX_Tickets_CategoryId",
                 table: "Tickets",
-                column: "Category_Id");
+                column: "CategoryId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Tickets_Creator_Id",
+                name: "IX_Tickets_CreatorId",
                 table: "Tickets",
-                column: "Creator_Id");
+                column: "CreatorId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Tickets_Subcategory_Id",
+                name: "IX_Tickets_SubcategoryId",
                 table: "Tickets",
-                column: "Subcategory_Id");
+                column: "SubcategoryId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_TicketSubcategories_Parent_Category_Id",
+                name: "IX_TicketSubcategories_ParentCategoryId",
                 table: "TicketSubcategories",
-                column: "Parent_Category_Id");
+                column: "ParentCategoryId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "BotMessageFAQOptions");
+
+            migrationBuilder.DropTable(
+                name: "Employees");
+
             migrationBuilder.DropTable(
                 name: "FAQOption");
 
@@ -789,6 +928,9 @@ namespace AirportApp.ClassLibrary.Migrations
                 name: "Tickets");
 
             migrationBuilder.DropTable(
+                name: "BotMessages");
+
+            migrationBuilder.DropTable(
                 name: "FAQNode");
 
             migrationBuilder.DropTable(
@@ -798,13 +940,10 @@ namespace AirportApp.ClassLibrary.Migrations
                 name: "AddOns");
 
             migrationBuilder.DropTable(
-                name: "Chats");
-
-            migrationBuilder.DropTable(
-                name: "Employees");
-
-            migrationBuilder.DropTable(
                 name: "TicketSubcategories");
+
+            migrationBuilder.DropTable(
+                name: "Chats");
 
             migrationBuilder.DropTable(
                 name: "Customers");
@@ -813,10 +952,10 @@ namespace AirportApp.ClassLibrary.Migrations
                 name: "Flights");
 
             migrationBuilder.DropTable(
-                name: "Users");
+                name: "TicketCategories");
 
             migrationBuilder.DropTable(
-                name: "TicketCategories");
+                name: "Users");
 
             migrationBuilder.DropTable(
                 name: "Memberships");
@@ -826,6 +965,9 @@ namespace AirportApp.ClassLibrary.Migrations
 
             migrationBuilder.DropTable(
                 name: "Routes");
+
+            migrationBuilder.DropTable(
+                name: "Senders");
 
             migrationBuilder.DropTable(
                 name: "Airports");

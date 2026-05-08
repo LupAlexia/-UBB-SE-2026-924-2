@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using AirportApp.ClassLibrary.Entity.Domain;
 using AirportApp.ClassLibrary.Entity.Domain.Review;
 using AirportApp.ClassLibrary.Entity.Dto;
 using AirportApp.ClassLibrary.Repository.Interfaces;
@@ -12,7 +13,7 @@ namespace Airport.Web.Controllers
     public class ReviewController : ControllerBase
     {
         private readonly IRepository<int, Review> reviewRepository;
-
+        private readonly IUserRepository userRepository;
         public ReviewController(IRepository<int, Review> reviewRepository)
         {
             this.reviewRepository = reviewRepository;
@@ -44,7 +45,7 @@ namespace Airport.Web.Controllers
         {
             var review = new Review
             {
-                UserId = dto.userId,
+                User = await userRepository.GetByIdAsync(dto.userId),
                 Message = dto.message,
                 DutyFreeRating = dto.dutyFreeRating,
                 FlightExperienceRating = dto.flightExperienceRating,

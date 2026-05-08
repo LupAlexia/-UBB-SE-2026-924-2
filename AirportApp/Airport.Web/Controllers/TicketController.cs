@@ -12,6 +12,9 @@ namespace Airport.Web.Controllers
     public class TicketController : ControllerBase
     {
         private readonly ITicketRepository ticketRepository;
+        private readonly IUserRepository userRepository;
+        private readonly ITicketCategoryRepository ticketCategoryRepository;
+        private readonly ITicketSubcategoryRepository ticketSubcategoryRepository;
 
         public TicketController(ITicketRepository ticketRepository)
         {
@@ -44,9 +47,9 @@ namespace Airport.Web.Controllers
         {
             var ticket = new ComplaintTicket
             {
-                CreatorId = dto.creatorId,
-                CategoryId = dto.categoryId,
-                SubcategoryId = dto.subcategoryId,
+                Creator = await userRepository.GetByIdAsync(dto.creatorId),
+                Category = await ticketCategoryRepository.GetByIdAsync(dto.categoryId),
+                Subcategory = await ticketSubcategoryRepository.GetByIdAsync(dto.subcategoryId),
                 Subject = dto.subject,
                 Description = dto.description,
                 CreationTimestamp = dto.creationTimestamp,

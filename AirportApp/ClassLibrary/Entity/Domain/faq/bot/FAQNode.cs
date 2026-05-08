@@ -1,16 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AirportApp.ClassLibrary.Entity.Domain.Faq.Bot;
-
-namespace AirportApp.ClassLibrary.Entity.Domain.Faq.Bot
+﻿namespace AirportApp.ClassLibrary.Entity.Domain.Faq.Bot
 {
-    public record FAQNode(
-        int faqNodeId,
-        string questionText,
-        ImmutableArray<FAQOption> options,
-        bool isFinalAnswer);
+    public class FAQNode
+    {
+        public int FaqNodeId { get; set; }
+        public string QuestionText { get; set; } = string.Empty;
+        public List<FAQOption> Options { get; set; } = new ();
+        public bool IsFinalAnswer { get; set; }
+
+        public FAQNode()
+        {
+        }
+
+        public FAQNode(int faqNodeId, string questionText, IEnumerable<FAQOption> options, bool isFinalAnswer)
+        {
+            this.FaqNodeId = faqNodeId;
+            this.QuestionText = questionText;
+            this.Options = options.ToList();
+            this.IsFinalAnswer = isFinalAnswer;
+        }
+    }
 }

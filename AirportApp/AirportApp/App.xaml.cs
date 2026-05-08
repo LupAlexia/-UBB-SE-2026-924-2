@@ -79,7 +79,15 @@ namespace AirportApp
                 }
                 else
                 {
-                    User = await Services.GetService<IUserService>() !.GetByIdAsync(userId);
+                    var userService = Services.GetService<IUserService>();
+                    User = await userService !.GetByIdAsync(userId);
+
+                    // Temporary compatibility: seeded user IDs may be offset to avoid TPH key collisions.
+                    if (User == null && userId > 0 && userId < 100)
+                    {
+                        User = await userService.GetByIdAsync(userId + 100);
+                    }
+
                     return User != null;
                 }
             }

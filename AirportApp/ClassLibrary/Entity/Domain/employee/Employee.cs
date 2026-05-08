@@ -5,44 +5,29 @@ using AirportApp.ClassLibrary.Entity.Domain.Message;
 namespace AirportApp.ClassLibrary.Entity.Domain.Employee
 {
     [Table("Employees")]
-    public class Employee : ISender
+    public class Employee : Sender
     {
-        // 1. EF Core Auto-Properties
-        [Key]
-        [Column("Employee_Id")]
-        public int Id { get; set; }
-
-        [Required]
-        [MaxLength(100)]
-        [Column("Full_Name")]
-        public string FullName { get; set; } = string.Empty;
-
-        [Required]
-        [MaxLength(255)]
-        [Column("Email_Address")]
-        public string EmailAddress { get; set; } = string.Empty;
-
+        // Id, FullName, EmailAddress inherited from Sender
         [Required]
         [Column("Department")]
         public EmployeeDepartment AssignedDepartment { get; set; }
 
-        // 2. Required Parameterless Constructor
         public Employee()
         {
+            Discriminator = "Employee";
         }
 
         public Employee(int employeeIdentificationNumber, string fullName, string emailAddress, EmployeeDepartment assignedDepartment)
+            : base(employeeIdentificationNumber, fullName, emailAddress)
         {
-            Id = employeeIdentificationNumber;
-            FullName = fullName;
-            EmailAddress = emailAddress;
             AssignedDepartment = assignedDepartment;
+            Discriminator = "Employee";
         }
 
         public string GetDepartmentName() => AssignedDepartment.ToString();
 
-        public string RetrieveConfiguredDisplayFullNameForBot() => FullName;
-        public string RetrieveConfiguredEmailAddressForBotContact() => EmailAddress;
-        public int RetrieveUniqueDatabaseIdentifierForBot() => Id;
+        public override string RetrieveConfiguredDisplayFullNameForBot() => FullName;
+        public override string RetrieveConfiguredEmailAddressForBotContact() => EmailAddress;
+        public override int RetrieveUniqueDatabaseIdentifierForBot() => Id;
     }
 }

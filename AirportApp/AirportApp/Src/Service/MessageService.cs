@@ -6,6 +6,7 @@ using AirportApp.ClassLibrary.Entity.Domain.Chats;
 using AirportApp.ClassLibrary.Entity.Domain.Message;
 using AirportApp.ClassLibrary.Entity.Domain.Faq.Bot;
 using AirportApp.ClassLibrary.Repository.Interfaces;
+using AirportApp.ClassLibrary.Entity.Domain;
 
 namespace AirportApp.Src.Service
 {
@@ -25,7 +26,7 @@ namespace AirportApp.Src.Service
             this.botEngine = botEngine ?? throw new ArgumentNullException(nameof(botEngine));
         }
 
-        public async Task<BotMessage> SendMessageAsync(int chatId, ISender sender, FAQOption selectedOption)
+        public async Task<BotMessage> SendMessageAsync(int chatId, Sender sender, FAQOption selectedOption)
         {
             if (selectedOption == null)
             {
@@ -65,7 +66,7 @@ namespace AirportApp.Src.Service
 
             var allMessages = await messageRepository.GetAllAsync();
             return allMessages
-                .Where(chatMessage => chatMessage.ChatId == chatId)
+                .Where(chatMessage => chatMessage.Chat.Id == chatId)
                 .OrderBy(chatMessage => chatMessage.Timestamp);
         }
 

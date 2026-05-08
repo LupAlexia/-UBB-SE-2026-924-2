@@ -11,19 +11,9 @@ namespace AirportApp.ClassLibrary.Entity.Domain
         [Column("Ticket_Id")]
         public int Id { get; set; }
 
-        [Required]
-        [Column("User_Id")]
-        public int UserId { get; set; }
+        public Customer User { get; set; }
 
-        [ForeignKey(nameof(UserId))]
-        public Customer? User { get; set; }
-
-        [Required]
-        [Column("Flight_Id")]
-        public int FlightId { get; set; }
-
-        [ForeignKey(nameof(FlightId))]
-        public Flight? Flight { get; set; }
+        public Flight Flight { get; set; }
 
         [Required]
         [MaxLength(10)]
@@ -65,9 +55,7 @@ namespace AirportApp.ClassLibrary.Entity.Domain
         public FlightTicket(Customer user, Flight flight, string seat, float price, string status, string passengerFirstName, string passengerLastName, string passengerEmail, string passengerPhone)
         {
             User = user;
-            UserId = user.Id;
             Flight = flight;
-            FlightId = flight.Id;
             Seat = seat;
             Price = price;
             Status = status;
@@ -81,9 +69,7 @@ namespace AirportApp.ClassLibrary.Entity.Domain
         {
             Id = ticketId;
             User = user;
-            UserId = user.Id;
             Flight = flight;
-            FlightId = flight.Id;
             Seat = seat;
             Price = price;
             Status = status;

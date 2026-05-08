@@ -23,7 +23,7 @@ namespace AirportApp.ClassLibrary.Entity.Repository.Database
         {
             var node = await this.dataBaseContext.FaqNodes
                 .Include(n => n.Options)
-                .FirstOrDefaultAsync(n => n.NodeId == id);
+                .FirstOrDefaultAsync(n => n.FaqNodeId == id);
 
             if (node == null)
             {
@@ -31,42 +31,38 @@ namespace AirportApp.ClassLibrary.Entity.Repository.Database
             }
 
             var options = node.Options
-                .Select(o => new FAQOption(o.Label, o.NextOptionId))
+                .Select(o => new FAQOption(o.label, o.nextOptionId))
                 .ToImmutableArray();
+            Console.WriteLine(options);
 
-            return new FAQNode(node.NodeId, node.QuestionText, options, node.IsFinalAnswer);
+            return new FAQNode(node.FaqNodeId, node.QuestionText, options, node.IsFinalAnswer);
         }
 
         public async Task<int> CreateNewEntityAsync(FAQNode incomingFAQNodeEntityToBeSaved)
         {
-            var nodeEntity = new FAQNodeEntity
+            var nodeEntity = new FAQNode
             {
-                QuestionText = incomingFAQNodeEntityToBeSaved.questionText,
-                IsFinalAnswer = incomingFAQNodeEntityToBeSaved.isFinalAnswer
+                QuestionText = incomingFAQNodeEntityToBeSaved.QuestionText,
+                IsFinalAnswer = incomingFAQNodeEntityToBeSaved.IsFinalAnswer
             };
 
-            foreach (var opt in incomingFAQNodeEntityToBeSaved.options)
+            foreach (var opt in incomingFAQNodeEntityToBeSaved.Options)
             {
-                nodeEntity.Options.Add(new FAQOptionEntity { Label = opt.label, NextOptionId = opt.nextOptionId });
+                nodeEntity.Options.Add(new FAQOption(opt.label, opt.nextOptionId));
             }
 
             this.dataBaseContext.FaqNodes.Add(nodeEntity);
             await this.dataBaseContext.SaveChangesAsync();
 
-            return nodeEntity.NodeId;
+            return nodeEntity.FaqNodeId;
         }
 
         public async Task DeleteByIdAsync(int id)
         {
-            var node = await this.dataBaseContext.FaqNodes.Include(n => n.Options).FirstOrDefaultAsync(n => n.NodeId == id);
+            var node = await this.dataBaseContext.FaqNodes.Include(n => n.Options).FirstOrDefaultAsync(n => n.FaqNodeId == id);
             if (node == null)
             {
                 return;
-            }
-
-            if (node.Options != null && node.Options.Any())
-            {
-                this.dataBaseContext.FaqOptions.RemoveRange(node.Options);
             }
 
             this.dataBaseContext.FaqNodes.Remove(node);
@@ -75,21 +71,20 @@ namespace AirportApp.ClassLibrary.Entity.Repository.Database
 
         public async Task UpdateByIdAsync(int id, FAQNode updatedFAQNodeEntityData)
         {
-            var node = await this.dataBaseContext.FaqNodes.Include(n => n.Options).FirstOrDefaultAsync(n => n.NodeId == id);
+            var node = await this.dataBaseContext.FaqNodes.Include(n => n.Options).FirstOrDefaultAsync(n => n.FaqNodeId == id);
             if (node == null)
             {
                 return;
             }
 
-            node.QuestionText = updatedFAQNodeEntityData.questionText;
-            node.IsFinalAnswer = updatedFAQNodeEntityData.isFinalAnswer;
+            node.QuestionText = updatedFAQNodeEntityData.QuestionText;
+            node.IsFinalAnswer = updatedFAQNodeEntityData.IsFinalAnswer;
 
-            this.dataBaseContext.FaqOptions.RemoveRange(node.Options);
             node.Options.Clear();
 
-            foreach (var opt in updatedFAQNodeEntityData.options)
+            foreach (var opt in updatedFAQNodeEntityData.Options)
             {
-                node.Options.Add(new FAQOptionEntity { NodeId = id, Label = opt.label, NextOptionId = opt.nextOptionId });
+                node.Options.Add(new FAQOption(opt.label, opt.nextOptionId));
             }
 
             await this.dataBaseContext.SaveChangesAsync();
@@ -102,9 +97,9 @@ namespace AirportApp.ClassLibrary.Entity.Repository.Database
                 .ToListAsync();
 
             return nodes.Select(n => new FAQNode(
-                n.NodeId,
+                n.FaqNodeId,
                 n.QuestionText,
-                n.Options.Select(o => new FAQOption(o.Label, o.NextOptionId)).ToImmutableArray(),
+                n.Options.Select(o => new FAQOption(o.label, o.nextOptionId)).ToImmutableArray(),
                 n.IsFinalAnswer));
         }
     }

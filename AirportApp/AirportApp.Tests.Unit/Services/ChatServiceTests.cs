@@ -34,7 +34,7 @@ namespace AirportApp.Tests.Unit.Src.Service
         {
             mockChatRepository.CreateNewEntityAsync(Arg.Any<Chat>()).Returns(Task.FromResult(5));
 
-            var resultChat = await chatService.OpenChatAsync(101);
+            var resultChat = await chatService.OpenChatAsync(testUser);
 
             Assert.AreEqual(5, resultChat.Id);
         }
@@ -44,9 +44,9 @@ namespace AirportApp.Tests.Unit.Src.Service
         {
             mockChatRepository.CreateNewEntityAsync(Arg.Any<Chat>()).Returns(Task.FromResult(5));
 
-            var resultedChat = await chatService.OpenChatAsync(101);
+            var resultedChat = await chatService.OpenChatAsync(testUser);
 
-            Assert.AreEqual(101, resultedChat.UserId);
+            Assert.AreEqual(101, resultedChat.User.Id);
         }
 
         [TestMethod]
@@ -54,7 +54,7 @@ namespace AirportApp.Tests.Unit.Src.Service
         {
             mockChatRepository.CreateNewEntityAsync(Arg.Any<Chat>()).Returns(Task.FromResult(5));
 
-            var resultedChat = await chatService.OpenChatAsync(101);
+            var resultedChat = await chatService.OpenChatAsync(testUser);
 
             Assert.AreEqual(ChatStatus.Active, resultedChat.Status);
         }
@@ -64,7 +64,7 @@ namespace AirportApp.Tests.Unit.Src.Service
         {
             mockChatRepository.CreateNewEntityAsync(Arg.Any<Chat>()).Returns(x => Task.FromException<int>(new Exception("Database error")));
 
-            await Assert.ThrowsExceptionAsync<Exception>(async () => await chatService.OpenChatAsync(101));
+            await Assert.ThrowsExceptionAsync<Exception>(async () => await chatService.OpenChatAsync(testUser));
         }
 
         [TestMethod]
@@ -72,7 +72,7 @@ namespace AirportApp.Tests.Unit.Src.Service
         {
             mockChatRepository.CreateNewEntityAsync(Arg.Any<Chat>()).Returns(x => Task.FromException<int>(new Exception("Database error")));
 
-            var exceptionThrown = await Assert.ThrowsExceptionAsync<Exception>(async () => await chatService.OpenChatAsync(101));
+            var exceptionThrown = await Assert.ThrowsExceptionAsync<Exception>(async () => await chatService.OpenChatAsync(testUser));
 
             Assert.AreEqual("Database error", exceptionThrown.Message);
         }

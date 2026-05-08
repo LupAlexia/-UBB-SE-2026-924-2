@@ -26,7 +26,7 @@ namespace AirportApp.Src.Proxy
         public async Task<int> AddAsync(Review review)
         {
             var dto = new CreateReviewDTO(
-                userId: review.UserId,
+                userId: review.User.Id,
                 message: review.Message,
                 dutyFreeRating: review.DutyFreeRating,
                 flightExperienceRating: review.FlightExperienceRating,
