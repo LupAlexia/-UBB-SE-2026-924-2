@@ -1,3 +1,7 @@
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using System.Net.Http;
 using AirportApp.ClassLibrary.DataAccess;
 using AirportApp.ClassLibrary.Entity.Domain;
 using AirportApp.ClassLibrary.Entity.Domain.Chats;
@@ -11,7 +15,6 @@ using AirportApp.ClassLibrary.Repository;
 using AirportApp.ClassLibrary.Repository.Interfaces;
 using AirportApp.Src.Proxy;
 using AirportApp.Src.Service;
-using AirportApp.Src.Proxy;
 using AirportApp.Src.Service.Bot.Strategy;
 using AirportApp.Src.Service.Implementation;
 using AirportApp.Src.Service.Interfaces;
@@ -25,17 +28,13 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using System.Net.Http;
 
 namespace AirportApp
 {
     public partial class App : Application
     {
         public IServiceProvider Services { get; }
-        public Window? window;
+        public Window? Window;
         public User? User { get; private set; }
         public Employee? Employee { get; private set; }
         public bool IsEmployee = false;
@@ -60,14 +59,12 @@ namespace AirportApp
             {
                 System.IO.File.WriteAllText(
                 System.IO.Path.Combine(AppContext.BaseDirectory, "crash.txt"),
-                ex.ToString()
-            );
+                ex.ToString());
                 throw;
             }
 
             InitializeComponent();
         }
-        
 
         public async Task<bool> SetUserAsync(int userId)
         {
@@ -77,12 +74,12 @@ namespace AirportApp
             {
                 if (IsEmployee)
                 {
-                    Employee = await Services.GetService<IEmployeeService>()!.GetEmployeeByIdAsync(userId);
+                    Employee = await Services.GetService<IEmployeeService>() !.GetEmployeeByIdAsync(userId);
                     return Employee != null;
                 }
                 else
                 {
-                    User = await Services.GetService<IUserService>()!.GetByIdAsync(userId);
+                    User = await Services.GetService<IUserService>() !.GetByIdAsync(userId);
                     return User != null;
                 }
             }
@@ -106,9 +103,6 @@ namespace AirportApp
                 BaseAddress = new Uri("http://localhost:5253/")
             });
 
-
-
-
             services.AddAutoMapper(cfg =>
             {
                 cfg.AddProfile<UserMappingProfile>();
@@ -127,24 +121,11 @@ namespace AirportApp
                 options.UseSqlServer(conn);
             }, contextLifetime: Microsoft.Extensions.DependencyInjection.ServiceLifetime.Transient, optionsLifetime: Microsoft.Extensions.DependencyInjection.ServiceLifetime.Transient);
 
-            //services.AddSingleton<DecisionTreeRepository>();
-            //services.AddSingleton<IRepository<int, FAQNode>>(p => p.GetRequiredService<DecisionTreeRepository>());
             services.AddSingleton<IRepository<int, FAQNode>, FAQNodeRepositoryProxy>();
 
             services.AddTransient<IBotStrategy, DecisionTreeStrategy>();
             services.AddTransient<BotEngineIdentity>();
 
-            //services.AddSingleton<MessageDatabaseRepository>();
-            //services.AddSingleton<IRepository<int, Message>>(p => p.GetRequiredService<MessageDatabaseRepository>());
-            //services.AddSingleton<MessageService>();
-
-            //services.AddSingleton<ChatDatabaseRepository>();
-            //services.AddSingleton<IRepository<int, Chat>>(p => p.GetRequiredService<ChatDatabaseRepository>());
-            //services.AddSingleton<ChatService>();
-
-            //services.AddSingleton<ReviewRepository>();
-            //services.AddSingleton<IRepository<int, Review>>(p => p.GetRequiredService<ReviewRepository>());
-            //services.AddSingleton<ReviewService>();
             services.AddSingleton<IReviewService, ReviewServiceProxy>();
             services.AddSingleton<IChatService, ChatServiceProxy>();
             services.AddSingleton<IRepository<int, Chat>, ChatRepositoryProxy>();
@@ -152,17 +133,8 @@ namespace AirportApp
             services.AddSingleton<IRepository<int, Message>>(p => p.GetRequiredService<IMessageRepository>());
             services.AddSingleton<IMessageService, MessageService>();
 
-
-
-            //services.AddSingleton<IEmployeeRepository, EmployeeRepository>();
-            //services.AddSingleton<IEmployeeService, EmployeeService>();
             services.AddSingleton<IEmployeeService, EmployeeServiceProxy>();
 
-            //services.AddSingleton<UserRepository>();
-            //services.AddSingleton<IUserRepository>(p => p.GetRequiredService<UserRepository>());
-            //services.AddSingleton<AirportApp.ClassLibrary.Repository.Interfaces.IRepository<int, AirportApp.ClassLibrary.Entity.Domain.User>>(p => p.GetRequiredService<UserRepository>());
-            ////services.AddSingleton<IRepository<int, User>>(p => p.GetRequiredService<UserRepository>());
-            //services.AddSingleton<IUserService, UserService>();
             services.AddSingleton<IUserService, UserServiceProxy>();
 
             services.AddTransient<LandingViewModel>();
@@ -171,20 +143,12 @@ namespace AirportApp
             services.AddTransient<ChatViewModel>();
             services.AddTransient<UpperBarViewModel>();
 
-            //services.AddSingleton<ITicketRepository, TicketRepository>();
-            //services.AddSingleton<ITicketCategoryRepository, TicketCategoryRepository>();
-            //services.AddSingleton<ITicketSubcategoryRepository, TicketSubcategoryRepository>();
-            //services.AddSingleton<ITicketService, TicketService>();
-            //services.AddSingleton<ITicketCategoryService, TicketCategoryService>();
-            //services.AddSingleton<ITicketSubcategoryService, TicketSubcategoryService>();
             services.AddSingleton<IComplaintTicketService, ComplaintTicketServiceProxy>();
             services.AddSingleton<IComplaintTicketCategoryService, ComplaintTicketCategoryServiceProxy>();
             services.AddSingleton<IComplaintTicketSubcategoryService, ComplaintTicketSubcategoryServiceProxy>();
 
             services.AddTransient<TicketsViewModel>();
 
-            //services.AddSingleton<IFAQRepository, FAQRepository>();
-            //services.AddSingleton<IFAQService, FAQService>();
             services.AddSingleton<IFAQService, FAQServiceProxy>();
 
             services.AddTransient<FAQViewModel>();
@@ -194,7 +158,6 @@ namespace AirportApp
             {
                 BaseAddress = new Uri("http://localhost:5253/")
             });
-            //services.AddSingleton<IDatabaseConnectionFactory, DatabaseConnectionFactory>();
             services.AddSingleton<IFlightRepository, FlightRepository>();
             services.AddSingleton<IFlightTicketRepository, FlightTicketRepository>();
             services.AddSingleton<IAddOnRepository, AddOnRepository>();
@@ -226,11 +189,11 @@ namespace AirportApp
 
         protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
         {
-            window = new MainWindow();
+            Window = new MainWindow();
             var frame = new Frame();
             frame.Navigate(typeof(AirportApp.Src.View.General.ChoosingPage));
-            window.Content = frame;
-            window.Activate();
+            Window.Content = frame;
+            Window.Activate();
         }
     }
 }

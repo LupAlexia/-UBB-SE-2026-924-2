@@ -88,7 +88,7 @@ namespace AirportApp.Src.View
             // Home Button -> back to UserHomePage hub
             if (tag == HomeNavTag)
             {
-                var rootFrame = (Frame)((MainWindow)((App)Application.Current).window).Content;
+                var rootFrame = (Frame)((MainWindow)((App)Application.Current).Window).Content;
                 rootFrame.Navigate(typeof(General.UserHomePage));
                 return;
             }
