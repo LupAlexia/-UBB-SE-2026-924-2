@@ -30,8 +30,4 @@
     </PackageReference>
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Entity\Dto\mappingProfiles\" />
-  </ItemGroup>
-
 </Project>

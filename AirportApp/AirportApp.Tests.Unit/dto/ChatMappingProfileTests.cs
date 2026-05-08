@@ -5,7 +5,7 @@ using AirportApp.ClassLibrary.Entity.Domain;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 
-namespace AirportApp.Tests.Unit.src.dto.mappingprofiles;
+namespace AirportApp.Tests.Unit.dto;
 
 [TestClass]
 public class ChatMappingProfileTests
@@ -19,7 +19,7 @@ public class ChatMappingProfileTests
     public void Setup()
     {
         loggerFactory = Substitute.For<ILoggerFactory>();
-        var configuration = new AutoMapper.MapperConfiguration(cfg => cfg.AddProfile<ChatMappingProfile>(), loggerFactory);
+        var configuration = new MapperConfiguration(cfg => cfg.AddProfile<ChatMappingProfile>(), loggerFactory);
 
         mapper = configuration.CreateMapper();
         testUser = new User(10, "Test User", "test@test.com");
@@ -60,7 +60,7 @@ public class ChatMappingProfileTests
     [TestMethod]
     public void Map_ChatToChatDTO_ValidConfiguration()
     {
-        var configuration = new AutoMapper.MapperConfiguration(cfg => cfg.AddProfile<ChatMappingProfile>(), loggerFactory);
+        var configuration = new MapperConfiguration(cfg => cfg.AddProfile<ChatMappingProfile>(), loggerFactory);
 
         configuration.AssertConfigurationIsValid();
     }

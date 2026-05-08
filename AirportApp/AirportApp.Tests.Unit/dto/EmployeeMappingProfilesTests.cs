@@ -10,7 +10,7 @@ using AirportApp.ClassLibrary.Entity.Domain;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 
-namespace AirportApp.Tests.Unit.src.dto.mappingprofiles;
+namespace AirportApp.Tests.Unit.dto;
 
 [TestClass]
 public class EmployeeMappingProfileTests
@@ -22,7 +22,7 @@ public class EmployeeMappingProfileTests
     public void Setup()
     {
         loggerFactory = Substitute.For<ILoggerFactory>();
-        var configuration = new AutoMapper.MapperConfiguration(cfg => cfg.AddProfile<EmployeeMappingProfile>(), loggerFactory);
+        var configuration = new MapperConfiguration(cfg => cfg.AddProfile<EmployeeMappingProfile>(), loggerFactory);
         mapper = configuration.CreateMapper();
     }
 
@@ -49,7 +49,7 @@ public class EmployeeMappingProfileTests
     [TestMethod]
     public void Map_EmployeeToEmployeeDTO_ValidConfiguration()
     {
-        var configuration = new AutoMapper.MapperConfiguration(cfg => cfg.AddProfile<EmployeeMappingProfile>(), loggerFactory);
+        var configuration = new MapperConfiguration(cfg => cfg.AddProfile<EmployeeMappingProfile>(), loggerFactory);
         configuration.AssertConfigurationIsValid();
     }
 }

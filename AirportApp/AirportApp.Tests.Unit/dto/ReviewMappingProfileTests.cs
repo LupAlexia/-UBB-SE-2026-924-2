@@ -6,7 +6,7 @@ using AirportApp.ClassLibrary.Entity.Domain;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 
-namespace AirportApp.Tests.Unit.Dto.MappingProfiles
+namespace AirportApp.Tests.Unit
 {
     [TestClass]
     public class ReviewMappingProfileTests
@@ -20,7 +20,7 @@ namespace AirportApp.Tests.Unit.Dto.MappingProfiles
         public void Setup()
         {
             loggerFactory = Substitute.For<ILoggerFactory>();
-            var configuration = new AutoMapper.MapperConfiguration(cfg => cfg.AddProfile<ReviewMappingProfile>(), loggerFactory);
+            var configuration = new MapperConfiguration(cfg => cfg.AddProfile<ReviewMappingProfile>(), loggerFactory);
             mapper = configuration.CreateMapper();
             testUser = new User(101, "John Doe", "john@example.com");
             testReview = new Review(1, testUser, "Great flight!", 5, 4, 3, 2);

@@ -6,7 +6,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 
-namespace AirportApp.Tests.Unit.Src.Dto.MappingProfiles
+namespace AirportApp.Tests.Unit
 {
     [TestClass]
     public class TicketMappingProfileTests
@@ -22,7 +22,7 @@ namespace AirportApp.Tests.Unit.Src.Dto.MappingProfiles
         public void Setup()
         {
             loggerFactory = Substitute.For<ILoggerFactory>();
-            var configuration = new AutoMapper.MapperConfiguration(cfg => cfg.AddProfile<TicketMappingProfile>(), loggerFactory);
+            var configuration = new MapperConfiguration(cfg => cfg.AddProfile<TicketMappingProfile>(), loggerFactory);
             mapper = configuration.CreateMapper();
 
             testUser = new User(101, "Jane Doe", "jane@example.com");
