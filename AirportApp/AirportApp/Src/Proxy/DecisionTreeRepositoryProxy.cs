@@ -4,7 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
-using AirportApp.ClassLibrary.Entity.Domain.Faq.Bot;
+using AirportApp.ClassLibrary.Entity.Domain;
 using AirportApp.ClassLibrary.Repository.Interfaces;
 
 namespace AirportApp.Src.Proxy
@@ -67,7 +67,7 @@ namespace AirportApp.Src.Proxy
             public int FaqNodeId { get; set; }
             public string QuestionText { get; set; } = string.Empty;
             public bool IsFinalAnswer { get; set; }
-            public List<FAQOptionDto> Options { get; set; } = new();
+            public List<FAQOptionDto> Options { get; set; } = new ();
         }
 
         private class FAQOptionDto
