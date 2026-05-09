@@ -39,7 +39,7 @@ namespace AirportApp.ClassLibrary.Entity.Repository.Database
 
         public async Task<int> CreateNewEntityAsync(FAQNode incomingFAQNodeEntityToBeSaved)
         {
-            var nodeEntity = new FAQNodeEntity
+            var nodeEntity = new FAQNode
             {
                 QuestionText = incomingFAQNodeEntityToBeSaved.QuestionText,
                 IsFinalAnswer = incomingFAQNodeEntityToBeSaved.IsFinalAnswer
@@ -47,7 +47,7 @@ namespace AirportApp.ClassLibrary.Entity.Repository.Database
 
             foreach (var opt in incomingFAQNodeEntityToBeSaved.Options)
             {
-                nodeEntity.Options.Add(new FAQOptionEntity { Label = opt.label, NextOptionId = opt.nextOptionId });
+                nodeEntity.Options.Add(new FAQOption { Label = opt.Label, NextOptionId = opt.NextOptionId });
             }
 
             this.dataBaseContext.FaqNodes.Add(nodeEntity);
@@ -83,7 +83,7 @@ namespace AirportApp.ClassLibrary.Entity.Repository.Database
 
             foreach (var opt in updatedFAQNodeEntityData.Options)
             {
-                node.Options.Add(new FAQOptionEntity { Label = opt.label, NextOptionId = opt.nextOptionId });
+                node.Options.Add(new FAQOption { Label = opt.Label, NextOptionId = opt.NextOptionId });
             }
 
             await this.dataBaseContext.SaveChangesAsync();

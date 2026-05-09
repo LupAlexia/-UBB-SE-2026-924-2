@@ -105,7 +105,7 @@ namespace AirportApp.Src.ViewModel
             }
 
             BotMessage botReply = await messageService.SendMessageAsync(chat.Id, user, option);
-            System.Diagnostics.Debug.WriteLine($"User selected: {option.label}");
+            System.Diagnostics.Debug.WriteLine($"User selected: {option.Label}");
 
             await LoadChatHistoryAsync();
             UpdateAvailableOptions(botReply);

@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using AirportApp.ClassLibrary.DataAccess;
+using AirportApp.ClassLibrary.Entity.Domain;
 
 namespace AirportApp.Tests.Integration;
 
@@ -79,10 +80,10 @@ public abstract class BaseApiIntegrationTest : IDisposable
         if (!db.Employees.Any())
         {
             db.Employees.AddRange(
-                new AirportApp.ClassLibrary.Entity.Domain.Employee.Employee { Id = 1, FullName = "Alice Smith", EmailAddress = "alice@acme.com", AssignedDepartment = AirportApp.ClassLibrary.Entity.Domain.Employee.EmployeeDepartment.MEDICAL },
-                new AirportApp.ClassLibrary.Entity.Domain.Employee.Employee { Id = 2, FullName = "Bob Johnson", EmailAddress = "bob@contoso.com", AssignedDepartment = AirportApp.ClassLibrary.Entity.Domain.Employee.EmployeeDepartment.LEGAL },
-                new AirportApp.ClassLibrary.Entity.Domain.Employee.Employee { Id = 3, FullName = "Clara Davis", EmailAddress = "clara@skylink.com", AssignedDepartment = AirportApp.ClassLibrary.Entity.Domain.Employee.EmployeeDepartment.HR },
-                new AirportApp.ClassLibrary.Entity.Domain.Employee.Employee { Id = 4, FullName = "Daniel Green", EmailAddress = "daniel@acme.com", AssignedDepartment = AirportApp.ClassLibrary.Entity.Domain.Employee.EmployeeDepartment.CASHBACK });
+                new Employee { Id = 1, FullName = "Alice Smith", EmailAddress = "alice@acme.com", AssignedDepartment = EmployeeDepartment.MEDICAL },
+                new Employee { Id = 2, FullName = "Bob Johnson", EmailAddress = "bob@contoso.com", AssignedDepartment = EmployeeDepartment.LEGAL },
+                new Employee { Id = 3, FullName = "Clara Davis", EmailAddress = "clara@skylink.com", AssignedDepartment = EmployeeDepartment.HR },
+                new Employee { Id = 4, FullName = "Daniel Green", EmailAddress = "daniel@acme.com", AssignedDepartment = EmployeeDepartment.CASHBACK });
             db.SaveChanges();
         }
 
@@ -173,10 +174,10 @@ public abstract class BaseApiIntegrationTest : IDisposable
         if (!db.AddOns.Any())
         {
             db.AddOns.AddRange(
-                new AirportApp.ClassLibrary.Entity.Domain.AddOn { Id = 1, Name = "Extra Baggage", BasePrice = 30f },
-                new AirportApp.ClassLibrary.Entity.Domain.AddOn { Id = 2, Name = "Priority Boarding", BasePrice = 15f },
-                new AirportApp.ClassLibrary.Entity.Domain.AddOn { Id = 3, Name = "Seat Selection", BasePrice = 12f },
-                new AirportApp.ClassLibrary.Entity.Domain.AddOn { Id = 4, Name = "Lounge Access", BasePrice = 45f });
+                new AddOn { Id = 1, Name = "Extra Baggage", BasePrice = 30f },
+                new AddOn { Id = 2, Name = "Priority Boarding", BasePrice = 15f },
+                new AddOn { Id = 3, Name = "Seat Selection", BasePrice = 12f },
+                new AddOn { Id = 4, Name = "Lounge Access", BasePrice = 45f });
             db.SaveChanges();
         }
 
@@ -199,9 +200,9 @@ public abstract class BaseApiIntegrationTest : IDisposable
             if (u101 != null && u102 != null && u103 != null)
             {
                 db.Chats.AddRange(
-                    new AirportApp.ClassLibrary.Entity.Domain.Chats.Chat { Id = 1, User = u101, Status = AirportApp.ClassLibrary.Entity.Domain.Chats.ChatStatus.Active },
-                    new AirportApp.ClassLibrary.Entity.Domain.Chats.Chat { Id = 2, User = u102, Status = AirportApp.ClassLibrary.Entity.Domain.Chats.ChatStatus.Active },
-                    new AirportApp.ClassLibrary.Entity.Domain.Chats.Chat { Id = 3, User = u103, Status = AirportApp.ClassLibrary.Entity.Domain.Chats.ChatStatus.Active });
+                    new Chat { Id = 1, User = u101, Status = ChatStatus.Active },
+                    new Chat { Id = 2, User = u102, Status = ChatStatus.Active },
+                    new Chat { Id = 3, User = u103, Status = ChatStatus.Active });
                 db.SaveChanges();
             }
         }
@@ -218,9 +219,9 @@ public abstract class BaseApiIntegrationTest : IDisposable
             if (chat1 != null && chat2 != null && chat3 != null && sender1 != null && sender2 != null && sender3 != null)
             {
                 db.Messages.AddRange(
-                    new AirportApp.ClassLibrary.Entity.Domain.Message.Message { Id = 1, Chat = chat1, Sender = sender1, Text = "Hello! I need help with flights.", Timestamp = new DateTimeOffset(new DateTime(2026, 5, 4, 9, 0, 0)) },
-                    new AirportApp.ClassLibrary.Entity.Domain.Message.Message { Id = 2, Chat = chat2, Sender = sender2, Text = "Hi, I have a question about membership.", Timestamp = new DateTimeOffset(new DateTime(2026, 5, 4, 9, 5, 0)) },
-                    new AirportApp.ClassLibrary.Entity.Domain.Message.Message { Id = 3, Chat = chat3, Sender = sender3, Text = "Hello, I need support with my booking.", Timestamp = new DateTimeOffset(new DateTime(2026, 5, 4, 9, 10, 0)) });
+                    new Message { Id = 1, Chat = chat1, Sender = sender1, Text = "Hello! I need help with flights.", Timestamp = new DateTimeOffset(new DateTime(2026, 5, 4, 9, 0, 0)) },
+                    new Message { Id = 2, Chat = chat2, Sender = sender2, Text = "Hi, I have a question about membership.", Timestamp = new DateTimeOffset(new DateTime(2026, 5, 4, 9, 5, 0)) },
+                    new Message { Id = 3, Chat = chat3, Sender = sender3, Text = "Hello, I need support with my booking.", Timestamp = new DateTimeOffset(new DateTime(2026, 5, 4, 9, 10, 0)) });
                 db.SaveChanges();
             }
         }
@@ -229,11 +230,11 @@ public abstract class BaseApiIntegrationTest : IDisposable
         if (!db.Faqs.Any())
         {
             db.Faqs.AddRange(
-                new AirportApp.ClassLibrary.Entity.Domain.Faq.FAQEntry { Id = 1, Question = "How do I reset my password?", Answer = "Click on the 'Forgot Password' link on the login page.", Category = AirportApp.ClassLibrary.Entity.Domain.Faq.FAQCategoryEnum.Parking, ViewCount = 150, HelpfulVotesCount = 120, NotHelpfulVotesCount = 5 },
-                new AirportApp.ClassLibrary.Entity.Domain.Faq.FAQEntry { Id = 2, Question = "What is the baggage allowance?", Answer = "Standard baggage allowance is 2 checked bags. See add-ons for additional bags.", Category = AirportApp.ClassLibrary.Entity.Domain.Faq.FAQCategoryEnum.Baggage, ViewCount = 200, HelpfulVotesCount = 180, NotHelpfulVotesCount = 10 },
-                new AirportApp.ClassLibrary.Entity.Domain.Faq.FAQEntry { Id = 3, Question = "Can I change my flight?", Answer = "Yes, flight changes can be made up to 24 hours before departure, subject to availability.", Category = AirportApp.ClassLibrary.Entity.Domain.Faq.FAQCategoryEnum.Facilities, ViewCount = 180, HelpfulVotesCount = 160, NotHelpfulVotesCount = 8 },
-                new AirportApp.ClassLibrary.Entity.Domain.Faq.FAQEntry { Id = 4, Question = "Which payment methods are accepted?", Answer = "We accept major credit cards and selected digital wallets.", Category = AirportApp.ClassLibrary.Entity.Domain.Faq.FAQCategoryEnum.Facilities, ViewCount = 95, HelpfulVotesCount = 80, NotHelpfulVotesCount = 2 },
-                new AirportApp.ClassLibrary.Entity.Domain.Faq.FAQEntry { Id = 5, Question = "How do I contact support?", Answer = "Use the chat assistant or submit a support ticket from your account.", Category = AirportApp.ClassLibrary.Entity.Domain.Faq.FAQCategoryEnum.Facilities, ViewCount = 120, HelpfulVotesCount = 110, NotHelpfulVotesCount = 3 });
+                new FAQEntry { Id = 1, Question = "How do I reset my password?", Answer = "Click on the 'Forgot Password' link on the login page.", Category = FAQCategoryEnum.Parking, ViewCount = 150, HelpfulVotesCount = 120, NotHelpfulVotesCount = 5 },
+                new FAQEntry { Id = 2, Question = "What is the baggage allowance?", Answer = "Standard baggage allowance is 2 checked bags. See add-ons for additional bags.", Category = FAQCategoryEnum.Baggage, ViewCount = 200, HelpfulVotesCount = 180, NotHelpfulVotesCount = 10 },
+                new FAQEntry { Id = 3, Question = "Can I change my flight?", Answer = "Yes, flight changes can be made up to 24 hours before departure, subject to availability.", Category = FAQCategoryEnum.Facilities, ViewCount = 180, HelpfulVotesCount = 160, NotHelpfulVotesCount = 8 },
+                new FAQEntry { Id = 4, Question = "Which payment methods are accepted?", Answer = "We accept major credit cards and selected digital wallets.", Category = FAQCategoryEnum.Facilities, ViewCount = 95, HelpfulVotesCount = 80, NotHelpfulVotesCount = 2 },
+                new FAQEntry { Id = 5, Question = "How do I contact support?", Answer = "Use the chat assistant or submit a support ticket from your account.", Category = FAQCategoryEnum.Facilities, ViewCount = 120, HelpfulVotesCount = 110, NotHelpfulVotesCount = 3 });
             db.SaveChanges();
         }
 
@@ -241,9 +242,9 @@ public abstract class BaseApiIntegrationTest : IDisposable
         if (!db.TicketCategories.Any())
         {
             db.TicketCategories.AddRange(
-                new AirportApp.ClassLibrary.Entity.Domain.Ticket.ComplaintTicketCategory { Id = 1, CategoryName = "Booking Issues", CategoryUrgencyLevel = AirportApp.ClassLibrary.Entity.Domain.Ticket.ComplaintTicketUrgencyLevelEnum.HIGH },
-                new AirportApp.ClassLibrary.Entity.Domain.Ticket.ComplaintTicketCategory { Id = 2, CategoryName = "General Inquiry", CategoryUrgencyLevel = AirportApp.ClassLibrary.Entity.Domain.Ticket.ComplaintTicketUrgencyLevelEnum.LOW },
-                new AirportApp.ClassLibrary.Entity.Domain.Ticket.ComplaintTicketCategory { Id = 3, CategoryName = "Payment Problems", CategoryUrgencyLevel = AirportApp.ClassLibrary.Entity.Domain.Ticket.ComplaintTicketUrgencyLevelEnum.HIGH });
+                new ComplaintTicketCategory { Id = 1, CategoryName = "Booking Issues", CategoryUrgencyLevel = ComplaintTicketUrgencyLevelEnum.HIGH },
+                new ComplaintTicketCategory { Id = 2, CategoryName = "General Inquiry", CategoryUrgencyLevel = ComplaintTicketUrgencyLevelEnum.LOW },
+                new ComplaintTicketCategory { Id = 3, CategoryName = "Payment Problems", CategoryUrgencyLevel = ComplaintTicketUrgencyLevelEnum.HIGH });
             db.SaveChanges();
         }
     }

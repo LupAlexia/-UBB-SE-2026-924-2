@@ -2,6 +2,7 @@ using System.Linq;
 using System;
 using Microsoft.EntityFrameworkCore;
 using AirportApp.ClassLibrary.DataAccess;
+using AirportApp.ClassLibrary.Entity.Domain;
 
 namespace AirportApp.Tests.Integration;
 
@@ -40,25 +41,25 @@ public abstract class BaseIntegrationTest
         if (!db.Users.Any())
         {
             db.Users.AddRange(
-                new AirportApp.ClassLibrary.Entity.Domain.User { Id = 101, FullName = "Alice Bot", EmailAddress = "alice@bot.com" },
-                new AirportApp.ClassLibrary.Entity.Domain.User { Id = 102, FullName = "Bob Chat", EmailAddress = "bob@chat.com" },
-                new AirportApp.ClassLibrary.Entity.Domain.User { Id = 103, FullName = "Mia Passenger", EmailAddress = "mia@example.com" });
+                new User { Id = 101, FullName = "Alice Bot", EmailAddress = "alice@bot.com" },
+                new User { Id = 102, FullName = "Bob Chat", EmailAddress = "bob@chat.com" },
+                new User { Id = 103, FullName = "Mia Passenger", EmailAddress = "mia@example.com" });
             db.SaveChanges();
         }
 
         if (!db.Employees.Any())
         {
             db.Employees.AddRange(
-                new AirportApp.ClassLibrary.Entity.Domain.Employee.Employee { Id = 1, FullName = "Alice Smith", EmailAddress = "alice@acme.com", AssignedDepartment = AirportApp.ClassLibrary.Entity.Domain.Employee.EmployeeDepartment.MEDICAL },
-                new AirportApp.ClassLibrary.Entity.Domain.Employee.Employee { Id = 2, FullName = "Bob Johnson", EmailAddress = "bob@contoso.com", AssignedDepartment = AirportApp.ClassLibrary.Entity.Domain.Employee.EmployeeDepartment.LEGAL });
+                new Employee { Id = 1, FullName = "Alice Smith", EmailAddress = "alice@acme.com", AssignedDepartment = EmployeeDepartment.MEDICAL },
+                new Employee { Id = 2, FullName = "Bob Johnson", EmailAddress = "bob@contoso.com", AssignedDepartment = EmployeeDepartment.LEGAL });
             db.SaveChanges();
         }
 
         if (!db.Companies.Any())
         {
             db.Companies.AddRange(
-                new AirportApp.ClassLibrary.Entity.Domain.Company { Id = 1, Name = "Acme Airlines" },
-                new AirportApp.ClassLibrary.Entity.Domain.Company { Id = 2, Name = "Contoso Air" });
+                new Company { Id = 1, Name = "Acme Airlines" },
+                new Company { Id = 2, Name = "Contoso Air" });
             db.SaveChanges();
         }
 
@@ -77,8 +78,8 @@ public abstract class BaseIntegrationTest
             if (airport1 != null && airport2 != null)
             {
                 db.Gates.AddRange(
-                    new AirportApp.ClassLibrary.Entity.Domain.Gate { Id = 1, GateName = "A1", Airport = airport1 },
-                    new AirportApp.ClassLibrary.Entity.Domain.Gate { Id = 2, GateName = "B2", Airport = airport2 });
+                    new Gate { Id = 1, GateName = "A1", Airport = airport1 },
+                    new Gate { Id = 2, GateName = "B2", Airport = airport2 });
                 db.SaveChanges();
             }
         }
@@ -89,7 +90,7 @@ public abstract class BaseIntegrationTest
             var ap1 = db.Airports.FirstOrDefault(a => a.Id == 1);
             if (comp1 != null && ap1 != null)
             {
-                db.Routes.Add(new AirportApp.ClassLibrary.Entity.Domain.Route { Id = 1, Company = comp1, Airport = ap1, RouteType = "Departure", DepartureTime = DateTime.Now.AddDays(1), ArrivalTime = DateTime.Now.AddDays(1).AddHours(3), Capacity = 100 });
+                db.Routes.Add(new Route { Id = 1, Company = comp1, Airport = ap1, RouteType = "Departure", DepartureTime = DateTime.Now.AddDays(1), ArrivalTime = DateTime.Now.AddDays(1).AddHours(3), Capacity = 100 });
                 db.SaveChanges();
             }
         }
@@ -109,19 +110,19 @@ public abstract class BaseIntegrationTest
         if (!db.AddOns.Any())
         {
             db.AddOns.AddRange(
-                new AirportApp.ClassLibrary.Entity.Domain.AddOn { Id = 1, Name = "Extra Baggage", BasePrice = 30f },
-                new AirportApp.ClassLibrary.Entity.Domain.AddOn { Id = 2, Name = "Priority Boarding", BasePrice = 15f },
-                new AirportApp.ClassLibrary.Entity.Domain.AddOn { Id = 3, Name = "Seat Selection", BasePrice = 12f },
-                new AirportApp.ClassLibrary.Entity.Domain.AddOn { Id = 4, Name = "Lounge Access", BasePrice = 45f });
+                new AddOn { Id = 1, Name = "Extra Baggage", BasePrice = 30f },
+                new AddOn { Id = 2, Name = "Priority Boarding", BasePrice = 15f },
+                new AddOn { Id = 3, Name = "Seat Selection", BasePrice = 12f },
+                new AddOn { Id = 4, Name = "Lounge Access", BasePrice = 45f });
             db.SaveChanges();
         }
 
         if (!db.Memberships.Any())
         {
             db.Memberships.AddRange(
-                new AirportApp.ClassLibrary.Entity.Domain.Membership { Id = 1, Name = "Silver", FlightDiscountPercentage = 5f },
-                new AirportApp.ClassLibrary.Entity.Domain.Membership { Id = 2, Name = "Gold", FlightDiscountPercentage = 15f },
-                new AirportApp.ClassLibrary.Entity.Domain.Membership { Id = 3, Name = "Platinum", FlightDiscountPercentage = 25f });
+                new Membership { Id = 1, Name = "Silver", FlightDiscountPercentage = 5f },
+                new Membership { Id = 2, Name = "Gold", FlightDiscountPercentage = 15f },
+                new Membership { Id = 3, Name = "Platinum", FlightDiscountPercentage = 25f });
             db.SaveChanges();
         }
 
@@ -138,14 +139,20 @@ public abstract class BaseIntegrationTest
             if (m1 != null && m2 != null && m3 != null && a1 != null && a2 != null)
             {
                 db.MembershipAddonDiscounts.AddRange(
-                    new AirportApp.ClassLibrary.Entity.Domain.MembershipAddonDiscount(m1, a1, 10f),
-                    new AirportApp.ClassLibrary.Entity.Domain.MembershipAddonDiscount(m1, a2, 10f),
-                    new AirportApp.ClassLibrary.Entity.Domain.MembershipAddonDiscount(m2, a1, 20f),
-                    new AirportApp.ClassLibrary.Entity.Domain.MembershipAddonDiscount(m2, a2, 20f));
+                    new MembershipAddonDiscount(m1, a1, 10f),
+                    new MembershipAddonDiscount(m1, a2, 10f),
+                    new MembershipAddonDiscount(m2, a1, 20f),
+                    new MembershipAddonDiscount(m2, a2, 20f));
 
                 // extra discounts for premium
-                if (a3 != null) db.MembershipAddonDiscounts.Add(new AirportApp.ClassLibrary.Entity.Domain.MembershipAddonDiscount(m3, a3, 30f));
-                if (a4 != null) db.MembershipAddonDiscounts.Add(new AirportApp.ClassLibrary.Entity.Domain.MembershipAddonDiscount(m3, a4, 35f));
+                if (a3 != null)
+                {
+                    db.MembershipAddonDiscounts.Add(new MembershipAddonDiscount(m3, a3, 30f));
+                }
+                if (a4 != null)
+                {
+                    db.MembershipAddonDiscounts.Add(new MembershipAddonDiscount(m3, a4, 35f));
+                }
 
                 db.SaveChanges();
             }
@@ -156,7 +163,7 @@ public abstract class BaseIntegrationTest
             var u101 = db.Users.FirstOrDefault(u => u.Id == 101);
             if (u101 != null)
             {
-                db.Chats.Add(new AirportApp.ClassLibrary.Entity.Domain.Chats.Chat { Id = 1, User = u101, Status = AirportApp.ClassLibrary.Entity.Domain.Chats.ChatStatus.Active });
+                db.Chats.Add(new Chat { Id = 1, User = u101, Status = ChatStatus.Active });
                 db.SaveChanges();
             }
         }

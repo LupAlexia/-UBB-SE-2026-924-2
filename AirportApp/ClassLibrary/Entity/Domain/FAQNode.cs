@@ -1,19 +1,22 @@
-﻿namespace AirportApp.ClassLibrary.Entity.Domain
+﻿using System.Collections.Generic;
+using System.Linq;
+
+namespace AirportApp.ClassLibrary.Entity.Domain
 {
     public class FAQNode
     {
-        public int FaqNodeId { get; set; }
+        public int NodeId { get; set; }
         public string QuestionText { get; set; } = string.Empty;
-        public List<FAQOption> Options { get; set; } = new ();
+        public ICollection<FAQOption> Options { get; set; } = new List<FAQOption>();
         public bool IsFinalAnswer { get; set; }
 
         public FAQNode()
         {
         }
 
-        public FAQNode(int faqNodeId, string questionText, IEnumerable<FAQOption> options, bool isFinalAnswer)
+        public FAQNode(int nodeId, string questionText, IEnumerable<FAQOption> options, bool isFinalAnswer)
         {
-            this.FaqNodeId = faqNodeId;
+            this.NodeId = nodeId;
             this.QuestionText = questionText;
             this.Options = options.ToList();
             this.IsFinalAnswer = isFinalAnswer;

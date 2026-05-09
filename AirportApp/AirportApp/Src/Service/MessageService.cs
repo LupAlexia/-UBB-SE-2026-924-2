@@ -30,14 +30,14 @@ namespace AirportApp.Src.Service
             {
                 throw new ArgumentNullException(nameof(selectedOption));
             }
-            if (selectedOption.nextOptionId == 1)
+            if (selectedOption.NextOptionId == 1)
             {
                 await botEngine.ResetBotConversationStateToInitialRootNodeAsync();
             }
 
             Chat chat = await GetActiveChatAsync(chatId);
 
-            var userMessage = new Message(chat, selectedOption.label, sender);
+            var userMessage = new Message(chat, selectedOption.Label, sender);
             await messageRepository.CreateNewEntityAsync(userMessage);
 
             BotMessage botReply = await botEngine.GenerateAppropriateResponseBasedOnCurrentStrategyAsync(userMessage);

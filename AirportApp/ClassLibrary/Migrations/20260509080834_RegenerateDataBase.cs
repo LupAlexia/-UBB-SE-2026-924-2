@@ -593,9 +593,9 @@ namespace AirportApp.ClassLibrary.Migrations
                 columns: new[] { "Customer_Id", "Email", "MembershipId", "Password_Hash", "Phone", "Username" },
                 values: new object[,]
                 {
-                    { 101, "alice@bot.com", 1, "AQAAAAIAAYagAAAAEDrl9uYd+TsKeS/5rEQm1tMRQuxZA+Fi1GM68HJVp6X0rR54ESH8L7QueqJR+UYfuw==", string.Empty, "alice" },
-                    { 102, "bob@chat.com", 2, "AQAAAAIAAYagAAAAEPwJ21d3jG//dvwQ2SxOrZZaX50Yhwp0sLrcSfOFGCjg66Yb4J/nsQzAw8xq5Nc2OA==", string.Empty, "bob" },
-                    { 103, "mia@example.com", 3, "AQAAAAIAAYagAAAAEGlhWTQ/H0czyjnsB69Tet7CmjDtwtvBZp7DeEcYeczukF1speM20ohvo2uOZFl9ag==", string.Empty, "mia" }
+                    { 101, "alice@bot.com", 1, "AQAAAAIAAYagAAAAEFrClMiayKETDgc72t82k2u0x7FYwDamb26Y8Hc3Khcrvk35qv+UOG8DJfdS072a/w==", string.Empty, "alice" },
+                    { 102, "bob@chat.com", 2, "AQAAAAIAAYagAAAAEBo8g8J2kBatVyThJYhB+C1e4GA5JhOZFBGzHnhR2kzvmCt8LTrjdwsJQ0PRa8MUYw==", string.Empty, "bob" },
+                    { 103, "mia@example.com", 3, "AQAAAAIAAYagAAAAECR4iXe/cjGEgLa0nsm5yk3hU36OI4oNT+FlDYbqJoR3tVJ1xmbpd1O3KUBK0iBR3g==", string.Empty, "mia" }
                 });
 
             migrationBuilder.InsertData(
