@@ -9,7 +9,6 @@ using AirportApp.ClassLibrary.Entity.Domain.Chats;
 using AirportApp.ClassLibrary.Entity.Domain.Faq.Bot;
 using AirportApp.ClassLibrary.Entity.Domain.Message;
 using AirportApp.ClassLibrary.Entity.Dto;
-using AirportApp.ClassLibrary.Repository.Interfaces;
 using AirportApp.Src.Service;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -26,19 +25,17 @@ namespace AirportApp.Src.ViewModel.Chats
         private IMessageService messageService;
         private IChatService chatService;
         private IUserService userService;
-        private IRepository<int, FAQNode> faqNodeRepository;
         private IMapper mapper;
         private Chat chat;
         private User user;
         private const int FIRST_OPTION = 1;
 
-        public ChatViewModel(IMessageService msgService, IChatService chatService, IMapper mapper, IUserService userService, IRepository<int, FAQNode> faqNodeRepository, User testUser = null)
+        public ChatViewModel(IMessageService msgService, IChatService chatService, IMapper mapper, IUserService userService, User testUser = null)
         {
             messageService = msgService;
             this.chatService = chatService;
             this.mapper = mapper;
             this.userService = userService;
-            this.faqNodeRepository = faqNodeRepository;
 
             // uses the injected user for tests, otherwise fallback to App.Current
             user = testUser ?? (App.Current as App)?.User;
@@ -53,35 +50,20 @@ namespace AirportApp.Src.ViewModel.Chats
 
         private async Task InitializeChatAsync()
         {
-            chat = await this.chatService.OpenChatAsync(user);
-
-            await LoadChatHistoryAsync();
-
-            if (ChatHistory.Count == 0)
-            {
-                await LoadFirstMessageAsync();
-            }
-            else
-            {
-                await LoadInitialOptionsAsync();
-            }
-        }
-
-        private async Task LoadInitialOptionsAsync()
-        {
-            CurrentOptions.Clear();
-
             try
             {
-                FAQNode rootNode = await faqNodeRepository.GetByIdAsync(1);
-                foreach (FAQOption option in rootNode.Options)
+                chat = await this.chatService.OpenChatAsync(user);
+
+                await LoadChatHistoryAsync();
+
+                if (ChatHistory.Count == 0)
                 {
-                    CurrentOptions.Add(option);
+                    await LoadFirstMessageAsync();
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                CurrentOptions.Add(new FAQOption("Restart Chat", FIRST_OPTION));
+                System.Diagnostics.Debug.WriteLine($"InitializeChatAsync error: {ex}");
             }
         }
 
@@ -97,24 +79,24 @@ namespace AirportApp.Src.ViewModel.Chats
 
         private async Task LoadChatHistoryAsync()
         {
-            ChatHistory.Clear();
-            var messages = await messageService.GetAllMessagesAsync(chat.Id);
-            var currentUserId = user.RetrieveUniqueDatabaseIdentifierForBot();
-            foreach (var message in messages)
+            try
             {
-                var dataTransferObject = mapper.Map<MessageDTO>(message);
-                System.Diagnostics.Debug.WriteLine($"Message: {dataTransferObject.MessageText}, SenderId: {dataTransferObject.Sender.RetrieveUniqueDatabaseIdentifierForBot()}");
-                // if (dataTransferObject.Sender.RetrieveUniqueDatabaseIdentifierForBot() == BotEngineIdentity.CONSTANT_IDENTIFIER_FOR_DEFAULT_BOT_SYSTEM_USER)
-                // {
-                //    dataTransferObject.SenderName = "Carlos";
-                // }
-                // else
-                // {
-                //    var senderUser = await userService.GetByIdAsync(dataTransferObject.SenderId);
-                //    dataTransferObject.SenderName = senderUser?.RetrieveConfiguredDisplayFullNameForBot();
-                // }
-                dataTransferObject.IsOutgoing = (dataTransferObject.Sender.RetrieveUniqueDatabaseIdentifierForBot() == currentUserId);
-                ChatHistory.Add(dataTransferObject);
+                ChatHistory.Clear();
+                var messages = await messageService.GetAllMessagesAsync(chat.Id);
+                var currentUserId = user.RetrieveUniqueDatabaseIdentifierForBot();
+                foreach (var message in messages)
+                {
+                    var dataTransferObject = mapper.Map<MessageDTO>(message);
+                    var senderId = dataTransferObject.Sender?.RetrieveUniqueDatabaseIdentifierForBot() ?? dataTransferObject.SenderId;
+
+                    System.Diagnostics.Debug.WriteLine($"Message: {dataTransferObject.MessageText}, SenderId: {senderId}");
+                    dataTransferObject.IsOutgoing = senderId == currentUserId;
+                    ChatHistory.Add(dataTransferObject);
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"LoadChatHistoryAsync error: {ex}");
             }
         }
 

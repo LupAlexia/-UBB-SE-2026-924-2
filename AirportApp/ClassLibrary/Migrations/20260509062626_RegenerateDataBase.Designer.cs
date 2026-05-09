@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AirportApp.ClassLibrary.Migrations
 {
     [DbContext(typeof(AirportDbContext))]
-    [Migration("20260508185700_RegenerateDataBase")]
+    [Migration("20260509062626_RegenerateDataBase")]
     partial class RegenerateDataBase
     {
         /// <inheritdoc />
@@ -248,7 +248,7 @@ namespace AirportApp.ClassLibrary.Migrations
                             Id = 101,
                             Email = "alice@bot.com",
                             MembershipId = 1,
-                            PasswordHash = "AQAAAAIAAYagAAAAEA7ySiw1c4fcmPM170Ml05ewK89uBQDiwVlscoOVZoPRigQGrbHWOr0TwB3iv4aXjA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEDrl9uYd+TsKeS/5rEQm1tMRQuxZA+Fi1GM68HJVp6X0rR54ESH8L7QueqJR+UYfuw==",
                             Phone = "",
                             Username = "alice"
                         },
@@ -257,7 +257,7 @@ namespace AirportApp.ClassLibrary.Migrations
                             Id = 102,
                             Email = "bob@chat.com",
                             MembershipId = 2,
-                            PasswordHash = "AQAAAAIAAYagAAAAEDHfFMfhC0QVQUFojeTOvH2dxW2EOO/hJTYb7VzssrGmyU8CwQRPplscaTjEC0pGpA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEPwJ21d3jG//dvwQ2SxOrZZaX50Yhwp0sLrcSfOFGCjg66Yb4J/nsQzAw8xq5Nc2OA==",
                             Phone = "",
                             Username = "bob"
                         },
@@ -266,20 +266,20 @@ namespace AirportApp.ClassLibrary.Migrations
                             Id = 103,
                             Email = "mia@example.com",
                             MembershipId = 3,
-                            PasswordHash = "AQAAAAIAAYagAAAAEFV7Grxjk5rgP/uFSl6F/SYqv4Dt6S8bINBtt3Q6rvIpsDsDNkZj5lOtGRX7lWfryQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEGlhWTQ/H0czyjnsB69Tet7CmjDtwtvBZp7DeEcYeczukF1speM20ohvo2uOZFl9ag==",
                             Phone = "",
                             Username = "mia"
                         });
                 });
 
-            modelBuilder.Entity("AirportApp.ClassLibrary.Entity.Domain.Faq.Bot.FAQNode", b =>
+            modelBuilder.Entity("AirportApp.ClassLibrary.Entity.Domain.Faq.Bot.FAQNodeEntity", b =>
                 {
-                    b.Property<int>("FaqNodeId")
+                    b.Property<int>("NodeId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasColumnName("node_id");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("FaqNodeId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("NodeId"));
 
                     b.Property<bool>("IsFinalAnswer")
                         .HasColumnType("bit")
@@ -290,46 +290,97 @@ namespace AirportApp.ClassLibrary.Migrations
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("question_text");
 
-                    b.HasKey("FaqNodeId");
+                    b.HasKey("NodeId");
 
                     b.ToTable("FAQNode", (string)null);
 
                     b.HasData(
                         new
                         {
-                            FaqNodeId = 1,
+                            NodeId = 1,
                             IsFinalAnswer = false,
                             QuestionText = "Welcome! How can I help you today?"
                         },
                         new
                         {
-                            FaqNodeId = 2,
+                            NodeId = 2,
                             IsFinalAnswer = true,
                             QuestionText = "Flights information: You can search and book flights."
                         },
                         new
                         {
-                            FaqNodeId = 3,
+                            NodeId = 3,
                             IsFinalAnswer = true,
                             QuestionText = "Membership information: View plans and discounts."
                         },
                         new
                         {
-                            FaqNodeId = 4,
+                            NodeId = 4,
                             IsFinalAnswer = true,
                             QuestionText = "Baggage information: Learn what is included and what costs extra."
                         },
                         new
                         {
-                            FaqNodeId = 5,
+                            NodeId = 5,
                             IsFinalAnswer = true,
                             QuestionText = "Payments information: Find out which payment methods are accepted."
                         },
                         new
                         {
-                            FaqNodeId = 6,
+                            NodeId = 6,
                             IsFinalAnswer = true,
                             QuestionText = "Support information: Contact our team for help with bookings or accounts."
+                        });
+                });
+
+            modelBuilder.Entity("AirportApp.ClassLibrary.Entity.Domain.Faq.Bot.FAQOptionEntity", b =>
+                {
+                    b.Property<int>("NodeId")
+                        .HasColumnType("int")
+                        .HasColumnName("node_id");
+
+                    b.Property<string>("Label")
+                        .HasColumnType("nvarchar(450)")
+                        .HasColumnName("label");
+
+                    b.Property<int>("NextOptionId")
+                        .HasColumnType("int")
+                        .HasColumnName("next_option_id");
+
+                    b.HasKey("NodeId", "Label");
+
+                    b.ToTable("FAQOption", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            NodeId = 1,
+                            Label = "Flights",
+                            NextOptionId = 2
+                        },
+                        new
+                        {
+                            NodeId = 1,
+                            Label = "Memberships",
+                            NextOptionId = 3
+                        },
+                        new
+                        {
+                            NodeId = 1,
+                            Label = "Baggage",
+                            NextOptionId = 4
+                        },
+                        new
+                        {
+                            NodeId = 1,
+                            Label = "Payments",
+                            NextOptionId = 5
+                        },
+                        new
+                        {
+                            NodeId = 1,
+                            Label = "Contact support",
+                            NextOptionId = 6
                         });
                 });
 
@@ -786,65 +837,6 @@ namespace AirportApp.ClassLibrary.Migrations
                         });
                 });
 
-            modelBuilder.Entity("AirportApp.ClassLibrary.Entity.Domain.Message.BotMessage", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("Message_Id");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("ChatId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("SenderId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Text")
-                        .IsRequired()
-                        .HasColumnType("NVARCHAR(MAX)")
-                        .HasColumnName("Message_Text");
-
-                    b.Property<DateTimeOffset>("Timestamp")
-                        .HasColumnType("datetimeoffset")
-                        .HasColumnName("Timestamp");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ChatId");
-
-                    b.HasIndex("SenderId");
-
-                    b.ToTable("BotMessages");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            ChatId = 1,
-                            SenderId = -1,
-                            Text = "Welcome! How can I help you today?",
-                            Timestamp = new DateTimeOffset(new DateTime(2026, 5, 4, 10, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 3, 0, 0, 0))
-                        },
-                        new
-                        {
-                            Id = 2,
-                            ChatId = 2,
-                            SenderId = -1,
-                            Text = "What would you like to know about?",
-                            Timestamp = new DateTimeOffset(new DateTime(2026, 5, 4, 11, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 3, 0, 0, 0))
-                        },
-                        new
-                        {
-                            Id = 3,
-                            ChatId = 3,
-                            SenderId = -1,
-                            Text = "How can I assist you?",
-                            Timestamp = new DateTimeOffset(new DateTime(2026, 5, 4, 12, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 3, 0, 0, 0))
-                        });
-                });
-
             modelBuilder.Entity("AirportApp.ClassLibrary.Entity.Domain.Message.Message", b =>
                 {
                     b.Property<int>("Id")
@@ -876,6 +868,32 @@ namespace AirportApp.ClassLibrary.Migrations
                     b.HasIndex("SenderId");
 
                     b.ToTable("Messages");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            ChatId = 1,
+                            SenderId = 101,
+                            Text = "Hello! I need help with flights.",
+                            Timestamp = new DateTimeOffset(new DateTime(2026, 5, 4, 9, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 3, 0, 0, 0))
+                        },
+                        new
+                        {
+                            Id = 2,
+                            ChatId = 2,
+                            SenderId = 102,
+                            Text = "Hi, I have a question about membership.",
+                            Timestamp = new DateTimeOffset(new DateTime(2026, 5, 4, 9, 5, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 3, 0, 0, 0))
+                        },
+                        new
+                        {
+                            Id = 3,
+                            ChatId = 3,
+                            SenderId = 103,
+                            Text = "Hello, I need support with my booking.",
+                            Timestamp = new DateTimeOffset(new DateTime(2026, 5, 4, 9, 10, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 3, 0, 0, 0))
+                        });
                 });
 
             modelBuilder.Entity("AirportApp.ClassLibrary.Entity.Domain.Review.Review", b =>
@@ -1377,62 +1395,13 @@ namespace AirportApp.ClassLibrary.Migrations
                     b.Navigation("Membership");
                 });
 
-            modelBuilder.Entity("AirportApp.ClassLibrary.Entity.Domain.Faq.Bot.FAQNode", b =>
+            modelBuilder.Entity("AirportApp.ClassLibrary.Entity.Domain.Faq.Bot.FAQOptionEntity", b =>
                 {
-                    b.OwnsMany("AirportApp.ClassLibrary.Entity.Domain.Faq.Bot.FAQOption", "Options", b1 =>
-                        {
-                            b1.Property<int>("node_id")
-                                .HasColumnType("int");
-
-                            b1.Property<string>("label")
-                                .HasColumnType("nvarchar(450)")
-                                .HasColumnName("label");
-
-                            b1.Property<int>("nextOptionId")
-                                .HasColumnType("int")
-                                .HasColumnName("next_option_id");
-
-                            b1.HasKey("node_id", "label");
-
-                            b1.ToTable("FAQOption", (string)null);
-
-                            b1.WithOwner()
-                                .HasForeignKey("node_id");
-
-                            b1.HasData(
-                                new
-                                {
-                                    node_id = 1,
-                                    label = "Flights",
-                                    nextOptionId = 2
-                                },
-                                new
-                                {
-                                    node_id = 1,
-                                    label = "Memberships",
-                                    nextOptionId = 3
-                                },
-                                new
-                                {
-                                    node_id = 1,
-                                    label = "Baggage",
-                                    nextOptionId = 4
-                                },
-                                new
-                                {
-                                    node_id = 1,
-                                    label = "Payments",
-                                    nextOptionId = 5
-                                },
-                                new
-                                {
-                                    node_id = 1,
-                                    label = "Contact support",
-                                    nextOptionId = 6
-                                });
-                        });
-
-                    b.Navigation("Options");
+                    b.HasOne("AirportApp.ClassLibrary.Entity.Domain.Faq.Bot.FAQNodeEntity", null)
+                        .WithMany("Options")
+                        .HasForeignKey("NodeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("AirportApp.ClassLibrary.Entity.Domain.Flight", b =>
@@ -1501,92 +1470,6 @@ namespace AirportApp.ClassLibrary.Migrations
                     b.Navigation("AddOn");
 
                     b.Navigation("Membership");
-                });
-
-            modelBuilder.Entity("AirportApp.ClassLibrary.Entity.Domain.Message.BotMessage", b =>
-                {
-                    b.HasOne("AirportApp.ClassLibrary.Entity.Domain.Chats.Chat", "Chat")
-                        .WithMany()
-                        .HasForeignKey("ChatId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("AirportApp.ClassLibrary.Entity.Domain.Sender", "Sender")
-                        .WithMany()
-                        .HasForeignKey("SenderId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.OwnsMany("AirportApp.ClassLibrary.Entity.Domain.Faq.Bot.FAQOption", "FAQOptions", b1 =>
-                        {
-                            b1.Property<int>("Message_Id")
-                                .HasColumnType("int");
-
-                            b1.Property<string>("label")
-                                .HasColumnType("nvarchar(450)")
-                                .HasColumnName("label");
-
-                            b1.Property<int>("nextOptionId")
-                                .HasColumnType("int")
-                                .HasColumnName("next_option_id");
-
-                            b1.HasKey("Message_Id", "label", "nextOptionId");
-
-                            b1.ToTable("BotMessageFAQOptions", (string)null);
-
-                            b1.WithOwner()
-                                .HasForeignKey("Message_Id");
-
-                            b1.HasData(
-                                new
-                                {
-                                    Message_Id = 1,
-                                    label = "Flights",
-                                    nextOptionId = 2
-                                },
-                                new
-                                {
-                                    Message_Id = 1,
-                                    label = "Bookings",
-                                    nextOptionId = 3
-                                },
-                                new
-                                {
-                                    Message_Id = 1,
-                                    label = "Baggage",
-                                    nextOptionId = 4
-                                },
-                                new
-                                {
-                                    Message_Id = 2,
-                                    label = "Payment",
-                                    nextOptionId = 5
-                                },
-                                new
-                                {
-                                    Message_Id = 2,
-                                    label = "Refund",
-                                    nextOptionId = 6
-                                },
-                                new
-                                {
-                                    Message_Id = 3,
-                                    label = "Account",
-                                    nextOptionId = 7
-                                },
-                                new
-                                {
-                                    Message_Id = 3,
-                                    label = "Support",
-                                    nextOptionId = 8
-                                });
-                        });
-
-                    b.Navigation("Chat");
-
-                    b.Navigation("FAQOptions");
-
-                    b.Navigation("Sender");
                 });
 
             modelBuilder.Entity("AirportApp.ClassLibrary.Entity.Domain.Message.Message", b =>
@@ -1719,6 +1602,11 @@ namespace AirportApp.ClassLibrary.Migrations
             modelBuilder.Entity("AirportApp.ClassLibrary.Entity.Domain.Chats.Chat", b =>
                 {
                     b.Navigation("Messages");
+                });
+
+            modelBuilder.Entity("AirportApp.ClassLibrary.Entity.Domain.Faq.Bot.FAQNodeEntity", b =>
+                {
+                    b.Navigation("Options");
                 });
 
             modelBuilder.Entity("AirportApp.ClassLibrary.Entity.Domain.Membership", b =>

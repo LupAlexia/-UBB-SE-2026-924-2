@@ -27,7 +27,12 @@ namespace AirportApp.Src.Proxy
                 Status = ChatStatus.Active
             };
             var response = await httpClient.PostAsJsonAsync(BaseUrl, newChat);
-            response.EnsureSuccessStatusCode();
+            if (!response.IsSuccessStatusCode)
+            {
+                var err = await response.Content.ReadAsStringAsync();
+                System.Diagnostics.Debug.WriteLine($"OpenChatAsync failed: {response.StatusCode} - {err}");
+                response.EnsureSuccessStatusCode();
+            }
             return await response.Content.ReadFromJsonAsync<Chat>();
         }
 

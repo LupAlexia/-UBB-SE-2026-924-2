@@ -62,12 +62,13 @@ namespace AirportApp.Src.Service
 
         public async Task<IEnumerable<Message>> GetAllMessagesAsync(int chatId)
         {
-            _ = await chatRepository.GetByIdAsync(chatId);
+            Chat returnedChat = await chatRepository.GetByIdAsync(chatId);
 
             var allMessages = await messageRepository.GetAllAsync();
-            return allMessages
+            var filtered = allMessages
                 .Where(chatMessage => chatMessage.Chat.Id == chatId)
                 .OrderBy(chatMessage => chatMessage.Timestamp);
+            return filtered;
         }
 
         private async Task<Chat> GetActiveChatAsync(int chatId)

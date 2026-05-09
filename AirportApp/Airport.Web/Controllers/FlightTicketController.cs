@@ -1,3 +1,4 @@
+using System.Text.Json;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AirportApp.ClassLibrary.Entity.Domain;
@@ -60,20 +61,41 @@ namespace Airport.Web.Controllers
         }
 
         [HttpPost("batch")]
-        public async Task<ActionResult<bool>> SaveTicketsWithAddOnsAsync([FromBody] SaveTicketsRequest request)
+        public async Task<ActionResult<bool>> SaveTicketsWithAddOnsAsync([FromBody] JsonDocument body)
         {
-            if (request?.Tickets == null)
+            if (body == null)
             {
-                return BadRequest();
+                return BadRequest(new { Message = "Empty body" });
             }
 
-            bool isSuccess = await flightTicketRepository.SaveTicketsWithAddOnsAsync(request.Tickets, request.AddOnIds);
-            if (!isSuccess)
-            {
-                return BadRequest();
-            }
+            string raw = body.RootElement.GetRawText();
 
-            return Ok(isSuccess);
+            try
+            {
+                var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+                var request = JsonSerializer.Deserialize<SaveTicketsRequest>(raw, options);
+
+                if (request?.Tickets == null)
+                {
+                    return BadRequest(new { Message = "Deserialized request is null or Tickets missing.", Raw = raw });
+                }
+
+                bool isSuccess = await flightTicketRepository.SaveTicketsWithAddOnsAsync(request.Tickets, request.AddOnIds);
+                if (!isSuccess)
+                {
+                    return BadRequest(new { Message = "Repository returned false" });
+                }
+
+                return Ok(isSuccess);
+            }
+            catch (JsonException jex)
+            {
+                return BadRequest(new { Message = "JSON parse error", Error = jex.Message, Raw = raw });
+            }
+            catch (System.Exception ex)
+            {
+                return BadRequest(new { Message = "Unexpected error", Error = ex.Message, Raw = raw });
+            }
         }
     }
 }

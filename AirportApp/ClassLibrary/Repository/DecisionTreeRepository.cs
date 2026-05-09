@@ -23,7 +23,7 @@ namespace AirportApp.ClassLibrary.Entity.Repository.Database
         {
             var node = await this.dataBaseContext.FaqNodes
                 .Include(n => n.Options)
-                .FirstOrDefaultAsync(n => n.FaqNodeId == id);
+                .FirstOrDefaultAsync(n => n.NodeId == id);
 
             if (node == null)
             {
@@ -31,16 +31,15 @@ namespace AirportApp.ClassLibrary.Entity.Repository.Database
             }
 
             var options = node.Options
-                .Select(o => new FAQOption(o.label, o.nextOptionId))
+                .Select(o => new FAQOption(o.Label, o.NextOptionId))
                 .ToImmutableArray();
-            Console.WriteLine(options);
 
-            return new FAQNode(node.FaqNodeId, node.QuestionText, options, node.IsFinalAnswer);
+            return new FAQNode(node.NodeId, node.QuestionText, options, node.IsFinalAnswer);
         }
 
         public async Task<int> CreateNewEntityAsync(FAQNode incomingFAQNodeEntityToBeSaved)
         {
-            var nodeEntity = new FAQNode
+            var nodeEntity = new FAQNodeEntity
             {
                 QuestionText = incomingFAQNodeEntityToBeSaved.QuestionText,
                 IsFinalAnswer = incomingFAQNodeEntityToBeSaved.IsFinalAnswer
@@ -48,18 +47,18 @@ namespace AirportApp.ClassLibrary.Entity.Repository.Database
 
             foreach (var opt in incomingFAQNodeEntityToBeSaved.Options)
             {
-                nodeEntity.Options.Add(new FAQOption(opt.label, opt.nextOptionId));
+                nodeEntity.Options.Add(new FAQOptionEntity { Label = opt.label, NextOptionId = opt.nextOptionId });
             }
 
             this.dataBaseContext.FaqNodes.Add(nodeEntity);
             await this.dataBaseContext.SaveChangesAsync();
 
-            return nodeEntity.FaqNodeId;
+            return nodeEntity.NodeId;
         }
 
         public async Task DeleteByIdAsync(int id)
         {
-            var node = await this.dataBaseContext.FaqNodes.Include(n => n.Options).FirstOrDefaultAsync(n => n.FaqNodeId == id);
+            var node = await this.dataBaseContext.FaqNodes.Include(n => n.Options).FirstOrDefaultAsync(n => n.NodeId == id);
             if (node == null)
             {
                 return;
@@ -71,7 +70,7 @@ namespace AirportApp.ClassLibrary.Entity.Repository.Database
 
         public async Task UpdateByIdAsync(int id, FAQNode updatedFAQNodeEntityData)
         {
-            var node = await this.dataBaseContext.FaqNodes.Include(n => n.Options).FirstOrDefaultAsync(n => n.FaqNodeId == id);
+            var node = await this.dataBaseContext.FaqNodes.Include(n => n.Options).FirstOrDefaultAsync(n => n.NodeId == id);
             if (node == null)
             {
                 return;
@@ -84,7 +83,7 @@ namespace AirportApp.ClassLibrary.Entity.Repository.Database
 
             foreach (var opt in updatedFAQNodeEntityData.Options)
             {
-                node.Options.Add(new FAQOption(opt.label, opt.nextOptionId));
+                node.Options.Add(new FAQOptionEntity { Label = opt.label, NextOptionId = opt.nextOptionId });
             }
 
             await this.dataBaseContext.SaveChangesAsync();
@@ -97,9 +96,9 @@ namespace AirportApp.ClassLibrary.Entity.Repository.Database
                 .ToListAsync();
 
             return nodes.Select(n => new FAQNode(
-                n.FaqNodeId,
+                n.NodeId,
                 n.QuestionText,
-                n.Options.Select(o => new FAQOption(o.label, o.nextOptionId)).ToImmutableArray(),
+                n.Options.Select(o => new FAQOption(o.Label, o.NextOptionId)).ToImmutableArray(),
                 n.IsFinalAnswer));
         }
     }

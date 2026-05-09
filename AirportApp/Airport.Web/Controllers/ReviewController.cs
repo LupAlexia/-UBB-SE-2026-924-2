@@ -14,9 +14,10 @@ namespace Airport.Web.Controllers
     {
         private readonly IRepository<int, Review> reviewRepository;
         private readonly IUserRepository userRepository;
-        public ReviewController(IRepository<int, Review> reviewRepository)
+        public ReviewController(IRepository<int, Review> reviewRepository, IUserRepository userRepository)
         {
             this.reviewRepository = reviewRepository;
+            this.userRepository = userRepository;
         }
 
         [HttpGet]
@@ -43,9 +44,15 @@ namespace Airport.Web.Controllers
         [HttpPost]
         public async Task<ActionResult> CreateAsync([FromBody] CreateReviewDTO dto)
         {
+            var user = await userRepository.GetByIdAsync(dto.userId);
+            if (user == null)
+            {
+                return NotFound($"User with id {dto.userId} not found.");
+            }
+
             var review = new Review
             {
-                User = await userRepository.GetByIdAsync(dto.userId),
+                User = user,
                 Message = dto.message,
                 DutyFreeRating = dto.dutyFreeRating,
                 FlightExperienceRating = dto.flightExperienceRating,

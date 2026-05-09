@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using AirportApp.ClassLibrary.Entity.Domain.Message;
-using AirportApp.ClassLibrary.Entity.Domain.Chats;
+using AirportApp.ClassLibrary.Entity.Domain;
 using AirportApp.ClassLibrary.Repository.Interfaces;
 using AirportApp.ClassLibrary.DataAccess;
 
@@ -25,6 +25,14 @@ namespace AirportApp.ClassLibrary.Repository.Interfaces
             {
                 throw new ArgumentNullException(nameof(newEntity));
             }
+
+            var chatId = newEntity.Chat?.Id ?? throw new InvalidOperationException("Message chat is required.");
+            var senderId = newEntity.Sender?.RetrieveUniqueDatabaseIdentifierForBot() ?? throw new InvalidOperationException("Message sender is required.");
+
+            this.dataBaseContext.Entry(newEntity).Property("ChatId").CurrentValue = chatId;
+            this.dataBaseContext.Entry(newEntity).Property("SenderId").CurrentValue = senderId;
+            newEntity.Chat = null!;
+            newEntity.Sender = null!;
 
             this.dataBaseContext.Messages.Add(newEntity);
             await this.dataBaseContext.SaveChangesAsync();
@@ -57,29 +65,72 @@ namespace AirportApp.ClassLibrary.Repository.Interfaces
 
         public async Task<IEnumerable<Message>> GetAllAsync()
         {
-            return await this.dataBaseContext.Messages.ToListAsync();
+            var messages = await this.dataBaseContext.Messages
+                .Include(m => m.Chat)
+                .ToListAsync();
+
+            await PopulateSendersAsync(messages);
+            return messages;
         }
 
         public async Task<Message> GetByIdAsync(int identificationNumber)
         {
-            var message = await this.dataBaseContext.Messages.FirstOrDefaultAsync(m => m.Id == identificationNumber);
+            var message = await this.dataBaseContext.Messages
+                .Include(m => m.Chat)
+                .FirstOrDefaultAsync(m => m.Id == identificationNumber);
+
+            if (message != null)
+            {
+                message.Sender = await ResolveSenderAsync(message);
+            }
+
             return message ?? throw new KeyNotFoundException($"Message with id {identificationNumber} not found.");
         }
 
         public async Task<IEnumerable<Message>> GetByChatIdAsync(int chatId)
         {
-            return await this.dataBaseContext.Messages
+            var messages = await this.dataBaseContext.Messages
+                .Include(m => m.Chat)
                 .Where(m => m.Chat.Id == chatId)
                 .OrderBy(m => m.Timestamp)
                 .ToListAsync();
+
+            await PopulateSendersAsync(messages);
+            return messages;
         }
 
         public async Task<IEnumerable<Message>> GetMessagesSinceAsync(int chatId, int firstMessageId)
         {
-            return await this.dataBaseContext.Messages
+            var messages = await this.dataBaseContext.Messages
+                .Include(m => m.Chat)
                 .Where(m => m.Chat.Id == chatId && m.Id >= firstMessageId)
                 .OrderBy(m => m.Timestamp)
                 .ToListAsync();
+
+            await PopulateSendersAsync(messages);
+            return messages;
+        }
+
+        private async Task PopulateSendersAsync(IEnumerable<Message> messages)
+        {
+            foreach (var message in messages)
+            {
+                message.Sender = await ResolveSenderAsync(message);
+            }
+        }
+
+        private async Task<Sender> ResolveSenderAsync(Message message)
+        {
+            var senderId = dataBaseContext.Entry(message).Property<int>("SenderId").CurrentValue;
+
+            if (senderId == AirportApp.ClassLibrary.Entity.Domain.Message.BotEngineIdentity.CONSTANT_IDENTIFIER_FOR_DEFAULT_BOT_SYSTEM_USER)
+            {
+                return new AirportApp.ClassLibrary.Entity.Domain.Message.BotEngineIdentity(null);
+            }
+
+            return await dataBaseContext.Senders
+                .FirstOrDefaultAsync(s => s.Id == senderId)
+                ?? throw new KeyNotFoundException($"Sender with id {senderId} was not found.");
         }
     }
 }

@@ -42,6 +42,7 @@ namespace Airport.Web.Controllers
         public async Task<ActionResult> CreateAsync([FromBody] Chat chat)
         {
             int createdId = await chatRepository.CreateNewEntityAsync(chat);
+            chat.Id = createdId;
             return CreatedAtAction(nameof(GetByIdAsync), new { id = createdId }, chat);
         }
 

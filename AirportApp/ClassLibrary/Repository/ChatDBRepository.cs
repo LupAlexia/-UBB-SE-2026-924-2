@@ -25,9 +25,20 @@ namespace AirportApp.ClassLibrary.Repository
                 throw new ArgumentNullException(nameof(incomingChatEntityToBeSaved));
             }
 
-            this.dataBaseContext.Chats.Add(incomingChatEntityToBeSaved);
+            if (incomingChatEntityToBeSaved.User == null || incomingChatEntityToBeSaved.User.Id <= 0)
+            {
+                throw new ArgumentException("Chat must contain a valid user id.", nameof(incomingChatEntityToBeSaved));
+            }
+
+            var chatToPersist = new Chat
+            {
+                Status = incomingChatEntityToBeSaved.Status
+            };
+
+            this.dataBaseContext.Chats.Add(chatToPersist);
+            this.dataBaseContext.Entry(chatToPersist).Property("UserId").CurrentValue = incomingChatEntityToBeSaved.User.Id;
             await this.dataBaseContext.SaveChangesAsync();
-            return incomingChatEntityToBeSaved.Id;
+            return chatToPersist.Id;
         }
 
         public async Task DeleteByIdAsync(int identifierForChatToBeDeleted)
@@ -62,7 +73,10 @@ namespace AirportApp.ClassLibrary.Repository
 
         public async Task<Chat> GetByIdAsync(int identifierForRequestedChat)
         {
-            var chat = await this.dataBaseContext.Chats.FirstOrDefaultAsync(c => c.Id == identifierForRequestedChat);
+            var chat = await this.dataBaseContext.Chats
+                .Include(c => c.User)
+                .FirstOrDefaultAsync(c => c.Id == identifierForRequestedChat);
+
             return chat ?? throw new KeyNotFoundException($"Chat with id {identifierForRequestedChat} not found.");
         }
     }

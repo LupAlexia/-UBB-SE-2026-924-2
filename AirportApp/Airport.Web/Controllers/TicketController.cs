@@ -1,9 +1,12 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using AirportApp.ClassLibrary.DataAccess;
+using AirportApp.ClassLibrary.Entity.Domain;
 using AirportApp.ClassLibrary.Entity.Domain.Ticket;
 using AirportApp.ClassLibrary.Repository.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using AirportApp.ClassLibrary.Entity.Dto;
+using Microsoft.EntityFrameworkCore;
 
 namespace Airport.Web.Controllers
 {
@@ -16,9 +19,16 @@ namespace Airport.Web.Controllers
         private readonly ITicketCategoryRepository ticketCategoryRepository;
         private readonly ITicketSubcategoryRepository ticketSubcategoryRepository;
 
-        public TicketController(ITicketRepository ticketRepository)
+        public TicketController(
+            ITicketRepository ticketRepository,
+            IUserRepository userRepository,
+            ITicketCategoryRepository ticketCategoryRepository,
+            ITicketSubcategoryRepository ticketSubcategoryRepository)
         {
             this.ticketRepository = ticketRepository;
+            this.userRepository = userRepository;
+            this.ticketCategoryRepository = ticketCategoryRepository;
+            this.ticketSubcategoryRepository = ticketSubcategoryRepository;
         }
 
         [HttpGet]

@@ -37,6 +37,7 @@ namespace Airport.Web
             builder.Services.AddScoped<IRepository<int, Chat>, ChatDatabaseRepository>();
             builder.Services.AddScoped<IMessageRepository, MessageDatabaseRepository>();
             builder.Services.AddScoped<IRepository<int, Review>, ReviewRepository>();
+            builder.Services.AddScoped<IRepository<int, Sender>, SenderRepository>();
             builder.Services.AddScoped<IRepository<int, FAQNode>, DecisionTreeRepository>();
 
             builder.Services.AddControllers(options =>

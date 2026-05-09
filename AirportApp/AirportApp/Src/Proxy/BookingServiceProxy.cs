@@ -147,7 +147,6 @@ namespace AirportApp.Src.Proxy
                 PassengerLastName = t.PassengerLastName,
                 PassengerEmail = t.PassengerEmail,
                 PassengerPhone = t.PassengerPhone,
-                SelectedAddOns = new List<AddOn>() // Send empty list
             }).ToList();
 
             // Send request with both tickets and add-on IDs

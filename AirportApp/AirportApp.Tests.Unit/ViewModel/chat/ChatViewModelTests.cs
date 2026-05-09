@@ -47,7 +47,6 @@ namespace AirportApp.Tests.Unit.Src.ViewModel.Chats
             strategyMock = Substitute.For<IBotStrategy>();
             userService = Substitute.For<IUserService>();
             mapper = Substitute.For<IMapper>();
-
             botEngine = new BotEngineIdentity(strategyMock);
             messageService = new MessageService(chatRepositoryMock, msgRepositoryMock, botEngine);
             chatService = new ChatService(chatRepositoryMock, userRepositoryMock);

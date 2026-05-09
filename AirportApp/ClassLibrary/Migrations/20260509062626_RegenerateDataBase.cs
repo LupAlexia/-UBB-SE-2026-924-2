@@ -183,8 +183,8 @@ namespace AirportApp.ClassLibrary.Migrations
                 name: "FAQOption",
                 columns: table => new
                 {
-                    label = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     node_id = table.Column<int>(type: "int", nullable: false),
+                    label = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     next_option_id = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -446,34 +446,6 @@ namespace AirportApp.ClassLibrary.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "BotMessages",
-                columns: table => new
-                {
-                    Message_Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Message_Text = table.Column<string>(type: "NVARCHAR(MAX)", nullable: false),
-                    Timestamp = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
-                    ChatId = table.Column<int>(type: "int", nullable: false),
-                    SenderId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_BotMessages", x => x.Message_Id);
-                    table.ForeignKey(
-                        name: "FK_BotMessages_Chats_ChatId",
-                        column: x => x.ChatId,
-                        principalTable: "Chats",
-                        principalColumn: "Chat_Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_BotMessages_Senders_SenderId",
-                        column: x => x.SenderId,
-                        principalTable: "Senders",
-                        principalColumn: "Sender_Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Messages",
                 columns: table => new
                 {
@@ -522,25 +494,6 @@ namespace AirportApp.ClassLibrary.Migrations
                         column: x => x.Ticket_Id,
                         principalTable: "FlightTickets",
                         principalColumn: "Ticket_Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "BotMessageFAQOptions",
-                columns: table => new
-                {
-                    label = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    next_option_id = table.Column<int>(type: "int", nullable: false),
-                    Message_Id = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_BotMessageFAQOptions", x => new { x.Message_Id, x.label, x.next_option_id });
-                    table.ForeignKey(
-                        name: "FK_BotMessageFAQOptions_BotMessages_Message_Id",
-                        column: x => x.Message_Id,
-                        principalTable: "BotMessages",
-                        principalColumn: "Message_Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -640,9 +593,9 @@ namespace AirportApp.ClassLibrary.Migrations
                 columns: new[] { "Customer_Id", "Email", "MembershipId", "Password_Hash", "Phone", "Username" },
                 values: new object[,]
                 {
-                    { 101, "alice@bot.com", 1, "AQAAAAIAAYagAAAAEA7ySiw1c4fcmPM170Ml05ewK89uBQDiwVlscoOVZoPRigQGrbHWOr0TwB3iv4aXjA==", string.Empty, "alice" },
-                    { 102, "bob@chat.com", 2, "AQAAAAIAAYagAAAAEDHfFMfhC0QVQUFojeTOvH2dxW2EOO/hJTYb7VzssrGmyU8CwQRPplscaTjEC0pGpA==", string.Empty, "bob" },
-                    { 103, "mia@example.com", 3, "AQAAAAIAAYagAAAAEFV7Grxjk5rgP/uFSl6F/SYqv4Dt6S8bINBtt3Q6rvIpsDsDNkZj5lOtGRX7lWfryQ==", string.Empty, "mia" }
+                    { 101, "alice@bot.com", 1, "AQAAAAIAAYagAAAAEDrl9uYd+TsKeS/5rEQm1tMRQuxZA+Fi1GM68HJVp6X0rR54ESH8L7QueqJR+UYfuw==", string.Empty, "alice" },
+                    { 102, "bob@chat.com", 2, "AQAAAAIAAYagAAAAEPwJ21d3jG//dvwQ2SxOrZZaX50Yhwp0sLrcSfOFGCjg66Yb4J/nsQzAw8xq5Nc2OA==", string.Empty, "bob" },
+                    { 103, "mia@example.com", 3, "AQAAAAIAAYagAAAAEGlhWTQ/H0czyjnsB69Tet7CmjDtwtvBZp7DeEcYeczukF1speM20ohvo2uOZFl9ag==", string.Empty, "mia" }
                 });
 
             migrationBuilder.InsertData(
@@ -762,16 +715,6 @@ namespace AirportApp.ClassLibrary.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "BotMessages",
-                columns: new[] { "Message_Id", "ChatId", "SenderId", "Message_Text", "Timestamp" },
-                values: new object[,]
-                {
-                    { 1, 1, -1, "Welcome! How can I help you today?", new DateTimeOffset(new DateTime(2026, 5, 4, 10, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 3, 0, 0, 0)) },
-                    { 2, 2, -1, "What would you like to know about?", new DateTimeOffset(new DateTime(2026, 5, 4, 11, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 3, 0, 0, 0)) },
-                    { 3, 3, -1, "How can I assist you?", new DateTimeOffset(new DateTime(2026, 5, 4, 12, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 3, 0, 0, 0)) }
-                });
-
-            migrationBuilder.InsertData(
                 table: "FlightTickets",
                 columns: new[] { "Ticket_Id", "FlightId", "Passenger_Email", "Passenger_First_Name", "Passenger_Last_Name", "Passenger_Phone", "Price", "Seat", "Status", "UserId" },
                 values: new object[,]
@@ -783,28 +726,14 @@ namespace AirportApp.ClassLibrary.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "BotMessageFAQOptions",
-                columns: new[] { "Message_Id", "label", "next_option_id" },
+                table: "Messages",
+                columns: new[] { "Message_Id", "ChatId", "SenderId", "Message_Text", "Timestamp" },
                 values: new object[,]
                 {
-                    { 1, "Baggage", 4 },
-                    { 1, "Bookings", 3 },
-                    { 1, "Flights", 2 },
-                    { 2, "Payment", 5 },
-                    { 2, "Refund", 6 },
-                    { 3, "Account", 7 },
-                    { 3, "Support", 8 }
+                    { 1, 1, 101, "Hello! I need help with flights.", new DateTimeOffset(new DateTime(2026, 5, 4, 9, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 3, 0, 0, 0)) },
+                    { 2, 2, 102, "Hi, I have a question about membership.", new DateTimeOffset(new DateTime(2026, 5, 4, 9, 5, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 3, 0, 0, 0)) },
+                    { 3, 3, 103, "Hello, I need support with my booking.", new DateTimeOffset(new DateTime(2026, 5, 4, 9, 10, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 3, 0, 0, 0)) }
                 });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_BotMessages_ChatId",
-                table: "BotMessages",
-                column: "ChatId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_BotMessages_SenderId",
-                table: "BotMessages",
-                column: "SenderId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Chats_UserId",
@@ -901,9 +830,6 @@ namespace AirportApp.ClassLibrary.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "BotMessageFAQOptions");
-
-            migrationBuilder.DropTable(
                 name: "Employees");
 
             migrationBuilder.DropTable(
@@ -928,9 +854,6 @@ namespace AirportApp.ClassLibrary.Migrations
                 name: "Tickets");
 
             migrationBuilder.DropTable(
-                name: "BotMessages");
-
-            migrationBuilder.DropTable(
                 name: "FAQNode");
 
             migrationBuilder.DropTable(
@@ -940,10 +863,10 @@ namespace AirportApp.ClassLibrary.Migrations
                 name: "AddOns");
 
             migrationBuilder.DropTable(
-                name: "TicketSubcategories");
+                name: "Chats");
 
             migrationBuilder.DropTable(
-                name: "Chats");
+                name: "TicketSubcategories");
 
             migrationBuilder.DropTable(
                 name: "Customers");
@@ -952,10 +875,10 @@ namespace AirportApp.ClassLibrary.Migrations
                 name: "Flights");
 
             migrationBuilder.DropTable(
-                name: "TicketCategories");
+                name: "Users");
 
             migrationBuilder.DropTable(
-                name: "Users");
+                name: "TicketCategories");
 
             migrationBuilder.DropTable(
                 name: "Memberships");
