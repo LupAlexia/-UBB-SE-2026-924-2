@@ -21,21 +21,12 @@ namespace AirportApp.ClassLibrary.Entity.Repository.Database
 
         public async Task<FAQNode> GetByIdAsync(int id)
         {
-            var nodes = await this.dataBaseContext.FaqNodes
+            var node = await this.dataBaseContext.FaqNodes
                 .Include(n => n.Options)
-                .ToListAsync();
+                .ThenInclude(o => o.NextOption)
+                .FirstOrDefaultAsync(n => n.NodeId == id);
 
-            var node = nodes.FirstOrDefault(n => n.NodeId == id);
-
-            if (node == null)
-            {
-                return null;
-            }
-
-            var nodesById = nodes.ToDictionary(n => n.NodeId);
-            var mappedNode = MapNode(node, nodesById, new Dictionary<int, FAQNode>());
-
-            return mappedNode;
+            return node;
         }
 
         public async Task<int> CreateNewEntityAsync(FAQNode incomingFAQNodeEntityToBeSaved)
@@ -98,66 +89,12 @@ namespace AirportApp.ClassLibrary.Entity.Repository.Database
         {
             var nodes = await this.dataBaseContext.FaqNodes
                 .Include(n => n.Options)
+                .ThenInclude(o => o.NextOption)
                 .ToListAsync();
 
-            var nodesById = nodes.ToDictionary(n => n.NodeId);
-            var cache = new Dictionary<int, FAQNode>();
-
-            return nodes.Select(n => MapNode(n, nodesById, cache));
+            return nodes;
         }
 
-        private FAQNode MapNode(
-            FAQNode source,
-            IReadOnlyDictionary<int, FAQNode> nodesById,
-            IDictionary<int, FAQNode> cache)
-        {
-            if (cache.TryGetValue(source.NodeId, out var mappedNode))
-            {
-                return mappedNode;
-            }
 
-            mappedNode = new FAQNode
-            {
-                NodeId = source.NodeId,
-                QuestionText = source.QuestionText,
-                IsFinalAnswer = source.IsFinalAnswer
-            };
-
-            cache[source.NodeId] = mappedNode;
-
-            mappedNode.Options = source.Options
-                .Select(option => new FAQOption(option.Label, ResolveNextNodeId(option))
-                {
-                    NextOption = ResolveNextNode(option, nodesById, cache)
-                })
-                .ToList();
-
-            return mappedNode;
-        }
-
-        private int ResolveNextNodeId(FAQOption option)
-        {
-            var trackedEntry = this.dataBaseContext.Entry(option);
-            var nextOptionId = trackedEntry.Property<int?>("NextOptionId").CurrentValue;
-
-            if (nextOptionId.HasValue)
-            {
-                return nextOptionId.Value;
-            }
-
-            return option.NextOption?.NodeId ?? 0;
-        }
-
-        private FAQNode? ResolveNextNode(
-            FAQOption option,
-            IReadOnlyDictionary<int, FAQNode> nodesById,
-            IDictionary<int, FAQNode> cache)
-        {
-            var nextOptionId = ResolveNextNodeId(option);
-
-            return nextOptionId != 0 && nodesById.TryGetValue(nextOptionId, out var nextNode)
-                ? MapNode(nextNode, nodesById, cache)
-                : null;
-        }
     }
 }
