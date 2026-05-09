@@ -34,9 +34,9 @@ namespace AirportApp.Src.Proxy
         public async Task AddTicketAsync(ComplaintTicket ticketEntity)
         {
             var dto = new CreateTicketDTO(
-                creatorId: ticketEntity.CreatorId,
-                categoryId: ticketEntity.CategoryId,
-                subcategoryId: ticketEntity.SubcategoryId,
+                creatorId: ticketEntity.Creator.Id,
+                categoryId: ticketEntity.Category.Id,
+                subcategoryId: ticketEntity.Subcategory.Id,
                 subject: ticketEntity.Subject,
                 description: ticketEntity.Description,
                 creationTimestamp: ticketEntity.CreationTimestamp,

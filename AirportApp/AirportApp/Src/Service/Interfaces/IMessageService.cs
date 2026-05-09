@@ -9,7 +9,7 @@ namespace AirportApp.Src.Service.Interfaces
 {
     public interface IMessageService
     {
-        Task<BotMessage> SendMessageAsync(int chatId, ISender sender, FAQOption selectedOption);
+        Task<BotMessage> SendMessageAsync(int chatId, Sender sender, FAQOption selectedOption);
         Task<IMessage> GetMessageAsync(int chatId, int messageId);
         Task<IEnumerable<Message>> GetAllMessagesAsync(int chatId);
     }

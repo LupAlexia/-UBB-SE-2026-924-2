@@ -30,10 +30,6 @@ namespace AirportApp.ClassLibrary.Entity.Domain
         [Column("Password_Hash")]
         public string PasswordHash { get; set; } = string.Empty;
 
-        [Column("Membership_Id")]
-        public int? MembershipId { get; set; }
-
-        [ForeignKey(nameof(MembershipId))]
         public Membership? Membership { get; set; }
 
         public Customer()
@@ -47,7 +43,6 @@ namespace AirportApp.ClassLibrary.Entity.Domain
             Username = username;
             PasswordHash = passwordHash;
             Membership = membership;
-            MembershipId = membership?.Id;
         }
 
         public Customer(int userId, string email, string? phone, string username, string passwordHash, Membership? membership)
@@ -58,7 +53,6 @@ namespace AirportApp.ClassLibrary.Entity.Domain
             Username = username;
             PasswordHash = passwordHash;
             Membership = membership;
-            MembershipId = membership?.Id;
         }
     }
 }

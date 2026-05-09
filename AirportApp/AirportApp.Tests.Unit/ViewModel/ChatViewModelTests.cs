@@ -43,7 +43,6 @@ namespace AirportApp.Tests.Unit.ViewModel
             strategyMock = Substitute.For<IBotStrategy>();
             userService = Substitute.For<IUserService>();
             mapper = Substitute.For<IMapper>();
-
             botEngine = new BotEngineIdentity(strategyMock);
             messageService = new MessageService(chatRepositoryMock, msgRepositoryMock, botEngine);
             chatService = new ChatService(chatRepositoryMock, userRepositoryMock);
@@ -62,7 +61,7 @@ namespace AirportApp.Tests.Unit.ViewModel
                 var messageSender = messageEntity.GetSender();
                 if (messageSender != null)
                 {
-                    dataTransferObject.SenderId = messageSender.RetrieveUniqueDatabaseIdentifierForBot();
+                    dataTransferObject.Sender = messageSender;
                 }
                 return dataTransferObject;
             });

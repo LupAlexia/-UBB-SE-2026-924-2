@@ -15,11 +15,6 @@ namespace AirportApp.ClassLibrary.Entity.Domain
         [Column("Gate_Name")]
         public string GateName { get; set; } = string.Empty;
 
-        [Required]
-        [Column("Airport_Id")]
-        public int AirportId { get; set; }
-
-        [ForeignKey(nameof(AirportId))]
         public Airport Airport { get; set; } = null!;
 
         public Gate()
@@ -42,7 +37,6 @@ namespace AirportApp.ClassLibrary.Entity.Domain
             Id = id;
             GateName = gateName;
             Airport = airport;
-            AirportId = airport.Id;
         }
     }
 }

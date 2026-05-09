@@ -33,26 +33,10 @@ namespace AirportApp.ClassLibrary.Entity.Domain
         [Column("Status")]
         public ComplaintTicketStatusEnum CurrentStatus { get; set; }
 
-        // 2. Navigation Properties & Foreign Keys
-        [Required]
-        [Column("Creator_Id")]
-        public int CreatorId { get; set; }
-
-        [ForeignKey(nameof(CreatorId))]
         public User Creator { get; set; } = null!;
 
-        [Required]
-        [Column("Category_Id")]
-        public int CategoryId { get; set; }
-
-        [ForeignKey(nameof(CategoryId))]
         public ComplaintTicketCategory Category { get; set; } = null!;
 
-        [Required]
-        [Column("Subcategory_Id")]
-        public int SubcategoryId { get; set; }
-
-        [ForeignKey(nameof(SubcategoryId))]
         public ComplaintTicketSubcategory Subcategory { get; set; } = null!;
 
         public ComplaintTicket()
@@ -62,13 +46,10 @@ namespace AirportApp.ClassLibrary.Entity.Domain
         {
             Id = ticketId;
             Creator = ticketCreator ?? throw new ArgumentNullException(nameof(ticketCreator));
-            CreatorId = ticketCreator.UserId;
             Category = category ?? throw new ArgumentNullException(nameof(category));
             UrgencyLevel = initialUrgencyLevel ?? category.CategoryUrgencyLevel;
             CurrentStatus = initialStatus;
-            CategoryId = category.Id;
             Subcategory = subcategory ?? throw new ArgumentNullException(nameof(subcategory));
-            SubcategoryId = subcategory.Id;
             Subject = ticketSubject;
             Description = description;
             CreationTimestamp = creationTimestamp;

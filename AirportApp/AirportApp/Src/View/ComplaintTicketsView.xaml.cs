@@ -14,7 +14,7 @@ namespace AirportApp.Src.View.Ticket
 {
     public sealed partial class TicketsView : Page
     {
-        private const int DEFAULT_GUEST_IDENTIFIER = 1;
+        private const int DEFAULT_GUEST_IDENTIFIER = 102;
         private const string DEFAULT_SYSTEM_EMAIL = "email@email.com";
 
         public TicketsViewModel ViewModel { get; }
@@ -64,15 +64,18 @@ namespace AirportApp.Src.View.Ticket
                 var selectedCategory = ViewModel.Categories.FirstOrDefault(categoryItem => categoryItem.CategoryName == inputs.CategoryCombo.SelectedItem?.ToString());
                 var selectedSubcategory = ViewModel.Subcategories.FirstOrDefault(subcategoryItem => subcategoryItem.SubcategoryName == inputs.SubcategoryCombo.SelectedItem?.ToString());
 
+                int finalCategoryId = (selectedCategory == null || selectedCategory.Id == 0) ? 1 : selectedCategory.Id;
+                int finalSubcategoryId = (selectedSubcategory == null || selectedSubcategory.Id == 0) ? 1 : selectedSubcategory.Id;
+
                 var newTicket = new TicketDTO(
-                    ticketId: ViewModel.GetTotalTicketCount() + 1,
+                    ticketId: 0,
                     creatorAccountId: DEFAULT_GUEST_IDENTIFIER,
                     creatorEmailAddress: DEFAULT_SYSTEM_EMAIL,
                     urgencyLevel: ComplaintTicketUrgencyLevelEnum.LOW,
                     currentStatus: ComplaintTicketStatusEnum.OPEN,
-                    categoryId: selectedCategory?.Id ?? 1,
+                    categoryId: finalCategoryId,
                     categoryName: selectedCategory?.CategoryName ?? "General",
-                    subcategoryId: selectedSubcategory?.Id ?? 1,
+                    subcategoryId: finalSubcategoryId,
                     subcategoryName: selectedSubcategory?.SubcategoryName ?? "General",
                     subject: inputs.TitleBox.Text,
                     description: inputs.DescriptionBox.Text,

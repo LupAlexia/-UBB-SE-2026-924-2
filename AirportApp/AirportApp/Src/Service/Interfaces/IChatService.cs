@@ -9,7 +9,7 @@ namespace AirportApp.Src.Service.Interfaces
 {
     public interface IChatService
     {
-        Task<Chat> OpenChatAsync(int userId);
+        Task<Chat> OpenChatAsync(User userToOpenChatFor);
         Task CloseChatAsync(int chatId);
     }
 }

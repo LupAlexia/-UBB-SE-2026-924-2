@@ -12,7 +12,6 @@ namespace AirportApp.ClassLibrary.Entity.Domain
     [Table("Messages")]
     public class Message : IMessage
     {
-        // 1. EF Core Auto-Properties
         [Key]
         [Column("Message_Id")]
         public int Id { get; set; }
@@ -25,82 +24,52 @@ namespace AirportApp.ClassLibrary.Entity.Domain
         [Column("Timestamp")]
         public DateTimeOffset Timestamp { get; set; }
 
-        // 2. Navigation Properties
-        // This links the Message to a Chat in the database
-        [Required]
-        [Column("Chat_Id")]
-        public int ChatId { get; set; }
-
-        [ForeignKey(nameof(ChatId))]
-        public Chat? Chat { get; set; }
-
-        // Explicit Sender IDs
-        [Column("Sender_User_Id")]
-        public int? SenderUserId { get; set; }
-
-        [ForeignKey(nameof(SenderUserId))]
-        public User? SenderUser { get; set; }
-
-        [Column("Sender_Employee_Id")]
-        public int? SenderEmployeeId { get; set; }
-
-        [ForeignKey(nameof(SenderEmployeeId))]
-        public EmpNamespace? SenderEmployee { get; set; }
-        [NotMapped]
-        [System.Text.Json.Serialization.JsonIgnore]
-        public ISender? Sender => (ISender?)SenderUser ?? SenderEmployee;
+        public Chat Chat { get; set; } = null!;
+        public Sender Sender { get; set; } = null!;
 
         public Message()
         {
         }
 
-        public Message(ISender sender, Chat chat, string messageText)
+        public Message(Sender sender, Chat chat, string messageText)
         {
-            if (sender is User user)
-            {
-                SenderUser = user;
-            }
-            else if (sender is EmpNamespace emp)
-            {
-                SenderEmployee = emp;
-            }
-
-            Chat = chat;
-            Text = messageText;
-            Timestamp = DateTimeOffset.UtcNow;
+            this.Chat = chat;
+            this.Text = messageText;
+            this.Timestamp = DateTimeOffset.UtcNow;
+            this.Sender = sender;
         }
 
-        public Message(Chat chat, string text, ISender sender)
+        public Message(Chat chat, string text, Sender sender)
         {
             Chat = chat;
-            ChatId = chat.Id;
             Text = text;
-            if (sender is User user)
-            {
-                SenderUser = user;
-            }
-            else if (sender is EmpNamespace emp)
-            {
-                SenderEmployee = emp;
-            }
+            // if (sender is User user)
+            // {
+            //    SenderUser = user;
+            // }
+            // else if (sender is EmpNamespace.Employee emp)
+            // {
+            //    SenderEmployee = emp;
+            // }
+            Sender = sender;
             Timestamp = DateTimeOffset.UtcNow;
         }
 
         // TODO: This constructor is currently used only for mapping from DB. Without this message_id and timestamp are unsettable.
         // Updated Mapping Constructor
-        public Message(int id, ISender sender, Chat chat, string text, DateTimeOffset timestamp)
+        public Message(int id, Sender sender, Chat chat, string text, DateTimeOffset timestamp)
         {
             Id = id;
-            if (sender is User user)
-            {
-                SenderUser = user;
-            }
-            else if (sender is EmpNamespace emp)
-            {
-                SenderEmployee = emp;
-            }
+            // if (sender is User user)
+            // {
+            //    SenderUser = user;
+            // }
+            // else if (sender is EmpNamespace.Employee emp)
+            // {
+            //    SenderEmployee = emp;
+            // }
+            Sender = sender;
             Chat = chat;
-            ChatId = chat.Id;
             Text = text;
             Timestamp = timestamp;
         }

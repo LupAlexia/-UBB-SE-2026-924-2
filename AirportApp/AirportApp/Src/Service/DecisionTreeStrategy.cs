@@ -37,14 +37,14 @@ namespace AirportApp.Src.Service.Bot.Strategy
 
             string extractedTextContentFromIncomingUserMessage = incomingUserMessage.Text;
 
-            FAQOption? selectedUserOptionMatchingIncomingMessageText = currentlyActiveConversationDecisionTreeNode.options.FirstOrDefault((option) => option.label.Equals(extractedTextContentFromIncomingUserMessage));
+            FAQOption? selectedUserOptionMatchingIncomingMessageText = currentlyActiveConversationDecisionTreeNode.Options.FirstOrDefault((option) => option.Label.Equals(extractedTextContentFromIncomingUserMessage));
             if (selectedUserOptionMatchingIncomingMessageText == null)
             {
                 var restartNode = await repositoryForAccessingFrequentlyAskedQuestionsDecisionNodes.GetByIdAsync((int)BotStandardMessages.RestartConversation);
                 return new BotMessage.BotMessageBuilder(activeBotEngineInstance, incomingUserMessage.GetChat(), CONSTANT_VALUE_REPRESENTING_UNASSIGNED_DATABASE_IDENTIFIER, restartNode).Build();
             }
 
-            FAQNode nextQuestion = await repositoryForAccessingFrequentlyAskedQuestionsDecisionNodes.GetByIdAsync(selectedUserOptionMatchingIncomingMessageText.nextOptionId);
+            FAQNode nextQuestion = await repositoryForAccessingFrequentlyAskedQuestionsDecisionNodes.GetByIdAsync(selectedUserOptionMatchingIncomingMessageText.NextOptionId);
             currentlyActiveConversationDecisionTreeNode = nextQuestion;
 
             return new BotMessage.BotMessageBuilder(activeBotEngineInstance, incomingUserMessage.GetChat(), CONSTANT_VALUE_REPRESENTING_UNASSIGNED_DATABASE_IDENTIFIER, nextQuestion).Build();

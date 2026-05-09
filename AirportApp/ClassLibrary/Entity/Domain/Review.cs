@@ -30,15 +30,8 @@ namespace AirportApp.ClassLibrary.Entity.Domain
         [Column("Cleanliness_Rating")]
         public int CleanlinessRating { get; set; }
 
-        // 2. Navigation Properties (EF Core link to User)
-        [Required]
-        [Column("User_Id")]
-        public int UserId { get; set; }
-
-        [ForeignKey(nameof(UserId))]
         public User User { get; set; } = null!;
 
-        // 3. EF Core Required Parameterless Constructor
         public Review()
         {
         }
@@ -48,7 +41,6 @@ namespace AirportApp.ClassLibrary.Entity.Domain
         {
             Id = id;
             User = user ?? throw new ArgumentException("User cannot be null");
-            UserId = user.UserId;
             Message = message;
             DutyFreeRating = dutyFreeRating;
             FlightExperienceRating = flightExperienceRating;

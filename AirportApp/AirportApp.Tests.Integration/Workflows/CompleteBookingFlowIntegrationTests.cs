@@ -75,7 +75,6 @@ public class CompleteBookingFlowIntegrationTests : BaseIntegrationTest
         var membership = new Membership { Id = MembershipId, Name = MembershipName, FlightDiscountPercentage = MembershipDiscount };
         var user = UserFixture.CreateValidTestUser(membership: membership);
         user.Membership = membership;
-        user.MembershipId = membership.Id;
 
         var flight = await GetTestFlightAsync();
         var tickets = new List<FlightTicket> { new FlightTicket { Price = TicketPrice } };

@@ -21,12 +21,11 @@ namespace AirportApp.Src.Service
             this.userRepository = userRepository;
         }
 
-        public async Task<Chat> OpenChatAsync(int userId)
+        public async Task<Chat> OpenChatAsync(User userToOpenChatFor)
         {
-            User user = await userRepository.GetByIdAsync(userId);
             try
             {
-                Chat newChat = new Chat(UNASSIGNED_CHAT_ID, user, ChatStatus.Active);
+                Chat newChat = new Chat(UNASSIGNED_CHAT_ID, userToOpenChatFor, ChatStatus.Active);
                 int newIdentificationNumber = Convert.ToInt32(await chatRepository.CreateNewEntityAsync(newChat));
                 newChat.Id = newIdentificationNumber;
                 return newChat;

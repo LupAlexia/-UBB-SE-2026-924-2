@@ -39,15 +39,15 @@ namespace AirportApp.ClassLibrary.Entity.Repository.Database
 
         public async Task<int> CreateNewEntityAsync(FAQNode incomingFAQNodeEntityToBeSaved)
         {
-            var nodeEntity = new FAQNodeEntity
+            var nodeEntity = new FAQNode
             {
-                QuestionText = incomingFAQNodeEntityToBeSaved.questionText,
-                IsFinalAnswer = incomingFAQNodeEntityToBeSaved.isFinalAnswer
+                QuestionText = incomingFAQNodeEntityToBeSaved.QuestionText,
+                IsFinalAnswer = incomingFAQNodeEntityToBeSaved.IsFinalAnswer
             };
 
-            foreach (var opt in incomingFAQNodeEntityToBeSaved.options)
+            foreach (var opt in incomingFAQNodeEntityToBeSaved.Options)
             {
-                nodeEntity.Options.Add(new FAQOptionEntity { Label = opt.label, NextOptionId = opt.nextOptionId });
+                nodeEntity.Options.Add(new FAQOption { Label = opt.Label, NextOptionId = opt.NextOptionId });
             }
 
             this.dataBaseContext.FaqNodes.Add(nodeEntity);
@@ -64,11 +64,6 @@ namespace AirportApp.ClassLibrary.Entity.Repository.Database
                 return;
             }
 
-            if (node.Options != null && node.Options.Any())
-            {
-                this.dataBaseContext.FaqOptions.RemoveRange(node.Options);
-            }
-
             this.dataBaseContext.FaqNodes.Remove(node);
             await this.dataBaseContext.SaveChangesAsync();
         }
@@ -81,15 +76,14 @@ namespace AirportApp.ClassLibrary.Entity.Repository.Database
                 return;
             }
 
-            node.QuestionText = updatedFAQNodeEntityData.questionText;
-            node.IsFinalAnswer = updatedFAQNodeEntityData.isFinalAnswer;
+            node.QuestionText = updatedFAQNodeEntityData.QuestionText;
+            node.IsFinalAnswer = updatedFAQNodeEntityData.IsFinalAnswer;
 
-            this.dataBaseContext.FaqOptions.RemoveRange(node.Options);
             node.Options.Clear();
 
-            foreach (var opt in updatedFAQNodeEntityData.options)
+            foreach (var opt in updatedFAQNodeEntityData.Options)
             {
-                node.Options.Add(new FAQOptionEntity { NodeId = id, Label = opt.label, NextOptionId = opt.nextOptionId });
+                node.Options.Add(new FAQOption { Label = opt.Label, NextOptionId = opt.NextOptionId });
             }
 
             await this.dataBaseContext.SaveChangesAsync();
