@@ -23,7 +23,10 @@ namespace AirportApp.Src.Proxy
             try
             {
                 var dto = await httpClient.GetFromJsonAsync<AirportApp.ClassLibrary.Entity.Dto.FlightDTO>($"{BaseUrl}/{id}");
-                if (dto == null) return null;
+                if (dto == null)
+                {
+                    return null;
+                }
 
                 return new Flight
                 {
@@ -38,8 +41,11 @@ namespace AirportApp.Src.Proxy
                         RouteType = dto.route.routeType,
                         DepartureTime = dto.route.departureTime,
                         ArrivalTime = dto.route.arrivalTime,
-                        Capacity = dto.route.capacity
-                    } : null
+                        Capacity = dto.route.capacity,
+                        Airport = dto.route.airport != null ? new Airport { Id = dto.route.airport.id, AirportCode = dto.route.airport.airportCode, City = dto.route.airport.city } : null!,
+                        Company = dto.route.company != null ? new Company { Id = dto.route.company.id, Name = dto.route.company.name } : null!
+                    }
+                    : null
                 };
             }
             catch (HttpRequestException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
@@ -63,7 +69,10 @@ namespace AirportApp.Src.Proxy
                 }
 
                 var dtos = await httpClient.GetFromJsonAsync<IEnumerable<AirportApp.ClassLibrary.Entity.Dto.FlightDTO>>(query);
-                if (dtos == null) return new List<Flight>();
+                if (dtos == null)
+                {
+                    return new List<Flight>();
+                }
 
                 var flights = new List<Flight>();
                 foreach (var dto in dtos)
@@ -81,8 +90,11 @@ namespace AirportApp.Src.Proxy
                             RouteType = dto.route.routeType,
                             DepartureTime = dto.route.departureTime,
                             ArrivalTime = dto.route.arrivalTime,
-                            Capacity = dto.route.capacity
-                        } : null
+                            Capacity = dto.route.capacity,
+                            Airport = dto.route.airport != null ? new Airport { Id = dto.route.airport.id, AirportCode = dto.route.airport.airportCode, City = dto.route.airport.city } : null!,
+                            Company = dto.route.company != null ? new Company { Id = dto.route.company.id, Name = dto.route.company.name } : null!
+                        }
+                        : null
                     });
                 }
                 return flights;

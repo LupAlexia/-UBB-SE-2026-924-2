@@ -35,7 +35,21 @@ namespace Airport.Web.Controllers
                     ticket.PassengerLastName,
                     ticket.PassengerEmail,
                     ticket.PassengerPhone,
-                    ticket.SelectedAddOns?.Select(a => new AirportApp.ClassLibrary.Entity.Dto.AddOnDTO(a.Id, a.Name, a.BasePrice)).ToList() ?? new List<AirportApp.ClassLibrary.Entity.Dto.AddOnDTO>()));
+                    ticket.SelectedAddOns?.Select(a => new AirportApp.ClassLibrary.Entity.Dto.AddOnDTO(a.Id, a.Name, a.BasePrice)).ToList() ?? new List<AirportApp.ClassLibrary.Entity.Dto.AddOnDTO>(),
+                    ticket.Flight != null ? new AirportApp.ClassLibrary.Entity.Dto.FlightDTO(
+                        ticket.Flight.Id,
+                        ticket.Flight.RouteId,
+                        ticket.Flight.GateId,
+                        ticket.Flight.Date,
+                        ticket.Flight.FlightNumber,
+                        ticket.Flight.Route != null ? new AirportApp.ClassLibrary.Entity.Dto.RouteDTO(
+                            ticket.Flight.Route.Id,
+                            ticket.Flight.Route.RouteType,
+                            ticket.Flight.Route.DepartureTime,
+                            ticket.Flight.Route.ArrivalTime,
+                            ticket.Flight.Route.Capacity,
+                            ticket.Flight.Route.Airport != null ? new AirportApp.ClassLibrary.Entity.Dto.AirportDTO(ticket.Flight.Route.Airport.Id, ticket.Flight.Route.Airport.AirportCode, ticket.Flight.Route.Airport.City) : null,
+                            ticket.Flight.Route.Company != null ? new AirportApp.ClassLibrary.Entity.Dto.CompanyDTO(ticket.Flight.Route.Company.Id, ticket.Flight.Route.Company.Name) : null) : null) : null));
             }
             return Ok(dtos);
         }
@@ -98,8 +112,11 @@ namespace Airport.Web.Controllers
             }
 
             var tickets = new List<FlightTicket>();
-            foreach (var dto in request.Tickets)
+            var addOnIds = request.AddOnIds ?? new List<List<int>>();
+
+            for (int i = 0; i < request.Tickets.Count; i++)
             {
+                var dto = request.Tickets[i];
                 tickets.Add(new FlightTicket
                 {
                     Id = dto.id,
@@ -113,9 +130,14 @@ namespace Airport.Web.Controllers
                     PassengerEmail = dto.passengerEmail,
                     PassengerPhone = dto.passengerPhone
                 });
+
+                if (addOnIds.Count <= i && dto.selectedAddOns != null)
+                {
+                    addOnIds.Add(dto.selectedAddOns.Select(a => a.id).ToList());
+                }
             }
 
-            bool isSuccess = await flightTicketRepository.SaveTicketsWithAddOnsAsync(tickets, request.AddOnIds);
+            bool isSuccess = await flightTicketRepository.SaveTicketsWithAddOnsAsync(tickets, addOnIds);
             if (!isSuccess)
             {
                 return BadRequest();

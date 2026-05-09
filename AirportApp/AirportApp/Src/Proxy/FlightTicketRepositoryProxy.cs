@@ -24,8 +24,10 @@ namespace AirportApp.Src.Proxy
             try
             {
                 var dtos = await httpClient.GetFromJsonAsync<IEnumerable<AirportApp.ClassLibrary.Entity.Dto.FlightTicketDTO>>($"{BaseUrl}/user/{userId}");
-                if (dtos == null) return new List<FlightTicket>();
-
+                if (dtos == null)
+                {
+                    return new List<FlightTicket>();
+                }
                 var tickets = new List<FlightTicket>();
                 foreach (var dto in dtos)
                 {
@@ -41,7 +43,27 @@ namespace AirportApp.Src.Proxy
                         PassengerLastName = dto.passengerLastName,
                         PassengerEmail = dto.passengerEmail,
                         PassengerPhone = dto.passengerPhone,
-                        SelectedAddOns = dto.selectedAddOns?.Select(a => new AddOn(a.id, a.name, a.basePrice)).ToList() ?? new List<AddOn>()
+                        SelectedAddOns = dto.selectedAddOns?.Select(a => new AddOn(a.id, a.name, a.basePrice)).ToList() ?? new List<AddOn>(),
+                        Flight = dto.flight != null ? new Flight
+                        {
+                            Id = dto.flight.id,
+                            RouteId = dto.flight.routeId,
+                            GateId = dto.flight.gateId,
+                            Date = dto.flight.date,
+                            FlightNumber = dto.flight.flightNumber,
+                            Route = dto.flight.route != null ? new Route
+                            {
+                                Id = dto.flight.route.id,
+                                RouteType = dto.flight.route.routeType,
+                                DepartureTime = dto.flight.route.departureTime,
+                                ArrivalTime = dto.flight.route.arrivalTime,
+                                Capacity = dto.flight.route.capacity,
+                                Airport = dto.flight.route.airport != null ? new Airport { Id = dto.flight.route.airport.id, AirportCode = dto.flight.route.airport.airportCode, City = dto.flight.route.airport.city } : null!,
+                                Company = dto.flight.route.company != null ? new Company { Id = dto.flight.route.company.id, Name = dto.flight.route.company.name } : null!
+                            }
+                            : null!
+                        }
+                        : null
                     };
                     tickets.Add(ticket);
                 }

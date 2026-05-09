@@ -12,6 +12,7 @@ namespace AirportApp.ClassLibrary.Entity.Dto
         string passengerFirstName, 
         string passengerLastName, 
         string passengerEmail, 
-        string passengerPhone,
-        List<AddOnDTO> selectedAddOns);
+        string passengerPhone, 
+        List<AddOnDTO>? selectedAddOns, 
+        FlightDTO? flight = null);
 }

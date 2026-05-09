@@ -23,7 +23,10 @@ namespace AirportApp.Src.Proxy
             try
             {
                 var dto = await httpClient.GetFromJsonAsync<AirportApp.ClassLibrary.Entity.Dto.CustomerDTO>($"{BaseUrl}/{id}");
-                if (dto == null) return null;
+                if (dto == null)
+                {
+                    return null;
+                }
 
                 return new Customer
                 {
@@ -38,7 +41,8 @@ namespace AirportApp.Src.Proxy
                         Id = dto.membership.id,
                         Name = dto.membership.name,
                         FlightDiscountPercentage = dto.membership.flightDiscountPercentage
-                    } : null
+                    }
+                    : null
                 };
             }
             catch (HttpRequestException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
@@ -56,7 +60,10 @@ namespace AirportApp.Src.Proxy
             try
             {
                 var dto = await httpClient.GetFromJsonAsync<AirportApp.ClassLibrary.Entity.Dto.CustomerDTO>($"{BaseUrl}/by-email?email={Uri.EscapeDataString(email)}");
-                if (dto == null) return null;
+                if (dto == null)
+                {
+                    return null;
+                }
 
                 return new Customer
                 {
@@ -71,7 +78,8 @@ namespace AirportApp.Src.Proxy
                         Id = dto.membership.id,
                         Name = dto.membership.name,
                         FlightDiscountPercentage = dto.membership.flightDiscountPercentage
-                    } : null
+                    }
+                    : null
                 };
             }
             catch (HttpRequestException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
@@ -86,7 +94,6 @@ namespace AirportApp.Src.Proxy
             }
         }
 
-
         public async Task AddUserAsync(Customer user)
         {
             try
@@ -97,10 +104,17 @@ namespace AirportApp.Src.Proxy
                     user.Phone,
                     user.Username,
                     user.PasswordHash,
-                    user.MembershipId);
+                    user.MembershipId,
+                    null);
 
                 var response = await httpClient.PostAsJsonAsync(BaseUrl, dto);
                 response.EnsureSuccessStatusCode();
+
+                var createdDto = await response.Content.ReadFromJsonAsync<AirportApp.ClassLibrary.Entity.Dto.CustomerDTO>();
+                if (createdDto != null)
+                {
+                    user.Id = createdDto.id;
+                }
             }
             catch (HttpRequestException ex)
             {

@@ -40,7 +40,9 @@ namespace AirportApp.Src.Service
                 var ticket = new FlightTicket
                 {
                     Flight = flight,
+                    FlightId = flight.Id,
                     User = user,
+                    UserId = user.Id,
                     PassengerFirstName = passenger.FirstName,
                     PassengerLastName = passenger.LastName,
                     PassengerEmail = passenger.Email,

@@ -77,7 +77,17 @@ namespace Airport.Web.Controllers
                 MembershipId = dto.membershipId
             };
             await customerRepository.AddUserAsync(customer);
-            return Ok(dto);
+
+            var createdDto = new AirportApp.ClassLibrary.Entity.Dto.CustomerDTO(
+                customer.Id,
+                customer.Email,
+                customer.Phone,
+                customer.Username,
+                customer.PasswordHash,
+                customer.MembershipId,
+                null);
+
+            return Ok(createdDto);
         }
 
         [HttpPut("{id}/membership")]

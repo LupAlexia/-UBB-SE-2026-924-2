@@ -38,7 +38,9 @@ namespace Airport.Web.Controllers
                     flight.Route.RouteType,
                     flight.Route.DepartureTime,
                     flight.Route.ArrivalTime,
-                    flight.Route.Capacity) : null);
+                    flight.Route.Capacity,
+                    flight.Route.Airport != null ? new AirportApp.ClassLibrary.Entity.Dto.AirportDTO(flight.Route.Airport.Id, flight.Route.Airport.AirportCode, flight.Route.Airport.City) : null,
+                    flight.Route.Company != null ? new AirportApp.ClassLibrary.Entity.Dto.CompanyDTO(flight.Route.Company.Id, flight.Route.Company.Name) : null) : null);
 
             return Ok(dto);
         }
@@ -64,7 +66,9 @@ namespace Airport.Web.Controllers
                         flight.Route.RouteType,
                         flight.Route.DepartureTime,
                         flight.Route.ArrivalTime,
-                        flight.Route.Capacity) : null));
+                        flight.Route.Capacity,
+                        flight.Route.Airport != null ? new AirportApp.ClassLibrary.Entity.Dto.AirportDTO(flight.Route.Airport.Id, flight.Route.Airport.AirportCode, flight.Route.Airport.City) : null,
+                        flight.Route.Company != null ? new AirportApp.ClassLibrary.Entity.Dto.CompanyDTO(flight.Route.Company.Id, flight.Route.Company.Name) : null) : null));
             }
             return Ok(dtos);
         }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
@@ -23,7 +24,10 @@ namespace AirportApp.Src.Proxy
             try
             {
                 var dto = await httpClient.GetFromJsonAsync<AirportApp.ClassLibrary.Entity.Dto.MembershipDTO>($"{BaseUrl}/{id}");
-                if (dto == null) return null;
+                if (dto == null)
+                {
+                    return null;
+                }
 
                 return new Membership
                 {
@@ -45,7 +49,10 @@ namespace AirportApp.Src.Proxy
         public async Task<IEnumerable<Membership>> GetAllMembershipsAsync()
         {
             var dtos = await httpClient.GetFromJsonAsync<IEnumerable<AirportApp.ClassLibrary.Entity.Dto.MembershipDTO>>(BaseUrl);
-            if (dtos == null) return new List<Membership>();
+            if (dtos == null)
+            {
+                return new List<Membership>();
+            }
 
             return dtos.Select(dto => new Membership
             {
@@ -60,7 +67,10 @@ namespace AirportApp.Src.Proxy
             try
             {
                 var dtos = await httpClient.GetFromJsonAsync<IEnumerable<AirportApp.ClassLibrary.Entity.Dto.MembershipAddonDiscountDTO>>($"{BaseUrl}/{membershipId}/addon-discounts");
-                if (dtos == null) return new List<MembershipAddonDiscount>();
+                if (dtos == null)
+                {
+                    return new List<MembershipAddonDiscount>();
+                }
 
                 var discounts = new List<MembershipAddonDiscount>();
                 foreach (var dto in dtos)
