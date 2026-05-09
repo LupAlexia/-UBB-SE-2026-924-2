@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -135,7 +136,8 @@ namespace AirportApp.Tests.Unit.ViewModel
             var mockMessage = new Message(1, testUser, testChat, "Init", DateTimeOffset.UtcNow);
             var mockViewModel = CreateViewModel(new List<Message> { mockMessage });
             msgRepositoryMock.ClearReceivedCalls();
-            var selectedChatOption = new FAQOption("Test", 2);
+            var nextNode = new FAQNode(2, "Next Question", ImmutableArray<FAQOption>.Empty, false);
+            var selectedChatOption = new FAQOption("Test", nextNode);
 
             mockViewModel.HandleOptionClickCommand.Execute(selectedChatOption);
             await Task.Delay(100);

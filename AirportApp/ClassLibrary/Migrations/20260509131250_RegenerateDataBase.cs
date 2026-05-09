@@ -185,11 +185,17 @@ namespace AirportApp.ClassLibrary.Migrations
                 {
                     node_id = table.Column<int>(type: "int", nullable: false),
                     label = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    next_option_id = table.Column<int>(type: "int", nullable: false)
+                    NextOptionId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_FAQOption", x => new { x.node_id, x.label });
+                    table.ForeignKey(
+                        name: "FK_FAQOption_FAQNode_NextOptionId",
+                        column: x => x.NextOptionId,
+                        principalTable: "FAQNode",
+                        principalColumn: "node_id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_FAQOption_FAQNode_node_id",
                         column: x => x.node_id,
@@ -593,9 +599,9 @@ namespace AirportApp.ClassLibrary.Migrations
                 columns: new[] { "Customer_Id", "Email", "MembershipId", "Password_Hash", "Phone", "Username" },
                 values: new object[,]
                 {
-                    { 101, "alice@bot.com", 1, "AQAAAAIAAYagAAAAEFrClMiayKETDgc72t82k2u0x7FYwDamb26Y8Hc3Khcrvk35qv+UOG8DJfdS072a/w==", string.Empty, "alice" },
-                    { 102, "bob@chat.com", 2, "AQAAAAIAAYagAAAAEBo8g8J2kBatVyThJYhB+C1e4GA5JhOZFBGzHnhR2kzvmCt8LTrjdwsJQ0PRa8MUYw==", string.Empty, "bob" },
-                    { 103, "mia@example.com", 3, "AQAAAAIAAYagAAAAECR4iXe/cjGEgLa0nsm5yk3hU36OI4oNT+FlDYbqJoR3tVJ1xmbpd1O3KUBK0iBR3g==", string.Empty, "mia" }
+                    { 101, "alice@bot.com", 1, "AQAAAAIAAYagAAAAEAnmal1dXyQ2S6Y4pxUuSuc5fWS6js53V1C7LorQ8t5qt7WYOqBBwQF7hTrjd9wxdA==", string.Empty, "alice" },
+                    { 102, "bob@chat.com", 2, "AQAAAAIAAYagAAAAEMzHvpIxjezdUPYtCscMTO7+PweNzo0iUIkvhQSzn/Vp6IsvDRdrH9BsIICH6aekzQ==", string.Empty, "bob" },
+                    { 103, "mia@example.com", 3, "AQAAAAIAAYagAAAAEC7BFXq0nSxqAAiZdEzbHsONlQh99HO5pTpJjHSLfxudCim0MgvlhOo2+eYRDcY89Q==", string.Empty, "mia" }
                 });
 
             migrationBuilder.InsertData(
@@ -611,7 +617,7 @@ namespace AirportApp.ClassLibrary.Migrations
 
             migrationBuilder.InsertData(
                 table: "FAQOption",
-                columns: new[] { "label", "node_id", "next_option_id" },
+                columns: new[] { "label", "node_id", "NextOptionId" },
                 values: new object[,]
                 {
                     { "Baggage", 1, 4 },
@@ -744,6 +750,11 @@ namespace AirportApp.ClassLibrary.Migrations
                 name: "IX_Customers_MembershipId",
                 table: "Customers",
                 column: "MembershipId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_FAQOption_NextOptionId",
+                table: "FAQOption",
+                column: "NextOptionId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Flights_GateId",

@@ -21,20 +21,21 @@ namespace AirportApp.ClassLibrary.Entity.Repository.Database
 
         public async Task<FAQNode> GetByIdAsync(int id)
         {
-            var node = await this.dataBaseContext.FaqNodes
+            var nodes = await this.dataBaseContext.FaqNodes
                 .Include(n => n.Options)
-                .FirstOrDefaultAsync(n => n.NodeId == id);
+                .ToListAsync();
+
+            var node = nodes.FirstOrDefault(n => n.NodeId == id);
 
             if (node == null)
             {
                 return null;
             }
 
-            var options = node.Options
-                .Select(o => new FAQOption(o.Label, o.NextOptionId))
-                .ToImmutableArray();
+            var nodesById = nodes.ToDictionary(n => n.NodeId);
+            var mappedNode = MapNode(node, nodesById, new Dictionary<int, FAQNode>());
 
-            return new FAQNode(node.NodeId, node.QuestionText, options, node.IsFinalAnswer);
+            return mappedNode;
         }
 
         public async Task<int> CreateNewEntityAsync(FAQNode incomingFAQNodeEntityToBeSaved)
@@ -47,7 +48,9 @@ namespace AirportApp.ClassLibrary.Entity.Repository.Database
 
             foreach (var opt in incomingFAQNodeEntityToBeSaved.Options)
             {
-                nodeEntity.Options.Add(new FAQOption { Label = opt.Label, NextOptionId = opt.NextOptionId });
+                var optionEntity = new FAQOption(opt.Label, opt.NextOption);
+                nodeEntity.Options.Add(optionEntity);
+                this.dataBaseContext.Entry(optionEntity).Property<int?>("NextOptionId").CurrentValue = opt.NextOption?.NodeId;
             }
 
             this.dataBaseContext.FaqNodes.Add(nodeEntity);
@@ -83,7 +86,9 @@ namespace AirportApp.ClassLibrary.Entity.Repository.Database
 
             foreach (var opt in updatedFAQNodeEntityData.Options)
             {
-                node.Options.Add(new FAQOption { Label = opt.Label, NextOptionId = opt.NextOptionId });
+                var optionEntity = new FAQOption(opt.Label, opt.NextOption);
+                node.Options.Add(optionEntity);
+                this.dataBaseContext.Entry(optionEntity).Property<int?>("NextOptionId").CurrentValue = opt.NextOption?.NodeId;
             }
 
             await this.dataBaseContext.SaveChangesAsync();
@@ -95,11 +100,64 @@ namespace AirportApp.ClassLibrary.Entity.Repository.Database
                 .Include(n => n.Options)
                 .ToListAsync();
 
-            return nodes.Select(n => new FAQNode(
-                n.NodeId,
-                n.QuestionText,
-                n.Options.Select(o => new FAQOption(o.Label, o.NextOptionId)).ToImmutableArray(),
-                n.IsFinalAnswer));
+            var nodesById = nodes.ToDictionary(n => n.NodeId);
+            var cache = new Dictionary<int, FAQNode>();
+
+            return nodes.Select(n => MapNode(n, nodesById, cache));
+        }
+
+        private FAQNode MapNode(
+            FAQNode source,
+            IReadOnlyDictionary<int, FAQNode> nodesById,
+            IDictionary<int, FAQNode> cache)
+        {
+            if (cache.TryGetValue(source.NodeId, out var mappedNode))
+            {
+                return mappedNode;
+            }
+
+            mappedNode = new FAQNode
+            {
+                NodeId = source.NodeId,
+                QuestionText = source.QuestionText,
+                IsFinalAnswer = source.IsFinalAnswer
+            };
+
+            cache[source.NodeId] = mappedNode;
+
+            mappedNode.Options = source.Options
+                .Select(option => new FAQOption(option.Label, ResolveNextNodeId(option))
+                {
+                    NextOption = ResolveNextNode(option, nodesById, cache)
+                })
+                .ToList();
+
+            return mappedNode;
+        }
+
+        private int ResolveNextNodeId(FAQOption option)
+        {
+            var trackedEntry = this.dataBaseContext.Entry(option);
+            var nextOptionId = trackedEntry.Property<int?>("NextOptionId").CurrentValue;
+
+            if (nextOptionId.HasValue)
+            {
+                return nextOptionId.Value;
+            }
+
+            return option.NextOption?.NodeId ?? 0;
+        }
+
+        private FAQNode? ResolveNextNode(
+            FAQOption option,
+            IReadOnlyDictionary<int, FAQNode> nodesById,
+            IDictionary<int, FAQNode> cache)
+        {
+            var nextOptionId = ResolveNextNodeId(option);
+
+            return nextOptionId != 0 && nodesById.TryGetValue(nextOptionId, out var nextNode)
+                ? MapNode(nextNode, nodesById, cache)
+                : null;
         }
     }
 }

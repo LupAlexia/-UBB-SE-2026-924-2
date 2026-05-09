@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AirportApp.ClassLibrary.Migrations
 {
     [DbContext(typeof(AirportDbContext))]
-    [Migration("20260509080834_RegenerateDataBase")]
+    [Migration("20260509131250_RegenerateDataBase")]
     partial class RegenerateDataBase
     {
         /// <inheritdoc />
@@ -460,7 +460,7 @@ namespace AirportApp.ClassLibrary.Migrations
                             Id = 101,
                             Email = "alice@bot.com",
                             MembershipId = 1,
-                            PasswordHash = "AQAAAAIAAYagAAAAEFrClMiayKETDgc72t82k2u0x7FYwDamb26Y8Hc3Khcrvk35qv+UOG8DJfdS072a/w==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEAnmal1dXyQ2S6Y4pxUuSuc5fWS6js53V1C7LorQ8t5qt7WYOqBBwQF7hTrjd9wxdA==",
                             Phone = "",
                             Username = "alice"
                         },
@@ -469,7 +469,7 @@ namespace AirportApp.ClassLibrary.Migrations
                             Id = 102,
                             Email = "bob@chat.com",
                             MembershipId = 2,
-                            PasswordHash = "AQAAAAIAAYagAAAAEBo8g8J2kBatVyThJYhB+C1e4GA5JhOZFBGzHnhR2kzvmCt8LTrjdwsJQ0PRa8MUYw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEMzHvpIxjezdUPYtCscMTO7+PweNzo0iUIkvhQSzn/Vp6IsvDRdrH9BsIICH6aekzQ==",
                             Phone = "",
                             Username = "bob"
                         },
@@ -478,7 +478,7 @@ namespace AirportApp.ClassLibrary.Migrations
                             Id = 103,
                             Email = "mia@example.com",
                             MembershipId = 3,
-                            PasswordHash = "AQAAAAIAAYagAAAAECR4iXe/cjGEgLa0nsm5yk3hU36OI4oNT+FlDYbqJoR3tVJ1xmbpd1O3KUBK0iBR3g==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEC7BFXq0nSxqAAiZdEzbHsONlQh99HO5pTpJjHSLfxudCim0MgvlhOo2+eYRDcY89Q==",
                             Phone = "",
                             Username = "mia"
                         });
@@ -648,11 +648,12 @@ namespace AirportApp.ClassLibrary.Migrations
                         .HasColumnType("nvarchar(450)")
                         .HasColumnName("label");
 
-                    b.Property<int>("NextOptionId")
-                        .HasColumnType("int")
-                        .HasColumnName("next_option_id");
+                    b.Property<int?>("NextOptionId")
+                        .HasColumnType("int");
 
                     b.HasKey("NodeId", "Label");
+
+                    b.HasIndex("NextOptionId");
 
                     b.ToTable("FAQOption", (string)null);
 
@@ -1435,11 +1436,18 @@ namespace AirportApp.ClassLibrary.Migrations
 
             modelBuilder.Entity("AirportApp.ClassLibrary.Entity.Domain.FAQOption", b =>
                 {
+                    b.HasOne("AirportApp.ClassLibrary.Entity.Domain.FAQNode", "NextOption")
+                        .WithMany()
+                        .HasForeignKey("NextOptionId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.HasOne("AirportApp.ClassLibrary.Entity.Domain.FAQNode", null)
                         .WithMany("Options")
                         .HasForeignKey("NodeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("NextOption");
                 });
 
             modelBuilder.Entity("AirportApp.ClassLibrary.Entity.Domain.Flight", b =>

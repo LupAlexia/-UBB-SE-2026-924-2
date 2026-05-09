@@ -44,7 +44,8 @@ namespace AirportApp.Src.Service.Bot.Strategy
                 return new BotMessage.BotMessageBuilder(activeBotEngineInstance, incomingUserMessage.GetChat(), CONSTANT_VALUE_REPRESENTING_UNASSIGNED_DATABASE_IDENTIFIER, restartNode).Build();
             }
 
-            FAQNode nextQuestion = await repositoryForAccessingFrequentlyAskedQuestionsDecisionNodes.GetByIdAsync(selectedUserOptionMatchingIncomingMessageText.NextOptionId);
+            FAQNode nextQuestion = selectedUserOptionMatchingIncomingMessageText.NextOption
+                ?? await repositoryForAccessingFrequentlyAskedQuestionsDecisionNodes.GetByIdAsync(1);
             currentlyActiveConversationDecisionTreeNode = nextQuestion;
 
             return new BotMessage.BotMessageBuilder(activeBotEngineInstance, incomingUserMessage.GetChat(), CONSTANT_VALUE_REPRESENTING_UNASSIGNED_DATABASE_IDENTIFIER, nextQuestion).Build();

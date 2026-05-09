@@ -30,7 +30,7 @@ namespace AirportApp.Src.Service
             {
                 throw new ArgumentNullException(nameof(selectedOption));
             }
-            if (selectedOption.NextOptionId == 1)
+            if (selectedOption.NextOption?.NodeId == 1)
             {
                 await botEngine.ResetBotConversationStateToInitialRootNodeAsync();
             }

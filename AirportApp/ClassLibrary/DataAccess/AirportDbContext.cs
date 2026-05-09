@@ -71,7 +71,10 @@ namespace AirportApp.ClassLibrary.DataAccess
                 b.HasKey(e => new { e.NodeId, e.Label });
                 b.Property(e => e.NodeId).HasColumnName("node_id");
                 b.Property(e => e.Label).HasColumnName("label");
-                b.Property(e => e.NextOptionId).HasColumnName("next_option_id");
+                b.HasOne(e => e.NextOption)
+                    .WithMany()
+                    .HasForeignKey("NextOptionId")
+                    .OnDelete(DeleteBehavior.Restrict);
             });
 
             modelBuilder.Entity<Airport>()
