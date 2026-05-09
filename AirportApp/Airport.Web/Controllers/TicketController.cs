@@ -1,13 +1,9 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using AirportApp.ClassLibrary.DataAccess;
-using AirportApp.ClassLibrary.Entity.Domain;
-using AirportApp.ClassLibrary.Entity.Domain.Ticket;
 using AirportApp.ClassLibrary.Repository.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using AirportApp.ClassLibrary.Entity.Dto;
-using Microsoft.EntityFrameworkCore;
-
+using AirportApp.ClassLibrary.Entity.Domain;
 namespace Airport.Web.Controllers
 {
     [ApiController]

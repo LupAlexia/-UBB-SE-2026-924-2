@@ -4,8 +4,8 @@ using AirportApp.Src.ViewModel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using AirportApp.ClassLibrary.Entity.Domain;
-using AirportApp.Src.Service;
 using FluentAssertions;
+using AirportApp.Src.Service.Interfaces;
 
 namespace AirportApp.Tests.Unit.ViewModel
 {

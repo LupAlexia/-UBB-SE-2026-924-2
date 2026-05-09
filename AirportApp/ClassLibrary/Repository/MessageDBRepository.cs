@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using AirportApp.ClassLibrary.Entity.Domain.Message;
 using AirportApp.ClassLibrary.Entity.Domain;
 using AirportApp.ClassLibrary.Repository.Interfaces;
 using AirportApp.ClassLibrary.DataAccess;
@@ -123,9 +122,9 @@ namespace AirportApp.ClassLibrary.Repository.Interfaces
         {
             var senderId = dataBaseContext.Entry(message).Property<int>("SenderId").CurrentValue;
 
-            if (senderId == AirportApp.ClassLibrary.Entity.Domain.Message.BotEngineIdentity.CONSTANT_IDENTIFIER_FOR_DEFAULT_BOT_SYSTEM_USER)
+            if (senderId == BotEngineIdentity.CONSTANT_IDENTIFIER_FOR_DEFAULT_BOT_SYSTEM_USER)
             {
-                return new AirportApp.ClassLibrary.Entity.Domain.Message.BotEngineIdentity(null);
+                return new BotEngineIdentity(null);
             }
 
             return await dataBaseContext.Senders

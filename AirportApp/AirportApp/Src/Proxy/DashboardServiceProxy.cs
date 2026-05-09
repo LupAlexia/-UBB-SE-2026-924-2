@@ -9,7 +9,7 @@ using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
 using AirportApp.ClassLibrary.Entity.Domain;
-using AirportApp.Src.Service;
+using AirportApp.Src.Service.Interfaces;
 
 namespace AirportApp.Src.Proxy
 {

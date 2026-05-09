@@ -4,14 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using AirportApp.ClassLibrary.Entity.Domain.Chats;
-using AirportApp.ClassLibrary.Entity.Domain.Employee;
-using AirportApp.ClassLibrary.Entity.Domain.Faq;
-using AirportApp.ClassLibrary.Entity.Domain.Faq.Bot;
-using AirportApp.ClassLibrary.Entity.Domain.Review;
-using AirportApp.ClassLibrary.Entity.Domain.Ticket;
 using AirportApp.ClassLibrary.Entity.Domain;
-using AirportApp.ClassLibrary.Entity.Domain.Message;
 namespace AirportApp.ClassLibrary.DataAccess
 {
     public class AirportDbContext : DbContext
@@ -40,8 +33,8 @@ namespace AirportApp.ClassLibrary.DataAccess
         public DbSet<Company> Companies { get; set; }
         public DbSet<Gate> Gates { get; set; }
         public DbSet<Route> Routes { get; set; }
-        public DbSet<FAQNodeEntity> FaqNodes { get; set; }
-        public DbSet<FAQOptionEntity> FaqOptions { get; set; }
+        public DbSet<FAQNode> FaqNodes { get; set; }
+        public DbSet<FAQOption> FaqOptions { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -59,7 +52,7 @@ namespace AirportApp.ClassLibrary.DataAccess
             modelBuilder.Entity<Employee>()
                 .ToTable("Employees");
 
-            modelBuilder.Entity<FAQNodeEntity>(b =>
+            modelBuilder.Entity<FAQNode>(b =>
             {
                 b.ToTable("FAQNode");
                 b.HasKey(e => e.NodeId);
@@ -68,11 +61,11 @@ namespace AirportApp.ClassLibrary.DataAccess
                 b.Property(e => e.IsFinalAnswer).HasColumnName("is_final_answer");
                 b.HasMany(e => e.Options)
                     .WithOne()
-                    .HasForeignKey(o => o.NodeId)
+                    .HasForeignKey("NodeId")
                     .OnDelete(DeleteBehavior.Cascade);
             });
 
-            modelBuilder.Entity<FAQOptionEntity>(b =>
+            modelBuilder.Entity<FAQOption>(b =>
             {
                 b.ToTable("FAQOption");
                 b.HasKey(e => new { e.NodeId, e.Label });
@@ -201,7 +194,7 @@ namespace AirportApp.ClassLibrary.DataAccess
             User user3 = new User { Id = 103, FullName = "Mia Passenger", EmailAddress = "mia@example.com" };
 
             // Seed some basic decision-tree data for FAQs using entity types
-            modelBuilder.Entity<FAQNodeEntity>().HasData(
+            modelBuilder.Entity<FAQNode>().HasData(
                 new { NodeId = 1, QuestionText = "Welcome! How can I help you today?", IsFinalAnswer = false },
                 new { NodeId = 2, QuestionText = "Flights information: You can search and book flights.", IsFinalAnswer = true },
                 new { NodeId = 3, QuestionText = "Membership information: View plans and discounts.", IsFinalAnswer = true },
@@ -209,7 +202,7 @@ namespace AirportApp.ClassLibrary.DataAccess
                 new { NodeId = 5, QuestionText = "Payments information: Find out which payment methods are accepted.", IsFinalAnswer = true },
                 new { NodeId = 6, QuestionText = "Support information: Contact our team for help with bookings or accounts.", IsFinalAnswer = true });
 
-            modelBuilder.Entity<FAQOptionEntity>().HasData(
+            modelBuilder.Entity<FAQOption>().HasData(
                 new { NodeId = 1, Label = "Flights", NextOptionId = 2 },
                 new { NodeId = 1, Label = "Memberships", NextOptionId = 3 },
                 new { NodeId = 1, Label = "Baggage", NextOptionId = 4 },

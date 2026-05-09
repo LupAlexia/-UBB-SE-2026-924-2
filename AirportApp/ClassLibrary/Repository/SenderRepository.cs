@@ -20,10 +20,10 @@ namespace AirportApp.ClassLibrary.Repository
         public async Task<Sender> GetByIdAsync(int id)
         {
             // Special-case the bot engine identity (sentinel id)
-            if (id == AirportApp.ClassLibrary.Entity.Domain.Message.BotEngineIdentity.CONSTANT_IDENTIFIER_FOR_DEFAULT_BOT_SYSTEM_USER)
+            if (id == BotEngineIdentity.CONSTANT_IDENTIFIER_FOR_DEFAULT_BOT_SYSTEM_USER)
             {
                 // Return the bot sentinel object, not a persisted user row.
-                return new AirportApp.ClassLibrary.Entity.Domain.Message.BotEngineIdentity(null);
+                return new BotEngineIdentity(null);
             }
 
             return await dataBaseContext.Senders

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using AirportApp.ClassLibrary.Entity.Domain.Faq;
 using AirportApp.ClassLibrary.Repository.Interfaces;
 using AirportApp.ClassLibrary.DataAccess;
+using AirportApp.ClassLibrary.Entity.Domain;
 
 namespace AirportApp.ClassLibrary.Repository
 {

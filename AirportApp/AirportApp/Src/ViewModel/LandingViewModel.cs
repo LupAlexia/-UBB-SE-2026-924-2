@@ -2,8 +2,8 @@ using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using AutoMapper;
 using AirportApp.ClassLibrary.Entity.Dto;
-using AirportApp.Src.Service;
 using CommunityToolkit.Mvvm.ComponentModel;
+using AirportApp.Src.Service.Interfaces;
 
 namespace AirportApp.Src.ViewModel
 {

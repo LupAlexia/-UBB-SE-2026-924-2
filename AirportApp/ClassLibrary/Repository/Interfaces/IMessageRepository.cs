@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using AirportApp.ClassLibrary.Entity.Domain.Message;
+using AirportApp.ClassLibrary.Entity.Domain;
 
 namespace AirportApp.ClassLibrary.Repository.Interfaces
 {

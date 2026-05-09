@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using AirportApp.ClassLibrary.Entity.Domain.Faq;
+using AirportApp.ClassLibrary.Entity.Domain;
 
 namespace AirportApp.ClassLibrary.Entity.Dto
 {

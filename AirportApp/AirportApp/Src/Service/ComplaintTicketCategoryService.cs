@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using AirportApp.ClassLibrary.Entity.Domain.Ticket;
 using AirportApp.Src.Service.Interfaces;
 using AirportApp.ClassLibrary.Repository.Interfaces;
+using AirportApp.ClassLibrary.Entity.Domain;
 
 public class ComplaintTicketCategoryService : IComplaintTicketCategoryService
 {

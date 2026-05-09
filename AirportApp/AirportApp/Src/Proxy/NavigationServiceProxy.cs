@@ -1,6 +1,7 @@
 using System;
 using Microsoft.UI.Xaml.Controls;
 using AirportApp.Src.Service;
+using AirportApp.Src.Service.Interfaces;
 
 namespace AirportApp.Src.Proxy
 {

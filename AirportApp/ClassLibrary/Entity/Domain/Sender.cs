@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using AirportApp.ClassLibrary.Entity.Domain.Message;
+using AirportApp.ClassLibrary.Entity.Domain;
 
 namespace AirportApp.ClassLibrary.Entity.Domain
 {

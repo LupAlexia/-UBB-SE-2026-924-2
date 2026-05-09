@@ -2,8 +2,8 @@ using System;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using AirportApp.Src.Service;
 using AirportApp.ClassLibrary.Entity.Domain;
+using AirportApp.Src.Service.Interfaces;
 
 namespace AirportApp.Src.ViewModel
 {
