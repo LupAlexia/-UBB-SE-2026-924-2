@@ -45,16 +45,16 @@ namespace Airport.Web.Controllers
         {
             var ticket = new FlightTicket
             {
-                Id = dto.Id,
-                UserId = dto.UserId,
-                FlightId = dto.FlightId,
-                Seat = dto.Seat,
-                Price = dto.Price,
-                Status = dto.Status,
-                PassengerFirstName = dto.PassengerFirstName,
-                PassengerLastName = dto.PassengerLastName,
-                PassengerEmail = dto.PassengerEmail,
-                PassengerPhone = dto.PassengerPhone
+                Id = dto.id,
+                UserId = dto.userId,
+                FlightId = dto.flightId,
+                Seat = dto.seat,
+                Price = dto.price,
+                Status = dto.status,
+                PassengerFirstName = dto.passengerFirstName,
+                PassengerLastName = dto.passengerLastName,
+                PassengerEmail = dto.passengerEmail,
+                PassengerPhone = dto.passengerPhone
                 // Add-ons are usually handled via separate endpoint or batch
             };
             await flightTicketRepository.AddTicketAsync(ticket);
@@ -102,16 +102,16 @@ namespace Airport.Web.Controllers
             {
                 tickets.Add(new FlightTicket
                 {
-                    Id = dto.Id,
-                    UserId = dto.UserId,
-                    FlightId = dto.FlightId,
-                    Seat = dto.Seat,
-                    Price = dto.Price,
-                    Status = dto.Status,
-                    PassengerFirstName = dto.PassengerFirstName,
-                    PassengerLastName = dto.PassengerLastName,
-                    PassengerEmail = dto.PassengerEmail,
-                    PassengerPhone = dto.PassengerPhone
+                    Id = dto.id,
+                    UserId = dto.userId,
+                    FlightId = dto.flightId,
+                    Seat = dto.seat,
+                    Price = dto.price,
+                    Status = dto.status,
+                    PassengerFirstName = dto.passengerFirstName,
+                    PassengerLastName = dto.passengerLastName,
+                    PassengerEmail = dto.passengerEmail,
+                    PassengerPhone = dto.passengerPhone
                 });
             }
 

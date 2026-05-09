@@ -1,4 +1,4 @@
 namespace AirportApp.ClassLibrary.Entity.Dto
 {
-    public record MembershipAddonDiscountDTO(int MembershipId, int AddOnId, float DiscountPercentage, string AddOnName);
+    public record MembershipAddonDiscountDTO(int membershipId, int addOnId, float discountPercentage, string addOnName);
 }

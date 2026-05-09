@@ -21,8 +21,10 @@ namespace AirportApp.Src.Proxy
 
         public async Task<IEnumerable<AddOn>> GetAllAddOnsAsync()
         {
-            return await httpClient.GetFromJsonAsync<IEnumerable<AddOn>>(BaseUrl)
-                   ?? new List<AddOn>();
+            var dtos = await httpClient.GetFromJsonAsync<IEnumerable<AirportApp.ClassLibrary.Entity.Dto.AddOnDTO>>(BaseUrl);
+            if (dtos == null) return new List<AddOn>();
+
+            return dtos.Select(dto => new AddOn(dto.id, dto.name, dto.basePrice)).ToList();
         }
 
         public async Task<IEnumerable<AddOn>> GetAddOnsByIdsAsync(IEnumerable<int> addOnIds)
@@ -32,8 +34,10 @@ namespace AirportApp.Src.Proxy
                 var idList = addOnIds.ToList();
                 var response = await httpClient.PostAsJsonAsync($"{BaseUrl}/by-ids", idList);
                 response.EnsureSuccessStatusCode();
-                return await response.Content.ReadFromJsonAsync<IEnumerable<AddOn>>()
-                       ?? new List<AddOn>();
+                var dtos = await response.Content.ReadFromJsonAsync<IEnumerable<AirportApp.ClassLibrary.Entity.Dto.AddOnDTO>>();
+                if (dtos == null) return new List<AddOn>();
+
+                return dtos.Select(dto => new AddOn(dto.id, dto.name, dto.basePrice)).ToList();
             }
             catch (HttpRequestException ex)
             {

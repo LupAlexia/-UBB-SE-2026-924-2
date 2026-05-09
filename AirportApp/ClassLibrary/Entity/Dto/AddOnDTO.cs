@@ -1,4 +1,4 @@
 namespace AirportApp.ClassLibrary.Entity.Dto
 {
-    public record AddOnDTO(int Id, string Name, float BasePrice);
+    public record AddOnDTO(int id, string name, float basePrice);
 }

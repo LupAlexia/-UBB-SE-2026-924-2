@@ -22,7 +22,24 @@ namespace AirportApp.Src.Proxy
         {
             try
             {
-                return await httpClient.GetFromJsonAsync<Customer>($"{BaseUrl}/{id}");
+                var dto = await httpClient.GetFromJsonAsync<AirportApp.ClassLibrary.Entity.Dto.CustomerDTO>($"{BaseUrl}/{id}");
+                if (dto == null) return null;
+
+                return new Customer
+                {
+                    Id = dto.id,
+                    Email = dto.email,
+                    Phone = dto.phone,
+                    Username = dto.username,
+                    PasswordHash = dto.passwordHash,
+                    MembershipId = dto.membershipId,
+                    Membership = dto.membership != null ? new Membership
+                    {
+                        Id = dto.membership.id,
+                        Name = dto.membership.name,
+                        FlightDiscountPercentage = dto.membership.flightDiscountPercentage
+                    } : null
+                };
             }
             catch (HttpRequestException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
             {
@@ -38,7 +55,24 @@ namespace AirportApp.Src.Proxy
         {
             try
             {
-                return await httpClient.GetFromJsonAsync<Customer>($"{BaseUrl}/by-email?email={Uri.EscapeDataString(email)}");
+                var dto = await httpClient.GetFromJsonAsync<AirportApp.ClassLibrary.Entity.Dto.CustomerDTO>($"{BaseUrl}/by-email?email={Uri.EscapeDataString(email)}");
+                if (dto == null) return null;
+
+                return new Customer
+                {
+                    Id = dto.id,
+                    Email = dto.email,
+                    Phone = dto.phone,
+                    Username = dto.username,
+                    PasswordHash = dto.passwordHash,
+                    MembershipId = dto.membershipId,
+                    Membership = dto.membership != null ? new Membership
+                    {
+                        Id = dto.membership.id,
+                        Name = dto.membership.name,
+                        FlightDiscountPercentage = dto.membership.flightDiscountPercentage
+                    } : null
+                };
             }
             catch (HttpRequestException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
             {

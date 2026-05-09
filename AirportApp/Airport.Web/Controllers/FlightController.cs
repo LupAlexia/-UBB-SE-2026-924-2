@@ -32,7 +32,13 @@ namespace Airport.Web.Controllers
                 flight.RouteId,
                 flight.GateId,
                 flight.Date,
-                flight.FlightNumber);
+                flight.FlightNumber,
+                flight.Route != null ? new AirportApp.ClassLibrary.Entity.Dto.RouteDTO(
+                    flight.Route.Id,
+                    flight.Route.RouteType,
+                    flight.Route.DepartureTime,
+                    flight.Route.ArrivalTime,
+                    flight.Route.Capacity) : null);
 
             return Ok(dto);
         }
@@ -52,7 +58,13 @@ namespace Airport.Web.Controllers
                     flight.RouteId,
                     flight.GateId,
                     flight.Date,
-                    flight.FlightNumber));
+                    flight.FlightNumber,
+                    flight.Route != null ? new AirportApp.ClassLibrary.Entity.Dto.RouteDTO(
+                        flight.Route.Id,
+                        flight.Route.RouteType,
+                        flight.Route.DepartureTime,
+                        flight.Route.ArrivalTime,
+                        flight.Route.Capacity) : null));
             }
             return Ok(dtos);
         }

@@ -22,7 +22,25 @@ namespace AirportApp.Src.Proxy
         {
             try
             {
-                return await httpClient.GetFromJsonAsync<Flight>($"{BaseUrl}/{id}");
+                var dto = await httpClient.GetFromJsonAsync<AirportApp.ClassLibrary.Entity.Dto.FlightDTO>($"{BaseUrl}/{id}");
+                if (dto == null) return null;
+
+                return new Flight
+                {
+                    Id = dto.id,
+                    RouteId = dto.routeId,
+                    GateId = dto.gateId,
+                    Date = dto.date,
+                    FlightNumber = dto.flightNumber,
+                    Route = dto.route != null ? new Route
+                    {
+                        Id = dto.route.id,
+                        RouteType = dto.route.routeType,
+                        DepartureTime = dto.route.departureTime,
+                        ArrivalTime = dto.route.arrivalTime,
+                        Capacity = dto.route.capacity
+                    } : null
+                };
             }
             catch (HttpRequestException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
             {
@@ -44,8 +62,30 @@ namespace AirportApp.Src.Proxy
                     query += $"&date={date:yyyy-MM-dd}";
                 }
 
-                return await httpClient.GetFromJsonAsync<IEnumerable<Flight>>(query)
-                       ?? new List<Flight>();
+                var dtos = await httpClient.GetFromJsonAsync<IEnumerable<AirportApp.ClassLibrary.Entity.Dto.FlightDTO>>(query);
+                if (dtos == null) return new List<Flight>();
+
+                var flights = new List<Flight>();
+                foreach (var dto in dtos)
+                {
+                    flights.Add(new Flight
+                    {
+                        Id = dto.id,
+                        RouteId = dto.routeId,
+                        GateId = dto.gateId,
+                        Date = dto.date,
+                        FlightNumber = dto.flightNumber,
+                        Route = dto.route != null ? new Route
+                        {
+                            Id = dto.route.id,
+                            RouteType = dto.route.routeType,
+                            DepartureTime = dto.route.departureTime,
+                            ArrivalTime = dto.route.arrivalTime,
+                            Capacity = dto.route.capacity
+                        } : null
+                    });
+                }
+                return flights;
             }
             catch (HttpRequestException ex)
             {

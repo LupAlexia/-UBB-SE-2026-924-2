@@ -22,7 +22,15 @@ namespace AirportApp.Src.Proxy
         {
             try
             {
-                return await httpClient.GetFromJsonAsync<Membership>($"{BaseUrl}/{id}");
+                var dto = await httpClient.GetFromJsonAsync<AirportApp.ClassLibrary.Entity.Dto.MembershipDTO>($"{BaseUrl}/{id}");
+                if (dto == null) return null;
+
+                return new Membership
+                {
+                    Id = dto.id,
+                    Name = dto.name,
+                    FlightDiscountPercentage = dto.flightDiscountPercentage
+                };
             }
             catch (HttpRequestException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
             {
@@ -36,8 +44,15 @@ namespace AirportApp.Src.Proxy
 
         public async Task<IEnumerable<Membership>> GetAllMembershipsAsync()
         {
-            return await httpClient.GetFromJsonAsync<IEnumerable<Membership>>(BaseUrl)
-                   ?? new List<Membership>();
+            var dtos = await httpClient.GetFromJsonAsync<IEnumerable<AirportApp.ClassLibrary.Entity.Dto.MembershipDTO>>(BaseUrl);
+            if (dtos == null) return new List<Membership>();
+
+            return dtos.Select(dto => new Membership
+            {
+                Id = dto.id,
+                Name = dto.name,
+                FlightDiscountPercentage = dto.flightDiscountPercentage
+            }).ToList();
         }
 
         public async Task<IEnumerable<MembershipAddonDiscount>> GetAddonDiscountsAsync(int membershipId)
@@ -52,10 +67,10 @@ namespace AirportApp.Src.Proxy
                 {
                     discounts.Add(new MembershipAddonDiscount
                     {
-                        MembershipId = dto.MembershipId,
-                        AddOnId = dto.AddOnId,
-                        DiscountPercentage = dto.DiscountPercentage,
-                        AddOn = new AddOn { Id = dto.AddOnId, Name = dto.AddOnName }
+                        MembershipId = dto.membershipId,
+                        AddOnId = dto.addOnId,
+                        DiscountPercentage = dto.discountPercentage,
+                        AddOn = new AddOn { Id = dto.addOnId, Name = dto.addOnName }
                     });
                 }
                 return discounts;

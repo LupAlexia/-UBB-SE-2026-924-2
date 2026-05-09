@@ -31,17 +31,17 @@ namespace AirportApp.Src.Proxy
                 {
                     var ticket = new FlightTicket
                     {
-                        Id = dto.Id,
-                        UserId = dto.UserId,
-                        FlightId = dto.FlightId,
-                        Seat = dto.Seat,
-                        Price = dto.Price,
-                        Status = dto.Status,
-                        PassengerFirstName = dto.PassengerFirstName,
-                        PassengerLastName = dto.PassengerLastName,
-                        PassengerEmail = dto.PassengerEmail,
-                        PassengerPhone = dto.PassengerPhone,
-                        SelectedAddOns = dto.SelectedAddOns?.Select(a => new AddOn(a.Id, a.Name, a.BasePrice)).ToList() ?? new List<AddOn>()
+                        Id = dto.id,
+                        UserId = dto.userId,
+                        FlightId = dto.flightId,
+                        Seat = dto.seat,
+                        Price = dto.price,
+                        Status = dto.status,
+                        PassengerFirstName = dto.passengerFirstName,
+                        PassengerLastName = dto.passengerLastName,
+                        PassengerEmail = dto.passengerEmail,
+                        PassengerPhone = dto.passengerPhone,
+                        SelectedAddOns = dto.selectedAddOns?.Select(a => new AddOn(a.id, a.name, a.basePrice)).ToList() ?? new List<AddOn>()
                     };
                     tickets.Add(ticket);
                 }

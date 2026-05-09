@@ -3,15 +3,15 @@ using System.Collections.Generic;
 namespace AirportApp.ClassLibrary.Entity.Dto
 {
     public record FlightTicketDTO(
-        int Id, 
-        int UserId, 
-        int FlightId, 
-        string Seat, 
-        float Price, 
-        string Status, 
-        string PassengerFirstName, 
-        string PassengerLastName, 
-        string PassengerEmail, 
-        string PassengerPhone,
-        List<AddOnDTO> SelectedAddOns);
+        int id, 
+        int userId, 
+        int flightId, 
+        string seat, 
+        float price, 
+        string status, 
+        string passengerFirstName, 
+        string passengerLastName, 
+        string passengerEmail, 
+        string passengerPhone,
+        List<AddOnDTO> selectedAddOns);
 }

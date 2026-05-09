@@ -31,7 +31,11 @@ namespace Airport.Web.Controllers
                 customer.Phone,
                 customer.Username,
                 customer.PasswordHash,
-                customer.MembershipId);
+                customer.MembershipId,
+                customer.Membership != null ? new AirportApp.ClassLibrary.Entity.Dto.MembershipDTO(
+                    customer.Membership.Id,
+                    customer.Membership.Name,
+                    customer.Membership.FlightDiscountPercentage) : null);
 
             return Ok(dto);
         }
@@ -51,7 +55,11 @@ namespace Airport.Web.Controllers
                 customer.Phone,
                 customer.Username,
                 customer.PasswordHash,
-                customer.MembershipId);
+                customer.MembershipId,
+                customer.Membership != null ? new AirportApp.ClassLibrary.Entity.Dto.MembershipDTO(
+                    customer.Membership.Id,
+                    customer.Membership.Name,
+                    customer.Membership.FlightDiscountPercentage) : null);
 
             return Ok(dto);
         }
@@ -61,12 +69,12 @@ namespace Airport.Web.Controllers
         {
             var customer = new Customer
             {
-                Id = dto.Id,
-                Email = dto.Email,
-                Phone = dto.Phone,
-                Username = dto.Username,
-                PasswordHash = dto.PasswordHash,
-                MembershipId = dto.MembershipId
+                Id = dto.id,
+                Email = dto.email,
+                Phone = dto.phone,
+                Username = dto.username,
+                PasswordHash = dto.passwordHash,
+                MembershipId = dto.membershipId
             };
             await customerRepository.AddUserAsync(customer);
             return Ok(dto);
