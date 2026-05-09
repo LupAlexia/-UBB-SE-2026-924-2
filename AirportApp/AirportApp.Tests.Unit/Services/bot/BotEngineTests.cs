@@ -64,7 +64,7 @@ namespace AirportApp.Tests.Unit.Src.Service.Bot
         public void RetrieveUniqueDatabaseIdentifierForBot_WhenCalled_ReturnsZero()
         {
             var resultedIdentifier = botEngine.RetrieveUniqueDatabaseIdentifierForBot();
-            Assert.AreEqual(0, resultedIdentifier);
+            Assert.AreEqual(BotEngineIdentity.CONSTANT_IDENTIFIER_FOR_DEFAULT_BOT_SYSTEM_USER, resultedIdentifier);
         }
     }
 }

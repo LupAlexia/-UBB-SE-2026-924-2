@@ -14,6 +14,7 @@ namespace AirportApp.ClassLibrary.Entity.Dto.MappingProfiles
                     new DateTimeOffset(((IMessage)source).Timestamp.Ticks, TimeSpan.Zero)))
                 .ForMember(destination => destination.FaqOptions, option => option.MapFrom(source => source.GetNextOptions()))
                 .ForMember(destination => destination.ChatId, option => option.MapFrom(source => source.GetChat().Id))
+                .ForMember(destination => destination.SenderId, option => option.MapFrom(source => source.GetSender().RetrieveUniqueDatabaseIdentifierForBot()))
                 .ForMember(destination => destination.Sender, option => option.MapFrom(source => source.GetSender()))
                 .ForMember(destination => destination.MessageId, option => option.Ignore())
                 .ForMember(destination => destination.IsOutgoing, option => option.Ignore());
