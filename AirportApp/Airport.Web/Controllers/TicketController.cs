@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using AirportApp.ClassLibrary.Repository.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using AirportApp.ClassLibrary.Entity.Dto;
-
+using AirportApp.ClassLibrary.Entity.Domain;
 namespace Airport.Web.Controllers
 {
     [ApiController]
