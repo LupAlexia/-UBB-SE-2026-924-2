@@ -36,11 +36,18 @@ namespace AirportApp.Src.Proxy
             {
                 return await httpClient.GetFromJsonAsync<Customer>($"{BaseUrl}/by-email?email={Uri.EscapeDataString(email)}");
             }
+            catch (HttpRequestException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                // 404 means the user isn't there, which is a VALID result for registration!
+                return null;
+            }
             catch (HttpRequestException ex)
             {
-                throw new KeyNotFoundException($"Customer with email {email} not found.", ex);
+                // Any other error (like the server being down) should still be thrown
+                throw new InvalidOperationException("Server communication error.", ex);
             }
         }
+
 
         public async Task AddUserAsync(Customer user)
         {
