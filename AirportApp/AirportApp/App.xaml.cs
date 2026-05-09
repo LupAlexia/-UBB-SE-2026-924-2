@@ -117,16 +117,16 @@ namespace AirportApp
             services.AddTransient<IBotStrategy, DecisionTreeStrategy>();
             services.AddTransient<BotEngineIdentity>();
 
-            services.AddSingleton<IReviewService, ReviewServiceProxy>();
-            services.AddSingleton<IChatService, ChatServiceProxy>();
+            services.AddSingleton<IReviewService, ReviewService>();
+            services.AddSingleton<IChatService, ChatService>();
             services.AddSingleton<IRepository<int, Chat>, ChatRepositoryProxy>();
             services.AddSingleton<IMessageRepository, MessageRepositoryProxy>();
             services.AddSingleton<IRepository<int, Message>>(p => p.GetRequiredService<IMessageRepository>());
             services.AddSingleton<IMessageService, MessageService>();
 
-            services.AddSingleton<IEmployeeService, EmployeeServiceProxy>();
+            services.AddSingleton<IEmployeeService, EmployeeService>();
 
-            services.AddSingleton<IUserService, UserServiceProxy>();
+            services.AddSingleton<IUserService, UserService>();
 
             services.AddTransient<LandingViewModel>();
             services.AddTransient<AllReviewsViewModel>();
@@ -134,13 +134,13 @@ namespace AirportApp
             services.AddTransient<ChatViewModel>();
             services.AddTransient<UpperBarViewModel>();
 
-            services.AddSingleton<IComplaintTicketService, ComplaintTicketServiceProxy>();
-            services.AddSingleton<IComplaintTicketCategoryService, ComplaintTicketCategoryServiceProxy>();
-            services.AddSingleton<IComplaintTicketSubcategoryService, ComplaintTicketSubcategoryServiceProxy>();
+            services.AddSingleton<IComplaintTicketService, ComplaintTicketService>();
+            services.AddSingleton<IComplaintTicketCategoryService, ComplaintTicketCategoryService>();
+            services.AddSingleton<IComplaintTicketSubcategoryService, ComplaintTicketSubcategoryService>();
 
             services.AddTransient<TicketsViewModel>();
 
-            services.AddSingleton<IFAQService, FAQServiceProxy>();
+            services.AddSingleton<IFAQService, FAQService>();
 
             services.AddTransient<FAQViewModel>();
 
@@ -150,17 +150,17 @@ namespace AirportApp
                 BaseAddress = new Uri("http://localhost:5253/")
             });
             services.AddSingleton<IFlightRepository, FlightRepository>();
-            services.AddSingleton<IFlightTicketRepository, FlightTicketRepository>();
-            services.AddSingleton<IAddOnRepository, AddOnRepository>();
-            services.AddSingleton<IMembershipRepository, MembershipRepository>();
-            services.AddSingleton<ICustomerRepository, CustomerRepository>();
-            services.AddSingleton<IAuthService, AuthServiceProxy>();
-            services.AddSingleton<IFlightSearchService, FlightSearchServiceProxy>();
-            services.AddSingleton<IBookingService, BookingServiceProxy>();
+            services.AddSingleton<IFlightTicketRepository, FlightTicketRepositoryProxy>();
+            services.AddSingleton<IAddOnRepository, AddOnRepositoryProxy>();
+            services.AddSingleton<IMembershipRepository, MembershipRepositoryProxy>();
+            services.AddSingleton<ICustomerRepository, CustomerRepositoryProxy>();
+            services.AddSingleton<IAuthService, AuthService>();
+            services.AddSingleton<IFlightSearchService, FlightSearchService>();
+            services.AddSingleton<IBookingService, BookingService>();
             services.AddSingleton<IPricingService, PricingService>();
-            services.AddSingleton<IDashboardService, DashboardServiceProxy>();
-            services.AddSingleton<ICancellationService, CancellationServiceProxy>();
-            services.AddSingleton<IMembershipService, MembershipServiceProxy>();
+            services.AddSingleton<IDashboardService, DashboardService>();
+            services.AddSingleton<ICancellationService, CancellationService>();
+            services.AddSingleton<IMembershipService, MembershipService>();
             services.AddSingleton<NavigationService>();
 
             var provider = services.BuildServiceProvider();
