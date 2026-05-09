@@ -19,7 +19,7 @@ namespace Airport.Web.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Flight>> GetByIdAsync(int id)
+        public async Task<ActionResult<AirportApp.ClassLibrary.Entity.Dto.FlightDTO>> GetByIdAsync(int id)
         {
             Flight? flight = await flightRepository.GetFlightByIdAsync(id);
             if (flight == null)
@@ -27,17 +27,34 @@ namespace Airport.Web.Controllers
                 return NotFound();
             }
 
-            return Ok(flight);
+            var dto = new AirportApp.ClassLibrary.Entity.Dto.FlightDTO(
+                flight.Id,
+                flight.RouteId,
+                flight.GateId,
+                flight.Date,
+                flight.FlightNumber);
+
+            return Ok(dto);
         }
 
         [HttpGet("search")]
-        public async Task<ActionResult<IEnumerable<Flight>>> GetByRouteAsync(
+        public async Task<ActionResult<IEnumerable<AirportApp.ClassLibrary.Entity.Dto.FlightDTO>>> GetByRouteAsync(
             [FromQuery] string location,
             [FromQuery] string routeType,
             [FromQuery] DateTime? date)
         {
             IEnumerable<Flight> flights = await flightRepository.GetFlightsByRouteAsync(location, routeType, date);
-            return Ok(flights);
+            var dtos = new List<AirportApp.ClassLibrary.Entity.Dto.FlightDTO>();
+            foreach (var flight in flights)
+            {
+                dtos.Add(new AirportApp.ClassLibrary.Entity.Dto.FlightDTO(
+                    flight.Id,
+                    flight.RouteId,
+                    flight.GateId,
+                    flight.Date,
+                    flight.FlightNumber));
+            }
+            return Ok(dtos);
         }
 
         [HttpGet("{flightId}/occupied-seat-count")]

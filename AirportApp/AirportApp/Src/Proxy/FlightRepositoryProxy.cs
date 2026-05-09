@@ -24,9 +24,13 @@ namespace AirportApp.Src.Proxy
             {
                 return await httpClient.GetFromJsonAsync<Flight>($"{BaseUrl}/{id}");
             }
+            catch (HttpRequestException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                return null;
+            }
             catch (HttpRequestException ex)
             {
-                throw new KeyNotFoundException($"Flight with id {id} not found.", ex);
+                throw new InvalidOperationException($"Server communication error while retrieving flight {id}.", ex);
             }
         }
 

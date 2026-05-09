@@ -18,14 +18,19 @@ namespace Airport.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Membership>>> GetAllAsync()
+        public async Task<ActionResult<IEnumerable<AirportApp.ClassLibrary.Entity.Dto.MembershipDTO>>> GetAllAsync()
         {
             IEnumerable<Membership> memberships = await membershipRepository.GetAllMembershipsAsync();
-            return Ok(memberships);
+            var dtos = new List<AirportApp.ClassLibrary.Entity.Dto.MembershipDTO>();
+            foreach (var membership in memberships)
+            {
+                dtos.Add(new AirportApp.ClassLibrary.Entity.Dto.MembershipDTO(membership.Id, membership.Name, membership.FlightDiscountPercentage));
+            }
+            return Ok(dtos);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Membership>> GetByIdAsync(int id)
+        public async Task<ActionResult<AirportApp.ClassLibrary.Entity.Dto.MembershipDTO>> GetByIdAsync(int id)
         {
             Membership? membership = await membershipRepository.GetMembershipByIdAsync(id);
             if (membership == null)
@@ -33,14 +38,24 @@ namespace Airport.Web.Controllers
                 return NotFound();
             }
 
-            return Ok(membership);
+            var dto = new AirportApp.ClassLibrary.Entity.Dto.MembershipDTO(membership.Id, membership.Name, membership.FlightDiscountPercentage);
+            return Ok(dto);
         }
 
         [HttpGet("{id}/addon-discounts")]
-        public async Task<ActionResult<IEnumerable<MembershipAddonDiscount>>> GetAddonDiscountsAsync(int id)
+        public async Task<ActionResult<IEnumerable<AirportApp.ClassLibrary.Entity.Dto.MembershipAddonDiscountDTO>>> GetAddonDiscountsAsync(int id)
         {
             IEnumerable<MembershipAddonDiscount> discounts = await membershipRepository.GetAddonDiscountsAsync(id);
-            return Ok(discounts);
+            var dtos = new List<AirportApp.ClassLibrary.Entity.Dto.MembershipAddonDiscountDTO>();
+            foreach (var discount in discounts)
+            {
+                dtos.Add(new AirportApp.ClassLibrary.Entity.Dto.MembershipAddonDiscountDTO(
+                    discount.MembershipId,
+                    discount.AddOnId,
+                    discount.DiscountPercentage,
+                    discount.AddOn?.Name ?? string.Empty));
+            }
+            return Ok(dtos);
         }
     }
 }

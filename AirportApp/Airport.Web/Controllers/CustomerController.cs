@@ -17,7 +17,7 @@ namespace Airport.Web.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Customer>> GetByIdAsync(int id)
+        public async Task<ActionResult<AirportApp.ClassLibrary.Entity.Dto.CustomerDTO>> GetByIdAsync(int id)
         {
             Customer? customer = await customerRepository.GetByIdAsync(id);
             if (customer == null)
@@ -25,11 +25,19 @@ namespace Airport.Web.Controllers
                 return NotFound();
             }
 
-            return Ok(customer);
+            var dto = new AirportApp.ClassLibrary.Entity.Dto.CustomerDTO(
+                customer.Id,
+                customer.Email,
+                customer.Phone,
+                customer.Username,
+                customer.PasswordHash,
+                customer.MembershipId);
+
+            return Ok(dto);
         }
 
         [HttpGet("by-email")]
-        public async Task<ActionResult<Customer>> GetByEmailAsync([FromQuery] string email)
+        public async Task<ActionResult<AirportApp.ClassLibrary.Entity.Dto.CustomerDTO>> GetByEmailAsync([FromQuery] string email)
         {
             Customer? customer = await customerRepository.GetByEmailAsync(email);
             if (customer == null)
@@ -37,14 +45,31 @@ namespace Airport.Web.Controllers
                 return NotFound();
             }
 
-            return Ok(customer);
+            var dto = new AirportApp.ClassLibrary.Entity.Dto.CustomerDTO(
+                customer.Id,
+                customer.Email,
+                customer.Phone,
+                customer.Username,
+                customer.PasswordHash,
+                customer.MembershipId);
+
+            return Ok(dto);
         }
 
         [HttpPost]
-        public async Task<ActionResult> AddUserAsync([FromBody] Customer customer)
+        public async Task<ActionResult> AddUserAsync([FromBody] AirportApp.ClassLibrary.Entity.Dto.CustomerDTO dto)
         {
+            var customer = new Customer
+            {
+                Id = dto.Id,
+                Email = dto.Email,
+                Phone = dto.Phone,
+                Username = dto.Username,
+                PasswordHash = dto.PasswordHash,
+                MembershipId = dto.MembershipId
+            };
             await customerRepository.AddUserAsync(customer);
-            return Ok(customer);
+            return Ok(dto);
         }
 
         [HttpPut("{id}/membership")]

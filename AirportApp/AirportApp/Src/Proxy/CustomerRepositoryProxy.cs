@@ -24,9 +24,13 @@ namespace AirportApp.Src.Proxy
             {
                 return await httpClient.GetFromJsonAsync<Customer>($"{BaseUrl}/{id}");
             }
+            catch (HttpRequestException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                return null;
+            }
             catch (HttpRequestException ex)
             {
-                throw new KeyNotFoundException($"Customer with id {id} not found.", ex);
+                throw new InvalidOperationException($"Server communication error while retrieving customer {id}.", ex);
             }
         }
 
@@ -53,7 +57,15 @@ namespace AirportApp.Src.Proxy
         {
             try
             {
-                var response = await httpClient.PostAsJsonAsync(BaseUrl, user);
+                var dto = new AirportApp.ClassLibrary.Entity.Dto.CustomerDTO(
+                    user.Id,
+                    user.Email,
+                    user.Phone,
+                    user.Username,
+                    user.PasswordHash,
+                    user.MembershipId);
+
+                var response = await httpClient.PostAsJsonAsync(BaseUrl, dto);
                 response.EnsureSuccessStatusCode();
             }
             catch (HttpRequestException ex)

@@ -24,9 +24,13 @@ namespace AirportApp.Src.Proxy
             {
                 return await httpClient.GetFromJsonAsync<Membership>($"{BaseUrl}/{id}");
             }
+            catch (HttpRequestException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                return null;
+            }
             catch (HttpRequestException ex)
             {
-                throw new KeyNotFoundException($"Membership with id {id} not found.", ex);
+                throw new InvalidOperationException($"Server communication error while retrieving membership {id}.", ex);
             }
         }
 
@@ -40,8 +44,21 @@ namespace AirportApp.Src.Proxy
         {
             try
             {
-                return await httpClient.GetFromJsonAsync<IEnumerable<MembershipAddonDiscount>>($"{BaseUrl}/{membershipId}/addon-discounts")
-                       ?? new List<MembershipAddonDiscount>();
+                var dtos = await httpClient.GetFromJsonAsync<IEnumerable<AirportApp.ClassLibrary.Entity.Dto.MembershipAddonDiscountDTO>>($"{BaseUrl}/{membershipId}/addon-discounts");
+                if (dtos == null) return new List<MembershipAddonDiscount>();
+
+                var discounts = new List<MembershipAddonDiscount>();
+                foreach (var dto in dtos)
+                {
+                    discounts.Add(new MembershipAddonDiscount
+                    {
+                        MembershipId = dto.MembershipId,
+                        AddOnId = dto.AddOnId,
+                        DiscountPercentage = dto.DiscountPercentage,
+                        AddOn = new AddOn { Id = dto.AddOnId, Name = dto.AddOnName }
+                    });
+                }
+                return discounts;
             }
             catch (HttpRequestException ex)
             {

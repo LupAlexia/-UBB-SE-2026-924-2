@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Linq;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 using AirportApp.ClassLibrary.Entity.Domain;
@@ -22,8 +23,29 @@ namespace AirportApp.Src.Proxy
         {
             try
             {
-                return await httpClient.GetFromJsonAsync<IEnumerable<FlightTicket>>($"{BaseUrl}/user/{userId}")
-                       ?? new List<FlightTicket>();
+                var dtos = await httpClient.GetFromJsonAsync<IEnumerable<AirportApp.ClassLibrary.Entity.Dto.FlightTicketDTO>>($"{BaseUrl}/user/{userId}");
+                if (dtos == null) return new List<FlightTicket>();
+
+                var tickets = new List<FlightTicket>();
+                foreach (var dto in dtos)
+                {
+                    var ticket = new FlightTicket
+                    {
+                        Id = dto.Id,
+                        UserId = dto.UserId,
+                        FlightId = dto.FlightId,
+                        Seat = dto.Seat,
+                        Price = dto.Price,
+                        Status = dto.Status,
+                        PassengerFirstName = dto.PassengerFirstName,
+                        PassengerLastName = dto.PassengerLastName,
+                        PassengerEmail = dto.PassengerEmail,
+                        PassengerPhone = dto.PassengerPhone,
+                        SelectedAddOns = dto.SelectedAddOns?.Select(a => new AddOn(a.Id, a.Name, a.BasePrice)).ToList() ?? new List<AddOn>()
+                    };
+                    tickets.Add(ticket);
+                }
+                return tickets;
             }
             catch (HttpRequestException ex)
             {
@@ -35,7 +57,20 @@ namespace AirportApp.Src.Proxy
         {
             try
             {
-                var response = await httpClient.PostAsJsonAsync(BaseUrl, ticket);
+                var dto = new AirportApp.ClassLibrary.Entity.Dto.FlightTicketDTO(
+                    ticket.Id,
+                    ticket.UserId,
+                    ticket.FlightId,
+                    ticket.Seat,
+                    ticket.Price,
+                    ticket.Status,
+                    ticket.PassengerFirstName,
+                    ticket.PassengerLastName,
+                    ticket.PassengerEmail,
+                    ticket.PassengerPhone,
+                    ticket.SelectedAddOns?.Select(a => new AirportApp.ClassLibrary.Entity.Dto.AddOnDTO(a.Id, a.Name, a.BasePrice)).ToList() ?? new List<AirportApp.ClassLibrary.Entity.Dto.AddOnDTO>());
+
+                var response = await httpClient.PostAsJsonAsync(BaseUrl, dto);
                 response.EnsureSuccessStatusCode();
             }
             catch (HttpRequestException ex)
@@ -100,9 +135,22 @@ namespace AirportApp.Src.Proxy
         {
             try
             {
-                var request = new SaveTicketsRequest
+                var ticketDtos = tickets.Select(ticket => new AirportApp.ClassLibrary.Entity.Dto.FlightTicketDTO(
+                    ticket.Id,
+                    ticket.UserId,
+                    ticket.FlightId,
+                    ticket.Seat,
+                    ticket.Price,
+                    ticket.Status,
+                    ticket.PassengerFirstName,
+                    ticket.PassengerLastName,
+                    ticket.PassengerEmail,
+                    ticket.PassengerPhone,
+                    ticket.SelectedAddOns?.Select(a => new AirportApp.ClassLibrary.Entity.Dto.AddOnDTO(a.Id, a.Name, a.BasePrice)).ToList() ?? new List<AirportApp.ClassLibrary.Entity.Dto.AddOnDTO>())).ToList();
+
+                var request = new AirportApp.ClassLibrary.Entity.Dto.SaveTicketsRequestDTO
                 {
-                    Tickets = tickets,
+                    Tickets = ticketDtos,
                     AddOnIds = addOnIds ?? new List<List<int>>()
                 };
 
