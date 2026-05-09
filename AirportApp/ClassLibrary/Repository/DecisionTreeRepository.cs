@@ -41,7 +41,6 @@ namespace AirportApp.ClassLibrary.Entity.Repository.Database
             {
                 var optionEntity = new FAQOption(opt.Label, opt.NextOption);
                 nodeEntity.Options.Add(optionEntity);
-                this.dataBaseContext.Entry(optionEntity).Property<int?>("NextOptionId").CurrentValue = opt.NextOption?.NodeId;
             }
 
             this.dataBaseContext.FaqNodes.Add(nodeEntity);
@@ -79,7 +78,6 @@ namespace AirportApp.ClassLibrary.Entity.Repository.Database
             {
                 var optionEntity = new FAQOption(opt.Label, opt.NextOption);
                 node.Options.Add(optionEntity);
-                this.dataBaseContext.Entry(optionEntity).Property<int?>("NextOptionId").CurrentValue = opt.NextOption?.NodeId;
             }
 
             await this.dataBaseContext.SaveChangesAsync();
@@ -94,7 +92,5 @@ namespace AirportApp.ClassLibrary.Entity.Repository.Database
 
             return nodes;
         }
-
-
     }
 }

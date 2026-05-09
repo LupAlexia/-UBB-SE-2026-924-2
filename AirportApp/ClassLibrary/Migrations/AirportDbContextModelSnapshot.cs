@@ -457,7 +457,7 @@ namespace AirportApp.ClassLibrary.Migrations
                             Id = 101,
                             Email = "alice@bot.com",
                             MembershipId = 1,
-                            PasswordHash = "AQAAAAIAAYagAAAAEAnmal1dXyQ2S6Y4pxUuSuc5fWS6js53V1C7LorQ8t5qt7WYOqBBwQF7hTrjd9wxdA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEFenwIGaS8Iw2zttM43jERpt162/RNiW0/ym+2RpOMoCb8e8fCktIbSBWj98U3wKKw==",
                             Phone = "",
                             Username = "alice"
                         },
@@ -466,7 +466,7 @@ namespace AirportApp.ClassLibrary.Migrations
                             Id = 102,
                             Email = "bob@chat.com",
                             MembershipId = 2,
-                            PasswordHash = "AQAAAAIAAYagAAAAEMzHvpIxjezdUPYtCscMTO7+PweNzo0iUIkvhQSzn/Vp6IsvDRdrH9BsIICH6aekzQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEC8U9uWPNk5tDFUJvCIq6GRveg1Fy5FLYZ+xVODxBz3VAv4lbceZAVCEeuSX9zfGmg==",
                             Phone = "",
                             Username = "bob"
                         },
@@ -475,7 +475,7 @@ namespace AirportApp.ClassLibrary.Migrations
                             Id = 103,
                             Email = "mia@example.com",
                             MembershipId = 3,
-                            PasswordHash = "AQAAAAIAAYagAAAAEC7BFXq0nSxqAAiZdEzbHsONlQh99HO5pTpJjHSLfxudCim0MgvlhOo2+eYRDcY89Q==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEIVJmYMM7etHufWnOMzxARPwP5rhz/vg/5uq19PTDoVQQ7JZdI6D2vIJ5mxljdPz5A==",
                             Phone = "",
                             Username = "mia"
                         });
@@ -601,89 +601,105 @@ namespace AirportApp.ClassLibrary.Migrations
                         {
                             NodeId = 1,
                             IsFinalAnswer = false,
-                            QuestionText = "Welcome! How can I help you today?"
+                            QuestionText = "How can I help you today?"
                         },
                         new
                         {
                             NodeId = 2,
-                            IsFinalAnswer = true,
-                            QuestionText = "Flights information: You can search and book flights."
+                            IsFinalAnswer = false,
+                            QuestionText = "What is the issue with your baggage?"
                         },
                         new
                         {
                             NodeId = 3,
                             IsFinalAnswer = true,
-                            QuestionText = "Membership information: View plans and discounts."
+                            QuestionText = "Check your email for a tracking link or visit the lost & found desk."
                         },
                         new
                         {
                             NodeId = 4,
                             IsFinalAnswer = true,
-                            QuestionText = "Baggage information: Learn what is included and what costs extra."
+                            QuestionText = "Please file a \"Property Irregularity Report\" at the arrival hall."
                         },
                         new
                         {
                             NodeId = 5,
-                            IsFinalAnswer = true,
-                            QuestionText = "Payments information: Find out which payment methods are accepted."
+                            IsFinalAnswer = false,
+                            QuestionText = "What would you like to do with your booking?"
                         },
                         new
                         {
                             NodeId = 6,
                             IsFinalAnswer = true,
-                            QuestionText = "Support information: Contact our team for help with bookings or accounts."
+                            QuestionText = "You can change your flight via the \"My Bookings\" section on our website."
                         });
                 });
 
             modelBuilder.Entity("AirportApp.ClassLibrary.Entity.Domain.FAQOption", b =>
                 {
+                    b.Property<int>("OptionId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("option_id");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("OptionId"));
+
+                    b.Property<string>("Label")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("label");
+
+                    b.Property<int?>("NextOptionId")
+                        .HasColumnType("int")
+                        .HasColumnName("next_option_id");
+
                     b.Property<int>("NodeId")
                         .HasColumnType("int")
                         .HasColumnName("node_id");
 
-                    b.Property<string>("Label")
-                        .HasColumnType("nvarchar(450)")
-                        .HasColumnName("label");
-
-                    b.Property<int?>("NextOptionId")
-                        .HasColumnType("int");
-
-                    b.HasKey("NodeId", "Label");
+                    b.HasKey("OptionId");
 
                     b.HasIndex("NextOptionId");
+
+                    b.HasIndex("NodeId");
 
                     b.ToTable("FAQOption", (string)null);
 
                     b.HasData(
                         new
                         {
-                            NodeId = 1,
-                            Label = "Flights",
-                            NextOptionId = 2
+                            OptionId = 1,
+                            Label = "Baggage Issues",
+                            NextOptionId = 2,
+                            NodeId = 1
                         },
                         new
                         {
-                            NodeId = 1,
-                            Label = "Memberships",
-                            NextOptionId = 3
+                            OptionId = 2,
+                            Label = "Manage Booking",
+                            NextOptionId = 5,
+                            NodeId = 1
                         },
                         new
                         {
-                            NodeId = 1,
-                            Label = "Baggage",
-                            NextOptionId = 4
+                            OptionId = 3,
+                            Label = "Lost Baggage",
+                            NextOptionId = 3,
+                            NodeId = 2
                         },
                         new
                         {
-                            NodeId = 1,
-                            Label = "Payments",
-                            NextOptionId = 5
+                            OptionId = 4,
+                            Label = "Damaged Baggage",
+                            NextOptionId = 4,
+                            NodeId = 2
                         },
                         new
                         {
-                            NodeId = 1,
-                            Label = "Contact support",
-                            NextOptionId = 6
+                            OptionId = 5,
+                            Label = "Change Flight Date",
+                            NextOptionId = 6,
+                            NodeId = 5
                         });
                 });
 

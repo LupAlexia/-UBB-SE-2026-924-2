@@ -24,6 +24,7 @@ namespace AirportApp.Tests.Unit.ViewModel
         private IRepository<int, Chat> chatRepositoryMock;
         private IRepository<int, Message> msgRepositoryMock;
         private IRepository<int, User> userRepositoryMock;
+        private IRepository<int, FAQNode> faqRepositoryMock;
         private IBotStrategy strategyMock;
         private IUserService userService;
         private IMapper mapper;
@@ -41,6 +42,7 @@ namespace AirportApp.Tests.Unit.ViewModel
             chatRepositoryMock = Substitute.For<IRepository<int, Chat>>();
             msgRepositoryMock = Substitute.For<IRepository<int, Message>>();
             userRepositoryMock = Substitute.For<IRepository<int, User>>();
+            faqRepositoryMock = Substitute.For<IRepository<int, FAQNode>>();
             strategyMock = Substitute.For<IBotStrategy>();
             userService = Substitute.For<IUserService>();
             mapper = Substitute.For<IMapper>();
@@ -72,6 +74,10 @@ namespace AirportApp.Tests.Unit.ViewModel
                 .Returns(Task.FromResult(defaultBotReply));
 
             userService.GetByIdAsync(42).Returns(Task.FromResult(testUser));
+
+            // Mock FAQ node for RestartChat
+            var faqNode1 = new FAQNode(1, "Test Question", ImmutableArray<FAQOption>.Empty, false);
+            faqRepositoryMock.GetByIdAsync(1).Returns(Task.FromResult(faqNode1));
         }
 
         private ChatViewModel CreateViewModel(List<Message> initialMessages = null)
@@ -85,7 +91,7 @@ namespace AirportApp.Tests.Unit.ViewModel
                 msgRepositoryMock.GetAllAsync().Returns(Task.FromResult(Enumerable.Empty<Message>()));
             }
 
-            return new ChatViewModel(messageService, chatService, mapper, userService, testUser);
+            return new ChatViewModel(messageService, chatService, mapper, userService, faqRepositoryMock, testUser);
         }
 
         [TestMethod]
