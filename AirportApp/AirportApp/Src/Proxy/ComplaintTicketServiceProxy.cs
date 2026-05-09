@@ -44,7 +44,7 @@ namespace AirportApp.Src.Proxy
                 currentStatus: ticketEntity.CurrentStatus,
                 urgencyLevel: ticketEntity.UrgencyLevel);
 
-            var response = await httpClient.PostAsJsonAsync(BaseUrl + "/debug-create", dto);
+            var response = await httpClient.PostAsJsonAsync(BaseUrl, dto);
             response.EnsureSuccessStatusCode();
         }
 
