@@ -2,23 +2,28 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Net.Http;
-using AirportApp.ClassLibrary.DataAccess;
 using AirportApp.ClassLibrary.Entity.Domain;
 using AirportApp.ClassLibrary.Entity.Repository.Database;
 using AirportApp.ClassLibrary.Repository;
 using AirportApp.ClassLibrary.Repository.Interfaces;
-using AirportApp.Src.Proxy;
 using AirportApp.Src.Service;
 using AirportApp.Src.Service.Bot.Strategy;
 using AirportApp.Src.Service.Implementation;
 using AirportApp.Src.Service.Interfaces;
 using AirportApp.Src.ViewModel;
 using Microsoft.EntityFrameworkCore;
+using AirportApp.Src.ViewModel.Chats;
+using AirportApp.Src.ViewModel.Faq;
+using AirportApp.Src.ViewModel.General;
+using AirportApp.Src.ViewModel.Review;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using AirportApp.ClassLibrary.Entity.Dto;
+using AirportApp.Src.Proxy;
+using AirportApp.ClassLibrary.DataAccess;
+using Microsoft.EntityFrameworkCore;
 
 namespace AirportApp
 {
@@ -112,44 +117,49 @@ namespace AirportApp
                 options.UseSqlServer(conn);
             }, contextLifetime: Microsoft.Extensions.DependencyInjection.ServiceLifetime.Transient, optionsLifetime: Microsoft.Extensions.DependencyInjection.ServiceLifetime.Transient);
 
-            services.AddSingleton<IRepository<int, FAQNode>, FAQNodeRepositoryProxy>();
+
 
             services.AddTransient<IBotStrategy, DecisionTreeStrategy>();
             services.AddTransient<BotEngineIdentity>();
 
-            services.AddSingleton<IReviewService, ReviewService>();
-            services.AddSingleton<IChatService, ChatService>();
+
+            services.AddSingleton<IRepository<int, FAQNode>, DecisionTreeRepositoryProxy>();
             services.AddSingleton<IRepository<int, Chat>, ChatRepositoryProxy>();
             services.AddSingleton<IMessageRepository, MessageRepositoryProxy>();
             services.AddSingleton<IRepository<int, Message>>(p => p.GetRequiredService<IMessageRepository>());
-            services.AddSingleton<IMessageService, MessageService>();
+            services.AddSingleton<ITicketCategoryRepository, ComplaintTicketCategoryRepositoryProxy>();
+            services.AddSingleton<ITicketSubcategoryRepository, ComplaintTicketSubcategoryRepositoryProxy>();
+            services.AddSingleton<ITicketRepository, ComplaintTicketRepositoryProxy>();
+
+            services.AddSingleton<UserRepositoryProxy>();
+            services.AddSingleton<IUserRepository>(p => p.GetRequiredService<UserRepositoryProxy>());
+            services.AddSingleton<IRepository<int, User>>(p => p.GetRequiredService<UserRepositoryProxy>());
+
+            services.AddSingleton<IEmployeeRepository, EmployeeRepositoryProxy>();
+            services.AddSingleton<IFAQRepository, FAQRepositoryProxy>();
+            services.AddSingleton<IRepository<int, Review>, ReviewRepositoryProxy>();
+
 
             services.AddSingleton<IEmployeeService, EmployeeService>();
-
             services.AddSingleton<IUserService, UserService>();
+            services.AddSingleton<IMessageService, MessageService>();
+            services.AddSingleton<IComplaintTicketService, ComplaintTicketService>();
+            services.AddSingleton<IComplaintTicketCategoryService, ComplaintTicketCategoryService>();
+            services.AddSingleton<IComplaintTicketSubcategoryService, ComplaintTicketSubcategoryService>();
+            services.AddSingleton<IFAQService, FAQService>();
+            services.AddSingleton<IReviewService, ReviewService>();
+            services.AddSingleton<IChatService, ChatService>();
 
             services.AddTransient<LandingViewModel>();
             services.AddTransient<AllReviewsViewModel>();
             services.AddTransient<AddReviewViewModel>();
             services.AddTransient<ChatViewModel>();
             services.AddTransient<UpperBarViewModel>();
-
-            services.AddSingleton<IComplaintTicketService, ComplaintTicketService>();
-            services.AddSingleton<IComplaintTicketCategoryService, ComplaintTicketCategoryService>();
-            services.AddSingleton<IComplaintTicketSubcategoryService, ComplaintTicketSubcategoryService>();
-
             services.AddTransient<TicketsViewModel>();
-
-            services.AddSingleton<IFAQService, FAQService>();
-
             services.AddTransient<FAQViewModel>();
 
             // --- Servicii CloudSpritzers (Flight Tickets) ---
-            services.AddSingleton(new HttpClient
-            {
-                BaseAddress = new Uri("http://localhost:5253/")
-            });
-            services.AddSingleton<IFlightRepository, FlightRepository>();
+            services.AddSingleton<IFlightRepository, FlightRepositoryProxy>();
             services.AddSingleton<IFlightTicketRepository, FlightTicketRepositoryProxy>();
             services.AddSingleton<IAddOnRepository, AddOnRepositoryProxy>();
             services.AddSingleton<IMembershipRepository, MembershipRepositoryProxy>();
