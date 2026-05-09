@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using AirportApp.ClassLibrary.Entity.Domain.Ticket;
 using AirportApp.Src.ViewModel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using AirportApp.ClassLibrary.Entity.Domain;

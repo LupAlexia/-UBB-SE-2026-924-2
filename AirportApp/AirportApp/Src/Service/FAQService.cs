@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using AirportApp.ClassLibrary.Entity.Domain.Faq;
 using AirportApp.Src.Service.Interfaces;
 using AirportApp.ClassLibrary.Repository.Interfaces;
+using AirportApp.ClassLibrary.Entity.Domain;
 
 namespace AirportApp.Src.Service.Implementation
 {

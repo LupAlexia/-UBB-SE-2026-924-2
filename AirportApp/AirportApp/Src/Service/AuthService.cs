@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using AirportApp.ClassLibrary.Entity.Domain;
 using AirportApp.ClassLibrary.Repository.Interfaces;
 using AirportApp.ClassLibrary.Repository;
+using AirportApp.Src.Service.Interfaces;
 
 namespace AirportApp.Src.Service
 {

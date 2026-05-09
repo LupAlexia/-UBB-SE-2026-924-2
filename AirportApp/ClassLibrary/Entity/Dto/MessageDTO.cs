@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Text.Json.Serialization;
-using AirportApp.ClassLibrary.Entity.Domain.Faq.Bot;
-using AirportApp.ClassLibrary.Entity.Domain.Message;
+using AirportApp.ClassLibrary.Entity.Domain;
 
 namespace AirportApp.ClassLibrary.Entity.Dto
 {

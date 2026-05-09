@@ -5,8 +5,8 @@ using AirportApp.Src.ViewModel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using AirportApp.Src.Service;
 using AirportApp.ClassLibrary.Repository.Interfaces;
-using AirportApp.ClassLibrary.Entity.Domain.Ticket;
 using NSubstitute;
+using AirportApp.ClassLibrary.Entity.Domain;
 
 namespace AirportApp.Tests.Unit.Src.Service
 {

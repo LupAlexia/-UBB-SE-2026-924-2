@@ -5,7 +5,6 @@ using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 using AirportApp.ClassLibrary.Entity.Domain;
-using AirportApp.ClassLibrary.Entity.Domain.Ticket;
 using AirportApp.ClassLibrary.Entity.Dto;
 using AirportApp.Src.Service.Interfaces;
 using User = AirportApp.ClassLibrary.Entity.Domain.User; // alias ca in service, pentru a evita confuzia cu User-ul din ViewModel parca

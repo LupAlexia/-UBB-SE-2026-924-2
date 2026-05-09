@@ -4,12 +4,6 @@ using System.Threading.Tasks;
 using System.Net.Http;
 using AirportApp.ClassLibrary.DataAccess;
 using AirportApp.ClassLibrary.Entity.Domain;
-using AirportApp.ClassLibrary.Entity.Domain.Chats;
-using AirportApp.ClassLibrary.Entity.Domain.Employee;
-using AirportApp.ClassLibrary.Entity.Domain.Faq.Bot;
-using AirportApp.ClassLibrary.Entity.Domain.Message;
-using AirportApp.ClassLibrary.Entity.Domain.Review;
-using AirportApp.ClassLibrary.Entity.Dto.MappingProfiles;
 using AirportApp.ClassLibrary.Entity.Repository.Database;
 using AirportApp.ClassLibrary.Repository;
 using AirportApp.ClassLibrary.Repository.Interfaces;
@@ -19,15 +13,12 @@ using AirportApp.Src.Service.Bot.Strategy;
 using AirportApp.Src.Service.Implementation;
 using AirportApp.Src.Service.Interfaces;
 using AirportApp.Src.ViewModel;
-using AirportApp.Src.ViewModel.Chats;
-using AirportApp.Src.ViewModel.Faq;
-using AirportApp.Src.ViewModel.General;
-using AirportApp.Src.ViewModel.Review;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using AirportApp.ClassLibrary.Entity.Dto;
 
 namespace AirportApp
 {
