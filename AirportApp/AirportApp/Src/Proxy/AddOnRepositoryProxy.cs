@@ -21,13 +21,13 @@ namespace AirportApp.Src.Proxy
 
         public async Task<IEnumerable<AddOn>> GetAllAddOnsAsync()
         {
-            var dtos = await httpClient.GetFromJsonAsync<IEnumerable<AirportApp.ClassLibrary.Entity.Dto.AddOnDTO>>(BaseUrl);
-            if (dtos == null)
+            var addOnTransferObjectList =await httpClient.GetFromJsonAsync<IEnumerable<AirportApp.ClassLibrary.Entity.Dto.AddOnDTO>>(BaseUrl);
+            if (addOnTransferObjectList == null)
             {
                 return new List<AddOn>();
             }
 
-            return dtos.Select(dto => new AddOn(dto.id, dto.name, dto.basePrice)).ToList();
+            return addOnTransferObjectList.Select(addOnTransferObject => new AddOn(addOnTransferObject.id, addOnTransferObject.name, addOnTransferObject.basePrice)).ToList();
         }
 
         public async Task<IEnumerable<AddOn>> GetAddOnsByIdsAsync(IEnumerable<int> addOnIds)
@@ -37,17 +37,17 @@ namespace AirportApp.Src.Proxy
                 var idList = addOnIds.ToList();
                 var response = await httpClient.PostAsJsonAsync($"{BaseUrl}/by-ids", idList);
                 response.EnsureSuccessStatusCode();
-                var dtos = await response.Content.ReadFromJsonAsync<IEnumerable<AirportApp.ClassLibrary.Entity.Dto.AddOnDTO>>();
-                if (dtos == null)
+                var addOnTransferObjectList =await response.Content.ReadFromJsonAsync<IEnumerable<AirportApp.ClassLibrary.Entity.Dto.AddOnDTO>>();
+                if (addOnTransferObjectList == null)
                 {
                     return new List<AddOn>();
                 }
 
-                return dtos.Select(dto => new AddOn(dto.id, dto.name, dto.basePrice)).ToList();
+                return addOnTransferObjectList.Select(addOnTransferObject => new AddOn(addOnTransferObject.id, addOnTransferObject.name, addOnTransferObject.basePrice)).ToList();
             }
-            catch (HttpRequestException ex)
+            catch (HttpRequestException httpRequestException)
             {
-                throw new InvalidOperationException("Failed to retrieve add-ons by IDs from server.", ex);
+                throw new InvalidOperationException("Failed to retrieve add-ons by IDs from server.", httpRequestException);
             }
         }
     }

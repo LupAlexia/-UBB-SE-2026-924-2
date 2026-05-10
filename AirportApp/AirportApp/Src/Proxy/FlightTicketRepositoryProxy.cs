@@ -23,70 +23,70 @@ namespace AirportApp.Src.Proxy
         {
             try
             {
-                var dtos = await httpClient.GetFromJsonAsync<IEnumerable<AirportApp.ClassLibrary.Entity.Dto.FlightTicketDTO>>($"{BaseUrl}/user/{userId}");
-                if (dtos == null)
+                var flightTicketTransferObjectList = await httpClient.GetFromJsonAsync<IEnumerable<AirportApp.ClassLibrary.Entity.Dto.FlightTicketDTO>>($"{BaseUrl}/user/{userId}");
+                if (flightTicketTransferObjectList == null)
                 {
                     return new List<FlightTicket>();
                 }
                 var tickets = new List<FlightTicket>();
-                foreach (var dto in dtos)
+                foreach (var flightTicketTransferObject in flightTicketTransferObjectList)
                 {
                     var user = new Customer
                     {
-                        Id = dto.userId
+                        Id = flightTicketTransferObject.userId
                     };
 
                     var flight = new Flight
                     {
-                        Id = dto.flight?.id ?? dto.flightId,
-                        Date = dto.flight?.date ?? default,
-                        FlightNumber = dto.flight?.flightNumber ?? string.Empty,
-                        Route = dto.flight?.route != null
+                        Id = flightTicketTransferObject.flight?.id ?? flightTicketTransferObject.flightId,
+                        Date = flightTicketTransferObject.flight?.date ?? default,
+                        FlightNumber = flightTicketTransferObject.flight?.flightNumber ?? string.Empty,
+                        Route = flightTicketTransferObject.flight?.route != null
                             ? new Route
                             {
-                                Id = dto.flight.route.id,
-                                RouteType = dto.flight.route.routeType,
-                                DepartureTime = dto.flight.route.departureTime,
-                                ArrivalTime = dto.flight.route.arrivalTime,
-                                Capacity = dto.flight.route.capacity,
-                                Airport = dto.flight.route.airport != null
+                                Id = flightTicketTransferObject.flight.route.id,
+                                RouteType = flightTicketTransferObject.flight.route.routeType,
+                                DepartureTime = flightTicketTransferObject.flight.route.departureTime,
+                                ArrivalTime = flightTicketTransferObject.flight.route.arrivalTime,
+                                Capacity = flightTicketTransferObject.flight.route.capacity,
+                                Airport = flightTicketTransferObject.flight.route.airport != null
                                     ? new Airport
                                     {
-                                        Id = dto.flight.route.airport.id,
-                                        AirportCode = dto.flight.route.airport.airportCode,
-                                        City = dto.flight.route.airport.city
+                                        Id = flightTicketTransferObject.flight.route.airport.id,
+                                        AirportCode = flightTicketTransferObject.flight.route.airport.airportCode,
+                                        City = flightTicketTransferObject.flight.route.airport.city
                                     }
                                     : null!,
-                                Company = dto.flight.route.company != null
+                                Company = flightTicketTransferObject.flight.route.company != null
                                     ? new Company
                                     {
-                                        Id = dto.flight.route.company.id,
-                                        Name = dto.flight.route.company.name
+                                        Id = flightTicketTransferObject.flight.route.company.id,
+                                        Name = flightTicketTransferObject.flight.route.company.name
                                     }
                                     : null!
                             }
                             : null!,
-                        Gate = dto.flight != null
+                        Gate = flightTicketTransferObject.flight != null
                             ? new Gate
                             {
-                                Id = dto.flight.gateId
+                                Id = flightTicketTransferObject.flight.gateId
                             }
                             : null!
                     };
 
                     var ticket = new FlightTicket
                     {
-                        Id = dto.id,
+                        Id = flightTicketTransferObject.id,
                         User = user,
                         Flight = flight,
-                        Seat = dto.seat,
-                        Price = dto.price,
-                        Status = dto.status,
-                        PassengerFirstName = dto.passengerFirstName,
-                        PassengerLastName = dto.passengerLastName,
-                        PassengerEmail = dto.passengerEmail,
-                        PassengerPhone = dto.passengerPhone,
-                        SelectedAddOns = dto.selectedAddOns?.Select(addOnObject => new AddOn(addOnObject.id, addOnObject.name, addOnObject.basePrice)).ToList() ?? new List<AddOn>(),
+                        Seat = flightTicketTransferObject.seat,
+                        Price = flightTicketTransferObject.price,
+                        Status = flightTicketTransferObject.status,
+                        PassengerFirstName = flightTicketTransferObject.passengerFirstName,
+                        PassengerLastName = flightTicketTransferObject.passengerLastName,
+                        PassengerEmail = flightTicketTransferObject.passengerEmail,
+                        PassengerPhone = flightTicketTransferObject.passengerPhone,
+                        SelectedAddOns = flightTicketTransferObject.selectedAddOns?.Select(addOnObject => new AddOn(addOnObject.id, addOnObject.name, addOnObject.basePrice)).ToList() ?? new List<AddOn>(),
                     };
                     tickets.Add(ticket);
                 }
@@ -118,9 +118,9 @@ namespace AirportApp.Src.Proxy
                 var response = await httpClient.PostAsJsonAsync(BaseUrl, dataTransferObject);
                 response.EnsureSuccessStatusCode();
             }
-            catch (HttpRequestException ex)
+            catch (HttpRequestException httpRequestException)
             {
-                throw new InvalidOperationException("Failed to add ticket to server.", ex);
+                throw new InvalidOperationException("Failed to add ticket to server.", httpRequestException);
             }
         }
 
@@ -144,9 +144,9 @@ namespace AirportApp.Src.Proxy
                 var response = await httpClient.PostAsJsonAsync($"{BaseUrl}/{ticketId}/addons", addOnIds);
                 response.EnsureSuccessStatusCode();
             }
-            catch (HttpRequestException ex)
+            catch (HttpRequestException httpRequestException)
             {
-                throw new InvalidOperationException($"Failed to add add-ons to ticket {ticketId}.", ex);
+                throw new InvalidOperationException($"Failed to add add-ons to ticket {ticketId}.", httpRequestException);
             }
         }
 
@@ -157,9 +157,9 @@ namespace AirportApp.Src.Proxy
                 return await httpClient.GetFromJsonAsync<IEnumerable<string>>($"{BaseUrl}/flight/{flightId}/occupied-seats")
                        ?? new List<string>();
             }
-            catch (HttpRequestException ex)
+            catch (HttpRequestException httpRequestException)
             {
-                throw new InvalidOperationException($"Failed to retrieve occupied seats for flight {flightId}.", ex);
+                throw new InvalidOperationException($"Failed to retrieve occupied seats for flight {flightId}.", httpRequestException);
             }
         }
 
@@ -170,9 +170,9 @@ namespace AirportApp.Src.Proxy
                 var result = await httpClient.GetFromJsonAsync<bool>($"{BaseUrl}/flight/{flightId}/seat-available/{Uri.EscapeDataString(seat)}");
                 return result;
             }
-            catch (HttpRequestException ex)
+            catch (HttpRequestException httpRequestException)
             {
-                throw new InvalidOperationException($"Failed to check seat availability for flight {flightId}.", ex);
+                throw new InvalidOperationException($"Failed to check seat availability for flight {flightId}.", httpRequestException);
             }
         }
 
@@ -180,7 +180,7 @@ namespace AirportApp.Src.Proxy
         {
             try
             {
-                var ticketDtos = tickets.Select(ticket => new AirportApp.ClassLibrary.Entity.Dto.FlightTicketDTO(
+                var flightTicketTransferObjects = tickets.Select(ticket => new AirportApp.ClassLibrary.Entity.Dto.FlightTicketDTO(
                     ticket.Id,
                     ticket.User.Id,
                     ticket.Flight.Id,
@@ -195,7 +195,7 @@ namespace AirportApp.Src.Proxy
 
                 var request = new AirportApp.ClassLibrary.Entity.Dto.SaveTicketsRequestDTO
                 {
-                    Tickets = ticketDtos,
+                    Tickets = flightTicketTransferObjects,
                     AddOnIds = addOnIds ?? new List<List<int>>()
                 };
 
@@ -204,9 +204,9 @@ namespace AirportApp.Src.Proxy
                 var result = await response.Content.ReadFromJsonAsync<bool>();
                 return result;
             }
-            catch (HttpRequestException ex)
+            catch (HttpRequestException httpRequestException)
             {
-                throw new InvalidOperationException("Failed to save tickets with add-ons to server.", ex);
+                throw new InvalidOperationException("Failed to save tickets with add-ons to server.", httpRequestException);
             }
         }
     }

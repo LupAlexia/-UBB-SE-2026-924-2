@@ -37,7 +37,7 @@ namespace AirportApp.Tests.Unit.Services
             var ticketWithFlight = new FlightTicket { Flight = new Flight { Date = DateTime.Now.AddDays(UpcomingDaysOffset) } };
             var ticketWithoutFlight = new FlightTicket { Flight = null };
 
-            mockTicketRepository.Setup(r => r.GetTicketsByUserIdAsync(TargetUserId))
+            mockTicketRepository.Setup(ticketRepository => ticketRepository.GetTicketsByUserIdAsync(TargetUserId))
                 .ReturnsAsync(new List<FlightTicket> { ticketWithFlight, ticketWithoutFlight });
 
             var results = dashboardService.GetUserTicketsAsync(TargetUserId, UpcomingFilter).Result.ToList();
@@ -53,7 +53,7 @@ namespace AirportApp.Tests.Unit.Services
             var recentPastFlight = new Flight { Date = DateTime.Now.AddDays(PastDaysOffset) };
             var futureFlight = new Flight { Date = DateTime.Now.AddDays(UpcomingDaysOffset) };
 
-            mockTicketRepository.Setup(r => r.GetTicketsByUserIdAsync(TargetUserId))
+            mockTicketRepository.Setup(ticketRepository => ticketRepository.GetTicketsByUserIdAsync(TargetUserId))
                 .ReturnsAsync(new List<FlightTicket>
                 {
                     new FlightTicket { Flight = olderFlight },
@@ -74,7 +74,7 @@ namespace AirportApp.Tests.Unit.Services
             var nearFutureFlight = new Flight { Date = DateTime.Now.AddDays(UpcomingDaysOffset) };
             var farFutureFlight = new Flight { Date = DateTime.Now.AddDays(UpcomingDaysOffsetFurther) };
 
-            mockTicketRepository.Setup(r => r.GetTicketsByUserIdAsync(TargetUserId))
+            mockTicketRepository.Setup(ticketRepository => ticketRepository.GetTicketsByUserIdAsync(TargetUserId))
                 .ReturnsAsync(new List<FlightTicket>
                 {
                     new FlightTicket { Flight = farFutureFlight },
@@ -92,7 +92,7 @@ namespace AirportApp.Tests.Unit.Services
         public void GetUserTickets_FilterCaseInsensitive_WorksForLowercasePast()
         {
             var pastFlight = new Flight { Date = DateTime.Now.AddDays(PastDaysOffset) };
-            mockTicketRepository.Setup(r => r.GetTicketsByUserIdAsync(TargetUserId))
+            mockTicketRepository.Setup(ticketRepository => ticketRepository.GetTicketsByUserIdAsync(TargetUserId))
                 .ReturnsAsync(new List<FlightTicket> { new FlightTicket { Flight = pastFlight } });
 
             var results = dashboardService.GetUserTicketsAsync(TargetUserId, "past").Result.ToList();
@@ -103,7 +103,7 @@ namespace AirportApp.Tests.Unit.Services
         [TestMethod]
         public void GetUserTickets_EmptyTicketList_ReturnsEmpty()
         {
-            mockTicketRepository.Setup(r => r.GetTicketsByUserIdAsync(TargetUserId))
+            mockTicketRepository.Setup(ticketRepository => ticketRepository.GetTicketsByUserIdAsync(TargetUserId))
                 .ReturnsAsync(new List<FlightTicket>());
 
             var results = dashboardService.GetUserTicketsAsync(TargetUserId, UpcomingFilter).Result.ToList();
@@ -117,7 +117,7 @@ namespace AirportApp.Tests.Unit.Services
             var futureFlight = new Flight { Date = DateTime.Now.AddDays(UpcomingDaysOffset) };
             var pastFlight = new Flight { Date = DateTime.Now.AddDays(PastDaysOffset) };
 
-            mockTicketRepository.Setup(r => r.GetTicketsByUserIdAsync(TargetUserId))
+            mockTicketRepository.Setup(ticketRepository => ticketRepository.GetTicketsByUserIdAsync(TargetUserId))
                 .ReturnsAsync(new List<FlightTicket>
                 {
                     new FlightTicket { Flight = futureFlight },
@@ -134,7 +134,7 @@ namespace AirportApp.Tests.Unit.Services
         public void GetUserTickets_FlightInImmediateFuture_CountsAsUpcoming()
         {
             var soonFlight = new Flight { Date = DateTime.Now.AddSeconds(ImmediateFutureSeconds) };
-            mockTicketRepository.Setup(r => r.GetTicketsByUserIdAsync(TargetUserId))
+            mockTicketRepository.Setup(ticketRepository => ticketRepository.GetTicketsByUserIdAsync(TargetUserId))
                 .ReturnsAsync(new List<FlightTicket> { new FlightTicket { Flight = soonFlight } });
 
             var results = dashboardService.GetUserTicketsAsync(TargetUserId, UpcomingFilter).Result.ToList();

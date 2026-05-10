@@ -12,16 +12,16 @@ namespace AirportApp.ClassLibrary.Entity.Repository.Database
 {
     public class DecisionTreeRepository : IRepository<int, FAQNode>
     {
-        private readonly AirportDbContext dataBaseContext;
+        private readonly AirportDbContext databaseContext;
 
-        public DecisionTreeRepository(AirportDbContext dataBaseContext)
+        public DecisionTreeRepository(AirportDbContext databaseContext)
         {
-            this.dataBaseContext = dataBaseContext ?? throw new ArgumentNullException(nameof(dataBaseContext));
+            this.databaseContext = databaseContext ?? throw new ArgumentNullException(nameof(databaseContext));
         }
 
         public async Task<FAQNode> GetByIdAsync(int id)
         {
-            var node = await this.dataBaseContext.FaqNodes
+            var node = await this.databaseContext.FaqNodes
                 .Include(nodeEntity => nodeEntity.Options)
                 .ThenInclude(option => option.NextOption)
                 .FirstOrDefaultAsync(nodeEntity => nodeEntity.NodeId == id);
@@ -43,27 +43,27 @@ namespace AirportApp.ClassLibrary.Entity.Repository.Database
                 nodeEntity.Options.Add(optionEntity);
             }
 
-            this.dataBaseContext.FaqNodes.Add(nodeEntity);
-            await this.dataBaseContext.SaveChangesAsync();
+            this.databaseContext.FaqNodes.Add(nodeEntity);
+            await this.databaseContext.SaveChangesAsync();
 
             return nodeEntity.NodeId;
         }
 
         public async Task DeleteByIdAsync(int nodeIdentifier)
         {
-            var node = await this.dataBaseContext.FaqNodes.Include(nodeEntity => nodeEntity.Options).FirstOrDefaultAsync(nodeEntity => nodeEntity.NodeId == nodeIdentifier);
+            var node = await this.databaseContext.FaqNodes.Include(nodeEntity => nodeEntity.Options).FirstOrDefaultAsync(nodeEntity => nodeEntity.NodeId == nodeIdentifier);
             if (node == null)
             {
                 return;
             }
 
-            this.dataBaseContext.FaqNodes.Remove(node);
-            await this.dataBaseContext.SaveChangesAsync();
+            this.databaseContext.FaqNodes.Remove(node);
+            await this.databaseContext.SaveChangesAsync();
         }
 
         public async Task UpdateByIdAsync(int id, FAQNode updatedFAQNodeEntityData)
         {
-            var node = await this.dataBaseContext.FaqNodes.Include(node => node.Options).FirstOrDefaultAsync(node => node.NodeId == id);
+            var node = await this.databaseContext.FaqNodes.Include(node => node.Options).FirstOrDefaultAsync(node => node.NodeId == id);
             if (node == null)
             {
                 return;
@@ -80,12 +80,12 @@ namespace AirportApp.ClassLibrary.Entity.Repository.Database
                 node.Options.Add(optionEntity);
             }
 
-            await this.dataBaseContext.SaveChangesAsync();
+            await this.databaseContext.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<FAQNode>> GetAllAsync()
         {
-            var nodes = await this.dataBaseContext.FaqNodes
+            var nodes = await this.databaseContext.FaqNodes
                 .Include(node => node.Options)
                 .ThenInclude(option => option.NextOption)
                 .ToListAsync();

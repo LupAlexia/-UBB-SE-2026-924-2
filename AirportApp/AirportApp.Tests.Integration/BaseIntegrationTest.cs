@@ -86,11 +86,11 @@ public abstract class BaseIntegrationTest
 
         if (!dataBaseContext.Routes.Any())
         {
-            var comp1 = dataBaseContext.Companies.FirstOrDefault(company => company.Id == 1);
-            var ap1 = dataBaseContext.Airports.FirstOrDefault(airport => airport.Id == 1);
-            if (comp1 != null && ap1 != null)
+            var company1 = dataBaseContext.Companies.FirstOrDefault(company => company.Id == 1);
+            var airport1 = dataBaseContext.Airports.FirstOrDefault(airport => airport.Id == 1);
+            if (company1 != null && airport1 != null)
             {
-                dataBaseContext.Routes.Add(new Route { Id = 1, Company = comp1, Airport = ap1, RouteType = "Departure", DepartureTime = DateTime.Now.AddDays(1), ArrivalTime = DateTime.Now.AddDays(1).AddHours(3), Capacity = 100 });
+                dataBaseContext.Routes.Add(new Route { Id = 1, Company = company1, Airport = airport1, RouteType = "Departure", DepartureTime = DateTime.Now.AddDays(1), ArrivalTime = DateTime.Now.AddDays(1).AddHours(3), Capacity = 100 });
                 dataBaseContext.SaveChanges();
             }
         }
@@ -128,30 +128,30 @@ public abstract class BaseIntegrationTest
 
         if (!dataBaseContext.MembershipAddonDiscounts.Any())
         {
-            var m1 = dataBaseContext.Memberships.FirstOrDefault(membership => membership.Id == 1);
-            var m2 = dataBaseContext.Memberships.FirstOrDefault(membership => membership.Id == 2);
-            var m3 = dataBaseContext.Memberships.FirstOrDefault(membership => membership.Id == 3);
-            var a1 = dataBaseContext.AddOns.FirstOrDefault(addon => addon.Id == 1);
-            var a2 = dataBaseContext.AddOns.FirstOrDefault(addon => addon.Id == 2);
-            var a3 = dataBaseContext.AddOns.FirstOrDefault(addon => addon.Id == 3);
-            var a4 = dataBaseContext.AddOns.FirstOrDefault(addon => addon.Id == 4);
+            var membership1 = dataBaseContext.Memberships.FirstOrDefault(membership => membership.Id == 1);
+            var membership2 = dataBaseContext.Memberships.FirstOrDefault(membership => membership.Id == 2);
+            var membership3 = dataBaseContext.Memberships.FirstOrDefault(membership => membership.Id == 3);
+            var addOn1 = dataBaseContext.AddOns.FirstOrDefault(addon => addon.Id == 1);
+            var addOn2 = dataBaseContext.AddOns.FirstOrDefault(addon => addon.Id == 2);
+            var addOn3 = dataBaseContext.AddOns.FirstOrDefault(addon => addon.Id == 3);
+            var addOn4 = dataBaseContext.AddOns.FirstOrDefault(addon => addon.Id == 4);
 
-            if (m1 != null && m2 != null && m3 != null && a1 != null && a2 != null)
+            if (membership1 != null && membership2 != null && membership3 != null && addOn1 != null && addOn2 != null)
             {
                 dataBaseContext.MembershipAddonDiscounts.AddRange(
-                    new MembershipAddonDiscount(m1, a1, 10f),
-                    new MembershipAddonDiscount(m1, a2, 10f),
-                    new MembershipAddonDiscount(m2, a1, 20f),
-                    new MembershipAddonDiscount(m2, a2, 20f));
+                    new MembershipAddonDiscount(membership1, addOn1, 10f),
+                    new MembershipAddonDiscount(membership1, addOn2, 10f),
+                    new MembershipAddonDiscount(membership2, addOn1, 20f),
+                    new MembershipAddonDiscount(membership2, addOn2, 20f));
 
                 // extra discounts for premium
-                if (a3 != null)
+                if (addOn3 != null)
                 {
-                    dataBaseContext.MembershipAddonDiscounts.Add(new MembershipAddonDiscount(m3, a3, 30f));
+                    dataBaseContext.MembershipAddonDiscounts.Add(new MembershipAddonDiscount(membership3, addOn3, 30f));
                 }
-                if (a4 != null)
+                if (addOn4 != null)
                 {
-                    dataBaseContext.MembershipAddonDiscounts.Add(new MembershipAddonDiscount(m3, a4, 35f));
+                    dataBaseContext.MembershipAddonDiscounts.Add(new MembershipAddonDiscount(membership3, addOn4, 35f));
                 }
 
                 dataBaseContext.SaveChanges();
@@ -160,10 +160,10 @@ public abstract class BaseIntegrationTest
 
         if (!dataBaseContext.Chats.Any())
         {
-            var u101 = dataBaseContext.Users.FirstOrDefault(user => user.Id == 101);
-            if (u101 != null)
+            var user101 = dataBaseContext.Users.FirstOrDefault(user => user.Id == 101);
+            if (user101 != null)
             {
-                dataBaseContext.Chats.Add(new Chat { Id = 1, User = u101, Status = ChatStatus.Active });
+                dataBaseContext.Chats.Add(new Chat { Id = 1, User = user101, Status = ChatStatus.Active });
                 dataBaseContext.SaveChanges();
             }
         }

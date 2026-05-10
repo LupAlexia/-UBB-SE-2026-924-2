@@ -10,9 +10,9 @@ namespace Airport.Web
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static void Main(string[] arguments)
         {
-            var builder = WebApplication.CreateBuilder(args);
+            var builder = WebApplication.CreateBuilder(arguments);
             builder.WebHost.UseUrls("http://localhost:5253");
 
             builder.Services.AddDbContext<AirportDbContext>(options =>

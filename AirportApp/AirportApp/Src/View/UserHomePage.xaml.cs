@@ -10,17 +10,17 @@ namespace AirportApp.Src.View.General
             InitializeComponent();
         }
 
-        private void CustomerSupportButton_Click(object sender, RoutedEventArgs e)
+        private void CustomerSupportButton_Click(object sender, RoutedEventArgs routedEventArguments)
         {
             Frame.Navigate(typeof(LandingPage));
         }
 
-        private void ManageTicketsButton_Click(object sender, RoutedEventArgs e)
+        private void ManageTicketsButton_Click(object sender, RoutedEventArgs routedEventArguments)
         {
             Frame.Navigate(typeof(TravelPage));
         }
 
-        private void SwitchToEmployeeButton_Click(object sender, RoutedEventArgs e)
+        private void SwitchToEmployeeButton_Click(object sender, RoutedEventArgs routedEventArguments)
         {
             // Intoarce userul la ChoosingPage ca sa se poata loga ca employee
             Frame.Navigate(typeof(ChoosingPage));

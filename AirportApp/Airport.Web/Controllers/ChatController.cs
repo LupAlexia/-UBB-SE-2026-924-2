@@ -42,10 +42,10 @@ namespace Airport.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> CreateAsync([FromBody] CreateChatDTO dto)
+        public async Task<ActionResult> CreateAsync([FromBody] CreateChatDTO chatCreationData)
         {
-            User user = await userRepository.GetByIdAsync(dto.userId);
-            var chat = new Chat(0, user, dto.status);
+            User user = await userRepository.GetByIdAsync(chatCreationData.userId);
+            var chat = new Chat(0, user, chatCreationData.status);
 
             int createdId = await chatRepository.CreateNewEntityAsync(chat);
             chat.Id = createdId;

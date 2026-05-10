@@ -62,7 +62,7 @@ namespace AirportApp.Tests.Unit.Src.Service
         {
             await userService.CreateNewUserAsync(CreateUserId, CreateUserName, CreateUserEmail);
 
-            await userRepository.Received(1).CreateNewEntityAsync(Arg.Is<User>(u => u.RetrieveUniqueDatabaseIdentifierForBot() == CreateUserId));
+            await userRepository.Received(1).CreateNewEntityAsync(Arg.Is<User>(user => user.RetrieveUniqueDatabaseIdentifierForBot() == CreateUserId));
         }
 
         [TestMethod]

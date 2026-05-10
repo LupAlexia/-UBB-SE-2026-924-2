@@ -49,18 +49,18 @@ namespace Airport.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> CreateAsync([FromBody] CreateTicketDTO dto)
+        public async Task<ActionResult> CreateAsync([FromBody] CreateTicketDTO ticketCreationData)
         {
             var ticket = new ComplaintTicket
             {
-                Creator = await userRepository.GetByIdAsync(dto.creatorId),
-                Category = await ticketCategoryRepository.GetByIdAsync(dto.categoryId),
-                Subcategory = await ticketSubcategoryRepository.GetByIdAsync(dto.subcategoryId),
-                Subject = dto.subject,
-                Description = dto.description,
-                CreationTimestamp = dto.creationTimestamp,
-                CurrentStatus = dto.currentStatus,
-                UrgencyLevel = dto.urgencyLevel
+                Creator = await userRepository.GetByIdAsync(ticketCreationData.creatorId),
+                Category = await ticketCategoryRepository.GetByIdAsync(ticketCreationData.categoryId),
+                Subcategory = await ticketSubcategoryRepository.GetByIdAsync(ticketCreationData.subcategoryId),
+                Subject = ticketCreationData.subject,
+                Description = ticketCreationData.description,
+                CreationTimestamp = ticketCreationData.creationTimestamp,
+                CurrentStatus = ticketCreationData.currentStatus,
+                UrgencyLevel = ticketCreationData.urgencyLevel
             };
 
             int createdId = await ticketRepository.CreateNewEntityAsync(ticket);

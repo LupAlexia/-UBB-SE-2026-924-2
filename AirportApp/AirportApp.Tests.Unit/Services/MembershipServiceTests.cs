@@ -48,14 +48,14 @@ namespace AirportApp.Tests.Unit.Services
             var membership = new Membership { Id = TargetMembershipId, Name = PremiumMembershipName };
             var discounts = new List<MembershipAddonDiscount> { new MembershipAddonDiscount { DiscountPercentage = DefaultDiscountPercentage } };
 
-            mockMembershipRepository.Setup(r => r.GetAllMembershipsAsync()).ReturnsAsync(new List<Membership> { membership });
-            mockMembershipRepository.Setup(r => r.GetAddonDiscountsAsync(TargetMembershipId)).ReturnsAsync(discounts);
+            mockMembershipRepository.Setup(membershipRepository => membershipRepository.GetAllMembershipsAsync()).ReturnsAsync(new List<Membership> { membership });
+            mockMembershipRepository.Setup(membershipRepository => membershipRepository.GetAddonDiscountsAsync(TargetMembershipId)).ReturnsAsync(discounts);
 
             var result = membershipService.GetAllMembershipsAsync().Result.ToList();
 
             result.Should().ContainSingle();
             result.First().AddonDiscounts.Should().BeEquivalentTo(discounts);
-            mockMembershipRepository.Verify(r => r.GetAddonDiscountsAsync(TargetMembershipId), Times.Once);
+            mockMembershipRepository.Verify(membershipRepository => membershipRepository.GetAddonDiscountsAsync(TargetMembershipId), Times.Once);
         }
 
         [TestMethod]
@@ -64,25 +64,25 @@ namespace AirportApp.Tests.Unit.Services
             var membership1 = new Membership { Id = BasicMembershipId, Name = BasicMembershipName };
             var membership2 = new Membership { Id = TargetMembershipId, Name = PremiumMembershipName };
 
-            mockMembershipRepository.Setup(r => r.GetAllMembershipsAsync()).ReturnsAsync(new List<Membership> { membership1, membership2 });
-            mockMembershipRepository.Setup(r => r.GetAddonDiscountsAsync(It.IsAny<int>())).ReturnsAsync(new List<MembershipAddonDiscount>());
+            mockMembershipRepository.Setup(membershipRepository => membershipRepository.GetAllMembershipsAsync()).ReturnsAsync(new List<Membership> { membership1, membership2 });
+            mockMembershipRepository.Setup(membershipRepository => membershipRepository.GetAddonDiscountsAsync(It.IsAny<int>())).ReturnsAsync(new List<MembershipAddonDiscount>());
 
             var result = membershipService.GetAllMembershipsAsync().Result.ToList();
 
             result.Should().HaveCount(2);
-            mockMembershipRepository.Verify(r => r.GetAddonDiscountsAsync(BasicMembershipId), Times.Once);
-            mockMembershipRepository.Verify(r => r.GetAddonDiscountsAsync(TargetMembershipId), Times.Once);
+            mockMembershipRepository.Verify(membershipRepository => membershipRepository.GetAddonDiscountsAsync(BasicMembershipId), Times.Once);
+            mockMembershipRepository.Verify(membershipRepository => membershipRepository.GetAddonDiscountsAsync(TargetMembershipId), Times.Once);
         }
 
         [TestMethod]
         public void GetAllMemberships_EmptyList_ReturnsEmpty()
         {
-            mockMembershipRepository.Setup(r => r.GetAllMembershipsAsync()).ReturnsAsync(new List<Membership>());
+            mockMembershipRepository.Setup(membershipRepository => membershipRepository.GetAllMembershipsAsync()).ReturnsAsync(new List<Membership>());
 
             var result = membershipService.GetAllMembershipsAsync().Result.ToList();
 
             result.Should().BeEmpty();
-            mockMembershipRepository.Verify(r => r.GetAddonDiscountsAsync(It.IsAny<int>()), Times.Never);
+            mockMembershipRepository.Verify(membershipRepository => membershipRepository.GetAddonDiscountsAsync(It.IsAny<int>()), Times.Never);
         }
 
         [TestMethod]
@@ -91,23 +91,23 @@ namespace AirportApp.Tests.Unit.Services
             var membership = new Membership { Id = TargetMembershipId, Name = PremiumMembershipName };
             var discounts = new List<MembershipAddonDiscount> { new MembershipAddonDiscount { DiscountPercentage = DefaultDiscountPercentage } };
 
-            mockMembershipRepository.Setup(r => r.GetMembershipByIdAsync(TargetMembershipId)).ReturnsAsync(membership);
-            mockMembershipRepository.Setup(r => r.GetAddonDiscountsAsync(TargetMembershipId)).ReturnsAsync(discounts);
-            mockUserRepository.Setup(r => r.UpdateUserMembershipAsync(TargetUserId, TargetMembershipId)).Returns(Task.CompletedTask);
+            mockMembershipRepository.Setup(membershipRepository => membershipRepository.GetMembershipByIdAsync(TargetMembershipId)).ReturnsAsync(membership);
+            mockMembershipRepository.Setup(membershipRepository => membershipRepository.GetAddonDiscountsAsync(TargetMembershipId)).ReturnsAsync(discounts);
+            mockUserRepository.Setup(userRepository => userRepository.UpdateUserMembershipAsync(TargetUserId, TargetMembershipId)).Returns(Task.CompletedTask);
 
             var result = membershipService.UpgradeUserMembershipAsync(TargetUserId, TargetMembershipId).Result;
 
             result.Should().NotBeNull();
             result!.Name.Should().Be(PremiumMembershipName);
             result.AddonDiscounts.Should().BeEquivalentTo(discounts);
-            mockUserRepository.Verify(r => r.UpdateUserMembershipAsync(TargetUserId, TargetMembershipId), Times.Once);
+            mockUserRepository.Verify(userRepository => userRepository.UpdateUserMembershipAsync(TargetUserId, TargetMembershipId), Times.Once);
         }
 
         [TestMethod]
         public void UpgradeUserMembership_MembershipNotFound_ReturnsNull()
         {
-            mockMembershipRepository.Setup(r => r.GetMembershipByIdAsync(TargetMembershipId)).ReturnsAsync((Membership?)null);
-            mockUserRepository.Setup(r => r.UpdateUserMembershipAsync(TargetUserId, TargetMembershipId)).Returns(Task.CompletedTask);
+            mockMembershipRepository.Setup(membershipRepository => membershipRepository.GetMembershipByIdAsync(TargetMembershipId)).ReturnsAsync((Membership?)null);
+            mockUserRepository.Setup(userRepository => userRepository.UpdateUserMembershipAsync(TargetUserId, TargetMembershipId)).Returns(Task.CompletedTask);
 
             var result = membershipService.UpgradeUserMembershipAsync(TargetUserId, TargetMembershipId).Result;
 
@@ -117,7 +117,7 @@ namespace AirportApp.Tests.Unit.Services
         [TestMethod]
         public void PurchaseMembership_ExceptionThrown_ReturnsFailureResult()
         {
-            mockUserRepository.Setup(r => r.UpdateUserMembershipAsync(TargetUserId, TargetMembershipId))
+            mockUserRepository.Setup(userRepository => userRepository.UpdateUserMembershipAsync(TargetUserId, TargetMembershipId))
                 .ThrowsAsync(new Exception(DatabaseErrorMessage));
 
             var result = membershipService.PurchaseMembershipAsync(TargetUserId, TargetMembershipId).Result;
@@ -132,9 +132,9 @@ namespace AirportApp.Tests.Unit.Services
             UserSession.CurrentUser = null;
             var membership = new Membership { Id = TargetMembershipId, Name = PremiumMembershipName };
 
-            mockMembershipRepository.Setup(r => r.GetMembershipByIdAsync(TargetMembershipId)).ReturnsAsync(membership);
-            mockMembershipRepository.Setup(r => r.GetAddonDiscountsAsync(TargetMembershipId)).ReturnsAsync(new List<MembershipAddonDiscount>());
-            mockUserRepository.Setup(r => r.UpdateUserMembershipAsync(TargetUserId, TargetMembershipId)).Returns(Task.CompletedTask);
+            mockMembershipRepository.Setup(membershipRepository => membershipRepository.GetMembershipByIdAsync(TargetMembershipId)).ReturnsAsync(membership);
+            mockMembershipRepository.Setup(membershipRepository => membershipRepository.GetAddonDiscountsAsync(TargetMembershipId)).ReturnsAsync(new List<MembershipAddonDiscount>());
+            mockUserRepository.Setup(userRepository => userRepository.UpdateUserMembershipAsync(TargetUserId, TargetMembershipId)).Returns(Task.CompletedTask);
 
             var result = membershipService.PurchaseMembershipAsync(TargetUserId, TargetMembershipId).Result;
 

@@ -22,7 +22,7 @@ public class UserMappingProfileTests
     public void Setup()
     {
         loggerFactory = Substitute.For<ILoggerFactory>();
-        var configuration = new MapperConfiguration(cfg => cfg.AddProfile<UserMappingProfile>(), loggerFactory);
+        var configuration = new MapperConfiguration(mapperConfiguration => cfg.AddProfile<UserMappingProfile>(), loggerFactory);
 
         mapper = configuration.CreateMapper();
     }
@@ -50,7 +50,7 @@ public class UserMappingProfileTests
     [TestMethod]
     public void Map_UserToUserDTO_ValidConfiguration()
     {
-        var configuration = new MapperConfiguration(cfg => cfg.AddProfile<UserMappingProfile>(), loggerFactory);
+        var configuration = new MapperConfiguration(mapperConfiguration => cfg.AddProfile<UserMappingProfile>(), loggerFactory);
 
         configuration.AssertConfigurationIsValid();
     }

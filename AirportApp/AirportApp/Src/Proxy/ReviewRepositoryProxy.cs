@@ -33,7 +33,7 @@ namespace AirportApp.Src.Proxy
 
         public async Task<int> CreateNewEntityAsync(Review reviewElement)
         {
-            var dto = new CreateReviewDTO(
+            var reviewCreationData = new CreateReviewDTO(
                 userId: reviewElement.User.Id,
                 message: reviewElement.Message,
                 dutyFreeRating: reviewElement.DutyFreeRating,
@@ -41,7 +41,7 @@ namespace AirportApp.Src.Proxy
                 staffFriendlinessRating: reviewElement.StaffFriendlinessRating,
                 cleanlinessRating: reviewElement.CleanlinessRating);
 
-            var response = await httpClient.PostAsJsonAsync(BaseUrl, dto);
+            var response = await httpClient.PostAsJsonAsync(BaseUrl, reviewCreationData);
             response.EnsureSuccessStatusCode();
             var created = await response.Content.ReadFromJsonAsync<Review>();
             return created!.Id;

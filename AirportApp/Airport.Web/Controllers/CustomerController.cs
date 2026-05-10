@@ -26,7 +26,7 @@ namespace Airport.Web.Controllers
                 return NotFound();
             }
 
-            var dto = new AirportApp.ClassLibrary.Entity.Dto.CustomerDTO(
+            var customerTransferObject = new AirportApp.ClassLibrary.Entity.Dto.CustomerDTO(
                 customer.Id,
                 customer.Email,
                 customer.Phone,
@@ -38,7 +38,7 @@ namespace Airport.Web.Controllers
                     customer.Membership.Name,
                     customer.Membership.FlightDiscountPercentage) : null);
 
-            return Ok(dto);
+            return Ok(customerTransferObject);
         }
 
         [HttpGet("by-email")]
@@ -50,7 +50,7 @@ namespace Airport.Web.Controllers
                 return NotFound();
             }
 
-            var dto = new AirportApp.ClassLibrary.Entity.Dto.CustomerDTO(
+            var customerTransferObject = new AirportApp.ClassLibrary.Entity.Dto.CustomerDTO(
                 customer.Id,
                 customer.Email,
                 customer.Phone,
@@ -62,25 +62,24 @@ namespace Airport.Web.Controllers
                     customer.Membership.Name,
                     customer.Membership.FlightDiscountPercentage) : null);
 
-            return Ok(dto);
+            return Ok(customerTransferObject);
         }
 
         [HttpPost]
-        public async Task<ActionResult> AddUserAsync([FromBody] AirportApp.ClassLibrary.Entity.Dto.CustomerDTO dto)
+        public async Task<ActionResult> AddUserAsync([FromBody] AirportApp.ClassLibrary.Entity.Dto.CustomerDTO customerData)
         {
             var customer = new Customer
             {
-                Id = dto.id,
-                Email = dto.email,
-                Phone = dto.phone,
-                Username = dto.username,
-                PasswordHash = dto.passwordHash,
-                // ??????
-                Membership = new Membership { Id = dto.membership.id, Name = dto.membership.name, FlightDiscountPercentage = dto.membership.flightDiscountPercentage }
+                Id = customerData.id,
+                Email = customerData.email,
+                Phone = customerData.phone,
+                Username = customerData.username,
+                PasswordHash = customerData.passwordHash,
+                Membership = customerData.membership != null ? new Membership { Id = customerData.membership.id, Name = customerData.membership.name, FlightDiscountPercentage = customerData.membership.flightDiscountPercentage } : null
             };
             await customerRepository.AddUserAsync(customer);
 
-            var createdDto = new AirportApp.ClassLibrary.Entity.Dto.CustomerDTO(
+            var createdCustomerTransferObject = new AirportApp.ClassLibrary.Entity.Dto.CustomerDTO(
                 customer.Id,
                 customer.Email,
                 customer.Phone,
@@ -89,7 +88,7 @@ namespace Airport.Web.Controllers
                 customer.Membership != null ? customer.Membership.Id : null,
                 null);
 
-            return Ok(createdDto);
+            return Ok(createdCustomerTransferObject);
         }
 
         [HttpPut("{id}/membership")]

@@ -23,42 +23,42 @@ namespace AirportApp.Src.Proxy
         {
             try
             {
-                var dto = await httpClient.GetFromJsonAsync<AirportApp.ClassLibrary.Entity.Dto.MembershipDTO>($"{BaseUrl}/{id}");
-                if (dto == null)
+                var membershipTransferObject = await httpClient.GetFromJsonAsync<AirportApp.ClassLibrary.Entity.Dto.MembershipDTO>($"{BaseUrl}/{id}");
+                if (membershipTransferObject == null)
                 {
                     return null;
                 }
 
                 return new Membership
                 {
-                    Id = dto.id,
-                    Name = dto.name,
-                    FlightDiscountPercentage = dto.flightDiscountPercentage
+                    Id = membershipTransferObject.id,
+                    Name = membershipTransferObject.name,
+                    FlightDiscountPercentage = membershipTransferObject.flightDiscountPercentage
                 };
             }
-            catch (HttpRequestException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+            catch (HttpRequestException httpRequestException) when (httpRequestException.StatusCode == System.Net.HttpStatusCode.NotFound)
             {
                 return null;
             }
-            catch (HttpRequestException ex)
+            catch (HttpRequestException httpRequestException)
             {
-                throw new InvalidOperationException($"Server communication error while retrieving membership {id}.", ex);
+                throw new InvalidOperationException($"Server communication error while retrieving membership {id}.", httpRequestException);
             }
         }
 
         public async Task<IEnumerable<Membership>> GetAllMembershipsAsync()
         {
-            var dtos = await httpClient.GetFromJsonAsync<IEnumerable<AirportApp.ClassLibrary.Entity.Dto.MembershipDTO>>(BaseUrl);
-            if (dtos == null)
+            var membershipTransferObjectList = await httpClient.GetFromJsonAsync<IEnumerable<AirportApp.ClassLibrary.Entity.Dto.MembershipDTO>>(BaseUrl);
+            if (membershipTransferObjectList == null)
             {
                 return new List<Membership>();
             }
 
-            return dtos.Select(dto => new Membership
+            return membershipTransferObjectList.Select(membershipTransferObject => new Membership
             {
-                Id = dto.id,
-                Name = dto.name,
-                FlightDiscountPercentage = dto.flightDiscountPercentage
+                Id = membershipTransferObject.id,
+                Name = membershipTransferObject.name,
+                FlightDiscountPercentage = membershipTransferObject.flightDiscountPercentage
             }).ToList();
         }
 
@@ -66,30 +66,30 @@ namespace AirportApp.Src.Proxy
         {
             try
             {
-                var dtos = await httpClient.GetFromJsonAsync<IEnumerable<AirportApp.ClassLibrary.Entity.Dto.MembershipAddonDiscountDTO>>($"{BaseUrl}/{membershipId}/addon-discounts");
-                if (dtos == null)
+                var membershipAddonDiscountTransferObjectList = await httpClient.GetFromJsonAsync<IEnumerable<AirportApp.ClassLibrary.Entity.Dto.MembershipAddonDiscountDTO>>($"{BaseUrl}/{membershipId}/addon-discounts");
+                if (membershipAddonDiscountTransferObjectList == null)
                 {
                     return new List<MembershipAddonDiscount>();
                 }
 
                 var discounts = new List<MembershipAddonDiscount>();
-                foreach (var dto in dtos)
+                foreach (var membershipAddonDiscountTransferObject in membershipAddonDiscountTransferObjectList)
                 {
                     discounts.Add(new MembershipAddonDiscount
                     {
                         Membership = new Membership
                         {
-                            Id = dto.membershipId
+                            Id = membershipAddonDiscountTransferObject.membershipId
                         },
-                        DiscountPercentage = dto.discountPercentage,
-                        AddOn = new AddOn { Id = dto.addOnId, Name = dto.addOnName }
+                        DiscountPercentage = membershipAddonDiscountTransferObject.discountPercentage,
+                        AddOn = new AddOn { Id = membershipAddonDiscountTransferObject.addOnId, Name = membershipAddonDiscountTransferObject.addOnName }
                     });
                 }
                 return discounts;
             }
-            catch (HttpRequestException ex)
+            catch (HttpRequestException httpRequestException)
             {
-                throw new InvalidOperationException($"Failed to retrieve addon discounts for membership {membershipId}.", ex);
+                throw new InvalidOperationException($"Failed to retrieve addon discounts for membership {membershipId}.", httpRequestException);
             }
         }
     }

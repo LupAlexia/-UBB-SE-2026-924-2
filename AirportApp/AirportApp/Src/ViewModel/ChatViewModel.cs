@@ -60,9 +60,9 @@ namespace AirportApp.Src.ViewModel
                     await LoadFirstMessageAsync();
                 }
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
-                System.Diagnostics.Debug.WriteLine($"InitializeChatAsync error: {ex}");
+                System.Diagnostics.Debug.WriteLine($"InitializeChatAsync error: {exception}");
             }
         }
 
@@ -93,9 +93,9 @@ namespace AirportApp.Src.ViewModel
                     ChatHistory.Add(dataTransferObject);
                 }
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
-                System.Diagnostics.Debug.WriteLine($"LoadChatHistoryAsync error: {ex}");
+                System.Diagnostics.Debug.WriteLine($"LoadChatHistoryAsync error: {exception}");
             }
         }
 

@@ -177,7 +177,7 @@ namespace AirportApp.Tests.Unit
 
             await authService.RegisterAsync(HashTestEmail, ValidPhoneNumber, HashTestUsername, ValidPassword);
 
-            await mockRepository.Received(1).AddUserAsync(Arg.Is<Customer>(c => c.PasswordHash != ValidPassword && !string.IsNullOrEmpty(c.PasswordHash)));
+            await mockRepository.Received(1).AddUserAsync(Arg.Is<Customer>(customer => customer.PasswordHash != ValidPassword && !string.IsNullOrEmpty(customer.PasswordHash)));
         }
 
         [TestMethod]

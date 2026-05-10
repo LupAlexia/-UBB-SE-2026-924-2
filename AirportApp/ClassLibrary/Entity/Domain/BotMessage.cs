@@ -73,18 +73,18 @@ namespace AirportApp.ClassLibrary.Entity.Domain
 
         public class BotMessageBuilder
         {
-            private int id;
+            private int messageId;
             private Sender sender = new BotEngineIdentity(null!);
             private Chat chat = null!;
             private string messageText = string.Empty;
             private List<FAQOption> faqOptions = new ();
             private DateTimeOffset timestamp = DateTimeOffset.UtcNow;
 
-            public BotMessageBuilder(Sender sender, Chat chat, int id)
+            public BotMessageBuilder(Sender sender, Chat chat, int messageId)
             {
                 this.sender = sender;
                 this.chat = chat;
-                this.id = id;
+                this.messageId = messageId;
             }
             public BotMessageBuilder WithTimestamp(DateTimeOffset timestamp)
             {
@@ -98,7 +98,7 @@ namespace AirportApp.ClassLibrary.Entity.Domain
             }
             public BotMessageBuilder WithId(int setId)
             {
-                id = setId;
+                messageId = setId;
                 return this;
             }
 
@@ -124,7 +124,7 @@ namespace AirportApp.ClassLibrary.Entity.Domain
 
             public BotMessage Build()
             {
-                return new BotMessage(id, sender, chat, messageText, faqOptions, timestamp);
+                return new BotMessage(messageId, sender, chat, messageText, faqOptions, timestamp);
             }
         }
     }

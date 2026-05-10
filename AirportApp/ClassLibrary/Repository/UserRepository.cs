@@ -10,45 +10,45 @@ namespace AirportApp.ClassLibrary.Repository
 {
     public class UserRepository : IUserRepository, AirportApp.ClassLibrary.Repository.Interfaces.IRepository<int, User>
     {
-        private readonly AirportDbContext dataBaseContext;
+        private readonly AirportDbContext databaseContext;
 
-        public UserRepository(AirportDbContext context)
+        public UserRepository(AirportDbContext databaseContext)
         {
-            dataBaseContext = context ?? throw new ArgumentNullException(nameof(dataBaseContext));
+            this.databaseContext = databaseContext ?? throw new ArgumentNullException(nameof(databaseContext));
         }
 
         public async Task<int> CreateNewEntityAsync(User userEntity)
         {
-            dataBaseContext.Users.Add(userEntity);
-            await dataBaseContext.SaveChangesAsync();
+            databaseContext.Users.Add(userEntity);
+            await databaseContext.SaveChangesAsync();
             return userEntity.Id;
         }
 
         public async Task DeleteByIdAsync(int identificationNumber)
         {
-            var user = await dataBaseContext.Users.FindAsync(identificationNumber);
+            var user = await databaseContext.Users.FindAsync(identificationNumber);
             if (user != null)
             {
-                dataBaseContext.Users.Remove(user);
-                await dataBaseContext.SaveChangesAsync();
+                databaseContext.Users.Remove(user);
+                await databaseContext.SaveChangesAsync();
             }
         }
 
         public async Task<IEnumerable<User>> GetAllAsync()
         {
-            return await dataBaseContext.Users.ToListAsync();
+            return await databaseContext.Users.ToListAsync();
         }
 
         public async Task<User> GetByIdAsync(int identificationNumber)
         {
-            return await dataBaseContext.Users.FindAsync(identificationNumber)
+            return await databaseContext.Users.FindAsync(identificationNumber)
                    ?? throw new KeyNotFoundException($"User with id {identificationNumber} was not found.");
         }
 
         public async Task UpdateByIdAsync(int identificationNumber, User userEntity)
         {
-            dataBaseContext.Users.Update(userEntity);
-            await dataBaseContext.SaveChangesAsync();
+            databaseContext.Users.Update(userEntity);
+            await databaseContext.SaveChangesAsync();
         }
     }
 }

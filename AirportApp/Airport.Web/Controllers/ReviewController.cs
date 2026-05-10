@@ -41,22 +41,22 @@ namespace Airport.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> CreateAsync([FromBody] CreateReviewDTO dto)
+        public async Task<ActionResult> CreateAsync([FromBody] CreateReviewDTO reviewCreationData)
         {
-            var user = await userRepository.GetByIdAsync(dto.userId);
+            var user = await userRepository.GetByIdAsync(reviewCreationData.userId);
             if (user == null)
             {
-                return NotFound($"User with id {dto.userId} not found.");
+                return NotFound($"User with id {reviewCreationData.userId} not found.");
             }
 
             var review = new Review
             {
                 User = user,
-                Message = dto.message,
-                DutyFreeRating = dto.dutyFreeRating,
-                FlightExperienceRating = dto.flightExperienceRating,
-                StaffFriendlinessRating = dto.staffFriendlinessRating,
-                CleanlinessRating = dto.cleanlinessRating
+                Message = reviewCreationData.message,
+                DutyFreeRating = reviewCreationData.dutyFreeRating,
+                FlightExperienceRating = reviewCreationData.flightExperienceRating,
+                StaffFriendlinessRating = reviewCreationData.staffFriendlinessRating,
+                CleanlinessRating = reviewCreationData.cleanlinessRating
             };
             int createdId = await reviewRepository.CreateNewEntityAsync(review);
             return CreatedAtAction(nameof(GetByIdAsync), new { id = createdId }, review);

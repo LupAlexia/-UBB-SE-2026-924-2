@@ -54,46 +54,46 @@ namespace Airport.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> CreateAsync([FromBody] CreateMessageDTO dto)
+        public async Task<ActionResult> CreateAsync([FromBody] CreateMessageDTO messageCreationData)
         {
-            if (dto == null)
+            if (messageCreationData == null)
             {
                 return BadRequest(new { Message = "ChatId and SenderId are required." });
             }
-            if (dto.chatId < 0)
+            if (messageCreationData.chatId < 0)
             {
                 return BadRequest(new { Message = "ChatId and SenderId are required." });
             }
-            if (dto.senderId <= -2)
+            if (messageCreationData.senderId <= -2)
             {
                 return BadRequest(new { Message = "ChatId and SenderId are required." });
             }
 
             try
             {
-                Chat chat = await chatRepository.GetByIdAsync(dto.chatId);
-                Sender sender = await senderRepository.GetByIdAsync(dto.senderId);
+                Chat chat = await chatRepository.GetByIdAsync(messageCreationData.chatId);
+                Sender sender = await senderRepository.GetByIdAsync(messageCreationData.senderId);
 
                 if (chat == null || sender == null)
                 {
                     return NotFound(new { Message = "Chat or Sender not found." });
                 }
 
-                var message = new Message(chat, dto.text, sender)
+                var message = new Message(chat, messageCreationData.text, sender)
                 {
-                    Timestamp = dto.timestamp == default ? DateTimeOffset.UtcNow : dto.timestamp
+                    Timestamp = messageCreationData.timestamp == default ? DateTimeOffset.UtcNow : messageCreationData.timestamp
                 };
 
                 int createdId = await messageRepository.CreateNewEntityAsync(message);
                 return CreatedAtAction(nameof(GetByIdAsync), new { id = createdId }, message);
             }
-            catch (KeyNotFoundException kex)
+            catch (KeyNotFoundException keyNotFoundException)
             {
-                return NotFound(new { Message = kex.Message });
+                return NotFound(new { Message = keyNotFoundException.Message });
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
-                return BadRequest(new { Message = ex.Message });
+                return BadRequest(new { Message = exception.Message });
             }
         }
 

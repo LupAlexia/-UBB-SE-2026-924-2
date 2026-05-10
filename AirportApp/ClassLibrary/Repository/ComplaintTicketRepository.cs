@@ -10,76 +10,76 @@ namespace AirportApp.ClassLibrary.Repository
 {
     public class ComplaintTicketRepository : ITicketRepository
     {
-        private readonly AirportDbContext dataBaseContext;
+        private readonly AirportDbContext databaseContext;
 
-        public ComplaintTicketRepository(AirportDbContext context)
+        public ComplaintTicketRepository(AirportDbContext databaseContext)
         {
-            dataBaseContext = context ?? throw new ArgumentNullException(nameof(dataBaseContext));
+            this.databaseContext = databaseContext ?? throw new ArgumentNullException(nameof(databaseContext));
         }
 
         public async Task<IEnumerable<ComplaintTicket>> GetAllAsync()
         {
-            return await dataBaseContext.Tickets
-                .Include(t => t.Creator)
-                .Include(t => t.Category)
-                .Include(t => t.Subcategory)
+            return await databaseContext.Tickets
+                .Include(ticket => ticket.Creator)
+                .Include(ticket => ticket.Category)
+                .Include(ticket => ticket.Subcategory)
                 .ToListAsync();
         }
 
         public async Task<ComplaintTicket> GetByIdAsync(int id)
         {
-            return await dataBaseContext.Tickets
-                .Include(t => t.Creator)
-                .Include(t => t.Category)
-                .Include(t => t.Subcategory)
-                .FirstOrDefaultAsync(t => t.Id == id)
+            return await databaseContext.Tickets
+                .Include(ticket => ticket.Creator)
+                .Include(ticket => ticket.Category)
+                .Include(ticket => ticket.Subcategory)
+                .FirstOrDefaultAsync(ticket => ticket.Id == id)
                 ?? throw new KeyNotFoundException($"Ticket with id {id} not found.");
         }
 
         public async Task<int> CreateNewEntityAsync(ComplaintTicket ticket)
         {
-            dataBaseContext.Tickets.Add(ticket);
-            await dataBaseContext.SaveChangesAsync();
+            databaseContext.Tickets.Add(ticket);
+            await databaseContext.SaveChangesAsync();
             return ticket.Id;
         }
 
         public async Task UpdateByIdAsync(int id, ComplaintTicket ticket)
         {
-            dataBaseContext.Tickets.Update(ticket);
-            await dataBaseContext.SaveChangesAsync();
+            databaseContext.Tickets.Update(ticket);
+            await databaseContext.SaveChangesAsync();
         }
 
         public async Task UpdateStatusByIdAsync(int id, ComplaintTicketStatusEnum newStatus)
         {
-            var ticket = await dataBaseContext.Tickets.FindAsync(id);
+            var ticket = await databaseContext.Tickets.FindAsync(id);
             if (ticket == null)
             {
                 throw new KeyNotFoundException($"Ticket with id {id} not found.");
             }
 
             ticket.CurrentStatus = newStatus;
-            await dataBaseContext.SaveChangesAsync();
+            await databaseContext.SaveChangesAsync();
         }
 
         public async Task UpdateUrgencyLevelByIdAsync(int id, ComplaintTicketUrgencyLevelEnum newUrgencyLevel)
         {
-            var ticket = await dataBaseContext.Tickets.FindAsync(id);
+            var ticket = await databaseContext.Tickets.FindAsync(id);
             if (ticket == null)
             {
                 throw new KeyNotFoundException($"Ticket with id {id} not found.");
             }
 
             ticket.UrgencyLevel = newUrgencyLevel;
-            await dataBaseContext.SaveChangesAsync();
+            await databaseContext.SaveChangesAsync();
         }
 
         public async Task DeleteByIdAsync(int id)
         {
-            var ticket = await dataBaseContext.Tickets.FindAsync(id);
+            var ticket = await databaseContext.Tickets.FindAsync(id);
             if (ticket != null)
             {
-                dataBaseContext.Tickets.Remove(ticket);
-                await dataBaseContext.SaveChangesAsync();
+                databaseContext.Tickets.Remove(ticket);
+                await databaseContext.SaveChangesAsync();
             }
         }
     }

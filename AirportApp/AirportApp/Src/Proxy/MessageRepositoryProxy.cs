@@ -23,23 +23,23 @@ namespace AirportApp.Src.Proxy
 
         public async Task<IEnumerable<Message>> GetAllAsync()
         {
-            var dtos = await httpClient.GetFromJsonAsync<IEnumerable<MessageDTO>>(BaseUrl)
+            var messageTransferObjectList = await httpClient.GetFromJsonAsync<IEnumerable<MessageDTO>>(BaseUrl)
                        ?? new List<MessageDTO>();
 
-            return dtos.Select(MapToMessage).ToList();
+            return messageTransferObjectList.Select(MapToMessage).ToList();
         }
 
         public async Task<Message> GetByIdAsync(int id)
         {
-            var dto = await httpClient.GetFromJsonAsync<MessageDTO>($"{BaseUrl}/{id}")
+            var messageTransferObject = await httpClient.GetFromJsonAsync<MessageDTO>($"{BaseUrl}/{id}")
                       ?? throw new KeyNotFoundException($"Message with id {id} not found.");
 
-            return MapToMessage(dto);
+            return MapToMessage(messageTransferObject);
         }
 
         public async Task<int> CreateNewEntityAsync(Message message)
         {
-            var dto = new
+            var messageCreationData = new
             {
                 text = message.Text,
                 timestamp = message.Timestamp == default ? DateTimeOffset.UtcNow : message.Timestamp,
@@ -47,7 +47,7 @@ namespace AirportApp.Src.Proxy
                 senderId = message.Sender.RetrieveUniqueDatabaseIdentifierForBot()
             };
 
-            var response = await httpClient.PostAsJsonAsync(BaseUrl, dto);
+            var response = await httpClient.PostAsJsonAsync(BaseUrl, messageCreationData);
             response.EnsureSuccessStatusCode();
 
             var location = response.Headers.Location;
@@ -77,27 +77,27 @@ namespace AirportApp.Src.Proxy
 
         public async Task<IEnumerable<Message>> GetByChatIdAsync(int chatId)
         {
-            var dtos = await httpClient.GetFromJsonAsync<IEnumerable<MessageDTO>>($"{BaseUrl}/chat/{chatId}")
+            var messageTransferObjectList = await httpClient.GetFromJsonAsync<IEnumerable<MessageDTO>>($"{BaseUrl}/chat/{chatId}")
                        ?? new List<MessageDTO>();
 
-            return dtos.Select(MapToMessage).ToList();
+            return messageTransferObjectList.Select(MapToMessage).ToList();
         }
 
         public async Task<IEnumerable<Message>> GetMessagesSinceAsync(int chatId, int firstMessageId)
         {
-            var dtos = await httpClient.GetFromJsonAsync<IEnumerable<MessageDTO>>($"{BaseUrl}/chat/{chatId}/since/{firstMessageId}")
+            var messageTransferObjectList = await httpClient.GetFromJsonAsync<IEnumerable<MessageDTO>>($"{BaseUrl}/chat/{chatId}/since/{firstMessageId}")
                        ?? new List<MessageDTO>();
 
-            return dtos.Select(MapToMessage).ToList();
+            return messageTransferObjectList.Select(MapToMessage).ToList();
         }
 
-        private static Message MapToMessage(MessageDTO dto)
+        private static Message MapToMessage(MessageDTO messageTransferObject)
         {
-            var sender = dto.Sender as Sender ?? (dto.SenderId == BotEngineIdentity.CONSTANT_IDENTIFIER_FOR_DEFAULT_BOT_SYSTEM_USER
+            var sender = messageTransferObject.Sender as Sender ?? (messageTransferObject.SenderId == BotEngineIdentity.CONSTANT_IDENTIFIER_FOR_DEFAULT_BOT_SYSTEM_USER
                 ? new BotEngineIdentity(null)
-                : new User { Id = dto.SenderId });
+                : new User { Id = messageTransferObject.SenderId });
 
-            return new Message(dto.MessageId, sender, new Chat { Id = dto.ChatId }, dto.MessageText, dto.Timestamp);
+            return new Message(messageTransferObject.MessageId, sender, new Chat { Id = messageTransferObject.ChatId }, messageTransferObject.MessageText, messageTransferObject.Timestamp);
         }
     }
 }

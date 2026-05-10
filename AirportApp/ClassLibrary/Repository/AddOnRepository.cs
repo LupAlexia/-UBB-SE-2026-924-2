@@ -11,21 +11,21 @@ namespace AirportApp.ClassLibrary.Repository
 {
     public class AddOnRepository : IAddOnRepository
     {
-        private readonly AirportDbContext dataBaseContext;
+        private readonly AirportDbContext databaseContext;
 
         public AddOnRepository(AirportDbContext databaseContext)
         {
-            this.dataBaseContext = databaseContext ?? throw new ArgumentNullException(nameof(databaseContext));
+            this.databaseContext = databaseContext ?? throw new ArgumentNullException(nameof(databaseContext));
         }
 
         public async Task<IEnumerable<AddOn>> GetAllAddOnsAsync()
         {
-            return await this.dataBaseContext.AddOns.ToListAsync();
+            return await this.databaseContext.AddOns.ToListAsync();
         }
 
         public async Task<IEnumerable<AddOn>> GetAddOnsByIdsAsync(IEnumerable<int> addOnIds)
         {
-            return await this.dataBaseContext.AddOns
+            return await this.databaseContext.AddOns
                 .Where(addOnEntity => addOnIds.Contains(addOnEntity.Id))
                 .ToListAsync();
         }

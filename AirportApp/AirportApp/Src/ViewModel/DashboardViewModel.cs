@@ -171,9 +171,9 @@ namespace AirportApp.Src.ViewModel
                         UseShellExecute = true
                     });
                 }
-                catch (Exception ex)
+                catch (Exception exception)
                 {
-                    System.Diagnostics.Debug.WriteLine($"Failed to generate PDF: {ex.Message}");
+                    System.Diagnostics.Debug.WriteLine($"Failed to generate PDF: {exception.Message}");
                 }
             }
         }
