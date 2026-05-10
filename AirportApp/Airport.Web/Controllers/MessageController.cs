@@ -71,7 +71,6 @@ namespace Airport.Web.Controllers
 
             try
             {
-                // Fetch Chat and Sender from database
                 Chat chat = await chatRepository.GetByIdAsync(dto.chatId);
                 Sender sender = await senderRepository.GetByIdAsync(dto.senderId);
 
@@ -80,7 +79,6 @@ namespace Airport.Web.Controllers
                     return NotFound(new { Message = "Chat or Sender not found." });
                 }
 
-                // Reconstruct Message with populated navigations
                 var message = new Message(chat, dto.text, sender)
                 {
                     Timestamp = dto.timestamp == default ? DateTimeOffset.UtcNow : dto.timestamp
