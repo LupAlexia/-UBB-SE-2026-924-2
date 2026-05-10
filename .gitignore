@@ -10,3 +10,4 @@ AirportApp/.env
 AirportApp/appsettings.json 
 AirportApp/App2.xaml.cs 
 AirportApp/MainWindow2.xaml.cs 
+/AirportApp/Airport.Web/appsettings.example.json
