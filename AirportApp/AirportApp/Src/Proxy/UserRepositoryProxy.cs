@@ -26,8 +26,15 @@ namespace AirportApp.Src.Proxy
 
         public async Task<User> GetByIdAsync(int identificationNumber)
         {
-            return await httpClient.GetFromJsonAsync<User>($"{BaseUrl}/{identificationNumber}")
-                   ?? throw new KeyNotFoundException($"User with id {identificationNumber} was not found.");
+            try
+            {
+                return await httpClient.GetFromJsonAsync<User>($"{BaseUrl}/{identificationNumber}")
+                       ?? throw new KeyNotFoundException($"User with id {identificationNumber} was not found.");
+            }
+            catch (HttpRequestException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                throw new KeyNotFoundException($"User with id {identificationNumber} was not found.");
+            }
         }
 
         public async Task<int> CreateNewEntityAsync(User userEntity)

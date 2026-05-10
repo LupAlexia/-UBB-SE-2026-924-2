@@ -74,6 +74,10 @@ namespace AirportApp.Src.View.General
                             this.Frame.Navigate(typeof(UserHomePage));
                         }
                     }
+                    else
+                    {
+                        DisplayErrorMessage($"The ID {parsedId} could not be found.", "AUTHENTICATION FAILED");
+                    }
                 }
             }
             else
