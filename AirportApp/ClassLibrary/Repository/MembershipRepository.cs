@@ -21,7 +21,7 @@ namespace AirportApp.ClassLibrary.Repository
         public async Task<Membership?> GetMembershipByIdAsync(int id)
         {
             return await this.dataBaseContext.Memberships
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .FirstOrDefaultAsync(membershipEntity => membershipEntity.Id == id);
         }
 
         public async Task<IEnumerable<Membership>> GetAllMembershipsAsync()
@@ -32,8 +32,8 @@ namespace AirportApp.ClassLibrary.Repository
         public async Task<IEnumerable<MembershipAddonDiscount>> GetAddonDiscountsAsync(int membershipId)
         {
             return await this.dataBaseContext.MembershipAddonDiscounts
-                .Include(d => d.AddOn)
-                .Where(d => EF.Property<int>(d, "MembershipId") == membershipId)
+                .Include(discount => discount.AddOn)
+                .Where(discount => EF.Property<int>(discount, "MembershipId") == membershipId)
                 .ToListAsync();
         }
     }

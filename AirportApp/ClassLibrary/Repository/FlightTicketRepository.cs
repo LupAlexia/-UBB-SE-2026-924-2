@@ -62,7 +62,7 @@ namespace AirportApp.ClassLibrary.Repository
 
         public async Task UpdateTicketStatusAsync(int ticketId, string status)
         {
-            var ticket = await this.dataBaseContext.FlightTickets.FirstOrDefaultAsync(t => t.Id == ticketId);
+            var ticket = await this.dataBaseContext.FlightTickets.FirstOrDefaultAsync(ticketEntity => ticketEntity.Id == ticketId);
             if (ticket != null)
             {
                 ticket.Status = status;
@@ -79,7 +79,7 @@ namespace AirportApp.ClassLibrary.Repository
 
             var ticket = await this.dataBaseContext.FlightTickets
                 .Include(t => t.SelectedAddOns)
-                .FirstOrDefaultAsync(t => t.Id == ticketId);
+                .FirstOrDefaultAsync(ticketEntity => ticketEntity.Id == ticketId);
 
             if (ticket == null)
             {
@@ -88,7 +88,7 @@ namespace AirportApp.ClassLibrary.Repository
 
             foreach (var addOnId in addOnIds)
             {
-                var addOn = await this.dataBaseContext.AddOns.FirstOrDefaultAsync(a => a.Id == addOnId);
+                var addOn = await this.dataBaseContext.AddOns.FirstOrDefaultAsync(addOn => addOn.Id == addOnId);
                 if (addOn != null && !ticket.SelectedAddOns.Contains(addOn))
                 {
                     ticket.SelectedAddOns.Add(addOn);
@@ -127,11 +127,9 @@ namespace AirportApp.ClassLibrary.Repository
                 {
                         var ticket = tickets[ticketIndex];
 
-                        // Capture IDs before clearing navigation properties
                         var userId = ticket.User?.Id ?? 0;
                         var flightId = ticket.Flight?.Id ?? 0;
 
-                    // Reset navigation properties to null to prevent EF re-insertion errors
                     ticket.User = null;
                     ticket.Flight = null;
 
@@ -160,7 +158,6 @@ namespace AirportApp.ClassLibrary.Repository
 
                     this.dataBaseContext.FlightTickets.Add(ticket);
 
-                    // Set shadow foreign key values so EF inserts correct FK columns
                     if (userId > 0)
                     {
                         this.dataBaseContext.Entry(ticket).Property("UserId").CurrentValue = userId;
@@ -177,7 +174,6 @@ namespace AirportApp.ClassLibrary.Repository
             }
             catch (Exception ex)
             {
-                // Log the exception for debugging
                 System.Diagnostics.Debug.WriteLine($"Error saving tickets: {ex}");
                 return false;
             }

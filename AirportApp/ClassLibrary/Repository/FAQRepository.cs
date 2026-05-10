@@ -63,7 +63,7 @@ namespace AirportApp.ClassLibrary.Repository
 
         public async Task DeleteByIdAsync(int identificationNumber)
         {
-            var faqEntry = await this.dataBaseContext.Faqs.FirstOrDefaultAsync(f => f.Id == identificationNumber);
+            var faqEntry = await this.dataBaseContext.Faqs.FirstOrDefaultAsync(faqEntity => faqEntity.Id == identificationNumber);
             if (faqEntry != null)
             {
                 this.dataBaseContext.Faqs.Remove(faqEntry);
@@ -84,13 +84,13 @@ namespace AirportApp.ClassLibrary.Repository
             }
 
             return await this.dataBaseContext.Faqs
-                .Where(f => f.Category == category)
+                .Where(faqEntity => faqEntity.Category == category)
                 .ToListAsync();
         }
 
         public async Task IncrementViewCountAsync(int identificationNumber)
         {
-            var faqEntry = await this.dataBaseContext.Faqs.FirstOrDefaultAsync(f => f.Id == identificationNumber);
+            var faqEntry = await this.dataBaseContext.Faqs.FirstOrDefaultAsync(faqEntity => faqEntity.Id == identificationNumber);
             if (faqEntry != null)
             {
                 faqEntry.ViewCount++;
@@ -100,7 +100,7 @@ namespace AirportApp.ClassLibrary.Repository
 
         public async Task IncrementWasHelpfulVotesAsync(int identificationNumber)
         {
-            var faqEntry = await this.dataBaseContext.Faqs.FirstOrDefaultAsync(f => f.Id == identificationNumber);
+            var faqEntry = await this.dataBaseContext.Faqs.FirstOrDefaultAsync(faqEntity => faqEntity.Id == identificationNumber);
             if (faqEntry != null)
             {
                 faqEntry.HelpfulVotesCount++;
@@ -110,7 +110,7 @@ namespace AirportApp.ClassLibrary.Repository
 
         public async Task IncrementWasNotHelpfulVotesAsync(int identificationNumber)
         {
-            var faqEntry = await this.dataBaseContext.Faqs.FirstOrDefaultAsync(f => f.Id == identificationNumber);
+            var faqEntry = await this.dataBaseContext.Faqs.FirstOrDefaultAsync(faqEntity => faqEntity.Id == identificationNumber);
             if (faqEntry != null)
             {
                 faqEntry.NotHelpfulVotesCount++;

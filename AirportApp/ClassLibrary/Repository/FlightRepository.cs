@@ -18,7 +18,7 @@ namespace AirportApp.ClassLibrary.Repository
             this.dataBaseContext = dataBaseContext;
         }
 
-        public async Task<Flight?> GetFlightByIdAsync(int id)
+        public async Task<Flight?> GetFlightByIdAsync(int flightIdentifier)
         {
             return await this.dataBaseContext.Flights
                 .Include(flight => flight.Route)
@@ -26,7 +26,7 @@ namespace AirportApp.ClassLibrary.Repository
                 .Include(flight => flight.Route)
                     .ThenInclude(route => route.Airport)
                 .Include(flight => flight.Gate)
-                .FirstOrDefaultAsync(flight => flight.Id == id);
+                .FirstOrDefaultAsync(flight => flight.Id == flightIdentifier);
         }
 
         public async Task<IEnumerable<Flight>> GetFlightsByRouteAsync(string location, string routeType, DateTime? date)
