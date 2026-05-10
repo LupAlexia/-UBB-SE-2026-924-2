@@ -27,7 +27,7 @@ namespace AirportApp.ClassLibrary.Repository
             }
 
             return await dataBaseContext.Senders
-                .FirstOrDefaultAsync(s => s.Id == id)
+                .FirstOrDefaultAsync(sender => sender.Id == id)
                 ?? throw new KeyNotFoundException($"Sender with id {id} was not found.");
         }
 

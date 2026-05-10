@@ -19,7 +19,7 @@ namespace Airport.Web.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Flight>> GetByIdAsync(int id)
+        public async Task<ActionResult<AirportApp.ClassLibrary.Entity.Dto.FlightDTO>> GetByIdAsync(int id)
         {
             Flight? flight = await flightRepository.GetFlightByIdAsync(id);
             if (flight == null)
@@ -27,17 +27,50 @@ namespace Airport.Web.Controllers
                 return NotFound();
             }
 
-            return Ok(flight);
+            var dto = new AirportApp.ClassLibrary.Entity.Dto.FlightDTO(
+                flight.Id,
+                flight.Route.Id,
+                flight.Gate.Id,
+                flight.Date,
+                flight.FlightNumber,
+                flight.Route != null ? new AirportApp.ClassLibrary.Entity.Dto.RouteDTO(
+                    flight.Route.Id,
+                    flight.Route.RouteType,
+                    flight.Route.DepartureTime,
+                    flight.Route.ArrivalTime,
+                    flight.Route.Capacity,
+                    flight.Route.Airport != null ? new AirportApp.ClassLibrary.Entity.Dto.AirportDTO(flight.Route.Airport.Id, flight.Route.Airport.AirportCode, flight.Route.Airport.City) : null,
+                    flight.Route.Company != null ? new AirportApp.ClassLibrary.Entity.Dto.CompanyDTO(flight.Route.Company.Id, flight.Route.Company.Name) : null) : null);
+
+            return Ok(dto);
         }
 
         [HttpGet("search")]
-        public async Task<ActionResult<IEnumerable<Flight>>> GetByRouteAsync(
+        public async Task<ActionResult<IEnumerable<AirportApp.ClassLibrary.Entity.Dto.FlightDTO>>> GetByRouteAsync(
             [FromQuery] string location,
             [FromQuery] string routeType,
             [FromQuery] DateTime? date)
         {
             IEnumerable<Flight> flights = await flightRepository.GetFlightsByRouteAsync(location, routeType, date);
-            return Ok(flights);
+            var dtos = new List<AirportApp.ClassLibrary.Entity.Dto.FlightDTO>();
+            foreach (var flight in flights)
+            {
+                dtos.Add(new AirportApp.ClassLibrary.Entity.Dto.FlightDTO(
+                    flight.Id,
+                    flight.Route.Id,
+                    flight.Gate.Id,
+                    flight.Date,
+                    flight.FlightNumber,
+                    flight.Route != null ? new AirportApp.ClassLibrary.Entity.Dto.RouteDTO(
+                        flight.Route.Id,
+                        flight.Route.RouteType,
+                        flight.Route.DepartureTime,
+                        flight.Route.ArrivalTime,
+                        flight.Route.Capacity,
+                        flight.Route.Airport != null ? new AirportApp.ClassLibrary.Entity.Dto.AirportDTO(flight.Route.Airport.Id, flight.Route.Airport.AirportCode, flight.Route.Airport.City) : null,
+                        flight.Route.Company != null ? new AirportApp.ClassLibrary.Entity.Dto.CompanyDTO(flight.Route.Company.Id, flight.Route.Company.Name) : null) : null));
+            }
+            return Ok(dtos);
         }
 
         [HttpGet("{flightId}/occupied-seat-count")]

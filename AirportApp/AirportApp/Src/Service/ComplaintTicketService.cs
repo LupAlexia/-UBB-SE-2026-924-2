@@ -99,7 +99,6 @@ namespace AirportApp.Src.Service
             targetTicket.UpdateStatus(newStatus);
             await ticketRepository.UpdateByIdAsync(ticketId, targetTicket);
         }
-
         public IEnumerable<TicketDTO> FilterTicketsByStatus(IEnumerable<TicketDTO> tickets, TicketFilterStatusEnum filter)
         {
             switch (filter)

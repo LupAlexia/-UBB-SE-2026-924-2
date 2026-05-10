@@ -20,11 +20,4 @@ namespace AirportApp.ClassLibrary.Repository.Interfaces
 
         Task<bool> IsSeatAvailableAsync(int flightId, string seat);
     }
-
-    // DTO to send tickets and add-on IDs to API
-    public class SaveTicketsRequest
-    {
-        public List<FlightTicket> Tickets { get; set; } = new List<FlightTicket>();
-        public List<List<int>> AddOnIds { get; set; } = new List<List<int>>();
-    }
 }

@@ -40,7 +40,7 @@ namespace AirportApp.ClassLibrary.Repository.Interfaces
 
         public async Task DeleteByIdAsync(int identificationNumber)
         {
-            var message = await this.dataBaseContext.Messages.FirstOrDefaultAsync(m => m.Id == identificationNumber);
+            var message = await this.dataBaseContext.Messages.FirstOrDefaultAsync(messageEntity => messageEntity.Id == identificationNumber);
             if (message != null)
             {
                 this.dataBaseContext.Messages.Remove(message);
@@ -55,7 +55,7 @@ namespace AirportApp.ClassLibrary.Repository.Interfaces
                 throw new ArgumentNullException(nameof(message));
             }
 
-            var existingMessage = await this.dataBaseContext.Messages.FirstOrDefaultAsync(m => m.Id == identificationNumber);
+            var existingMessage = await this.dataBaseContext.Messages.FirstOrDefaultAsync(messageEntity => messageEntity.Id == identificationNumber);
             if (existingMessage != null)
             {
                 await this.dataBaseContext.SaveChangesAsync();
@@ -65,7 +65,7 @@ namespace AirportApp.ClassLibrary.Repository.Interfaces
         public async Task<IEnumerable<Message>> GetAllAsync()
         {
             var messages = await this.dataBaseContext.Messages
-                .Include(m => m.Chat)
+                .Include(messageEntity => messageEntity.Chat)
                 .ToListAsync();
 
             await PopulateSendersAsync(messages);
@@ -75,8 +75,8 @@ namespace AirportApp.ClassLibrary.Repository.Interfaces
         public async Task<Message> GetByIdAsync(int identificationNumber)
         {
             var message = await this.dataBaseContext.Messages
-                .Include(m => m.Chat)
-                .FirstOrDefaultAsync(m => m.Id == identificationNumber);
+                .Include(messageEntity => messageEntity.Chat)
+                .FirstOrDefaultAsync(messageEntity => messageEntity.Id == identificationNumber);
 
             if (message != null)
             {
@@ -89,9 +89,9 @@ namespace AirportApp.ClassLibrary.Repository.Interfaces
         public async Task<IEnumerable<Message>> GetByChatIdAsync(int chatId)
         {
             var messages = await this.dataBaseContext.Messages
-                .Include(m => m.Chat)
-                .Where(m => m.Chat.Id == chatId)
-                .OrderBy(m => m.Timestamp)
+                .Include(messageEntity => messageEntity.Chat)
+                .Where(messageEntity => messageEntity.Chat.Id == chatId)
+                .OrderBy(messageEntity => messageEntity.Timestamp)
                 .ToListAsync();
 
             await PopulateSendersAsync(messages);
@@ -101,9 +101,9 @@ namespace AirportApp.ClassLibrary.Repository.Interfaces
         public async Task<IEnumerable<Message>> GetMessagesSinceAsync(int chatId, int firstMessageId)
         {
             var messages = await this.dataBaseContext.Messages
-                .Include(m => m.Chat)
-                .Where(m => m.Chat.Id == chatId && m.Id >= firstMessageId)
-                .OrderBy(m => m.Timestamp)
+                .Include(messageEntity => messageEntity.Chat)
+                .Where(messageEntity => messageEntity.Chat.Id == chatId && messageEntity.Id >= firstMessageId)
+                .OrderBy(messageEntity => messageEntity.Timestamp)
                 .ToListAsync();
 
             await PopulateSendersAsync(messages);
@@ -128,7 +128,7 @@ namespace AirportApp.ClassLibrary.Repository.Interfaces
             }
 
             return await dataBaseContext.Senders
-                .FirstOrDefaultAsync(s => s.Id == senderId)
+                .FirstOrDefaultAsync(sender => sender.Id == senderId)
                 ?? throw new KeyNotFoundException($"Sender with id {senderId} was not found.");
         }
     }

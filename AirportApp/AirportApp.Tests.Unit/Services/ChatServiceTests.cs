@@ -61,7 +61,7 @@ namespace AirportApp.Tests.Unit.Src.Service
         [TestMethod]
         public async Task OpenChat_RepositoryThrowsException_ThrowsException()
         {
-            mockChatRepository.CreateNewEntityAsync(Arg.Any<Chat>()).Returns(x => Task.FromException<int>(new Exception("Database error")));
+            mockChatRepository.CreateNewEntityAsync(Arg.Any<Chat>()).Returns(response => Task.FromException<int>(new Exception("Database error")));
 
             await Assert.ThrowsExceptionAsync<Exception>(async () => await chatService.OpenChatAsync(testUser));
         }
@@ -69,7 +69,7 @@ namespace AirportApp.Tests.Unit.Src.Service
         [TestMethod]
         public async Task OpenChat_RepositoryThrowsException_ThrowsCorrectErrorMessage()
         {
-            mockChatRepository.CreateNewEntityAsync(Arg.Any<Chat>()).Returns(x => Task.FromException<int>(new Exception("Database error")));
+            mockChatRepository.CreateNewEntityAsync(Arg.Any<Chat>()).Returns(response => Task.FromException<int>(new Exception("Database error")));
 
             var exceptionThrown = await Assert.ThrowsExceptionAsync<Exception>(async () => await chatService.OpenChatAsync(testUser));
 
@@ -90,7 +90,7 @@ namespace AirportApp.Tests.Unit.Src.Service
         [TestMethod]
         public async Task CloseChat_RepositoryThrowsException_ThrowsException()
         {
-            mockChatRepository.GetByIdAsync(999).Returns(x => Task.FromException<Chat>(new KeyNotFoundException("Chat not found")));
+            mockChatRepository.GetByIdAsync(999).Returns(response => Task.FromException<Chat>(new KeyNotFoundException("Chat not found")));
 
             await Assert.ThrowsExceptionAsync<Exception>(async () => await chatService.CloseChatAsync(999));
         }
@@ -98,7 +98,7 @@ namespace AirportApp.Tests.Unit.Src.Service
         [TestMethod]
         public async Task CloseChat_RepositoryThrowsException_ThrowsCorrectErrorMessage()
         {
-            mockChatRepository.GetByIdAsync(999).Returns(x => Task.FromException<Chat>(new KeyNotFoundException("Chat not found")));
+            mockChatRepository.GetByIdAsync(999).Returns(response => Task.FromException<Chat>(new KeyNotFoundException("Chat not found")));
 
             var exceptionThrown = await Assert.ThrowsExceptionAsync<Exception>(async () => await chatService.CloseChatAsync(999));
 

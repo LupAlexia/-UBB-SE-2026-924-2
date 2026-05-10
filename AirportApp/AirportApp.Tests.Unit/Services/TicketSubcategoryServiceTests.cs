@@ -58,7 +58,7 @@ namespace AirportApp.Tests.Unit.Src.Service
         [TestMethod]
         public async Task GetSubcategoryById_WhenIdIsInvalid_PropagatesException()
         {
-            subcategoryRepositoryMock.GetByIdAsync(999).Returns(x => Task.FromException<ComplaintTicketSubcategory>(new KeyNotFoundException()));
+            subcategoryRepositoryMock.GetByIdAsync(999).Returns(response => Task.FromException<ComplaintTicketSubcategory>(new KeyNotFoundException()));
             await Assert.ThrowsExceptionAsync<KeyNotFoundException>(async () => await subcategoryService.GetSubcategoryByIdAsync(999));
         }
     }

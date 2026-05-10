@@ -22,11 +22,11 @@ namespace AirportApp.ClassLibrary.Entity.Repository.Database
         public async Task<FAQNode> GetByIdAsync(int id)
         {
             var node = await this.dataBaseContext.FaqNodes
-                .Include(n => n.Options)
-                .ThenInclude(o => o.NextOption)
-                .FirstOrDefaultAsync(n => n.NodeId == id);
+                .Include(nodeEntity => nodeEntity.Options)
+                .ThenInclude(option => option.NextOption)
+                .FirstOrDefaultAsync(nodeEntity => nodeEntity.NodeId == id);
 
-            return node;
+            return node ?? throw new KeyNotFoundException($"FAQNode with id {id} was not found.");
         }
 
         public async Task<int> CreateNewEntityAsync(FAQNode incomingFAQNodeEntityToBeSaved)
@@ -37,9 +37,9 @@ namespace AirportApp.ClassLibrary.Entity.Repository.Database
                 IsFinalAnswer = incomingFAQNodeEntityToBeSaved.IsFinalAnswer
             };
 
-            foreach (var opt in incomingFAQNodeEntityToBeSaved.Options)
+            foreach (var option in incomingFAQNodeEntityToBeSaved.Options)
             {
-                var optionEntity = new FAQOption(opt.Label, opt.NextOption);
+                var optionEntity = new FAQOption(option.Label, option.NextOption);
                 nodeEntity.Options.Add(optionEntity);
             }
 
@@ -49,9 +49,9 @@ namespace AirportApp.ClassLibrary.Entity.Repository.Database
             return nodeEntity.NodeId;
         }
 
-        public async Task DeleteByIdAsync(int id)
+        public async Task DeleteByIdAsync(int nodeIdentifier)
         {
-            var node = await this.dataBaseContext.FaqNodes.Include(n => n.Options).FirstOrDefaultAsync(n => n.NodeId == id);
+            var node = await this.dataBaseContext.FaqNodes.Include(nodeEntity => nodeEntity.Options).FirstOrDefaultAsync(nodeEntity => nodeEntity.NodeId == nodeIdentifier);
             if (node == null)
             {
                 return;
@@ -63,7 +63,7 @@ namespace AirportApp.ClassLibrary.Entity.Repository.Database
 
         public async Task UpdateByIdAsync(int id, FAQNode updatedFAQNodeEntityData)
         {
-            var node = await this.dataBaseContext.FaqNodes.Include(n => n.Options).FirstOrDefaultAsync(n => n.NodeId == id);
+            var node = await this.dataBaseContext.FaqNodes.Include(node => node.Options).FirstOrDefaultAsync(node => node.NodeId == id);
             if (node == null)
             {
                 return;
@@ -74,9 +74,9 @@ namespace AirportApp.ClassLibrary.Entity.Repository.Database
 
             node.Options.Clear();
 
-            foreach (var opt in updatedFAQNodeEntityData.Options)
+            foreach (var option in updatedFAQNodeEntityData.Options)
             {
-                var optionEntity = new FAQOption(opt.Label, opt.NextOption);
+                var optionEntity = new FAQOption(option.Label, option.NextOption);
                 node.Options.Add(optionEntity);
             }
 
@@ -86,8 +86,8 @@ namespace AirportApp.ClassLibrary.Entity.Repository.Database
         public async Task<IEnumerable<FAQNode>> GetAllAsync()
         {
             var nodes = await this.dataBaseContext.FaqNodes
-                .Include(n => n.Options)
-                .ThenInclude(o => o.NextOption)
+                .Include(node => node.Options)
+                .ThenInclude(option => option.NextOption)
                 .ToListAsync();
 
             return nodes;

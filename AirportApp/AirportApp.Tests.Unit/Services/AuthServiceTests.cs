@@ -121,7 +121,7 @@ namespace AirportApp.Tests.Unit
 
             await authService.RegisterAsync(email, ValidAlternatePhone, "gabriela_s", "ParolaGabriela123!");
 
-            await mockRepository.Received(1).AddUserAsync(Arg.Is<Customer>(c => c.Email == email));
+            await mockRepository.Received(1).AddUserAsync(Arg.Is<Customer>(customer => customer.Email == email));
         }
 
         [TestMethod]

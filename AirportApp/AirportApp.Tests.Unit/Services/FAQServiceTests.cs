@@ -31,12 +31,12 @@ namespace AirportApp.Tests.Unit.Services
                 new FAQEntry(2, "Q2", "A2", FAQCategoryEnum.CheckIn, 0, 0, 0),
                 new FAQEntry(3, "Q3", "A3", FAQCategoryEnum.Baggage, 0, 0, 0)
             };
-            faqRepositoryMock.GetByCategoryAsync(FAQCategoryEnum.CheckIn).Returns(Task.FromResult(faqs.Where(f => f.Category == FAQCategoryEnum.CheckIn).ToList()));
+            faqRepositoryMock.GetByCategoryAsync(FAQCategoryEnum.CheckIn).Returns(Task.FromResult(faqs.Where(faqEntity => faqEntity.Category == FAQCategoryEnum.CheckIn).ToList()));
 
             var result = (await faqService.GetByCategoryAsync(FAQCategoryEnum.CheckIn)).ToList();
 
             Assert.AreEqual(2, result.Count);
-            Assert.IsTrue(result.All(f => f.Category == FAQCategoryEnum.CheckIn));
+            Assert.IsTrue(result.All(faqEntity => faqEntity.Category == FAQCategoryEnum.CheckIn));
             await faqRepositoryMock.Received(1).GetByCategoryAsync(FAQCategoryEnum.CheckIn);
         }
 

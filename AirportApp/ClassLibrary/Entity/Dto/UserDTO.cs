@@ -1,4 +1,4 @@
-﻿namespace AirportApp.ClassLibrary.Entity.Dto
+namespace AirportApp.ClassLibrary.Entity.Dto
 {
     public record UserDTO(string name, string email);
 }

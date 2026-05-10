@@ -58,7 +58,7 @@ namespace AirportApp.ClassLibrary.Repository
                 throw new ArgumentNullException(nameof(updatedChatEntityData));
             }
 
-            var chatFound = await this.dataBaseContext.Chats.FirstOrDefaultAsync(c => c.Id == identifierForChatToBeUpdated);
+            var chatFound = await this.dataBaseContext.Chats.FirstOrDefaultAsync(chatEntity => chatEntity.Id == identifierForChatToBeUpdated);
             if (chatFound != null)
             {
                 chatFound.Status = updatedChatEntityData.Status;
@@ -74,8 +74,8 @@ namespace AirportApp.ClassLibrary.Repository
         public async Task<Chat> GetByIdAsync(int identifierForRequestedChat)
         {
             var chat = await this.dataBaseContext.Chats
-                .Include(c => c.User)
-                .FirstOrDefaultAsync(c => c.Id == identifierForRequestedChat);
+                .Include(chatEntity => chatEntity.User)
+                .FirstOrDefaultAsync(chatEntity => chatEntity.Id == identifierForRequestedChat);
 
             return chat ?? throw new KeyNotFoundException($"Chat with id {identifierForRequestedChat} not found.");
         }
