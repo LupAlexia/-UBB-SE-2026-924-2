@@ -12,6 +12,21 @@ namespace AirportApp.Tests.Unit.Services
     [TestClass]
     public class FAQServiceTests
     {
+        private const int FaqId1 = 1;
+        private const int FaqId2 = 2;
+        private const int FaqId3 = 3;
+        private const int ZeroViewCount = 0;
+        private const string Question1 = "Q1";
+        private const string Question2 = "Q2";
+        private const string Question3 = "Q3";
+        private const string Answer1 = "A1";
+        private const string Answer2 = "A2";
+        private const string Answer3 = "A3";
+        private const string SearchQueryMatchingQuestion = "Q1";
+        private const string SearchQueryMatchingAnswer = "A2";
+        private const string SearchQueryNoMatch = "zzznomatch";
+        private const string SearchQueryCaseInsensitive = "q1";
+
         private IFAQRepository faqRepositoryMock;
         private FAQService faqService;
 
@@ -27,41 +42,124 @@ namespace AirportApp.Tests.Unit.Services
         {
             var faqs = new List<FAQEntry>
             {
-                new FAQEntry(1, "Q1", "A1", FAQCategoryEnum.CheckIn, 0, 0, 0),
-                new FAQEntry(2, "Q2", "A2", FAQCategoryEnum.CheckIn, 0, 0, 0),
-                new FAQEntry(3, "Q3", "A3", FAQCategoryEnum.Baggage, 0, 0, 0)
+                new FAQEntry(FaqId1, Question1, Answer1, FAQCategoryEnum.CheckIn, ZeroViewCount, ZeroViewCount, ZeroViewCount),
+                new FAQEntry(FaqId2, Question2, Answer2, FAQCategoryEnum.CheckIn, ZeroViewCount, ZeroViewCount, ZeroViewCount)
             };
-            faqRepositoryMock.GetByCategoryAsync(FAQCategoryEnum.CheckIn).Returns(Task.FromResult(faqs.Where(faqEntity => faqEntity.Category == FAQCategoryEnum.CheckIn).ToList()));
+            faqRepositoryMock.GetByCategoryAsync(FAQCategoryEnum.CheckIn).Returns(Task.FromResult(faqs));
 
             var result = (await faqService.GetByCategoryAsync(FAQCategoryEnum.CheckIn)).ToList();
 
             Assert.AreEqual(2, result.Count);
-            Assert.IsTrue(result.All(faqEntity => faqEntity.Category == FAQCategoryEnum.CheckIn));
+            Assert.IsTrue(result.All(f => f.Category == FAQCategoryEnum.CheckIn));
             await faqRepositoryMock.Received(1).GetByCategoryAsync(FAQCategoryEnum.CheckIn);
         }
 
         [TestMethod]
-        public async Task GetAll_WhenCalled_ReturnsAllFromRepository()
+        public async Task FilterFAQEntry_WithSpecificCategory_FiltersAndSearches()
         {
             var faqs = new List<FAQEntry>
             {
-                new FAQEntry(1, "Q1", "A1", FAQCategoryEnum.CheckIn, 0, 0, 0),
-                new FAQEntry(2, "Q2", "A2", FAQCategoryEnum.Baggage, 0, 0, 0)
+                new FAQEntry(FaqId1, Question1, Answer1, FAQCategoryEnum.CheckIn, ZeroViewCount, ZeroViewCount, ZeroViewCount),
+                new FAQEntry(FaqId2, Question2, Answer2, FAQCategoryEnum.Baggage, ZeroViewCount, ZeroViewCount, ZeroViewCount)
             };
-            faqRepositoryMock.GetAllAsync().Returns(Task.FromResult((IEnumerable<FAQEntry>)faqs));
+            faqRepositoryMock.GetByCategoryAsync(FAQCategoryEnum.CheckIn).Returns(Task.FromResult(
+                faqs.Where(f => f.Category == FAQCategoryEnum.CheckIn).ToList()));
 
-            var result = (await faqService.GetAllAsync()).ToList();
+            var result = await faqService.FilterFAQEntryAsync(FAQCategoryEnum.CheckIn, string.Empty);
 
-            Assert.AreEqual(2, result.Count);
-            await faqRepositoryMock.Received(1).GetAllAsync();
+            Assert.AreEqual(1, result.Count);
+            Assert.AreEqual(Question1, result[0].Question);
         }
 
         [TestMethod]
-        public async Task AddFAQEntry_WhenCalled_CallsRepository()
+        public async Task FilterFAQEntry_WithAllCategory_ReturnsAllEntries()
         {
-            var faq = new FAQEntry(1, "Q1", "A1", FAQCategoryEnum.CheckIn, 0, 0, 0);
-            await faqService.AddFAQEntryAsync(faq);
-            await faqRepositoryMock.Received(1).CreateNewEntityAsync(faq);
+            var faqs = new List<FAQEntry>
+            {
+                new FAQEntry(FaqId1, Question1, Answer1, FAQCategoryEnum.CheckIn, ZeroViewCount, ZeroViewCount, ZeroViewCount),
+                new FAQEntry(FaqId2, Question2, Answer2, FAQCategoryEnum.Baggage, ZeroViewCount, ZeroViewCount, ZeroViewCount),
+                new FAQEntry(FaqId3, Question3, Answer3, FAQCategoryEnum.CheckIn, ZeroViewCount, ZeroViewCount, ZeroViewCount)
+            };
+            faqRepositoryMock.GetAllAsync().Returns(Task.FromResult((IEnumerable<FAQEntry>)faqs));
+
+            var result = await faqService.FilterFAQEntryAsync(FAQCategoryEnum.All, string.Empty);
+
+            Assert.AreEqual(3, result.Count);
+        }
+
+        [TestMethod]
+        public async Task FilterFAQEntry_WithSearchQuery_FiltersOnQuestion()
+        {
+            var faqs = new List<FAQEntry>
+            {
+                new FAQEntry(FaqId1, Question1, Answer1, FAQCategoryEnum.CheckIn, ZeroViewCount, ZeroViewCount, ZeroViewCount),
+                new FAQEntry(FaqId2, Question2, Answer2, FAQCategoryEnum.CheckIn, ZeroViewCount, ZeroViewCount, ZeroViewCount)
+            };
+            faqRepositoryMock.GetAllAsync().Returns(Task.FromResult((IEnumerable<FAQEntry>)faqs));
+
+            var result = await faqService.FilterFAQEntryAsync(FAQCategoryEnum.All, SearchQueryMatchingQuestion);
+
+            Assert.AreEqual(1, result.Count);
+            Assert.AreEqual(Question1, result[0].Question);
+        }
+
+        [TestMethod]
+        public async Task FilterFAQEntry_WithSearchQuery_FiltersOnAnswer()
+        {
+            var faqs = new List<FAQEntry>
+            {
+                new FAQEntry(FaqId1, Question1, Answer1, FAQCategoryEnum.CheckIn, ZeroViewCount, ZeroViewCount, ZeroViewCount),
+                new FAQEntry(FaqId2, Question2, Answer2, FAQCategoryEnum.CheckIn, ZeroViewCount, ZeroViewCount, ZeroViewCount)
+            };
+            faqRepositoryMock.GetAllAsync().Returns(Task.FromResult((IEnumerable<FAQEntry>)faqs));
+
+            var result = await faqService.FilterFAQEntryAsync(FAQCategoryEnum.All, SearchQueryMatchingAnswer);
+
+            Assert.AreEqual(1, result.Count);
+            Assert.AreEqual(Question2, result[0].Question);
+        }
+
+        [TestMethod]
+        public async Task FilterFAQEntry_SearchIsCaseInsensitive()
+        {
+            var faqs = new List<FAQEntry>
+            {
+                new FAQEntry(FaqId1, Question1, Answer1, FAQCategoryEnum.CheckIn, ZeroViewCount, ZeroViewCount, ZeroViewCount)
+            };
+            faqRepositoryMock.GetAllAsync().Returns(Task.FromResult((IEnumerable<FAQEntry>)faqs));
+
+            var result = await faqService.FilterFAQEntryAsync(FAQCategoryEnum.All, SearchQueryCaseInsensitive);
+
+            Assert.AreEqual(1, result.Count);
+        }
+
+        [TestMethod]
+        public async Task FilterFAQEntry_NoMatchingQuery_ReturnsEmpty()
+        {
+            var faqs = new List<FAQEntry>
+            {
+                new FAQEntry(FaqId1, Question1, Answer1, FAQCategoryEnum.CheckIn, ZeroViewCount, ZeroViewCount, ZeroViewCount)
+            };
+            faqRepositoryMock.GetAllAsync().Returns(Task.FromResult((IEnumerable<FAQEntry>)faqs));
+
+            var result = await faqService.FilterFAQEntryAsync(FAQCategoryEnum.All, SearchQueryNoMatch);
+
+            Assert.AreEqual(0, result.Count);
+        }
+
+        [TestMethod]
+        public async Task FilterFAQEntry_NullSearchQuery_ReturnsAllInCategory()
+        {
+            var faqs = new List<FAQEntry>
+            {
+                new FAQEntry(FaqId1, Question1, Answer1, FAQCategoryEnum.CheckIn, ZeroViewCount, ZeroViewCount, ZeroViewCount),
+                new FAQEntry(FaqId2, Question2, Answer2, FAQCategoryEnum.CheckIn, ZeroViewCount, ZeroViewCount, ZeroViewCount)
+            };
+            faqRepositoryMock.GetAllAsync().Returns(Task.FromResult((IEnumerable<FAQEntry>)faqs));
+
+            var result = await faqService.FilterFAQEntryAsync(FAQCategoryEnum.All, null!);
+
+            Assert.AreEqual(2, result.Count);
         }
     }
 }

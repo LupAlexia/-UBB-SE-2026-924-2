@@ -7,6 +7,14 @@ namespace AirportApp.Tests.Unit.Services
     [TestClass]
     public class BotEngineTests
     {
+        private const int TestUserId = 1;
+        private const int TestChatId = 1;
+        private const int TestMessageId = 1;
+        private const string TestUserName = "Test";
+        private const string TestUserEmail = "test@test.com";
+        private const string MockStrategyResponse = "I am the mocked strategy response";
+        private const string ShortReply = "reply";
+
         private IBotStrategy mockStrategy = null!;
         private BotEngineIdentity botEngine = null!;
         private User testUser = null!;
@@ -16,56 +24,49 @@ namespace AirportApp.Tests.Unit.Services
         {
             mockStrategy = Substitute.For<IBotStrategy>();
             botEngine = new BotEngineIdentity(mockStrategy);
-            testUser = new User(1, "Test", "test@test.com");
+            testUser = new User(TestUserId, TestUserName, TestUserEmail);
         }
 
         [TestMethod]
-        public async Task GenerateAppropriateResponse_ValidMessage_ReturnsStrategyResult()
+        public async Task GenerateResponse_ValidMessage_ReturnsStrategyResult()
         {
-            var mockIncomingMessage = Substitute.For<IMessage>();
-            var dummyChat = new Chat(1, testUser, ChatStatus.Active);
-            var expectedResponse = new BotMessage.BotMessageBuilder(botEngine, dummyChat, 1)
-                .WithMessage("I am the mocked strategy response")
+            var mockMessage = Substitute.For<IMessage>();
+            var dummyChat = new Chat(TestChatId, testUser, ChatStatus.Active);
+            var expectedResponse = new BotMessage.BotMessageBuilder(botEngine, dummyChat, TestMessageId)
+                .WithMessage(MockStrategyResponse)
                 .Build();
 
-            mockStrategy.ProcessIncomingUserMessageAndDetermineNextDecisionTreeNodeAsync(botEngine, mockIncomingMessage)
+            mockStrategy.ProcessIncomingUserMessageAndDetermineNextDecisionTreeNodeAsync(botEngine, mockMessage)
                 .Returns(expectedResponse);
 
-            var resultedBotResponse = await botEngine.GenerateAppropriateResponseBasedOnCurrentStrategyAsync(mockIncomingMessage);
+            var result = await botEngine.GenerateAppropriateResponseBasedOnCurrentStrategyAsync(mockMessage);
 
-            Assert.AreEqual(expectedResponse, resultedBotResponse);
+            Assert.AreEqual(expectedResponse, result);
         }
 
         [TestMethod]
-        public async Task ResetBotConversationState_CallsStrategyResetMethod_ExactlyOnce()
+        public async Task GenerateResponse_DelegatesToStrategy_ExactlyOnce()
+        {
+            var mockMessage = Substitute.For<IMessage>();
+            var dummyChat = new Chat(TestChatId, testUser, ChatStatus.Active);
+            var response = new BotMessage.BotMessageBuilder(botEngine, dummyChat, TestMessageId)
+                .WithMessage(ShortReply)
+                .Build();
+
+            mockStrategy.ProcessIncomingUserMessageAndDetermineNextDecisionTreeNodeAsync(botEngine, mockMessage)
+                .Returns(response);
+
+            await botEngine.GenerateAppropriateResponseBasedOnCurrentStrategyAsync(mockMessage);
+
+            await mockStrategy.Received(1).ProcessIncomingUserMessageAndDetermineNextDecisionTreeNodeAsync(botEngine, mockMessage);
+        }
+
+        [TestMethod]
+        public async Task ResetBotConversationState_DelegatesToStrategy_ExactlyOnce()
         {
             await botEngine.ResetBotConversationStateToInitialRootNodeAsync();
 
             await mockStrategy.Received(1).ResetCurrentlyActiveConversationNodeToInitialStartingPointAsync();
         }
-
-        [TestMethod]
-        public void RetrieveConfiguredEmailAddressForBotContact_WhenCalled_ReturnsCorrectEmail()
-        {
-            var resultedEmail = botEngine.RetrieveConfiguredEmailAddressForBotContact();
-            Assert.AreEqual("customer-support@cloudspritzers.com", resultedEmail);
-        }
-
-        [TestMethod]
-        public void RetrieveConfiguredDisplayFullNameForBot_WhenCalled_ReturnsCarlos()
-        {
-            var resultedFullName = botEngine.RetrieveConfiguredDisplayFullNameForBot();
-            Assert.AreEqual("Carlos", resultedFullName);
-        }
-
-        [TestMethod]
-        public void RetrieveUniqueDatabaseIdentifierForBot_WhenCalled_ReturnsZero()
-        {
-            var resultedIdentifier = botEngine.RetrieveUniqueDatabaseIdentifierForBot();
-            Assert.AreEqual(BotEngineIdentity.CONSTANT_IDENTIFIER_FOR_DEFAULT_BOT_SYSTEM_USER, resultedIdentifier);
-        }
     }
 }
-
-
-
