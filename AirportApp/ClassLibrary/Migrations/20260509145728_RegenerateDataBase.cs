@@ -183,13 +183,21 @@ namespace AirportApp.ClassLibrary.Migrations
                 name: "FAQOption",
                 columns: table => new
                 {
-                    node_id = table.Column<int>(type: "int", nullable: false),
-                    label = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    next_option_id = table.Column<int>(type: "int", nullable: false)
+                    option_id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    label = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    next_option_id = table.Column<int>(type: "int", nullable: true),
+                    node_id = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_FAQOption", x => new { x.node_id, x.label });
+                    table.PrimaryKey("PK_FAQOption", x => x.option_id);
+                    table.ForeignKey(
+                        name: "FK_FAQOption_FAQNode_next_option_id",
+                        column: x => x.next_option_id,
+                        principalTable: "FAQNode",
+                        principalColumn: "node_id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_FAQOption_FAQNode_node_id",
                         column: x => x.node_id,
@@ -533,12 +541,12 @@ namespace AirportApp.ClassLibrary.Migrations
                 columns: new[] { "node_id", "is_final_answer", "question_text" },
                 values: new object[,]
                 {
-                    { 1, false, "Welcome! How can I help you today?" },
-                    { 2, true, "Flights information: You can search and book flights." },
-                    { 3, true, "Membership information: View plans and discounts." },
-                    { 4, true, "Baggage information: Learn what is included and what costs extra." },
-                    { 5, true, "Payments information: Find out which payment methods are accepted." },
-                    { 6, true, "Support information: Contact our team for help with bookings or accounts." }
+                    { 1, false, "How can I help you today?" },
+                    { 2, false, "What is the issue with your baggage?" },
+                    { 3, true, "Check your email for a tracking link or visit the lost & found desk." },
+                    { 4, true, "Please file a \"Property Irregularity Report\" at the arrival hall." },
+                    { 5, false, "What would you like to do with your booking?" },
+                    { 6, true, "You can change your flight via the \"My Bookings\" section on our website." }
                 });
 
             migrationBuilder.InsertData(
@@ -593,9 +601,9 @@ namespace AirportApp.ClassLibrary.Migrations
                 columns: new[] { "Customer_Id", "Email", "MembershipId", "Password_Hash", "Phone", "Username" },
                 values: new object[,]
                 {
-                    { 101, "alice@bot.com", 1, "AQAAAAIAAYagAAAAEFrClMiayKETDgc72t82k2u0x7FYwDamb26Y8Hc3Khcrvk35qv+UOG8DJfdS072a/w==", string.Empty, "alice" },
-                    { 102, "bob@chat.com", 2, "AQAAAAIAAYagAAAAEBo8g8J2kBatVyThJYhB+C1e4GA5JhOZFBGzHnhR2kzvmCt8LTrjdwsJQ0PRa8MUYw==", string.Empty, "bob" },
-                    { 103, "mia@example.com", 3, "AQAAAAIAAYagAAAAECR4iXe/cjGEgLa0nsm5yk3hU36OI4oNT+FlDYbqJoR3tVJ1xmbpd1O3KUBK0iBR3g==", string.Empty, "mia" }
+                    { 101, "alice@bot.com", 1, "AQAAAAIAAYagAAAAEFenwIGaS8Iw2zttM43jERpt162/RNiW0/ym+2RpOMoCb8e8fCktIbSBWj98U3wKKw==", string.Empty, "alice" },
+                    { 102, "bob@chat.com", 2, "AQAAAAIAAYagAAAAEC8U9uWPNk5tDFUJvCIq6GRveg1Fy5FLYZ+xVODxBz3VAv4lbceZAVCEeuSX9zfGmg==", string.Empty, "bob" },
+                    { 103, "mia@example.com", 3, "AQAAAAIAAYagAAAAEIVJmYMM7etHufWnOMzxARPwP5rhz/vg/5uq19PTDoVQQ7JZdI6D2vIJ5mxljdPz5A==", string.Empty, "mia" }
                 });
 
             migrationBuilder.InsertData(
@@ -611,14 +619,14 @@ namespace AirportApp.ClassLibrary.Migrations
 
             migrationBuilder.InsertData(
                 table: "FAQOption",
-                columns: new[] { "label", "node_id", "next_option_id" },
+                columns: new[] { "option_id", "label", "next_option_id", "node_id" },
                 values: new object[,]
                 {
-                    { "Baggage", 1, 4 },
-                    { "Contact support", 1, 6 },
-                    { "Flights", 1, 2 },
-                    { "Memberships", 1, 3 },
-                    { "Payments", 1, 5 }
+                    { 1, "Baggage Issues", 2, 1 },
+                    { 2, "Manage Booking", 5, 1 },
+                    { 3, "Lost Baggage", 3, 2 },
+                    { 4, "Damaged Baggage", 4, 2 },
+                    { 5, "Change Flight Date", 6, 5 }
                 });
 
             migrationBuilder.InsertData(
@@ -744,6 +752,16 @@ namespace AirportApp.ClassLibrary.Migrations
                 name: "IX_Customers_MembershipId",
                 table: "Customers",
                 column: "MembershipId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_FAQOption_next_option_id",
+                table: "FAQOption",
+                column: "next_option_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_FAQOption_node_id",
+                table: "FAQOption",
+                column: "node_id");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Flights_GateId",

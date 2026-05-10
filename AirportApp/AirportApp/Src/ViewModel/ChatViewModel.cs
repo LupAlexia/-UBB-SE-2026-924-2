@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using AirportApp.ClassLibrary.Entity.Domain;
 using AirportApp.ClassLibrary.Entity.Dto;
+using AirportApp.ClassLibrary.Repository.Interfaces;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.UI.Xaml.Controls;
@@ -22,16 +23,18 @@ namespace AirportApp.Src.ViewModel
         private IChatService chatService;
         private IUserService userService;
         private IMapper mapper;
+        private IRepository<int, FAQNode> faqRepository;
         private Chat chat;
         private User user;
         private const int FIRST_OPTION = 1;
 
-        public ChatViewModel(IMessageService msgService, IChatService chatService, IMapper mapper, IUserService userService, User testUser = null)
+        public ChatViewModel(IMessageService msgService, IChatService chatService, IMapper mapper, IUserService userService, IRepository<int, FAQNode> faqRepository, User testUser = null)
         {
             messageService = msgService;
             this.chatService = chatService;
             this.mapper = mapper;
             this.userService = userService;
+            this.faqRepository = faqRepository;
 
             // uses the injected user for tests, otherwise fallback to App.Current
             user = testUser ?? (App.Current as App)?.User;
@@ -108,10 +111,10 @@ namespace AirportApp.Src.ViewModel
             System.Diagnostics.Debug.WriteLine($"User selected: {option.Label}");
 
             await LoadChatHistoryAsync();
-            UpdateAvailableOptions(botReply);
+            await UpdateAvailableOptionsAsync(botReply);
         }
 
-        private void UpdateAvailableOptions(BotMessage botReply)
+        private async Task UpdateAvailableOptionsAsync(BotMessage botReply)
         {
             CurrentOptions.Clear();
             var nextOptions = (botReply as IMessage).GetNextOptions();
@@ -125,13 +128,15 @@ namespace AirportApp.Src.ViewModel
             }
             else
             {
-                CurrentOptions.Add(new FAQOption("Restart Chat", FIRST_OPTION));
+                var restartNode = await faqRepository.GetByIdAsync(FIRST_OPTION);
+                CurrentOptions.Add(new FAQOption("Restart Chat", restartNode));
             }
         }
 
         private async Task LoadFirstMessageAsync()
         {
-            await HandleOptionClickAsync(new FAQOption("Hello! I need help.", FIRST_OPTION));
+            var firstNode = await faqRepository.GetByIdAsync(FIRST_OPTION);
+            await HandleOptionClickAsync(new FAQOption("Hello! I need help.", firstNode));
         }
     }
 }

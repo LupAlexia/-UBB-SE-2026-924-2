@@ -1,21 +1,22 @@
-﻿using System.Collections.Generic;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AirportApp.ClassLibrary.Entity.Domain
 {
     public class FAQOption
     {
-        public int NodeId { get; set; }
+        public int OptionId { get; set; }
         public string Label { get; set; } = string.Empty;
-        public int NextOptionId { get; set; }
+        // They might not have a next option, meaning the end of the chat
+        public FAQNode? NextOption { get; set; }
 
         public FAQOption()
         {
         }
 
-        public FAQOption(string label, int nextOptionId)
+        public FAQOption(string label, FAQNode? nextOption)
         {
             this.Label = label;
-            this.NextOptionId = nextOptionId;
+            this.NextOption = nextOption;
         }
     }
 }
