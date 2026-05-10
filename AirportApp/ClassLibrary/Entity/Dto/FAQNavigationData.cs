@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using AirportApp.ClassLibrary.Entity.Dto;
 
-namespace AirportApp.Src.View
+namespace AirportApp.ClassLibrary.Entity.Dto
 {
     public class FAQNavigationData
     {
