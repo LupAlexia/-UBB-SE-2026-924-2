@@ -35,7 +35,6 @@ namespace AirportApp.Src.Proxy
                     Phone = dto.phone,
                     Username = dto.username,
                     PasswordHash = dto.passwordHash,
-                    MembershipId = dto.membershipId,
                     Membership = dto.membership != null ? new Membership
                     {
                         Id = dto.membership.id,
@@ -72,7 +71,6 @@ namespace AirportApp.Src.Proxy
                     Phone = dto.phone,
                     Username = dto.username,
                     PasswordHash = dto.passwordHash,
-                    MembershipId = dto.membershipId,
                     Membership = dto.membership != null ? new Membership
                     {
                         Id = dto.membership.id,
@@ -104,7 +102,7 @@ namespace AirportApp.Src.Proxy
                     user.Phone,
                     user.Username,
                     user.PasswordHash,
-                    user.MembershipId,
+                    user.Membership.Id,
                     null);
 
                 var response = await httpClient.PostAsJsonAsync(BaseUrl, dto);

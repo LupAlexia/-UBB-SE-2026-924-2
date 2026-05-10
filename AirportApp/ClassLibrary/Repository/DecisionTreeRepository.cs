@@ -26,7 +26,7 @@ namespace AirportApp.ClassLibrary.Entity.Repository.Database
                 .ThenInclude(o => o.NextOption)
                 .FirstOrDefaultAsync(n => n.NodeId == id);
 
-            return node;
+            return node ?? throw new KeyNotFoundException($"FAQNode with id {id} was not found.");
         }
 
         public async Task<int> CreateNewEntityAsync(FAQNode incomingFAQNodeEntityToBeSaved)

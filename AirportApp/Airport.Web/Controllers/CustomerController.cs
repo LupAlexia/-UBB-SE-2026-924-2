@@ -10,6 +10,7 @@ namespace Airport.Web.Controllers
     public class CustomerController : ControllerBase
     {
         private readonly ICustomerRepository customerRepository;
+        private readonly IMembershipRepository membershipRepository;
 
         public CustomerController(ICustomerRepository customerRepository)
         {
@@ -31,7 +32,7 @@ namespace Airport.Web.Controllers
                 customer.Phone,
                 customer.Username,
                 customer.PasswordHash,
-                customer.MembershipId,
+                customer.Membership != null ? customer.Membership.Id : null,
                 customer.Membership != null ? new AirportApp.ClassLibrary.Entity.Dto.MembershipDTO(
                     customer.Membership.Id,
                     customer.Membership.Name,
@@ -55,7 +56,7 @@ namespace Airport.Web.Controllers
                 customer.Phone,
                 customer.Username,
                 customer.PasswordHash,
-                customer.MembershipId,
+                customer.Membership != null ? customer.Membership.Id : null,
                 customer.Membership != null ? new AirportApp.ClassLibrary.Entity.Dto.MembershipDTO(
                     customer.Membership.Id,
                     customer.Membership.Name,
@@ -74,7 +75,8 @@ namespace Airport.Web.Controllers
                 Phone = dto.phone,
                 Username = dto.username,
                 PasswordHash = dto.passwordHash,
-                MembershipId = dto.membershipId
+                // ??????
+                Membership = new Membership { Id = dto.membership.id, Name = dto.membership.name, FlightDiscountPercentage = dto.membership.flightDiscountPercentage }
             };
             await customerRepository.AddUserAsync(customer);
 
@@ -84,7 +86,7 @@ namespace Airport.Web.Controllers
                 customer.Phone,
                 customer.Username,
                 customer.PasswordHash,
-                customer.MembershipId,
+                customer.Membership != null ? customer.Membership.Id : null,
                 null);
 
             return Ok(createdDto);

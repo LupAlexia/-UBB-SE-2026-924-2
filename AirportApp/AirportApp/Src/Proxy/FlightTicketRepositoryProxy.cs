@@ -31,11 +31,54 @@ namespace AirportApp.Src.Proxy
                 var tickets = new List<FlightTicket>();
                 foreach (var dto in dtos)
                 {
+                    var user = new Customer
+                    {
+                        Id = dto.userId
+                    };
+
+                    var flight = new Flight
+                    {
+                        Id = dto.flight?.id ?? dto.flightId,
+                        Date = dto.flight?.date ?? default,
+                        FlightNumber = dto.flight?.flightNumber ?? string.Empty,
+                        Route = dto.flight?.route != null
+                            ? new Route
+                            {
+                                Id = dto.flight.route.id,
+                                RouteType = dto.flight.route.routeType,
+                                DepartureTime = dto.flight.route.departureTime,
+                                ArrivalTime = dto.flight.route.arrivalTime,
+                                Capacity = dto.flight.route.capacity,
+                                Airport = dto.flight.route.airport != null
+                                    ? new Airport
+                                    {
+                                        Id = dto.flight.route.airport.id,
+                                        AirportCode = dto.flight.route.airport.airportCode,
+                                        City = dto.flight.route.airport.city
+                                    }
+                                    : null!,
+                                Company = dto.flight.route.company != null
+                                    ? new Company
+                                    {
+                                        Id = dto.flight.route.company.id,
+                                        Name = dto.flight.route.company.name
+                                    }
+                                    : null!
+                            }
+                            : null!,
+                        Gate = dto.flight != null
+                            ? new Gate
+                            {
+                                Id = dto.flight.gateId
+                            }
+                            : null!
+                    };
+
                     var ticket = new FlightTicket
                     {
                         Id = dto.id,
-                        UserId = dto.userId,
-                        FlightId = dto.flightId,
+                        User = user,
+                        Flight = flight,
                         Seat = dto.seat,
                         Price = dto.price,
                         Status = dto.status,
@@ -44,26 +87,6 @@ namespace AirportApp.Src.Proxy
                         PassengerEmail = dto.passengerEmail,
                         PassengerPhone = dto.passengerPhone,
                         SelectedAddOns = dto.selectedAddOns?.Select(a => new AddOn(a.id, a.name, a.basePrice)).ToList() ?? new List<AddOn>(),
-                        Flight = dto.flight != null ? new Flight
-                        {
-                            Id = dto.flight.id,
-                            RouteId = dto.flight.routeId,
-                            GateId = dto.flight.gateId,
-                            Date = dto.flight.date,
-                            FlightNumber = dto.flight.flightNumber,
-                            Route = dto.flight.route != null ? new Route
-                            {
-                                Id = dto.flight.route.id,
-                                RouteType = dto.flight.route.routeType,
-                                DepartureTime = dto.flight.route.departureTime,
-                                ArrivalTime = dto.flight.route.arrivalTime,
-                                Capacity = dto.flight.route.capacity,
-                                Airport = dto.flight.route.airport != null ? new Airport { Id = dto.flight.route.airport.id, AirportCode = dto.flight.route.airport.airportCode, City = dto.flight.route.airport.city } : null!,
-                                Company = dto.flight.route.company != null ? new Company { Id = dto.flight.route.company.id, Name = dto.flight.route.company.name } : null!
-                            }
-                            : null!
-                        }
-                        : null
                     };
                     tickets.Add(ticket);
                 }
@@ -81,8 +104,8 @@ namespace AirportApp.Src.Proxy
             {
                 var dto = new AirportApp.ClassLibrary.Entity.Dto.FlightTicketDTO(
                     ticket.Id,
-                    ticket.UserId,
-                    ticket.FlightId,
+                    ticket.User.Id,
+                    ticket.Flight.Id,
                     ticket.Seat,
                     ticket.Price,
                     ticket.Status,
@@ -159,8 +182,8 @@ namespace AirportApp.Src.Proxy
             {
                 var ticketDtos = tickets.Select(ticket => new AirportApp.ClassLibrary.Entity.Dto.FlightTicketDTO(
                     ticket.Id,
-                    ticket.UserId,
-                    ticket.FlightId,
+                    ticket.User.Id,
+                    ticket.Flight.Id,
                     ticket.Seat,
                     ticket.Price,
                     ticket.Status,

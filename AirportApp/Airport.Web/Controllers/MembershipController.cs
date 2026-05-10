@@ -50,8 +50,8 @@ namespace Airport.Web.Controllers
             foreach (var discount in discounts)
             {
                 dtos.Add(new AirportApp.ClassLibrary.Entity.Dto.MembershipAddonDiscountDTO(
-                    discount.MembershipId,
-                    discount.AddOnId,
+                    id,
+                    discount.AddOn?.Id ?? 0,
                     discount.DiscountPercentage,
                     discount.AddOn?.Name ?? string.Empty));
             }

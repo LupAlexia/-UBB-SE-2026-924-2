@@ -11,10 +11,14 @@ namespace Airport.Web.Controllers
     public class FlightTicketController : ControllerBase
     {
         private readonly IFlightTicketRepository flightTicketRepository;
+        private readonly ICustomerRepository customerRepository;
+        private readonly IFlightRepository flightRepository;
 
-        public FlightTicketController(IFlightTicketRepository flightTicketRepository)
+        public FlightTicketController(IFlightTicketRepository flightTicketRepository, ICustomerRepository customerRepository, IFlightRepository flightRepository)
         {
             this.flightTicketRepository = flightTicketRepository;
+            this.flightRepository = flightRepository;
+            this.customerRepository = customerRepository;
         }
 
         [HttpGet("user/{userId}")]
@@ -26,8 +30,8 @@ namespace Airport.Web.Controllers
             {
                 dtos.Add(new AirportApp.ClassLibrary.Entity.Dto.FlightTicketDTO(
                     ticket.Id,
-                    ticket.UserId,
-                    ticket.FlightId,
+                    ticket.User.Id,
+                    ticket.Flight.Id,
                     ticket.Seat,
                     ticket.Price,
                     ticket.Status,
@@ -38,8 +42,8 @@ namespace Airport.Web.Controllers
                     ticket.SelectedAddOns?.Select(a => new AirportApp.ClassLibrary.Entity.Dto.AddOnDTO(a.Id, a.Name, a.BasePrice)).ToList() ?? new List<AirportApp.ClassLibrary.Entity.Dto.AddOnDTO>(),
                     ticket.Flight != null ? new AirportApp.ClassLibrary.Entity.Dto.FlightDTO(
                         ticket.Flight.Id,
-                        ticket.Flight.RouteId,
-                        ticket.Flight.GateId,
+                        ticket.Flight.Route.Id,
+                        ticket.Flight.Gate.Id,
                         ticket.Flight.Date,
                         ticket.Flight.FlightNumber,
                         ticket.Flight.Route != null ? new AirportApp.ClassLibrary.Entity.Dto.RouteDTO(
@@ -60,8 +64,8 @@ namespace Airport.Web.Controllers
             var ticket = new FlightTicket
             {
                 Id = dto.id,
-                UserId = dto.userId,
-                FlightId = dto.flightId,
+                User = await customerRepository.GetByIdAsync(dto.userId),
+                Flight = await flightRepository.GetFlightByIdAsync(dto.flightId),
                 Seat = dto.seat,
                 Price = dto.price,
                 Status = dto.status,
@@ -120,8 +124,8 @@ namespace Airport.Web.Controllers
                 tickets.Add(new FlightTicket
                 {
                     Id = dto.id,
-                    UserId = dto.userId,
-                    FlightId = dto.flightId,
+                    User = await customerRepository.GetByIdAsync(dto.userId),
+                    Flight = await flightRepository.GetFlightByIdAsync(dto.flightId),
                     Seat = dto.seat,
                     Price = dto.price,
                     Status = dto.status,

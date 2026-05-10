@@ -77,8 +77,10 @@ namespace AirportApp.Src.Proxy
                 {
                     discounts.Add(new MembershipAddonDiscount
                     {
-                        MembershipId = dto.membershipId,
-                        AddOnId = dto.addOnId,
+                        Membership = new Membership
+                        {
+                            Id = dto.membershipId
+                        },
                         DiscountPercentage = dto.discountPercentage,
                         AddOn = new AddOn { Id = dto.addOnId, Name = dto.addOnName }
                     });

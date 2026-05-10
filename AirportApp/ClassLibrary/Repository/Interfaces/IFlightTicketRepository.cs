@@ -20,6 +20,4 @@ namespace AirportApp.ClassLibrary.Repository.Interfaces
 
         Task<bool> IsSeatAvailableAsync(int flightId, string seat);
     }
-
-
 }

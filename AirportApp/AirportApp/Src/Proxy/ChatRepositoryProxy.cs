@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 using AirportApp.ClassLibrary.Entity.Domain;
+using AirportApp.ClassLibrary.Entity.Dto;
 using AirportApp.ClassLibrary.Repository.Interfaces;
 
 namespace AirportApp.Src.Proxy
@@ -32,11 +33,7 @@ namespace AirportApp.Src.Proxy
 
         public async Task<int> CreateNewEntityAsync(Chat chat)
         {
-            var dto = new
-            {
-                UserId = chat.UserId != 0 ? chat.UserId : chat.User?.Id ?? 0,
-                Status = chat.Status
-            };
+            var dto = new CreateChatDTO(chat.User?.Id ?? 0, chat.Status);
 
             var response = await httpClient.PostAsJsonAsync(BaseUrl, dto);
             response.EnsureSuccessStatusCode();

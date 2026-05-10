@@ -122,11 +122,8 @@ namespace AirportApp
                 options.UseSqlServer(conn);
             }, contextLifetime: Microsoft.Extensions.DependencyInjection.ServiceLifetime.Transient, optionsLifetime: Microsoft.Extensions.DependencyInjection.ServiceLifetime.Transient);
 
-
-
             services.AddTransient<IBotStrategy, DecisionTreeStrategy>();
             services.AddTransient<BotEngineIdentity>();
-
 
             services.AddSingleton<IRepository<int, FAQNode>, DecisionTreeRepositoryProxy>();
             services.AddSingleton<IRepository<int, Chat>, ChatRepositoryProxy>();
@@ -143,7 +140,6 @@ namespace AirportApp
             services.AddSingleton<IEmployeeRepository, EmployeeRepositoryProxy>();
             services.AddSingleton<IFAQRepository, FAQRepositoryProxy>();
             services.AddSingleton<IRepository<int, Review>, ReviewRepositoryProxy>();
-
 
             services.AddSingleton<IEmployeeService, EmployeeService>();
             services.AddSingleton<IUserService, UserService>();

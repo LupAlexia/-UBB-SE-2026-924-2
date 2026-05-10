@@ -1,6 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
@@ -21,24 +19,23 @@ namespace AirportApp.Src.Proxy
 
         public async Task<IEnumerable<FAQNode>> GetAllAsync()
         {
-            var dtos = await httpClient.GetFromJsonAsync<IEnumerable<FAQNodeDto>>(BaseUrl)
-                       ?? new List<FAQNodeDto>();
-            return dtos.Select(MapToFAQNode);
+            return await httpClient.GetFromJsonAsync<IEnumerable<FAQNode>>(BaseUrl)
+                   ?? new List<FAQNode>();
         }
 
         public async Task<FAQNode> GetByIdAsync(int id)
         {
-            var dto = await httpClient.GetFromJsonAsync<FAQNodeDto>($"{BaseUrl}/{id}")
+            var node = await httpClient.GetFromJsonAsync<FAQNode>($"{BaseUrl}/{id}")
                       ?? throw new KeyNotFoundException($"FAQNode with id {id} was not found.");
-            return MapToFAQNode(dto);
+            return node;
         }
 
         public async Task<int> CreateNewEntityAsync(FAQNode node)
         {
             var response = await httpClient.PostAsJsonAsync(BaseUrl, node);
             response.EnsureSuccessStatusCode();
-            var created = await response.Content.ReadFromJsonAsync<FAQNodeDto>();
-            return created!.FaqNodeId;
+            var created = await response.Content.ReadFromJsonAsync<FAQNode>();
+            return created?.NodeId ?? 0;
         }
 
         public async Task UpdateByIdAsync(int id, FAQNode node)
@@ -51,29 +48,6 @@ namespace AirportApp.Src.Proxy
         {
             var response = await httpClient.DeleteAsync($"{BaseUrl}/{id}");
             response.EnsureSuccessStatusCode();
-        }
-
-        private static FAQNode MapToFAQNode(FAQNodeDto dto)
-        {
-            var options = (dto.Options ?? new List<FAQOptionDto>())
-                .Select(o => new FAQOption(o.Label, o.NextOptionId))
-                .ToImmutableArray();
-            return new FAQNode(dto.FaqNodeId, dto.QuestionText, options, dto.IsFinalAnswer);
-        }
-
-        // clase locale doar pentru deserializare
-        private class FAQNodeDto
-        {
-            public int FaqNodeId { get; set; }
-            public string QuestionText { get; set; } = string.Empty;
-            public bool IsFinalAnswer { get; set; }
-            public List<FAQOptionDto> Options { get; set; } = new ();
-        }
-
-        private class FAQOptionDto
-        {
-            public string Label { get; set; } = string.Empty;
-            public int NextOptionId { get; set; }
         }
     }
 }

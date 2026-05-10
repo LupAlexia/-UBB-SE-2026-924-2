@@ -31,8 +31,10 @@ namespace AirportApp.Src.Proxy
                 return new Flight
                 {
                     Id = dto.id,
-                    RouteId = dto.routeId,
-                    GateId = dto.gateId,
+                    Gate = new Gate
+                    {
+                        Id = dto.gateId
+                    },
                     Date = dto.date,
                     FlightNumber = dto.flightNumber,
                     Route = dto.route != null ? new Route
@@ -80,8 +82,10 @@ namespace AirportApp.Src.Proxy
                     flights.Add(new Flight
                     {
                         Id = dto.id,
-                        RouteId = dto.routeId,
-                        GateId = dto.gateId,
+                        Gate = new Gate
+                        {
+                            Id = dto.gateId
+                        },
                         Date = dto.date,
                         FlightNumber = dto.flightNumber,
                         Route = dto.route != null ? new Route

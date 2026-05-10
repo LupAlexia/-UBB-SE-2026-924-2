@@ -34,7 +34,7 @@ namespace AirportApp.Src.Proxy
         public async Task<int> CreateNewEntityAsync(Review reviewElement)
         {
             var dto = new CreateReviewDTO(
-                userId: reviewElement.UserId,
+                userId: reviewElement.User.Id,
                 message: reviewElement.Message,
                 dutyFreeRating: reviewElement.DutyFreeRating,
                 flightExperienceRating: reviewElement.FlightExperienceRating,

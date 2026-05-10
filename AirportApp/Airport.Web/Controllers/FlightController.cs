@@ -29,8 +29,8 @@ namespace Airport.Web.Controllers
 
             var dto = new AirportApp.ClassLibrary.Entity.Dto.FlightDTO(
                 flight.Id,
-                flight.RouteId,
-                flight.GateId,
+                flight.Route.Id,
+                flight.Gate.Id,
                 flight.Date,
                 flight.FlightNumber,
                 flight.Route != null ? new AirportApp.ClassLibrary.Entity.Dto.RouteDTO(
@@ -57,8 +57,8 @@ namespace Airport.Web.Controllers
             {
                 dtos.Add(new AirportApp.ClassLibrary.Entity.Dto.FlightDTO(
                     flight.Id,
-                    flight.RouteId,
-                    flight.GateId,
+                    flight.Route.Id,
+                    flight.Gate.Id,
                     flight.Date,
                     flight.FlightNumber,
                     flight.Route != null ? new AirportApp.ClassLibrary.Entity.Dto.RouteDTO(
