@@ -88,14 +88,17 @@ namespace AirportApp.Src.Service
 
         public async Task UpdateUrgencyLevelAsync(int ticketId, ComplaintTicketUrgencyLevelEnum newUrgencyLevel)
         {
-            await ticketRepository.UpdateUrgencyLevelByIdAsync(ticketId, newUrgencyLevel);
+            ComplaintTicket targetTicket = await ticketRepository.GetByIdAsync(ticketId);
+            targetTicket.UpdateUrgencyLevel(newUrgencyLevel);
+            await ticketRepository.UpdateByIdAsync(ticketId, targetTicket);
         }
 
         public async Task UpdateStatusAsync(int ticketId, ComplaintTicketStatusEnum newStatus)
         {
-            await ticketRepository.UpdateStatusByIdAsync(ticketId, newStatus);
+            ComplaintTicket targetTicket = await ticketRepository.GetByIdAsync(ticketId);
+            targetTicket.UpdateStatus(newStatus);
+            await ticketRepository.UpdateByIdAsync(ticketId, targetTicket);
         }
-
         public IEnumerable<TicketDTO> FilterTicketsByStatus(IEnumerable<TicketDTO> tickets, TicketFilterStatusEnum filter)
         {
             switch (filter)
