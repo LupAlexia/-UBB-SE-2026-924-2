@@ -48,11 +48,11 @@ namespace AirportApp
             {
                 Services = ConfigureServices();
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
                 System.IO.File.WriteAllText(
                 System.IO.Path.Combine(AppContext.BaseDirectory, "crash.txt"),
-                ex.ToString());
+                exception.ToString());
                 throw;
             }
 
@@ -104,22 +104,22 @@ namespace AirportApp
                 BaseAddress = new Uri("http://localhost:5253/")
             });
 
-            services.AddAutoMapper(cfg =>
+            services.AddAutoMapper(mapperConfiguration =>
             {
-                cfg.AddProfile<UserMappingProfile>();
-                cfg.AddProfile<EmployeeMappingProfile>();
-                cfg.AddProfile<MessageMappingProfile>();
-                cfg.AddProfile<FAQEntryMappingProfile>();
-                cfg.AddProfile<ReviewMappingProfile>();
-                cfg.AddProfile<TicketMappingProfile>();
+                mapperConfiguration.AddProfile<UserMappingProfile>();
+                mapperConfiguration.AddProfile<EmployeeMappingProfile>();
+                mapperConfiguration.AddProfile<MessageMappingProfile>();
+                mapperConfiguration.AddProfile<FAQEntryMappingProfile>();
+                mapperConfiguration.AddProfile<ReviewMappingProfile>();
+                mapperConfiguration.AddProfile<TicketMappingProfile>();
             });
 
             // --- Servicii Mystery Inc (Customer Support) ---
             // Register EF DbContext using connection string from appsettings.json
             services.AddDbContext<AirportDbContext>(options =>
             {
-                var conn = configuration.GetConnectionString("DefaultConnection");
-                options.UseSqlServer(conn);
+                var connectionString = configuration.GetConnectionString("DefaultConnection");
+                options.UseSqlServer(connectionString);
             }, contextLifetime: Microsoft.Extensions.DependencyInjection.ServiceLifetime.Transient, optionsLifetime: Microsoft.Extensions.DependencyInjection.ServiceLifetime.Transient);
 
             services.AddTransient<IBotStrategy, DecisionTreeStrategy>();
@@ -189,7 +189,7 @@ namespace AirportApp
             return provider;
         }
 
-        protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
+        protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs launchActivatedEventArgs)
         {
             Window = new MainWindow();
             var frame = new Frame();

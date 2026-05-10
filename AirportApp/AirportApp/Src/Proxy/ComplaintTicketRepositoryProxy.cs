@@ -33,7 +33,7 @@ namespace AirportApp.Src.Proxy
 
         public async Task<int> CreateNewEntityAsync(ComplaintTicket ticket)
         {
-            var dto = new CreateTicketDTO(
+            var ticketCreationData = new CreateTicketDTO(
                 creatorId: ticket.Creator.Id,
                 categoryId: ticket.Category.Id,
                 subcategoryId: ticket.Subcategory.Id,
@@ -43,7 +43,7 @@ namespace AirportApp.Src.Proxy
                 currentStatus: ticket.CurrentStatus,
                 urgencyLevel: ticket.UrgencyLevel);
 
-            var response = await httpClient.PostAsJsonAsync(BaseUrl, dto);
+            var response = await httpClient.PostAsJsonAsync(BaseUrl, ticketCreationData);
             response.EnsureSuccessStatusCode();
             var created = await response.Content.ReadFromJsonAsync<ComplaintTicket>();
             return created!.Id;

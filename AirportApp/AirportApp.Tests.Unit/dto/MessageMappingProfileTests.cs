@@ -21,7 +21,7 @@ namespace AirportApp.Tests.Unit
         public void Setup()
         {
             loggerFactory = Substitute.For<ILoggerFactory>();
-            var configuration = new MapperConfiguration(cfg => cfg.AddProfile<MessageMappingProfile>(), loggerFactory);
+            var configuration = new MapperConfiguration(mapperConfiguration => cfg.AddProfile<MessageMappingProfile>(), loggerFactory);
             autoMapperInstance = configuration.CreateMapper();
             testUser = new User(1, "Alex", "alex@mail.com");
             testChat = new Chat(10, testUser, ChatStatus.Active);
@@ -32,7 +32,7 @@ namespace AirportApp.Tests.Unit
         [TestMethod]
         public void Configuration_IsValid_PassesValidation()
         {
-            var configuration = new MapperConfiguration(cfg => cfg.AddProfile<MessageMappingProfile>(), loggerFactory);
+            var configuration = new MapperConfiguration(mapperConfiguration => cfg.AddProfile<MessageMappingProfile>(), loggerFactory);
 
             configuration.AssertConfigurationIsValid();
         }

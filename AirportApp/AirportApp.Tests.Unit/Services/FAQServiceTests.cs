@@ -50,7 +50,7 @@ namespace AirportApp.Tests.Unit.Services
             var result = (await faqService.GetByCategoryAsync(FAQCategoryEnum.CheckIn)).ToList();
 
             Assert.AreEqual(2, result.Count);
-            Assert.IsTrue(result.All(f => f.Category == FAQCategoryEnum.CheckIn));
+            Assert.IsTrue(result.All(faqEntry => faqEntry.Category == FAQCategoryEnum.CheckIn));
             await faqRepositoryMock.Received(1).GetByCategoryAsync(FAQCategoryEnum.CheckIn);
         }
 
@@ -63,7 +63,7 @@ namespace AirportApp.Tests.Unit.Services
                 new FAQEntry(FaqId2, Question2, Answer2, FAQCategoryEnum.Baggage, ZeroViewCount, ZeroViewCount, ZeroViewCount)
             };
             faqRepositoryMock.GetByCategoryAsync(FAQCategoryEnum.CheckIn).Returns(Task.FromResult(
-                faqs.Where(f => f.Category == FAQCategoryEnum.CheckIn).ToList()));
+                faqs.Where(faqEntry => faqEntry.Category == FAQCategoryEnum.CheckIn).ToList()));
 
             var result = await faqService.FilterFAQEntryAsync(FAQCategoryEnum.CheckIn, string.Empty);
 

@@ -134,7 +134,7 @@ namespace AirportApp.Tests.Unit.Src.Service
             await ticketService.UpdateStatusAsync(TicketId1, ComplaintTicketStatusEnum.RESOLVED);
 
             await ticketRepository.Received(1).GetByIdAsync(TicketId1);
-            await ticketRepository.Received(1).UpdateByIdAsync(TicketId1, Arg.Is<ComplaintTicket>(t => t.CurrentStatus == ComplaintTicketStatusEnum.RESOLVED));
+            await ticketRepository.Received(1).UpdateByIdAsync(TicketId1, Arg.Is<ComplaintTicket>(complaintTicket => complaintTicket.CurrentStatus == ComplaintTicketStatusEnum.RESOLVED));
         }
 
         [TestMethod]
@@ -146,7 +146,7 @@ namespace AirportApp.Tests.Unit.Src.Service
             await ticketService.UpdateUrgencyLevelAsync(TicketId1, ComplaintTicketUrgencyLevelEnum.HIGH);
 
             await ticketRepository.Received(1).GetByIdAsync(TicketId1);
-            await ticketRepository.Received(1).UpdateByIdAsync(TicketId1, Arg.Is<ComplaintTicket>(t => t.UrgencyLevel == ComplaintTicketUrgencyLevelEnum.HIGH));
+            await ticketRepository.Received(1).UpdateByIdAsync(TicketId1, Arg.Is<ComplaintTicket>(complaintTicket => complaintTicket.UrgencyLevel == ComplaintTicketUrgencyLevelEnum.HIGH));
         }
 
         [TestMethod]

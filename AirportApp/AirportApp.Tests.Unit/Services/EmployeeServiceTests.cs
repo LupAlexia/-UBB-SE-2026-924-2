@@ -64,7 +64,7 @@ namespace AirportApp.Tests.Unit.Src.Service
         {
             await employeeService.CreateNewEmployeeAsync(CreateEmployeeId, CreateEmployeeName, CreateEmployeeEmail, ValidDepartmentString);
 
-            await employeeRepository.Received(1).CreateNewEntityAsync(Arg.Is<Employee>(e => e.Id == CreateEmployeeId));
+            await employeeRepository.Received(1).CreateNewEntityAsync(Arg.Is<Employee>(employee => employee.Id == CreateEmployeeId));
         }
 
         [TestMethod]

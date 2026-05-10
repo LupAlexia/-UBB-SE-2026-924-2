@@ -22,35 +22,35 @@ namespace AirportApp.Src.Proxy
         {
             try
             {
-                var dto = await httpClient.GetFromJsonAsync<AirportApp.ClassLibrary.Entity.Dto.FlightDTO>($"{BaseUrl}/{id}");
-                if (dto == null)
+                var flightTransferObject = await httpClient.GetFromJsonAsync<AirportApp.ClassLibrary.Entity.Dto.FlightDTO>($"{BaseUrl}/{id}");
+                if (flightTransferObject == null)
                 {
                     return null;
                 }
 
                 return new Flight
                 {
-                    Id = dto.id,
+                    Id = flightTransferObject.id,
                     Gate = new Gate
                     {
-                        Id = dto.gateId
+                        Id = flightTransferObject.gateId
                     },
-                    Date = dto.date,
-                    FlightNumber = dto.flightNumber,
-                    Route = dto.route != null ? new Route
+                    Date = flightTransferObject.date,
+                    FlightNumber = flightTransferObject.flightNumber,
+                    Route = flightTransferObject.route != null ? new Route
                     {
-                        Id = dto.route.id,
-                        RouteType = dto.route.routeType,
-                        DepartureTime = dto.route.departureTime,
-                        ArrivalTime = dto.route.arrivalTime,
-                        Capacity = dto.route.capacity,
-                        Airport = dto.route.airport != null ? new Airport { Id = dto.route.airport.id, AirportCode = dto.route.airport.airportCode, City = dto.route.airport.city } : null!,
-                        Company = dto.route.company != null ? new Company { Id = dto.route.company.id, Name = dto.route.company.name } : null!
+                        Id = flightTransferObject.route.id,
+                        RouteType = flightTransferObject.route.routeType,
+                        DepartureTime = flightTransferObject.route.departureTime,
+                        ArrivalTime = flightTransferObject.route.arrivalTime,
+                        Capacity = flightTransferObject.route.capacity,
+                        Airport = flightTransferObject.route.airport != null ? new Airport { Id = flightTransferObject.route.airport.id, AirportCode = flightTransferObject.route.airport.airportCode, City = flightTransferObject.route.airport.city } : null!,
+                        Company = flightTransferObject.route.company != null ? new Company { Id = flightTransferObject.route.company.id, Name = flightTransferObject.route.company.name } : null!
                     }
                     : null
                 };
             }
-            catch (HttpRequestException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+            catch (HttpRequestException httpRequestException) when (httpRequestException.StatusCode == System.Net.HttpStatusCode.NotFound)
             {
                 return null;
             }
@@ -70,42 +70,42 @@ namespace AirportApp.Src.Proxy
                     query += $"&date={date:yyyy-MM-dd}";
                 }
 
-                var dtos = await httpClient.GetFromJsonAsync<IEnumerable<AirportApp.ClassLibrary.Entity.Dto.FlightDTO>>(query);
-                if (dtos == null)
+                var flightTransferObjectList = await httpClient.GetFromJsonAsync<IEnumerable<AirportApp.ClassLibrary.Entity.Dto.FlightDTO>>(query);
+                if (flightTransferObjectList == null)
                 {
                     return new List<Flight>();
                 }
 
                 var flights = new List<Flight>();
-                foreach (var dto in dtos)
+                foreach (var flightTransferObject in flightTransferObjectList)
                 {
                     flights.Add(new Flight
                     {
-                        Id = dto.id,
+                        Id = flightTransferObject.id,
                         Gate = new Gate
                         {
-                            Id = dto.gateId
+                            Id = flightTransferObject.gateId
                         },
-                        Date = dto.date,
-                        FlightNumber = dto.flightNumber,
-                        Route = dto.route != null ? new Route
+                        Date = flightTransferObject.date,
+                        FlightNumber = flightTransferObject.flightNumber,
+                        Route = flightTransferObject.route != null ? new Route
                         {
-                            Id = dto.route.id,
-                            RouteType = dto.route.routeType,
-                            DepartureTime = dto.route.departureTime,
-                            ArrivalTime = dto.route.arrivalTime,
-                            Capacity = dto.route.capacity,
-                            Airport = dto.route.airport != null ? new Airport { Id = dto.route.airport.id, AirportCode = dto.route.airport.airportCode, City = dto.route.airport.city } : null!,
-                            Company = dto.route.company != null ? new Company { Id = dto.route.company.id, Name = dto.route.company.name } : null!
+                            Id = flightTransferObject.route.id,
+                            RouteType = flightTransferObject.route.routeType,
+                            DepartureTime = flightTransferObject.route.departureTime,
+                            ArrivalTime = flightTransferObject.route.arrivalTime,
+                            Capacity = flightTransferObject.route.capacity,
+                            Airport = flightTransferObject.route.airport != null ? new Airport { Id = flightTransferObject.route.airport.id, AirportCode = flightTransferObject.route.airport.airportCode, City = flightTransferObject.route.airport.city } : null!,
+                            Company = flightTransferObject.route.company != null ? new Company { Id = flightTransferObject.route.company.id, Name = flightTransferObject.route.company.name } : null!
                         }
                         : null
                     });
                 }
                 return flights;
             }
-            catch (HttpRequestException ex)
+            catch (HttpRequestException httpRequestException)
             {
-                throw new InvalidOperationException($"Failed to retrieve flights by route from server.", ex);
+                throw new InvalidOperationException($"Failed to retrieve flights by route from server.", httpRequestException);
             }
         }
 
@@ -116,9 +116,9 @@ namespace AirportApp.Src.Proxy
                 var result = await httpClient.GetFromJsonAsync<int>($"{BaseUrl}/{flightId}/occupied-seat-count");
                 return result;
             }
-            catch (HttpRequestException ex)
+            catch (HttpRequestException httpRequestException)
             {
-                throw new InvalidOperationException($"Failed to retrieve occupied seat count for flight {flightId}.", ex);
+                throw new InvalidOperationException($"Failed to retrieve occupied seat count for flight {flightId}.", httpRequestException);
             }
         }
     }

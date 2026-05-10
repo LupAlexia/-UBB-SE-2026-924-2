@@ -27,9 +27,9 @@ namespace AirportApp.Src.View.Review
             };
         }
 
-        private async void OnAlertRequested(object? sender, (string Title, string Message) args)
+        private async void OnAlertRequested(object? sender, (string Title, string Message) alertEventArguments)
         {
-            var dialog = new ErrorDialog(args.Message, args.Title)
+            var dialog = new ErrorDialog(alertEventArguments.Message, alertEventArguments.Title)
             {
                 XamlRoot = this.Content.XamlRoot
             };

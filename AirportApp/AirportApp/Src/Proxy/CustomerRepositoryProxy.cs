@@ -22,35 +22,35 @@ namespace AirportApp.Src.Proxy
         {
             try
             {
-                var dto = await httpClient.GetFromJsonAsync<AirportApp.ClassLibrary.Entity.Dto.CustomerDTO>($"{BaseUrl}/{id}");
-                if (dto == null)
+                var customerTransferObject = await httpClient.GetFromJsonAsync<AirportApp.ClassLibrary.Entity.Dto.CustomerDTO>($"{BaseUrl}/{id}");
+                if (customerTransferObject == null)
                 {
                     return null;
                 }
 
                 return new Customer
                 {
-                    Id = dto.id,
-                    Email = dto.email,
-                    Phone = dto.phone,
-                    Username = dto.username,
-                    PasswordHash = dto.passwordHash,
-                    Membership = dto.membership != null ? new Membership
+                    Id = customerTransferObject.id,
+                    Email = customerTransferObject.email,
+                    Phone = customerTransferObject.phone,
+                    Username = customerTransferObject.username,
+                    PasswordHash = customerTransferObject.passwordHash,
+                    Membership = customerTransferObject.membership != null ? new Membership
                     {
-                        Id = dto.membership.id,
-                        Name = dto.membership.name,
-                        FlightDiscountPercentage = dto.membership.flightDiscountPercentage
+                        Id = customerTransferObject.membership.id,
+                        Name = customerTransferObject.membership.name,
+                        FlightDiscountPercentage = customerTransferObject.membership.flightDiscountPercentage
                     }
                     : null
                 };
             }
-            catch (HttpRequestException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+            catch (HttpRequestException httpRequestException) when (httpRequestException.StatusCode == System.Net.HttpStatusCode.NotFound)
             {
                 return null;
             }
-            catch (HttpRequestException ex)
+            catch (HttpRequestException httpRequestException)
             {
-                throw new InvalidOperationException($"Server communication error while retrieving customer {id}.", ex);
+                throw new InvalidOperationException($"Server communication error while retrieving customer {id}.", httpRequestException);
             }
         }
 
@@ -58,37 +58,37 @@ namespace AirportApp.Src.Proxy
         {
             try
             {
-                var dto = await httpClient.GetFromJsonAsync<AirportApp.ClassLibrary.Entity.Dto.CustomerDTO>($"{BaseUrl}/by-email?email={Uri.EscapeDataString(email)}");
-                if (dto == null)
+                var customerTransferObject = await httpClient.GetFromJsonAsync<AirportApp.ClassLibrary.Entity.Dto.CustomerDTO>($"{BaseUrl}/by-email?email={Uri.EscapeDataString(email)}");
+                if (customerTransferObject == null)
                 {
                     return null;
                 }
 
                 return new Customer
                 {
-                    Id = dto.id,
-                    Email = dto.email,
-                    Phone = dto.phone,
-                    Username = dto.username,
-                    PasswordHash = dto.passwordHash,
-                    Membership = dto.membership != null ? new Membership
+                    Id = customerTransferObject.id,
+                    Email = customerTransferObject.email,
+                    Phone = customerTransferObject.phone,
+                    Username = customerTransferObject.username,
+                    PasswordHash = customerTransferObject.passwordHash,
+                    Membership = customerTransferObject.membership != null ? new Membership
                     {
-                        Id = dto.membership.id,
-                        Name = dto.membership.name,
-                        FlightDiscountPercentage = dto.membership.flightDiscountPercentage
+                        Id = customerTransferObject.membership.id,
+                        Name = customerTransferObject.membership.name,
+                        FlightDiscountPercentage = customerTransferObject.membership.flightDiscountPercentage
                     }
                     : null
                 };
             }
-            catch (HttpRequestException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+            catch (HttpRequestException httpRequestException) when (httpRequestException.StatusCode == System.Net.HttpStatusCode.NotFound)
             {
                 // 404 means the user isn't there, which is a VALID result for registration!
                 return null;
             }
-            catch (HttpRequestException ex)
+            catch (HttpRequestException httpRequestException)
             {
                 // Any other error (like the server being down) should still be thrown
-                throw new InvalidOperationException("Server communication error.", ex);
+                throw new InvalidOperationException("Server communication error.", httpRequestException);
             }
         }
 
@@ -96,27 +96,27 @@ namespace AirportApp.Src.Proxy
         {
             try
             {
-                var dto = new AirportApp.ClassLibrary.Entity.Dto.CustomerDTO(
+                var customerTransferObject = new AirportApp.ClassLibrary.Entity.Dto.CustomerDTO(
                     user.Id,
                     user.Email,
                     user.Phone,
                     user.Username,
                     user.PasswordHash,
-                    user.Membership.Id,
+                    user.Membership?.Id,
                     null);
 
-                var response = await httpClient.PostAsJsonAsync(BaseUrl, dto);
+                var response = await httpClient.PostAsJsonAsync(BaseUrl, customerTransferObject);
                 response.EnsureSuccessStatusCode();
 
-                var createdDto = await response.Content.ReadFromJsonAsync<AirportApp.ClassLibrary.Entity.Dto.CustomerDTO>();
-                if (createdDto != null)
+                var createdCustomerTransferObject = await response.Content.ReadFromJsonAsync<AirportApp.ClassLibrary.Entity.Dto.CustomerDTO>();
+                if (createdCustomerTransferObject != null)
                 {
-                    user.Id = createdDto.id;
+                    user.Id = createdCustomerTransferObject.id;
                 }
             }
-            catch (HttpRequestException ex)
+            catch (HttpRequestException httpRequestException)
             {
-                throw new InvalidOperationException("Failed to add customer to server.", ex);
+                throw new InvalidOperationException("Failed to add customer to server.", httpRequestException);
             }
         }
 
@@ -127,9 +127,9 @@ namespace AirportApp.Src.Proxy
                 var response = await httpClient.PutAsJsonAsync($"{BaseUrl}/{userId}/membership", newMembershipId);
                 response.EnsureSuccessStatusCode();
             }
-            catch (HttpRequestException ex)
+            catch (HttpRequestException httpRequestException)
             {
-                throw new InvalidOperationException($"Failed to update membership for customer {userId}.", ex);
+                throw new InvalidOperationException($"Failed to update membership for customer {userId}.", httpRequestException);
             }
         }
     }

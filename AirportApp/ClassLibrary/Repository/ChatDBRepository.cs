@@ -11,11 +11,11 @@ namespace AirportApp.ClassLibrary.Repository
 {
     public class ChatDatabaseRepository : IRepository<int, Chat>
     {
-        private readonly AirportDbContext dataBaseContext;
+        private readonly AirportDbContext databaseContext;
 
-        public ChatDatabaseRepository(AirportDbContext dataBaseContext)
+        public ChatDatabaseRepository(AirportDbContext databaseContext)
         {
-            this.dataBaseContext = dataBaseContext ?? throw new ArgumentNullException(nameof(dataBaseContext));
+            this.databaseContext = databaseContext ?? throw new ArgumentNullException(nameof(databaseContext));
         }
 
         public async Task<int> CreateNewEntityAsync(Chat incomingChatEntityToBeSaved)
@@ -35,19 +35,19 @@ namespace AirportApp.ClassLibrary.Repository
                 Status = incomingChatEntityToBeSaved.Status
             };
 
-            this.dataBaseContext.Chats.Add(chatToPersist);
-            this.dataBaseContext.Entry(chatToPersist).Property("UserId").CurrentValue = incomingChatEntityToBeSaved.User.Id;
-            await this.dataBaseContext.SaveChangesAsync();
+            this.databaseContext.Chats.Add(chatToPersist);
+            this.databaseContext.Entry(chatToPersist).Property("UserId").CurrentValue = incomingChatEntityToBeSaved.User.Id;
+            await this.databaseContext.SaveChangesAsync();
             return chatToPersist.Id;
         }
 
         public async Task DeleteByIdAsync(int identifierForChatToBeDeleted)
         {
-            var chat = await this.dataBaseContext.Chats.FirstOrDefaultAsync(c => c.Id == identifierForChatToBeDeleted);
+            var chat = await this.databaseContext.Chats.FirstOrDefaultAsync(chat => chat.Id == identifierForChatToBeDeleted);
             if (chat != null)
             {
-                this.dataBaseContext.Chats.Remove(chat);
-                await this.dataBaseContext.SaveChangesAsync();
+                this.databaseContext.Chats.Remove(chat);
+                await this.databaseContext.SaveChangesAsync();
             }
         }
 
@@ -58,22 +58,22 @@ namespace AirportApp.ClassLibrary.Repository
                 throw new ArgumentNullException(nameof(updatedChatEntityData));
             }
 
-            var chatFound = await this.dataBaseContext.Chats.FirstOrDefaultAsync(chatEntity => chatEntity.Id == identifierForChatToBeUpdated);
+            var chatFound = await this.databaseContext.Chats.FirstOrDefaultAsync(chatEntity => chatEntity.Id == identifierForChatToBeUpdated);
             if (chatFound != null)
             {
                 chatFound.Status = updatedChatEntityData.Status;
-                await this.dataBaseContext.SaveChangesAsync();
+                await this.databaseContext.SaveChangesAsync();
             }
         }
 
         public async Task<IEnumerable<Chat>> GetAllAsync()
         {
-            return await this.dataBaseContext.Chats.ToListAsync();
+            return await this.databaseContext.Chats.ToListAsync();
         }
 
         public async Task<Chat> GetByIdAsync(int identifierForRequestedChat)
         {
-            var chat = await this.dataBaseContext.Chats
+            var chat = await this.databaseContext.Chats
                 .Include(chatEntity => chatEntity.User)
                 .FirstOrDefaultAsync(chatEntity => chatEntity.Id == identifierForRequestedChat);
 

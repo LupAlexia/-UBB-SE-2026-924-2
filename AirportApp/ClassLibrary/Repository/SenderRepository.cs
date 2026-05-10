@@ -10,11 +10,11 @@ namespace AirportApp.ClassLibrary.Repository
 {
     public class SenderRepository : IRepository<int, Sender>
     {
-        private readonly AirportDbContext dataBaseContext;
+        private readonly AirportDbContext databaseContext;
 
-        public SenderRepository(AirportDbContext context)
+        public SenderRepository(AirportDbContext databaseContext)
         {
-            dataBaseContext = context ?? throw new ArgumentNullException(nameof(dataBaseContext));
+            this.databaseContext = databaseContext ?? throw new ArgumentNullException(nameof(databaseContext));
         }
 
         public async Task<Sender> GetByIdAsync(int id)
@@ -26,14 +26,14 @@ namespace AirportApp.ClassLibrary.Repository
                 return new BotEngineIdentity(null);
             }
 
-            return await dataBaseContext.Senders
+            return await databaseContext.Senders
                 .FirstOrDefaultAsync(sender => sender.Id == id)
                 ?? throw new KeyNotFoundException($"Sender with id {id} was not found.");
         }
 
         public async Task<IEnumerable<Sender>> GetAllAsync()
         {
-            return await dataBaseContext.Senders.ToListAsync();
+            return await databaseContext.Senders.ToListAsync();
         }
 
         public async Task<int> CreateNewEntityAsync(Sender senderElement)
@@ -43,8 +43,8 @@ namespace AirportApp.ClassLibrary.Repository
                 throw new ArgumentNullException(nameof(senderElement));
             }
 
-            dataBaseContext.Senders.Add(senderElement);
-            await dataBaseContext.SaveChangesAsync();
+            databaseContext.Senders.Add(senderElement);
+            await databaseContext.SaveChangesAsync();
             return senderElement.Id;
         }
 
@@ -55,17 +55,17 @@ namespace AirportApp.ClassLibrary.Repository
                 throw new ArgumentNullException(nameof(senderElement));
             }
 
-            dataBaseContext.Senders.Update(senderElement);
-            await dataBaseContext.SaveChangesAsync();
+            databaseContext.Senders.Update(senderElement);
+            await databaseContext.SaveChangesAsync();
         }
 
         public async Task DeleteByIdAsync(int id)
         {
-            var sender = await dataBaseContext.Senders.FindAsync(id);
+            var sender = await databaseContext.Senders.FindAsync(id);
             if (sender != null)
             {
-                dataBaseContext.Senders.Remove(sender);
-                await dataBaseContext.SaveChangesAsync();
+                databaseContext.Senders.Remove(sender);
+                await databaseContext.SaveChangesAsync();
             }
         }
     }

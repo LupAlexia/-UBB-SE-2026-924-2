@@ -40,13 +40,13 @@ namespace AirportApp.Src.View.Ticket
             };
 
             // Logic for the Send button
-            inputs.SubmitButton.Click += async (sender, args) =>
+            inputs.SubmitButton.Click += async (sender, eventArguments) =>
             {
                 await HandleSubmission(inputs, submissionDialog);
             };
 
             // Logic for the Cancel button
-            inputs.CancelButton.Click += (sender, args) => submissionDialog.Hide();
+            inputs.CancelButton.Click += (sender, eventArguments) => submissionDialog.Hide();
 
             await submissionDialog.ShowAsync();
         }

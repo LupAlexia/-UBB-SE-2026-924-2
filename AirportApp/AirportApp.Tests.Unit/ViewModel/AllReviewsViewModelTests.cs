@@ -27,7 +27,7 @@ namespace AirportApp.Tests.Unit.ViewModel
         public void Setup()
         {
             loggerFactory = Substitute.For<ILoggerFactory>();
-            var configuration = new MapperConfiguration(cfg => cfg.AddProfile<ReviewMappingProfile>(), loggerFactory);
+            var configuration = new MapperConfiguration(mapperConfiguration => cfg.AddProfile<ReviewMappingProfile>(), loggerFactory);
             mapper = configuration.CreateMapper();
 
             mockRepository = Substitute.For<IRepository<int, ReviewEntity>>();

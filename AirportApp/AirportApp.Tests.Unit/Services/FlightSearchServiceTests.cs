@@ -60,8 +60,8 @@ namespace AirportApp.Tests.Unit.Services
                 new Flight { Id = FlightId1, FlightNumber = FlightNumber1, Route = new Route { Capacity = DefaultCapacity } },
                 new Flight { Id = FlightId2, FlightNumber = FlightNumber2, Route = new Route { Capacity = DefaultCapacity } }
             };
-            mockFlightRepository.Setup(r => r.GetFlightsByRouteAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<DateTime?>())).ReturnsAsync(flights);
-            mockFlightRepository.Setup(r => r.GetOccupiedSeatCountAsync(It.IsAny<int>())).ReturnsAsync(OccupiedSeatsLow);
+            mockFlightRepository.Setup(flightRepository => flightRepository.GetFlightsByRouteAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<DateTime?>())).ReturnsAsync(flights);
+            mockFlightRepository.Setup(flightRepository => flightRepository.GetOccupiedSeatCountAsync(It.IsAny<int>())).ReturnsAsync(OccupiedSeatsLow);
 
             var result = flightSearchService.SearchFlightsAsync(BucharestLocation, true, DateTime.Now.AddDays(DaysOffsetTarget), SinglePassenger).Result;
 
@@ -73,7 +73,7 @@ namespace AirportApp.Tests.Unit.Services
         {
             var result = flightSearchService.SearchFlightsAsync(null!, true, null, null).Result;
             result.Should().BeEmpty();
-            mockFlightRepository.Verify(r => r.GetFlightsByRouteAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<DateTime?>()), Times.Never);
+            mockFlightRepository.Verify(flightRepository => flightRepository.GetFlightsByRouteAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<DateTime?>()), Times.Never);
         }
 
         [TestMethod]
@@ -86,27 +86,27 @@ namespace AirportApp.Tests.Unit.Services
         [TestMethod]
         public void SearchFlights_IsDepartureTrue_PassesDepartureRouteType()
         {
-            mockFlightRepository.Setup(r => r.GetFlightsByRouteAsync(It.IsAny<string>(), "Departure", It.IsAny<DateTime?>())).ReturnsAsync(new List<Flight>());
+            mockFlightRepository.Setup(flightRepository => flightRepository.GetFlightsByRouteAsync(It.IsAny<string>(), "Departure", It.IsAny<DateTime?>())).ReturnsAsync(new List<Flight>());
 
             flightSearchService.SearchFlightsAsync(BucharestLocation, true, null, null).Wait();
 
-            mockFlightRepository.Verify(r => r.GetFlightsByRouteAsync(BucharestLocation, "Departure", null), Times.Once);
+            mockFlightRepository.Verify(flightRepository => flightRepository.GetFlightsByRouteAsync(BucharestLocation, "Departure", null), Times.Once);
         }
 
         [TestMethod]
         public void SearchFlights_IsDepartureFalse_PassesArrivalRouteType()
         {
-            mockFlightRepository.Setup(r => r.GetFlightsByRouteAsync(It.IsAny<string>(), "Arrival", It.IsAny<DateTime?>())).ReturnsAsync(new List<Flight>());
+            mockFlightRepository.Setup(flightRepository => flightRepository.GetFlightsByRouteAsync(It.IsAny<string>(), "Arrival", It.IsAny<DateTime?>())).ReturnsAsync(new List<Flight>());
 
             flightSearchService.SearchFlightsAsync(BucharestLocation, false, null, null).Wait();
 
-            mockFlightRepository.Verify(r => r.GetFlightsByRouteAsync(BucharestLocation, "Arrival", null), Times.Once);
+            mockFlightRepository.Verify(flightRepository => flightRepository.GetFlightsByRouteAsync(BucharestLocation, "Arrival", null), Times.Once);
         }
 
         [TestMethod]
         public void SearchFlights_NoMatches_ReturnsEmptyList()
         {
-            mockFlightRepository.Setup(r => r.GetFlightsByRouteAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<DateTime?>())).ReturnsAsync(new List<Flight>());
+            mockFlightRepository.Setup(flightRepository => flightRepository.GetFlightsByRouteAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<DateTime?>())).ReturnsAsync(new List<Flight>());
 
             var result = flightSearchService.SearchFlightsAsync(ClujNapovaLocation, true, DateTime.Now.AddDays(DaysOffsetNoMatch), SinglePassenger).Result;
 
@@ -121,12 +121,12 @@ namespace AirportApp.Tests.Unit.Services
                 new Flight { Id = FlightId1, Route = new Route { Capacity = DefaultCapacity } },
                 new Flight { Id = FlightId2, Route = new Route { Capacity = DefaultCapacity } }
             };
-            mockFlightRepository.Setup(r => r.GetFlightsByRouteAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<DateTime?>())).ReturnsAsync(flights);
+            mockFlightRepository.Setup(flightRepository => flightRepository.GetFlightsByRouteAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<DateTime?>())).ReturnsAsync(flights);
 
             var result = flightSearchService.SearchFlightsAsync(GenericLocation, true, null, null).Result;
 
             result.Should().HaveCount(2);
-            mockFlightRepository.Verify(r => r.GetOccupiedSeatCountAsync(It.IsAny<int>()), Times.Never);
+            mockFlightRepository.Verify(flightRepository => flightRepository.GetOccupiedSeatCountAsync(It.IsAny<int>()), Times.Never);
         }
 
         [TestMethod]
@@ -136,12 +136,12 @@ namespace AirportApp.Tests.Unit.Services
             {
                 new Flight { Id = FlightId1, Route = new Route { Capacity = DefaultCapacity } }
             };
-            mockFlightRepository.Setup(r => r.GetFlightsByRouteAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<DateTime?>())).ReturnsAsync(flights);
+            mockFlightRepository.Setup(flightRepository => flightRepository.GetFlightsByRouteAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<DateTime?>())).ReturnsAsync(flights);
 
             var result = flightSearchService.SearchFlightsAsync(GenericLocation, true, null, 0).Result;
 
             result.Should().HaveCount(1);
-            mockFlightRepository.Verify(r => r.GetOccupiedSeatCountAsync(It.IsAny<int>()), Times.Never);
+            mockFlightRepository.Verify(flightRepository => flightRepository.GetOccupiedSeatCountAsync(It.IsAny<int>()), Times.Never);
         }
 
         [TestMethod]
@@ -151,10 +151,10 @@ namespace AirportApp.Tests.Unit.Services
             var flight2 = new Flight { Id = FlightId2, FlightNumber = FlightNumber2, Route = new Route { Capacity = DefaultCapacity } };
             var flight3 = new Flight { Id = FlightId3, FlightNumber = FlightNumber3, Route = new Route { Capacity = DefaultCapacity } };
 
-            mockFlightRepository.Setup(r => r.GetFlightsByRouteAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<DateTime?>())).ReturnsAsync(new List<Flight> { flight1, flight2, flight3 });
-            mockFlightRepository.Setup(r => r.GetOccupiedSeatCountAsync(FlightId1)).ReturnsAsync(Flight1OccupiedSeats);
-            mockFlightRepository.Setup(r => r.GetOccupiedSeatCountAsync(FlightId2)).ReturnsAsync(Flight2OccupiedSeats);
-            mockFlightRepository.Setup(r => r.GetOccupiedSeatCountAsync(FlightId3)).ReturnsAsync(Flight3OccupiedSeats);
+            mockFlightRepository.Setup(flightRepository => flightRepository.GetFlightsByRouteAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<DateTime?>())).ReturnsAsync(new List<Flight> { flight1, flight2, flight3 });
+            mockFlightRepository.Setup(flightRepository => flightRepository.GetOccupiedSeatCountAsync(FlightId1)).ReturnsAsync(Flight1OccupiedSeats);
+            mockFlightRepository.Setup(flightRepository => flightRepository.GetOccupiedSeatCountAsync(FlightId2)).ReturnsAsync(Flight2OccupiedSeats);
+            mockFlightRepository.Setup(flightRepository => flightRepository.GetOccupiedSeatCountAsync(FlightId3)).ReturnsAsync(Flight3OccupiedSeats);
 
             var result = flightSearchService.SearchFlightsAsync(GenericLocation, true, null, GroupPassengers).Result;
 
@@ -168,8 +168,8 @@ namespace AirportApp.Tests.Unit.Services
         public void SearchFlights_AllFlightsAtFullCapacity_ReturnsEmpty()
         {
             var flight1 = new Flight { Id = FlightId1, Route = new Route { Capacity = FullCapacity } };
-            mockFlightRepository.Setup(r => r.GetFlightsByRouteAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<DateTime?>())).ReturnsAsync(new List<Flight> { flight1 });
-            mockFlightRepository.Setup(r => r.GetOccupiedSeatCountAsync(FlightId1)).ReturnsAsync(FullCapacity);
+            mockFlightRepository.Setup(flightRepository => flightRepository.GetFlightsByRouteAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<DateTime?>())).ReturnsAsync(new List<Flight> { flight1 });
+            mockFlightRepository.Setup(flightRepository => flightRepository.GetOccupiedSeatCountAsync(FlightId1)).ReturnsAsync(FullCapacity);
 
             var result = flightSearchService.SearchFlightsAsync(GenericLocation, true, null, SinglePassenger).Result;
 

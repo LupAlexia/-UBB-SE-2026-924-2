@@ -25,10 +25,10 @@ namespace Airport.Web.Controllers
         public async Task<ActionResult<IEnumerable<AirportApp.ClassLibrary.Entity.Dto.FlightTicketDTO>>> GetByUserIdAsync(int userId)
         {
             IEnumerable<FlightTicket> tickets = await flightTicketRepository.GetTicketsByUserIdAsync(userId);
-            var dtos = new List<AirportApp.ClassLibrary.Entity.Dto.FlightTicketDTO>();
+            var flightTicketTransferObjectList = new List<AirportApp.ClassLibrary.Entity.Dto.FlightTicketDTO>();
             foreach (var ticket in tickets)
             {
-                dtos.Add(new AirportApp.ClassLibrary.Entity.Dto.FlightTicketDTO(
+                flightTicketTransferObjectList.Add(new AirportApp.ClassLibrary.Entity.Dto.FlightTicketDTO(
                     ticket.Id,
                     ticket.User.Id,
                     ticket.Flight.Id,
@@ -55,28 +55,28 @@ namespace Airport.Web.Controllers
                             ticket.Flight.Route.Airport != null ? new AirportApp.ClassLibrary.Entity.Dto.AirportDTO(ticket.Flight.Route.Airport.Id, ticket.Flight.Route.Airport.AirportCode, ticket.Flight.Route.Airport.City) : null,
                             ticket.Flight.Route.Company != null ? new AirportApp.ClassLibrary.Entity.Dto.CompanyDTO(ticket.Flight.Route.Company.Id, ticket.Flight.Route.Company.Name) : null) : null) : null));
             }
-            return Ok(dtos);
+            return Ok(flightTicketTransferObjectList);
         }
 
         [HttpPost]
-        public async Task<ActionResult> AddTicketAsync([FromBody] AirportApp.ClassLibrary.Entity.Dto.FlightTicketDTO dto)
+        public async Task<ActionResult> AddTicketAsync([FromBody] AirportApp.ClassLibrary.Entity.Dto.FlightTicketDTO flightTicketData)
         {
             var ticket = new FlightTicket
             {
-                Id = dto.id,
-                User = await customerRepository.GetByIdAsync(dto.userId),
-                Flight = await flightRepository.GetFlightByIdAsync(dto.flightId),
-                Seat = dto.seat,
-                Price = dto.price,
-                Status = dto.status,
-                PassengerFirstName = dto.passengerFirstName,
-                PassengerLastName = dto.passengerLastName,
-                PassengerEmail = dto.passengerEmail,
-                PassengerPhone = dto.passengerPhone
+                Id = flightTicketData.id,
+                User = await customerRepository.GetByIdAsync(flightTicketData.userId),
+                Flight = await flightRepository.GetFlightByIdAsync(flightTicketData.flightId),
+                Seat = flightTicketData.seat,
+                Price = flightTicketData.price,
+                Status = flightTicketData.status,
+                PassengerFirstName = flightTicketData.passengerFirstName,
+                PassengerLastName = flightTicketData.passengerLastName,
+                PassengerEmail = flightTicketData.passengerEmail,
+                PassengerPhone = flightTicketData.passengerPhone
                 // Add-ons are usually handled via separate endpoint or batch
             };
             await flightTicketRepository.AddTicketAsync(ticket);
-            return Ok(dto);
+            return Ok(flightTicketData);
         }
 
         [HttpPut("{ticketId}/status")]
@@ -120,24 +120,24 @@ namespace Airport.Web.Controllers
 
             for (int counter = 0; counter < request.Tickets.Count; counter++)
             {
-                var dto = request.Tickets[counter];
+                var ticketTransferObject = request.Tickets[counter];
                 tickets.Add(new FlightTicket
                 {
-                    Id = dto.id,
-                    User = await customerRepository.GetByIdAsync(dto.userId),
-                    Flight = await flightRepository.GetFlightByIdAsync(dto.flightId),
-                    Seat = dto.seat,
-                    Price = dto.price,
-                    Status = dto.status,
-                    PassengerFirstName = dto.passengerFirstName,
-                    PassengerLastName = dto.passengerLastName,
-                    PassengerEmail = dto.passengerEmail,
-                    PassengerPhone = dto.passengerPhone
+                    Id = ticketTransferObject.id,
+                    User = await customerRepository.GetByIdAsync(ticketTransferObject.userId),
+                    Flight = await flightRepository.GetFlightByIdAsync(ticketTransferObject.flightId),
+                    Seat = ticketTransferObject.seat,
+                    Price = ticketTransferObject.price,
+                    Status = ticketTransferObject.status,
+                    PassengerFirstName = ticketTransferObject.passengerFirstName,
+                    PassengerLastName = ticketTransferObject.passengerLastName,
+                    PassengerEmail = ticketTransferObject.passengerEmail,
+                    PassengerPhone = ticketTransferObject.passengerPhone
                 });
 
-                if (addOnIds.Count <= counter && dto.selectedAddOns != null)
+                if (addOnIds.Count <= counter && ticketTransferObject.selectedAddOns != null)
                 {
-                    addOnIds.Add(dto.selectedAddOns.Select(addOn => addOn.id).ToList());
+                    addOnIds.Add(ticketTransferObject.selectedAddOns.Select(addOn => addOn.id).ToList());
                 }
             }
 

@@ -69,7 +69,7 @@ namespace AirportApp.Tests.Unit.Src.Service
         public async Task OpenChat_RepositoryThrowsException_PropagatesWithSameMessage()
         {
             mockChatRepository.CreateNewEntityAsync(Arg.Any<Chat>())
-                .Returns(r => Task.FromException<int>(new Exception(DatabaseErrorMessage)));
+                .Returns(callInfo => Task.FromException<int>(new Exception(DatabaseErrorMessage)));
 
             var ex = await Assert.ThrowsExceptionAsync<Exception>(() => chatService.OpenChatAsync(testUser));
 
@@ -85,14 +85,14 @@ namespace AirportApp.Tests.Unit.Src.Service
             await chatService.CloseChatAsync(TestChatId);
 
             await mockChatRepository.Received(1).UpdateByIdAsync(TestChatId,
-                Arg.Is<Chat>(c => c.Status == ChatStatus.Closed));
+                Arg.Is<Chat>(chat => chat.Status == ChatStatus.Closed));
         }
 
         [TestMethod]
         public async Task CloseChat_RepositoryThrowsException_PropagatesWithSameMessage()
         {
             mockChatRepository.GetByIdAsync(NonExistentChatId)
-                .Returns(r => Task.FromException<Chat>(new KeyNotFoundException(ChatNotFoundMessage)));
+                .Returns(callInfo => Task.FromException<Chat>(new KeyNotFoundException(ChatNotFoundMessage)));
 
             var ex = await Assert.ThrowsExceptionAsync<Exception>(() => chatService.CloseChatAsync(NonExistentChatId));
 

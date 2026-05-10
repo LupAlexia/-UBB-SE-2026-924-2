@@ -27,7 +27,7 @@ namespace Airport.Web.Controllers
                 return NotFound();
             }
 
-            var dto = new AirportApp.ClassLibrary.Entity.Dto.FlightDTO(
+            var flightTransferObject = new AirportApp.ClassLibrary.Entity.Dto.FlightDTO(
                 flight.Id,
                 flight.Route.Id,
                 flight.Gate.Id,
@@ -42,7 +42,7 @@ namespace Airport.Web.Controllers
                     flight.Route.Airport != null ? new AirportApp.ClassLibrary.Entity.Dto.AirportDTO(flight.Route.Airport.Id, flight.Route.Airport.AirportCode, flight.Route.Airport.City) : null,
                     flight.Route.Company != null ? new AirportApp.ClassLibrary.Entity.Dto.CompanyDTO(flight.Route.Company.Id, flight.Route.Company.Name) : null) : null);
 
-            return Ok(dto);
+            return Ok(flightTransferObject);
         }
 
         [HttpGet("search")]
@@ -52,10 +52,10 @@ namespace Airport.Web.Controllers
             [FromQuery] DateTime? date)
         {
             IEnumerable<Flight> flights = await flightRepository.GetFlightsByRouteAsync(location, routeType, date);
-            var dtos = new List<AirportApp.ClassLibrary.Entity.Dto.FlightDTO>();
+            var flightTransferObjectList = new List<AirportApp.ClassLibrary.Entity.Dto.FlightDTO>();
             foreach (var flight in flights)
             {
-                dtos.Add(new AirportApp.ClassLibrary.Entity.Dto.FlightDTO(
+                flightTransferObjectList.Add(new AirportApp.ClassLibrary.Entity.Dto.FlightDTO(
                     flight.Id,
                     flight.Route.Id,
                     flight.Gate.Id,
@@ -70,7 +70,7 @@ namespace Airport.Web.Controllers
                         flight.Route.Airport != null ? new AirportApp.ClassLibrary.Entity.Dto.AirportDTO(flight.Route.Airport.Id, flight.Route.Airport.AirportCode, flight.Route.Airport.City) : null,
                         flight.Route.Company != null ? new AirportApp.ClassLibrary.Entity.Dto.CompanyDTO(flight.Route.Company.Id, flight.Route.Company.Name) : null) : null));
             }
-            return Ok(dtos);
+            return Ok(flightTransferObjectList);
         }
 
         [HttpGet("{flightId}/occupied-seat-count")]

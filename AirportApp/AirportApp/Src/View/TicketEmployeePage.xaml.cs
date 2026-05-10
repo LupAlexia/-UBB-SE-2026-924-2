@@ -38,7 +38,7 @@ namespace AirportApp.Src.View.Ticket
 
         private async void EditTicketStatus_Click(object sender, RoutedEventArgs arguments)
         {
-            if (sender is Button btn && btn.Tag is int ticketId)
+            if (sender is Button button && button.Tag is int ticketId)
             {
                 var ticket = ViewModel.FilteredTicketsForDisplay.FirstOrDefault(ticketDto => ticketDto.ticketId == ticketId);
                 if (ticket == null)

@@ -31,7 +31,7 @@ namespace AirportApp.Src.Proxy
                 return await httpClient.GetFromJsonAsync<User>($"{BaseUrl}/{identificationNumber}")
                        ?? throw new KeyNotFoundException($"User with id {identificationNumber} was not found.");
             }
-            catch (HttpRequestException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+            catch (HttpRequestException httpRequestException) when (httpRequestException.StatusCode == System.Net.HttpStatusCode.NotFound)
             {
                 throw new KeyNotFoundException($"User with id {identificationNumber} was not found.");
             }

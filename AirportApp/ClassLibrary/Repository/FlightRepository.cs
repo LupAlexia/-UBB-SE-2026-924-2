@@ -11,16 +11,16 @@ namespace AirportApp.ClassLibrary.Repository
 {
     public class FlightRepository : IFlightRepository
     {
-        private readonly AirportDbContext dataBaseContext;
+        private readonly AirportDbContext databaseContext;
 
-        public FlightRepository(AirportDbContext dataBaseContext)
+        public FlightRepository(AirportDbContext databaseContext)
         {
-            this.dataBaseContext = dataBaseContext;
+            this.databaseContext = databaseContext;
         }
 
         public async Task<Flight?> GetFlightByIdAsync(int flightIdentifier)
         {
-            return await this.dataBaseContext.Flights
+            return await this.databaseContext.Flights
                 .Include(flight => flight.Route)
                     .ThenInclude(route => route.Company)
                 .Include(flight => flight.Route)
@@ -31,7 +31,7 @@ namespace AirportApp.ClassLibrary.Repository
 
         public async Task<IEnumerable<Flight>> GetFlightsByRouteAsync(string location, string routeType, DateTime? date)
         {
-            var query = this.dataBaseContext.Flights
+            var query = this.databaseContext.Flights
                 .Include(flight => flight.Route)
                     .ThenInclude(route => route.Company)
                 .Include(flight => flight.Route)
@@ -55,7 +55,7 @@ namespace AirportApp.ClassLibrary.Repository
 
         public async Task<int> GetOccupiedSeatCountAsync(int flightId)
         {
-            return await this.dataBaseContext.FlightTickets
+            return await this.databaseContext.FlightTickets
                 .Where(flightTicket => flightTicket.Status != "canceled" && flightTicket.Status != "Cancelled")
                 .Where(flightTicket => flightTicket.Flight.Id == flightId)
                 .CountAsync();
