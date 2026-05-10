@@ -14,13 +14,13 @@ using AirportApp.ClassLibrary.Entity.Domain;
 
 namespace AirportApp.Src.View.Faq
 {
-    public sealed partial class FAQView : Page
+    public sealed partial class FAQPage : Page
     {
         public FAQViewModel ViewModel { get; }
 
         private int currentPersonId;
 
-        public FAQView()
+        public FAQPage()
         {
             ViewModel = (App.Current as App).Services.GetService<FAQViewModel>();
             this.InitializeComponent();

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Page
-    x:Class="AirportApp.Src.View.General.EnterYourId"
+    x:Class="AirportApp.Src.View.General.EnterYourIdPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:vm="using:AirportApp.Src.ViewModel.General"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"

@@ -12,14 +12,14 @@ using AirportApp.ClassLibrary.Entity.Domain;
 
 namespace AirportApp.Src.View.Ticket
 {
-    public sealed partial class TicketsView : Page
+    public sealed partial class ComplaintTicketPage : Page
     {
         private const int DEFAULT_GUEST_IDENTIFIER = 102;
         private const string DEFAULT_SYSTEM_EMAIL = "email@email.com";
 
         public TicketsViewModel ViewModel { get; }
 
-        public TicketsView()
+        public ComplaintTicketPage()
         {
             ViewModel = (App.Current as App).Services.GetService<TicketsViewModel>();
             this.InitializeComponent();

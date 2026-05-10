@@ -4,12 +4,12 @@ using Microsoft.UI.Xaml.Controls;
 
 namespace AirportApp.Src.View.General
 {
-    public sealed partial class YouSure : ContentDialog
+    public sealed partial class ConfirmationDialog : ContentDialog
     {
         // Change to a read-only getter to prevent accidental reassignment
         public YouSureViewModel ViewModel { get; } = new ();
 
-        public YouSure()
+        public ConfirmationDialog()
         {
             this.InitializeComponent();
             this.DataContext = ViewModel;
@@ -20,7 +20,7 @@ namespace AirportApp.Src.View.General
         /// </summary>
         /// <param name="messageContent">The description shown to the user.</param>
         /// <param name="titleText">The heading of the dialog.</param>
-        public YouSure(string messageContent, string titleText = "Confirm") : this()
+        public ConfirmationDialog(string messageContent, string titleText = "Confirm") : this()
         {
             ViewModel.Message = messageContent;
             ViewModel.Title = titleText;

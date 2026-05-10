@@ -38,7 +38,7 @@ namespace AirportApp.Src.View.General
         /// <param name="title">The title of the error dialog.</param>
         private async void DisplayErrorMessage(string message, string title)
         {
-            var dialog1 = new MaiBoule(message, title);
+            var dialog1 = new ErrorDialog(message, title);
             dialog1.XamlRoot = this.Content.XamlRoot;
             await dialog1.ShowAsync();
         }
@@ -55,7 +55,7 @@ namespace AirportApp.Src.View.General
             {
                 ViewModel.SetUserRole(button.Tag.ToString());
 
-                Frame.Navigate(typeof(EnterYourId));
+                Frame.Navigate(typeof(EnterYourIdPage));
             }
         }
     }

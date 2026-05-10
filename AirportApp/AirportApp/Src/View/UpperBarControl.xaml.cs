@@ -5,11 +5,11 @@ using Microsoft.UI.Xaml.Controls;
 
 namespace AirportApp.Src.View.General
 {
-    public sealed partial class UpperBar : UserControl
+    public sealed partial class UpperBarControl : UserControl
     {
         public AirportApp.Src.ViewModel.UpperBarViewModel ViewModel { get; }
 
-        public UpperBar()
+        public UpperBarControl()
         {
             this.InitializeComponent();
 

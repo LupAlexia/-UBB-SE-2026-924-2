@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Page
-   x:Class="AirportApp.Src.View.Ticket.TicketEmployeeView"
+   x:Class="AirportApp.Src.View.Ticket.TicketEmployeePage"
    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
    xmlns:controls="using:Microsoft.UI.Xaml.Controls" 
@@ -57,7 +57,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <general:UpperBar Grid.Row="0" />
+        <general:UpperBarControl Grid.Row="0" />
 
         <Grid Grid.Row="1" Padding="40">
             <Grid.RowDefinitions>

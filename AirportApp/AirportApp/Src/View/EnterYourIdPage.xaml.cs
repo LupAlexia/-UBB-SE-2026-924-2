@@ -18,7 +18,7 @@ using AirportApp.Src.ViewModel;
 
 namespace AirportApp.Src.View.General
 {
-    public sealed partial class EnterYourId : Page
+    public sealed partial class EnterYourIdPage : Page
     {
         /// <summary>
         /// The ViewModel containing user input and authentication logic.
@@ -28,7 +28,7 @@ namespace AirportApp.Src.View.General
         /// <summary>
         /// Initializes a new instance of the EnterYourId page and sets the DataContext.
         /// </summary>
-        public EnterYourId()
+        public EnterYourIdPage()
         {
             this.InitializeComponent();
             this.DataContext = ViewModel;
@@ -41,7 +41,7 @@ namespace AirportApp.Src.View.General
         /// <param name="titleText">The title of the error dialog.</param>
         private async void DisplayErrorMessage(string messageContent, string titleText)
         {
-            var errorDialog = new MaiBoule(messageContent, titleText);
+            var errorDialog = new ErrorDialog(messageContent, titleText);
             errorDialog.XamlRoot = this.Content.XamlRoot;
             await errorDialog.ShowAsync();
         }
@@ -57,7 +57,7 @@ namespace AirportApp.Src.View.General
         {
             if (int.TryParse(ViewModel.UserIdentification, out int parsedId))
             {
-                var confirmationDialog = new YouSure($"Are you certain you are ID {parsedId}?", "Confirmation");
+                var confirmationDialog = new ConfirmationDialog($"Are you certain you are ID {parsedId}?", "Confirmation");
                 confirmationDialog.XamlRoot = this.Content.XamlRoot;
 
                 if (await confirmationDialog.ShowAsync() == ContentDialogResult.Primary)
