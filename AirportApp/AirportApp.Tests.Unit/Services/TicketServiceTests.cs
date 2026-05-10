@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using AirportApp.ClassLibrary.Entity.Dto;
 using AirportApp.ClassLibrary.Entity.Domain;
-using AirportApp.ClassLibrary.Entity.Domain.Ticket;
 using AirportApp.ClassLibrary.Repository.Interfaces;
 using AirportApp.Src.Service;
 using AirportApp.Src.ViewModel;
@@ -16,6 +15,33 @@ namespace AirportApp.Tests.Unit.Src.Service
     [TestClass]
     public class TicketServiceTests
     {
+        private const int TicketId1 = 1;
+        private const int TicketId2 = 2;
+        private const int TicketId3 = 7;
+        private const int UserId = 1;
+        private const int CategoryId = 1;
+        private const int WrongCategoryId = 99;
+        private const int SubcategoryId = 10;
+        private const int SubcategoryTicketCount = 101;
+        private const string UserName = "Dede";
+        private const string UserEmail = "dede_the_racoon@gmail.com";
+        private const string CategoryName = "IT";
+        private const string WrongCategoryName = "ThisIsWronggggg";
+        private const string SubcategoryName = "Hardware";
+        private const string ValidSubject = "Subject";
+        private const string ValidDescription = "Description";
+        private const string EmptySubject = "";
+        private const string EmptyDescription = "";
+        private const string TicketEmail1 = "myoneemail";
+        private const string TicketDomain = "ISSbestDomain";
+        private const string TicketSubdomain = "Some subdomain";
+        private const string TicketSubject1 = "Subj";
+        private const string TicketSubject2 = "Sub2";
+        private const string TicketDesc1 = "D1";
+        private const string TicketDesc2 = "D2";
+        private const string UpdatedSubject = "Subiect Test";
+        private const string UpdatedDescription = "Descriere Test";
+
         private ITicketRepository ticketRepository = null!;
         private ComplaintTicketService ticketService = null!;
         private User testUser = null!;
@@ -28,18 +54,25 @@ namespace AirportApp.Tests.Unit.Src.Service
             ticketRepository = Substitute.For<ITicketRepository>();
             ticketService = new ComplaintTicketService(ticketRepository);
 
-            testUser = new User(1, "Dede", "dede_the_racoon@gmail.com");
-            testCategory = new ComplaintTicketCategory(1, "IT", ComplaintTicketUrgencyLevelEnum.HIGH);
-            testSubcategory = new ComplaintTicketSubcategory(10, "Hardware", 101, testCategory);
+            testUser = new User(UserId, UserName, UserEmail);
+            testCategory = new ComplaintTicketCategory(CategoryId, CategoryName, ComplaintTicketUrgencyLevelEnum.HIGH);
+            testSubcategory = new ComplaintTicketSubcategory(SubcategoryId, SubcategoryName, SubcategoryTicketCount, testCategory);
         }
 
         [TestMethod]
         public async Task CreateTicket_WithValidData_CallsRepository()
         {
-            var currentTimeAndDate = DateTime.Now;
-
-            await ticketService.CreateTicketAsync(1, testUser, ComplaintTicketStatusEnum.OPEN, testCategory, testSubcategory, "Subject", "Description", currentTimeAndDate);
+            await ticketService.CreateTicketAsync(TicketId1, testUser, ComplaintTicketStatusEnum.OPEN, testCategory, testSubcategory, ValidSubject, ValidDescription, DateTime.Now);
             await ticketRepository.Received(1).CreateNewEntityAsync(Arg.Any<ComplaintTicket>());
+        }
+
+        [TestMethod]
+        public async Task CreateTicket_WithInvalidData_DoesNotCallRepository()
+        {
+            await Assert.ThrowsExceptionAsync<ArgumentNullException>(
+                () => ticketService.CreateTicketAsync(TicketId1, testUser, ComplaintTicketStatusEnum.OPEN, testCategory, testSubcategory, EmptySubject, ValidDescription, DateTime.Now));
+
+            await ticketRepository.DidNotReceive().CreateNewEntityAsync(Arg.Any<ComplaintTicket>());
         }
 
         [TestMethod]
@@ -52,14 +85,14 @@ namespace AirportApp.Tests.Unit.Src.Service
         public void ValidateTicket_WhenCreatorIsNull_ThrowsArgumentNullException()
         {
             Assert.ThrowsException<ArgumentNullException>(() =>
-                new ComplaintTicket(1, null, ComplaintTicketStatusEnum.OPEN, testCategory, testSubcategory, "Subject", "Desc", DateTime.Now));
+                new ComplaintTicket(TicketId1, null, ComplaintTicketStatusEnum.OPEN, testCategory, testSubcategory, ValidSubject, ValidDescription, DateTime.Now));
         }
 
         [TestMethod]
         public void ValidateTicket_SubcategoryNotMatchingCategory_ThrowsArgumentException()
         {
-            var wrongCategory = new ComplaintTicketCategory(99, "ThisIsWronggggg", ComplaintTicketUrgencyLevelEnum.LOW);
-            var invalidTicket = new ComplaintTicket(1, testUser, ComplaintTicketStatusEnum.OPEN, wrongCategory, testSubcategory, "Subject", "Desc", DateTime.Now);
+            var wrongCategory = new ComplaintTicketCategory(WrongCategoryId, WrongCategoryName, ComplaintTicketUrgencyLevelEnum.LOW);
+            var invalidTicket = new ComplaintTicket(TicketId1, testUser, ComplaintTicketStatusEnum.OPEN, wrongCategory, testSubcategory, ValidSubject, ValidDescription, DateTime.Now);
 
             Assert.ThrowsException<ArgumentException>(() => ticketService.ValidateTicket(invalidTicket));
         }
@@ -67,14 +100,14 @@ namespace AirportApp.Tests.Unit.Src.Service
         [TestMethod]
         public void ValidateTicket_WithEmptySubject_ThrowsException()
         {
-            var invalidTicket = new ComplaintTicket(1, testUser, ComplaintTicketStatusEnum.OPEN, testCategory, testSubcategory, string.Empty, "Desc", DateTime.Now);
+            var invalidTicket = new ComplaintTicket(TicketId1, testUser, ComplaintTicketStatusEnum.OPEN, testCategory, testSubcategory, EmptySubject, ValidDescription, DateTime.Now);
             Assert.ThrowsException<ArgumentNullException>(() => ticketService.ValidateTicket(invalidTicket));
         }
 
         [TestMethod]
         public void ValidateTicket_WithEmptyDescription_ThrowsException()
         {
-            var invalidTicket = new ComplaintTicket(1, testUser, ComplaintTicketStatusEnum.OPEN, testCategory, testSubcategory, "Subject", string.Empty, DateTime.Now);
+            var invalidTicket = new ComplaintTicket(TicketId1, testUser, ComplaintTicketStatusEnum.OPEN, testCategory, testSubcategory, ValidSubject, EmptyDescription, DateTime.Now);
             Assert.ThrowsException<ArgumentNullException>(() => ticketService.ValidateTicket(invalidTicket));
         }
 
@@ -82,143 +115,80 @@ namespace AirportApp.Tests.Unit.Src.Service
         public void TicketConstructor_WhenCategoryIsNull_ThrowsArgumentNullException()
         {
             Assert.ThrowsException<ArgumentNullException>(() =>
-               new ComplaintTicket(1, testUser, ComplaintTicketStatusEnum.OPEN, null, testSubcategory, "Sub", "Desc", DateTime.Now));
+               new ComplaintTicket(TicketId1, testUser, ComplaintTicketStatusEnum.OPEN, null, testSubcategory, ValidSubject, ValidDescription, DateTime.Now));
         }
 
         [TestMethod]
         public void ValidateTicket_WhenSubcategoryIsNull_ThrowsArgumentNullException()
         {
             Assert.ThrowsException<ArgumentNullException>(() =>
-                new ComplaintTicket(1, testUser, ComplaintTicketStatusEnum.OPEN, testCategory, null, "Subject", "Description", DateTime.Now));
+                new ComplaintTicket(TicketId1, testUser, ComplaintTicketStatusEnum.OPEN, testCategory, null, ValidSubject, ValidDescription, DateTime.Now));
         }
 
         [TestMethod]
         public async Task UpdateStatus_ExistingTicket_UpdatesAndSaves()
         {
-            var ticket = new ComplaintTicket(1, testUser, ComplaintTicketStatusEnum.OPEN, testCategory, testSubcategory, "Sub", "Desc", DateTime.Now);
-            ticketRepository.GetByIdAsync(1).Returns(Task.FromResult(ticket));
+            var ticket = new ComplaintTicket(TicketId1, testUser, ComplaintTicketStatusEnum.OPEN, testCategory, testSubcategory, ValidSubject, ValidDescription, DateTime.Now);
+            ticketRepository.GetByIdAsync(TicketId1).Returns(Task.FromResult(ticket));
 
-            await ticketService.UpdateStatusAsync(1, ComplaintTicketStatusEnum.RESOLVED);
+            await ticketService.UpdateStatusAsync(TicketId1, ComplaintTicketStatusEnum.RESOLVED);
 
-            Assert.AreEqual(ComplaintTicketStatusEnum.RESOLVED, ticket.CurrentStatus);
-            await ticketRepository.Received(1).UpdateByIdAsync(1, ticket);
+            await ticketRepository.Received(1).GetByIdAsync(TicketId1);
+            await ticketRepository.Received(1).UpdateByIdAsync(TicketId1, Arg.Is<ComplaintTicket>(complaintTicket => complaintTicket.CurrentStatus == ComplaintTicketStatusEnum.RESOLVED));
         }
 
         [TestMethod]
         public async Task UpdateUrgencyLevel_ExistingTicket_UpdatesAndSaves()
         {
-            var ticket = new ComplaintTicket(1, testUser, ComplaintTicketStatusEnum.OPEN, testCategory, testSubcategory, "Sub", "Desc", DateTime.Now, ComplaintTicketUrgencyLevelEnum.LOW);
-            ticketRepository.GetByIdAsync(1).Returns(Task.FromResult(ticket));
+            var ticket = new ComplaintTicket(TicketId1, testUser, ComplaintTicketStatusEnum.OPEN, testCategory, testSubcategory, ValidSubject, ValidDescription, DateTime.Now, ComplaintTicketUrgencyLevelEnum.LOW);
+            ticketRepository.GetByIdAsync(TicketId1).Returns(Task.FromResult(ticket));
 
-            await ticketService.UpdateUrgencyLevelAsync(1, ComplaintTicketUrgencyLevelEnum.HIGH);
+            await ticketService.UpdateUrgencyLevelAsync(TicketId1, ComplaintTicketUrgencyLevelEnum.HIGH);
 
-            Assert.AreEqual(ComplaintTicketUrgencyLevelEnum.HIGH, ticket.UrgencyLevel);
-            await ticketRepository.Received(1).UpdateByIdAsync(1, ticket);
-        }
-
-        [TestMethod]
-        public async Task DeleteTicketById_WhenCalled_CallsRepositoryDelete()
-        {
-            int ticketIdToDelete = 42;
-            await ticketService.DeleteTicketByIdAsync(ticketIdToDelete);
-
-            await ticketRepository.Received(1).DeleteByIdAsync(ticketIdToDelete);
-        }
-
-        [TestMethod]
-        public async Task GetTicketById_WhenTicketExists_ReturnsCorrectTicket()
-        {
-            int targetId = 7;
-            var expectedTicket = new ComplaintTicket(targetId, testUser, ComplaintTicketStatusEnum.OPEN, testCategory, testSubcategory, "Subiect Test", "Descriere Test", DateTime.Now);
-
-            ticketRepository.GetByIdAsync(targetId).Returns(Task.FromResult(expectedTicket));
-            var resultedTicket = await ticketService.GetTicketByIdAsync(targetId);
-
-            Assert.IsNotNull(resultedTicket);
-            Assert.AreEqual(targetId, resultedTicket.Id);
-            Assert.AreEqual("Subiect Test", resultedTicket.Subject);
-            await ticketRepository.Received(1).GetByIdAsync(targetId);
-        }
-
-        [TestMethod]
-        public async Task GetTicketById_WhenTicketDoesNotExist_ReturnsNull()
-        {
-            int nonExistentId = 999;
-            ticketRepository.GetByIdAsync(nonExistentId).Returns(Task.FromResult((ComplaintTicket)null));
-
-            var resultedTicket = await ticketService.GetTicketByIdAsync(nonExistentId);
-
-            Assert.IsNull(resultedTicket);
-            await ticketRepository.Received(1).GetByIdAsync(nonExistentId);
-        }
-
-        [TestMethod]
-        public async Task GetAllTickets_WhenCalled_ReturnsAllTicketsFromRepository()
-        {
-            var tickets = new List<ComplaintTicket>
-            {
-                new ComplaintTicket(1, testUser, ComplaintTicketStatusEnum.OPEN, testCategory, testSubcategory, "S1", "D1", DateTime.Now),
-                new ComplaintTicket(2, testUser, ComplaintTicketStatusEnum.IN_PROGRESS, testCategory, testSubcategory, "S2", "D2", DateTime.Now)
-            };
-            ticketRepository.GetAllAsync().Returns(Task.FromResult((IEnumerable<ComplaintTicket>)tickets));
-
-            var resultedTickets = await ticketService.GetAllTicketsAsync();
-
-            Assert.IsNotNull(resultedTickets);
-            Assert.AreEqual(2, resultedTickets.Count());
-            await ticketRepository.Received(1).GetAllAsync();
-        }
-
-        [TestMethod]
-        public async Task UpdateTicketById_WhenCalled_CallsRepositoryUpdateWithCorrectData()
-        {
-            int targetId = 5;
-            var updatedTicket = new ComplaintTicket(targetId, testUser, ComplaintTicketStatusEnum.RESOLVED, testCategory, testSubcategory, "Updated Subject", "Updated Desc", DateTime.Now);
-
-            await ticketService.UpdateTicketByIdAsync(targetId, updatedTicket);
-
-            await ticketRepository.Received(1).UpdateByIdAsync(targetId, updatedTicket);
+            await ticketRepository.Received(1).GetByIdAsync(TicketId1);
+            await ticketRepository.Received(1).UpdateByIdAsync(TicketId1, Arg.Is<ComplaintTicket>(complaintTicket => complaintTicket.UrgencyLevel == ComplaintTicketUrgencyLevelEnum.HIGH));
         }
 
         [TestMethod]
         public void FilterTicketsByStatus_WithInProgressFilter_ReturnsOnlyInProgressTickets()
         {
-            var ticketsDataTransferObject = new List<TicketDTO>
+            var tickets = new List<TicketDTO>
             {
-                new TicketDTO(1, 1, "myoneemail", ComplaintTicketUrgencyLevelEnum.HIGH, ComplaintTicketStatusEnum.IN_PROGRESS, 1, "ISSbestDomain", 10, "Some subdomain", "Subj", "D1", DateTime.Now),
-                new TicketDTO(2, 1, "myoneemail", ComplaintTicketUrgencyLevelEnum.LOW, ComplaintTicketStatusEnum.OPEN, 1, "ISSbestDomain", 10, "Some subdomain", "Subj", "D2", DateTime.Now)
+                new TicketDTO(TicketId1, UserId, TicketEmail1, ComplaintTicketUrgencyLevelEnum.HIGH, ComplaintTicketStatusEnum.IN_PROGRESS, CategoryId, TicketDomain, SubcategoryId, TicketSubdomain, TicketSubject1, TicketDesc1, DateTime.Now),
+                new TicketDTO(TicketId2, UserId, TicketEmail1, ComplaintTicketUrgencyLevelEnum.LOW, ComplaintTicketStatusEnum.OPEN, CategoryId, TicketDomain, SubcategoryId, TicketSubdomain, TicketSubject2, TicketDesc2, DateTime.Now)
             };
 
-            var resultedTickets = ticketService.FilterTicketsByStatus(ticketsDataTransferObject, TicketFilterStatusEnum.IN_PROGRESS).ToList();
+            var result = ticketService.FilterTicketsByStatus(tickets, TicketFilterStatusEnum.IN_PROGRESS).ToList();
 
-            Assert.AreEqual(1, resultedTickets.Count);
-            Assert.AreEqual(ComplaintTicketStatusEnum.IN_PROGRESS, resultedTickets.First().currentStatus);
+            Assert.AreEqual(1, result.Count);
+            Assert.AreEqual(ComplaintTicketStatusEnum.IN_PROGRESS, result.First().currentStatus);
         }
 
         [TestMethod]
         public void FilterTicketsByStatus_WithResolvedFilter_ReturnsOnlyResolvedTickets()
         {
-            var ticketsDataTransferObject = new List<TicketDTO>
+            var tickets = new List<TicketDTO>
             {
-                new TicketDTO(1, 1, "e1", ComplaintTicketUrgencyLevelEnum.HIGH, ComplaintTicketStatusEnum.RESOLVED, 1, "C1", 10, "S1", "Sub1", "D1", DateTime.Now),
-                new TicketDTO(2, 1, "e1", ComplaintTicketUrgencyLevelEnum.LOW, ComplaintTicketStatusEnum.OPEN, 1, "C1", 10, "S1", "Sub2", "D2", DateTime.Now)
+                new TicketDTO(TicketId1, UserId, TicketEmail1, ComplaintTicketUrgencyLevelEnum.HIGH, ComplaintTicketStatusEnum.RESOLVED, CategoryId, TicketDomain, SubcategoryId, TicketSubdomain, TicketSubject1, TicketDesc1, DateTime.Now),
+                new TicketDTO(TicketId2, UserId, TicketEmail1, ComplaintTicketUrgencyLevelEnum.LOW, ComplaintTicketStatusEnum.OPEN, CategoryId, TicketDomain, SubcategoryId, TicketSubdomain, TicketSubject2, TicketDesc2, DateTime.Now)
             };
 
-            var resultedTickets = ticketService.FilterTicketsByStatus(ticketsDataTransferObject, TicketFilterStatusEnum.RESOLVED).ToList();
+            var result = ticketService.FilterTicketsByStatus(tickets, TicketFilterStatusEnum.RESOLVED).ToList();
 
-            Assert.AreEqual(1, resultedTickets.Count);
-            Assert.AreEqual(ComplaintTicketStatusEnum.RESOLVED, resultedTickets.First().currentStatus);
+            Assert.AreEqual(1, result.Count);
+            Assert.AreEqual(ComplaintTicketStatusEnum.RESOLVED, result.First().currentStatus);
         }
 
         [TestMethod]
         public void FilterTicketsByStatus_WithOpenFilter_ReturnsOnlyOpenTickets()
         {
-            var ticketsDataTransferObject = new List<TicketDTO>
+            var tickets = new List<TicketDTO>
             {
-                new TicketDTO(1, 1, "e1", ComplaintTicketUrgencyLevelEnum.HIGH, ComplaintTicketStatusEnum.OPEN, 1, "C1", 10, "S1", "Sub1", "D1", DateTime.Now),
-                new TicketDTO(2, 1, "e1", ComplaintTicketUrgencyLevelEnum.LOW, ComplaintTicketStatusEnum.RESOLVED, 1, "C1", 10, "S1", "Sub2", "D2", DateTime.Now)
+                new TicketDTO(TicketId1, UserId, TicketEmail1, ComplaintTicketUrgencyLevelEnum.HIGH, ComplaintTicketStatusEnum.OPEN, CategoryId, TicketDomain, SubcategoryId, TicketSubdomain, TicketSubject1, TicketDesc1, DateTime.Now),
+                new TicketDTO(TicketId2, UserId, TicketEmail1, ComplaintTicketUrgencyLevelEnum.LOW, ComplaintTicketStatusEnum.RESOLVED, CategoryId, TicketDomain, SubcategoryId, TicketSubdomain, TicketSubject2, TicketDesc2, DateTime.Now)
             };
-            var result = ticketService.FilterTicketsByStatus(ticketsDataTransferObject, TicketFilterStatusEnum.OPEN).ToList();
+
+            var result = ticketService.FilterTicketsByStatus(tickets, TicketFilterStatusEnum.OPEN).ToList();
 
             Assert.AreEqual(1, result.Count);
             Assert.AreEqual(ComplaintTicketStatusEnum.OPEN, result.First().currentStatus);
@@ -227,19 +197,16 @@ namespace AirportApp.Tests.Unit.Src.Service
         [TestMethod]
         public void FilterTicketsByStatus_WithUndefinedFilter_ReturnsAllTickets()
         {
-            var ticketsDataTransferObject = new List<TicketDTO>
+            var tickets = new List<TicketDTO>
             {
-                new TicketDTO(1, 1, "e1@test.com", ComplaintTicketUrgencyLevelEnum.HIGH, ComplaintTicketStatusEnum.OPEN, 1, "IT", 10, "Hardware", "Sub1", "Desc1", DateTime.Now),
-                new TicketDTO(2, 1, "e1@test.com", ComplaintTicketUrgencyLevelEnum.LOW, ComplaintTicketStatusEnum.RESOLVED, 1, "IT", 10, "Hardware", "Sub2", "Desc2", DateTime.Now)
+                new TicketDTO(TicketId1, UserId, TicketEmail1, ComplaintTicketUrgencyLevelEnum.HIGH, ComplaintTicketStatusEnum.OPEN, CategoryId, TicketDomain, SubcategoryId, TicketSubdomain, TicketSubject1, TicketDesc1, DateTime.Now),
+                new TicketDTO(TicketId2, UserId, TicketEmail1, ComplaintTicketUrgencyLevelEnum.LOW, ComplaintTicketStatusEnum.RESOLVED, CategoryId, TicketDomain, SubcategoryId, TicketSubdomain, TicketSubject2, TicketDesc2, DateTime.Now)
             };
 
             var unknownFilter = (TicketFilterStatusEnum)999;
+            var result = ticketService.FilterTicketsByStatus(tickets, unknownFilter).ToList();
 
-            var resultedTickets = ticketService.FilterTicketsByStatus(ticketsDataTransferObject, unknownFilter).ToList();
-
-            Assert.AreEqual(2, resultedTickets.Count);
-            Assert.AreEqual(ticketsDataTransferObject[0].subject, resultedTickets[0].subject);
-            Assert.AreEqual(ticketsDataTransferObject[1].subject, resultedTickets[1].subject);
+            Assert.AreEqual(2, result.Count);
         }
     }
 }

@@ -4,13 +4,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using AirportApp.ClassLibrary.Entity.Domain;
 using AirportApp.ClassLibrary.Repository.Interfaces;
+using AirportApp.Src.Service.Interfaces;
 
 namespace AirportApp.Src.Service
 {
     public class FlightSearchService : IFlightSearchService
     {
-        private const string DepartureRouteType = "DEP";
-        private const string ArrivalRouteType = "ARR";
+        private const string DepartureRouteType = "Departure";
+        private const string ArrivalRouteType = "Arrival";
 
         private readonly IFlightRepository flightRepository;
 

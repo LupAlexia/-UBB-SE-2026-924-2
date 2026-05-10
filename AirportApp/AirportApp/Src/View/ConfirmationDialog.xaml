@@ -1,0 +1,34 @@
+<ContentDialog
+    x:Class="AirportApp.Src.View.General.ConfirmationDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:vm="using:AirportApp.Src.ViewModel.General" 
+    Title="{x:Bind ViewModel.Title, Mode=OneWay}"
+    PrimaryButtonText="{x:Bind ViewModel.ConfirmButtonText, Mode=OneWay}"
+    CloseButtonText="{x:Bind ViewModel.CancelButtonText, Mode=OneWay}"
+    DefaultButton="Primary">
+    <ContentDialog.Resources>
+        <!-- Background -->
+        <SolidColorBrush x:Key="ContentDialogBackground" Color="{StaticResource CardBackgroundColor}"/>
+        <!-- Primary button — teal -->
+        <SolidColorBrush x:Key="ButtonBackground" Color="{StaticResource PrimaryColor}"/>
+        <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="{StaticResource PrimaryLightColor}"/>
+        <SolidColorBrush x:Key="ButtonBackgroundPressed" Color="{StaticResource PrimaryMutedColor}"/>
+        <SolidColorBrush x:Key="ButtonBackgroundFocused" Color="{StaticResource PrimaryColor}"/>
+        <SolidColorBrush x:Key="ButtonForeground" Color="{StaticResource CardBackgroundColor}"/>
+        <SolidColorBrush x:Key="ButtonForegroundPointerOver" Color="{StaticResource CardBackgroundColor}"/>
+        <SolidColorBrush x:Key="ButtonForegroundPressed" Color="{StaticResource CardBackgroundColor}"/>
+        <SolidColorBrush x:Key="ButtonForegroundFocused" Color="{StaticResource CardBackgroundColor}"/>
+        <SolidColorBrush x:Key="ButtonBorderBrush" Color="{StaticResource PrimaryColor}"/>
+        <SolidColorBrush x:Key="ButtonBorderBrushPointerOver" Color="{StaticResource PrimaryLightColor}"/>
+        <SolidColorBrush x:Key="ButtonBorderBrushPressed" Color="{StaticResource PrimaryMutedColor}"/>
+        <SolidColorBrush x:Key="ButtonBorderBrushFocused" Color="{StaticResource PrimaryColor}"/>
+        <!-- Message text -->
+        <SolidColorBrush x:Key="ContentDialogForeground" Color="{StaticResource SecondaryTextColor}"/>
+    </ContentDialog.Resources>
+    <StackPanel VerticalAlignment="Stretch">
+        <TextBlock Text="{x:Bind ViewModel.Message, Mode=OneWay}"
+                   TextWrapping="Wrap"
+                   Foreground="{ThemeResource SecondaryTextBrush}"/>
+    </StackPanel>
+</ContentDialog>

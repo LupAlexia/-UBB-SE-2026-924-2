@@ -2,10 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using AirportApp.ClassLibrary.Entity.Domain.Chats;
-using AirportApp.ClassLibrary.Entity.Domain.Message;
-using AirportApp.ClassLibrary.Entity.Domain.Faq.Bot;
 using AirportApp.ClassLibrary.Repository.Interfaces;
+using AirportApp.Src.Service.Interfaces;
+using AirportApp.ClassLibrary.Entity.Domain;
 
 namespace AirportApp.Src.Service
 {
@@ -25,20 +24,20 @@ namespace AirportApp.Src.Service
             this.botEngine = botEngine ?? throw new ArgumentNullException(nameof(botEngine));
         }
 
-        public async Task<BotMessage> SendMessageAsync(int chatId, ISender sender, FAQOption selectedOption)
+        public async Task<BotMessage> SendMessageAsync(int chatId, Sender sender, FAQOption selectedOption)
         {
             if (selectedOption == null)
             {
                 throw new ArgumentNullException(nameof(selectedOption));
             }
-            if (selectedOption.nextOptionId == 1)
+            if (selectedOption.NextOption?.NodeId == 1)
             {
                 await botEngine.ResetBotConversationStateToInitialRootNodeAsync();
             }
 
             Chat chat = await GetActiveChatAsync(chatId);
 
-            var userMessage = new Message(chat, selectedOption.label, sender);
+            var userMessage = new Message(chat, selectedOption.Label, sender);
             await messageRepository.CreateNewEntityAsync(userMessage);
 
             BotMessage botReply = await botEngine.GenerateAppropriateResponseBasedOnCurrentStrategyAsync(userMessage);
@@ -61,12 +60,13 @@ namespace AirportApp.Src.Service
 
         public async Task<IEnumerable<Message>> GetAllMessagesAsync(int chatId)
         {
-            _ = await chatRepository.GetByIdAsync(chatId);
+            Chat returnedChat = await chatRepository.GetByIdAsync(chatId);
 
             var allMessages = await messageRepository.GetAllAsync();
-            return allMessages
-                .Where(chatMessage => chatMessage.ChatId == chatId)
+            var filtered = allMessages
+                .Where(chatMessage => chatMessage.Chat.Id == chatId)
                 .OrderBy(chatMessage => chatMessage.Timestamp);
+            return filtered;
         }
 
         private async Task<Chat> GetActiveChatAsync(int chatId)

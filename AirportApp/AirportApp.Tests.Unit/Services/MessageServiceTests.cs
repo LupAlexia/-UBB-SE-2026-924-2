@@ -1,11 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
 using AirportApp.Src.ViewModel;
-using AirportApp.ClassLibrary.Entity.Domain.Chats;
-using AirportApp.ClassLibrary.Entity.Domain.Faq.Bot;
-using AirportApp.ClassLibrary.Entity.Domain.Message;
 using AirportApp.ClassLibrary.Entity.Domain;
 using AirportApp.ClassLibrary.Repository.Interfaces;
 using AirportApp.Src.Service;
@@ -24,11 +22,11 @@ namespace AirportApp.Tests.Unit.Src.Service
         private MessageService messageService = null!;
         private User testUser = null!;
 
-        private class TestSender : ISender
+        private class TestSender : Sender
         {
-            public int RetrieveUniqueDatabaseIdentifierForBot() => 1;
-            public string RetrieveConfiguredDisplayFullNameForBot() => "Test User";
-            public string RetrieveConfiguredEmailAddressForBotContact() => "user@test.com";
+            public override string RetrieveConfiguredDisplayFullNameForBot() => "Test User";
+            public override string RetrieveConfiguredEmailAddressForBotContact() => "user@test.com";
+            public override int RetrieveUniqueDatabaseIdentifierForBot() => 1;
         }
         private TestSender testSender = null!;
 
@@ -73,7 +71,8 @@ namespace AirportApp.Tests.Unit.Src.Service
         {
             var closedChat = new Chat(1, testUser, ChatStatus.Closed);
             mockChatRepository.GetByIdAsync(1).Returns(closedChat);
-            var selectedChatOption = new FAQOption("Hello", 2);
+            var nextNode = new FAQNode(2, "Next", ImmutableArray<FAQOption>.Empty, false);
+            var selectedChatOption = new FAQOption("Hello", nextNode);
 
             await Assert.ThrowsExceptionAsync<InvalidOperationException>(() => messageService.SendMessageAsync(1, testSender, selectedChatOption));
         }
@@ -83,7 +82,8 @@ namespace AirportApp.Tests.Unit.Src.Service
         {
             var closedChat = new Chat(1, testUser, ChatStatus.Closed);
             mockChatRepository.GetByIdAsync(1).Returns(closedChat);
-            var selectedChatOption = new FAQOption("Hello", 2);
+            var nextNode = new FAQNode(2, "Next", ImmutableArray<FAQOption>.Empty, false);
+            var selectedChatOption = new FAQOption("Hello", nextNode);
 
             var ex = await Assert.ThrowsExceptionAsync<InvalidOperationException>(() => messageService.SendMessageAsync(1, testSender, selectedChatOption));
             Assert.AreEqual("Chat 1 is not active.", ex.Message);
@@ -94,7 +94,8 @@ namespace AirportApp.Tests.Unit.Src.Service
         {
             var activeChat = new Chat(1, testUser, ChatStatus.Active);
             mockChatRepository.GetByIdAsync(1).Returns(activeChat);
-            var selectedChatOption = new FAQOption("Help me", 2);
+            var nextNode = new FAQNode(2, "Next", ImmutableArray<FAQOption>.Empty, false);
+            var selectedChatOption = new FAQOption("Help me", nextNode);
             var expectedReply = new BotMessage.BotMessageBuilder(realBotEngine, activeChat, 2).WithMessage("I can help").Build();
             mockStrategy.ProcessIncomingUserMessageAndDetermineNextDecisionTreeNodeAsync(Arg.Any<BotEngineIdentity>(), Arg.Any<IMessage>()).Returns(expectedReply);
 
@@ -108,7 +109,8 @@ namespace AirportApp.Tests.Unit.Src.Service
         {
             var activeChat = new Chat(1, testUser, ChatStatus.Active);
             mockChatRepository.GetByIdAsync(1).Returns(activeChat);
-            var selectedChatOption = new FAQOption("Help me", 2);
+            var nextNode = new FAQNode(2, "Next", ImmutableArray<FAQOption>.Empty, false);
+            var selectedChatOption = new FAQOption("Help me", nextNode);
             var expectedReply = new BotMessage.BotMessageBuilder(realBotEngine, activeChat, 2).WithMessage("I can help").Build();
             mockStrategy.ProcessIncomingUserMessageAndDetermineNextDecisionTreeNodeAsync(Arg.Any<BotEngineIdentity>(), Arg.Any<IMessage>()).Returns(expectedReply);
 
@@ -122,7 +124,8 @@ namespace AirportApp.Tests.Unit.Src.Service
         {
             var activeChat = new Chat(1, testUser, ChatStatus.Active);
             mockChatRepository.GetByIdAsync(1).Returns(activeChat);
-            var restartOption = new FAQOption("Restart", 1);
+            var restartNode = new FAQNode(1, "Restart", ImmutableArray<FAQOption>.Empty, true);
+            var restartOption = new FAQOption("Restart", restartNode);
             var expectedReply = new BotMessage.BotMessageBuilder(realBotEngine, activeChat, 1).WithMessage("Restarting").Build();
             mockStrategy.ProcessIncomingUserMessageAndDetermineNextDecisionTreeNodeAsync(Arg.Any<BotEngineIdentity>(), Arg.Any<IMessage>()).Returns(expectedReply);
 

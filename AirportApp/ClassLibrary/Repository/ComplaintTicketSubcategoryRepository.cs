@@ -4,40 +4,40 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using AirportApp.ClassLibrary.DataAccess;
-using AirportApp.ClassLibrary.Entity.Domain.Ticket;
 using AirportApp.ClassLibrary.Repository.Interfaces;
+using AirportApp.ClassLibrary.Entity.Domain;
 
 namespace AirportApp.ClassLibrary.Repository
 {
     public class ComplaintTicketSubcategoryRepository : ITicketSubcategoryRepository
     {
-        private readonly AirportDbContext dataBaseContext;
+        private readonly AirportDbContext databaseContext;
 
-        public ComplaintTicketSubcategoryRepository(AirportDbContext context)
+        public ComplaintTicketSubcategoryRepository(AirportDbContext databaseContext)
         {
-            dataBaseContext = context ?? throw new ArgumentNullException(nameof(dataBaseContext));
+            this.databaseContext = databaseContext ?? throw new ArgumentNullException(nameof(databaseContext));
         }
 
         public async Task<IEnumerable<ComplaintTicketSubcategory>> GetAllAsync()
         {
-            return await dataBaseContext.TicketSubcategories
-                           .Include(s => s.ParentCategory)
+            return await databaseContext.TicketSubcategories
+                           .Include(subcategory => subcategory.ParentCategory)
                            .ToListAsync();
         }
 
         public async Task<ComplaintTicketSubcategory> GetByIdAsync(int subcategoryId)
         {
-            return await dataBaseContext.TicketSubcategories
-                           .Include(s => s.ParentCategory)
-                           .FirstOrDefaultAsync(s => s.Id == subcategoryId)
+            return await databaseContext.TicketSubcategories
+                           .Include(subcategory => subcategory.ParentCategory)
+                           .FirstOrDefaultAsync(subcategory => subcategory.Id == subcategoryId)
                    ?? throw new KeyNotFoundException($"Subcategory with id {subcategoryId} not found.");
         }
 
         public async Task<IEnumerable<ComplaintTicketSubcategory>> GetByCategoryIdAsync(int categoryId)
         {
-            return await dataBaseContext.TicketSubcategories
-                           .Include(s => s.ParentCategory)
-                           .Where(s => s.ParentCategory.Id == categoryId)
+            return await databaseContext.TicketSubcategories
+                           .Include(subcategory => subcategory.ParentCategory)
+                           .Where(subcategory => subcategory.ParentCategory.Id == categoryId)
                            .ToListAsync();
         }
     }

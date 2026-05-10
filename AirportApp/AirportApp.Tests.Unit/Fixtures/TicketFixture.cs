@@ -15,9 +15,7 @@ public static class TicketFixture
         {
             Id = 1,
             User = user,
-            UserId = user.Id,
             Flight = flight,
-            FlightId = flight.Id,
             Seat = seat,
             Price = price,
             Status = status,

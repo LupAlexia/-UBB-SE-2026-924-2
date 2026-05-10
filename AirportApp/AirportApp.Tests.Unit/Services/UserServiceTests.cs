@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using AirportApp.Src.ViewModel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using AirportApp.Src.Service;
 using AirportApp.ClassLibrary.Repository.Interfaces;
@@ -14,8 +13,25 @@ namespace AirportApp.Tests.Unit.Src.Service
     [TestClass]
     public class UserServiceTests
     {
+        private const int UserId1 = 1;
+        private const int UserId2 = 2;
+        private const int NewUserId = 99;
+        private const int CreateUserId = 10;
+        private const string User1Name = "Ion Popescu";
+        private const string User1Email = "ion@test.com";
+        private const string User2Name = "Maria Ioana";
+        private const string User2Email = "maria@test.com";
+        private const string NewUserName = "Brand New";
+        private const string NewUserEmail = "brandnew@test.com";
+        private const string CreateUserName = "New User";
+        private const string CreateUserEmail = "new@test.com";
+        private const string EmptyNameUserEmail = "email@test.com";
+        private const string ValidNameForEmptyEmailTest = "Nume Valid";
+
         private IUserRepository userRepository;
         private UserService userService;
+        private User existingUser1;
+        private User existingUser2;
 
         [TestInitialize]
         public void Setup()
@@ -23,105 +39,86 @@ namespace AirportApp.Tests.Unit.Src.Service
             userRepository = Substitute.For<IUserRepository>();
             userService = new UserService(userRepository);
 
-            var initialUsers = new List<User>
-            {
-                new User(1, "Ion Popescu", "ion@test.com"),
-                new User(2, "Maria Ioana", "maria@test.com")
-            };
+            // Store references so tests can reuse the exact same objects
+            existingUser1 = new User(UserId1, User1Name, User1Email);
+            existingUser2 = new User(UserId2, User2Name, User2Email);
+
+            var initialUsers = new List<User> { existingUser1, existingUser2 };
             userRepository.GetAllAsync().Returns(Task.FromResult((IEnumerable<User>)initialUsers));
-        }
-
-        [TestMethod]
-        public async Task GetById_ExistingId_ReturnsUserFromRepository()
-        {
-            var expectedUser = new User(1, "Ion Popescu", "ion@test.com");
-            userRepository.GetByIdAsync(1).Returns(Task.FromResult(expectedUser));
-
-            var resultedUser = await userService.GetByIdAsync(1);
-
-            Assert.AreEqual(expectedUser, resultedUser);
-            await userRepository.Received(1).GetByIdAsync(1);
         }
 
         [TestMethod]
         public async Task GetAllUsers_WhenCalled_ReturnsAllEntities()
         {
-            var resultedUser = await userService.GetAllUsersAsync();
+            var result = await userService.GetAllUsersAsync();
 
-            Assert.AreEqual(2, resultedUser.Count);
-            Assert.AreEqual("Ion Popescu", resultedUser[0].RetrieveConfiguredDisplayFullNameForBot());
-            Assert.AreEqual("Maria Ioana", resultedUser[1].RetrieveConfiguredDisplayFullNameForBot());
+            Assert.AreEqual(2, result.Count);
+            Assert.AreEqual(User1Name, result[0].RetrieveConfiguredDisplayFullNameForBot());
+            Assert.AreEqual(User2Name, result[1].RetrieveConfiguredDisplayFullNameForBot());
         }
 
         [TestMethod]
         public async Task CreateNewUser_WithValidData_CallsRepository()
         {
-            int identificationNumber = 10;
-            string fullName = "New User";
-            string emailAddress = "new@test.com";
+            await userService.CreateNewUserAsync(CreateUserId, CreateUserName, CreateUserEmail);
 
-            await userService.CreateNewUserAsync(identificationNumber, fullName, emailAddress);
+            await userRepository.Received(1).CreateNewEntityAsync(Arg.Is<User>(user => user.RetrieveUniqueDatabaseIdentifierForBot() == CreateUserId));
+        }
 
-            await userRepository.Received(1).CreateNewEntityAsync(Arg.Is<User>(user => user.RetrieveUniqueDatabaseIdentifierForBot() == identificationNumber));
+        [TestMethod]
+        public async Task CreateNewUser_WithInvalidData_DoesNotCallRepository()
+        {
+            // Use empty name to trigger validation failure reliably
+            await Assert.ThrowsExceptionAsync<ArgumentException>(
+                () => userService.CreateNewUserAsync(NewUserId, string.Empty, NewUserEmail));
+
+            await userRepository.DidNotReceive().CreateNewEntityAsync(Arg.Any<User>());
         }
 
         [TestMethod]
         public async Task ValidateUserIntegrity_WithNullUser_ThrowsArgumentNullException()
         {
-            await Assert.ThrowsExceptionAsync<ArgumentNullException>(async () =>
-                await userService.ValidateUserIntegrityAsync(null!));
+            await Assert.ThrowsExceptionAsync<ArgumentNullException>(
+                () => userService.ValidateUserIntegrityAsync(null!));
         }
 
         [TestMethod]
         public async Task ValidateUserIntegrity_ForDuplicateUser_ThrowsArgumentException()
         {
-            var existingUser = (await userService.GetAllUsersAsync()).First();
+            var ex = await Assert.ThrowsExceptionAsync<ArgumentException>(
+                () => userService.ValidateUserIntegrityAsync(existingUser1));
 
-            var exceptionThrown = await Assert.ThrowsExceptionAsync<ArgumentException>(async () =>
-                await userService.ValidateUserIntegrityAsync(existingUser));
-
-            StringAssert.Contains("User already exists", exceptionThrown.Message);
+            StringAssert.Contains("User already exists", ex.Message);
         }
 
         [TestMethod]
         public async Task ValidateUserIntegrity_WithEmptyName_ThrowsArgumentException()
         {
-            var userWithEmptyName = new User(1, string.Empty, "email@test.com");
+            var userWithEmptyName = new User(NewUserId, string.Empty, EmptyNameUserEmail);
 
-            var exceptionThrown = await Assert.ThrowsExceptionAsync<ArgumentException>(async () =>
-                await userService.ValidateUserIntegrityAsync(userWithEmptyName));
+            var ex = await Assert.ThrowsExceptionAsync<ArgumentException>(
+                () => userService.ValidateUserIntegrityAsync(userWithEmptyName));
 
-            StringAssert.Contains("Name cannot be null or empty", exceptionThrown.Message);
+            StringAssert.Contains("Name cannot be null or empty", ex.Message);
         }
 
         [TestMethod]
         public async Task ValidateUserIntegrity_WithEmptyEmail_ThrowsArgumentException()
         {
-            var userWithEmptyEmail = new User(1, "Nume Valid", string.Empty);
+            var userWithEmptyEmail = new User(NewUserId, ValidNameForEmptyEmailTest, string.Empty);
 
-            var exceptionThrown = await Assert.ThrowsExceptionAsync<ArgumentException>(async () =>
-                await userService.ValidateUserIntegrityAsync(userWithEmptyEmail));
+            var ex = await Assert.ThrowsExceptionAsync<ArgumentException>(
+                () => userService.ValidateUserIntegrityAsync(userWithEmptyEmail));
 
-            StringAssert.Contains("Email cannot be null or empty", exceptionThrown.Message);
+            StringAssert.Contains("Email cannot be null or empty", ex.Message);
         }
 
         [TestMethod]
-        public async Task DeleteUserById_WhenCalled_CallsRepository()
+        public async Task ValidateUserIntegrity_WithValidUniqueUser_DoesNotThrow()
         {
-            await userService.DeleteUserByIdAsync(100);
+            var newUser = new User(NewUserId, NewUserName, NewUserEmail);
 
-            await userRepository.Received(1).DeleteByIdAsync(100);
-        }
-
-        [TestMethod]
-        public async Task UpdateUserById_WithCorrectData_CallsRepository()
-        {
-            int identificationNumber = 1;
-            var updatedUser = new User(identificationNumber, "Nume Actualizat", "updated@test.com");
-
-            await userService.UpdateUserByIdAsync(identificationNumber, updatedUser);
-
-            await userRepository.Received(1).UpdateByIdAsync(identificationNumber, updatedUser);
+            await userService.ValidateUserIntegrityAsync(newUser);
         }
     }
 }

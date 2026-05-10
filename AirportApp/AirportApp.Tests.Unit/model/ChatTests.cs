@@ -2,8 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using AirportApp.ClassLibrary.Entity.Domain;
-using AirportApp.ClassLibrary.Entity.Domain.Chats;
-using AirportApp.ClassLibrary.Entity.Domain.Message;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace AirportApp.Tests.Unit;
@@ -28,7 +26,6 @@ public class ChatTests
         Chat newChat = new Chat(chatId, testUser, status);
 
         Assert.AreEqual(chatId, newChat.Id);
-        Assert.AreEqual(testUser.UserId, newChat.UserId);
         Assert.AreEqual(status, newChat.Status);
         Assert.AreEqual(0, newChat.Messages.Count);
     }

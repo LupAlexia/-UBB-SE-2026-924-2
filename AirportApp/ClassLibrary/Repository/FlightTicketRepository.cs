@@ -13,16 +13,16 @@ namespace AirportApp.ClassLibrary.Repository
     {
         private const string CancelledStatus = "Cancelled";
 
-        private readonly AirportDbContext dataBaseContext;
+        private readonly AirportDbContext databaseContext;
 
-        public FlightTicketRepository(AirportDbContext dataBaseContext)
+        public FlightTicketRepository(AirportDbContext databaseContext)
         {
-            this.dataBaseContext = dataBaseContext ?? throw new ArgumentNullException(nameof(dataBaseContext));
+            this.databaseContext = databaseContext ?? throw new ArgumentNullException(nameof(databaseContext));
         }
 
         public async Task<IEnumerable<FlightTicket>> GetTicketsByUserIdAsync(int userId)
         {
-            return await this.dataBaseContext.FlightTickets
+            return await this.databaseContext.FlightTickets
                 .Where(ticket => ticket.User.Id == userId)
                 .Include(ticket => ticket.User)
                 .Include(ticket => ticket.Flight)
@@ -39,17 +39,34 @@ namespace AirportApp.ClassLibrary.Repository
 
         public async Task AddTicketAsync(FlightTicket ticket)
         {
-            this.dataBaseContext.Add(ticket);
-            await this.dataBaseContext.SaveChangesAsync();
+            if (ticket == null)
+            {
+                throw new ArgumentNullException(nameof(ticket));
+            }
+
+            if (ticket.User == null || ticket.User.Id <= 0)
+            {
+                throw new ArgumentException("Flight ticket must contain a valid user.", nameof(ticket));
+            }
+
+            if (ticket.Flight == null || ticket.Flight.Id <= 0)
+            {
+                throw new ArgumentException("Flight ticket must contain a valid flight.", nameof(ticket));
+            }
+
+            this.databaseContext.Add(ticket);
+            this.databaseContext.Entry(ticket).Property("UserId").CurrentValue = ticket.User.Id;
+            this.databaseContext.Entry(ticket).Property("FlightId").CurrentValue = ticket.Flight.Id;
+            await this.databaseContext.SaveChangesAsync();
         }
 
         public async Task UpdateTicketStatusAsync(int ticketId, string status)
         {
-            var ticket = await this.dataBaseContext.FlightTickets.FirstOrDefaultAsync(t => t.Id == ticketId);
+            var ticket = await this.databaseContext.FlightTickets.FirstOrDefaultAsync(ticketEntity => ticketEntity.Id == ticketId);
             if (ticket != null)
             {
                 ticket.Status = status;
-                await this.dataBaseContext.SaveChangesAsync();
+                await this.databaseContext.SaveChangesAsync();
             }
         }
 
@@ -60,9 +77,9 @@ namespace AirportApp.ClassLibrary.Repository
                 return;
             }
 
-            var ticket = await this.dataBaseContext.FlightTickets
-                .Include(t => t.SelectedAddOns)
-                .FirstOrDefaultAsync(t => t.Id == ticketId);
+            var ticket = await this.databaseContext.FlightTickets
+                .Include(flightTicket => flightTicket.SelectedAddOns)
+                .FirstOrDefaultAsync(ticketEntity => ticketEntity.Id == ticketId);
 
             if (ticket == null)
             {
@@ -71,19 +88,19 @@ namespace AirportApp.ClassLibrary.Repository
 
             foreach (var addOnId in addOnIds)
             {
-                var addOn = await this.dataBaseContext.AddOns.FirstOrDefaultAsync(a => a.Id == addOnId);
+                var addOn = await this.databaseContext.AddOns.FirstOrDefaultAsync(addOn => addOn.Id == addOnId);
                 if (addOn != null && !ticket.SelectedAddOns.Contains(addOn))
                 {
                     ticket.SelectedAddOns.Add(addOn);
                 }
             }
 
-            await this.dataBaseContext.SaveChangesAsync();
+            await this.databaseContext.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<string>> GetOccupiedSeatsAsync(int flightId)
         {
-            return await this.dataBaseContext.FlightTickets
+            return await this.databaseContext.FlightTickets
                 .Where(ticket => ticket.Flight.Id == flightId
                     && ticket.Status != CancelledStatus
                     && ticket.Seat != null)
@@ -93,7 +110,7 @@ namespace AirportApp.ClassLibrary.Repository
 
         public async Task<bool> IsSeatAvailableAsync(int flightId, string seat)
         {
-            int count = await this.dataBaseContext.FlightTickets
+            int count = await this.databaseContext.FlightTickets
                 .Where(ticket => ticket.Flight.Id == flightId
                     && ticket.Seat == seat
                     && ticket.Status != CancelledStatus)
@@ -108,13 +125,14 @@ namespace AirportApp.ClassLibrary.Repository
             {
                 for (int ticketIndex = 0; ticketIndex < tickets.Count; ticketIndex++)
                 {
-                    var ticket = tickets[ticketIndex];
+                        var ticket = tickets[ticketIndex];
 
-                    // Reset navigation properties to null to prevent EF re-insertion errors
+                        var userId = ticket.User?.Id ?? 0;
+                        var flightId = ticket.Flight?.Id ?? 0;
+
                     ticket.User = null;
                     ticket.Flight = null;
 
-                    // Get add-on IDs for this ticket
                     var currentAddOnIds = (addOnIds != null && ticketIndex < addOnIds.Count)
                         ? addOnIds[ticketIndex]
                         : new List<int>();
@@ -125,7 +143,7 @@ namespace AirportApp.ClassLibrary.Repository
                         foreach (var addOnId in currentAddOnIds)
                         {
                             // Fetch the tracked entity from the database
-                            var existing = await dataBaseContext.AddOns.FindAsync(addOnId);
+                            var existing = await databaseContext.AddOns.FindAsync(addOnId);
                             if (existing != null)
                             {
                                 attachedAddOns.Add(existing);
@@ -138,16 +156,25 @@ namespace AirportApp.ClassLibrary.Repository
                         ticket.SelectedAddOns = new List<AddOn>();
                     }
 
-                    this.dataBaseContext.FlightTickets.Add(ticket);
+                    this.databaseContext.FlightTickets.Add(ticket);
+
+                    if (userId > 0)
+                    {
+                        this.databaseContext.Entry(ticket).Property("UserId").CurrentValue = userId;
+                    }
+
+                    if (flightId > 0)
+                    {
+                        this.databaseContext.Entry(ticket).Property("FlightId").CurrentValue = flightId;
+                    }
                 }
 
-                await this.dataBaseContext.SaveChangesAsync();
+                await this.databaseContext.SaveChangesAsync();
                 return true;
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
-                // Log the exception for debugging
-                System.Diagnostics.Debug.WriteLine($"Error saving tickets: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"Error saving tickets: {exception}");
                 return false;
             }
         }

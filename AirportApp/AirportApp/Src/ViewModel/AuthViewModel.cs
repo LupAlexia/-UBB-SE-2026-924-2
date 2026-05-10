@@ -2,7 +2,7 @@ using System;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using AirportApp.ClassLibrary.Entity.Domain;
-using AirportApp.Src.Service;
+using AirportApp.Src.Service.Interfaces;
 
 namespace AirportApp.Src.ViewModel
 {
@@ -296,11 +296,11 @@ namespace AirportApp.Src.ViewModel
                 IsAuthenticated = true;
                 SuccessMessage = "Login successful.";
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
                 IsAuthenticated = false;
                 AuthenticatedUser = null;
-                ErrorMessage = ex.Message;
+                ErrorMessage = exception.Message;
             }
         }
 
@@ -315,9 +315,9 @@ namespace AirportApp.Src.ViewModel
 
                 SuccessMessage = "Registration successful. You can now sign in.";
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
-                ErrorMessage = ex.Message;
+                ErrorMessage = exception.Message;
             }
         }
 

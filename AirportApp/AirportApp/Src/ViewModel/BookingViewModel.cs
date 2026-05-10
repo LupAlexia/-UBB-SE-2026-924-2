@@ -6,8 +6,7 @@ using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using AirportApp.ClassLibrary.Entity.Domain;
-
-using AirportApp.Src.Service;
+using AirportApp.Src.Service.Interfaces;
 
 namespace AirportApp.Src.ViewModel
 {
@@ -197,19 +196,19 @@ namespace AirportApp.Src.ViewModel
 
             if (parsed == null)
             {
-                if (parameter is object[] arr && arr.Length > 0 && arr[0] is Flight fallbackFlight)
+                if (parameter is object[] array && array.Length > 0 && array[0] is Flight fallbackFlight)
                 {
                     Customer? fallbackUser = null;
                     int requested = 0;
-                    foreach (var item in arr)
+                    foreach (var item in array)
                     {
-                        if (fallbackUser == null && item is Customer u)
+                        if (fallbackUser == null && item is Customer user)
                         {
-                            fallbackUser = u;
+                            fallbackUser = user;
                         }
-                        else if (requested == 0 && item is int rp)
+                        else if (requested == 0 && item is int requestedParameter)
                         {
-                            requested = rp;
+                            requested = requestedParameter;
                         }
                     }
 
@@ -460,7 +459,7 @@ namespace AirportApp.Src.ViewModel
 
         public void SelectSeat(PassengerFormViewModel targetPassenger, string seat)
         {
-            var currentSeats = Passengers.Select(p => p.SelectedSeat ?? string.Empty).ToList();
+            var currentSeats = Passengers.Select(passengerEntity => passengerEntity.SelectedSeat ?? string.Empty).ToList();
             int targetIndex = Passengers.IndexOf(targetPassenger);
             var updatedSeats = bookingService.ApplySeatSelection(currentSeats, targetIndex, seat);
             for (int index = 0; index < Passengers.Count; index++)

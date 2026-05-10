@@ -3,28 +3,28 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using AirportApp.ClassLibrary.DataAccess;
-using AirportApp.ClassLibrary.Entity.Domain.Ticket;
 using AirportApp.ClassLibrary.Repository.Interfaces;
+using AirportApp.ClassLibrary.Entity.Domain;
 
 namespace AirportApp.ClassLibrary.Repository
 {
     public class ComplaintTicketCategoryRepository : ITicketCategoryRepository
     {
-        private readonly AirportDbContext dataBaseContext;
+        private readonly AirportDbContext databaseContext;
 
-        public ComplaintTicketCategoryRepository(AirportDbContext context)
+        public ComplaintTicketCategoryRepository(AirportDbContext databaseContext)
         {
-            dataBaseContext = context ?? throw new ArgumentNullException(nameof(dataBaseContext));
+            this.databaseContext = databaseContext ?? throw new ArgumentNullException(nameof(databaseContext));
         }
 
         public async Task<IEnumerable<ComplaintTicketCategory>> GetAllAsync()
         {
-            return await dataBaseContext.TicketCategories.ToListAsync();
+            return await databaseContext.TicketCategories.ToListAsync();
         }
 
         public async Task<ComplaintTicketCategory> GetByIdAsync(int categoryId)
         {
-            return await dataBaseContext.TicketCategories.FindAsync(categoryId)
+            return await databaseContext.TicketCategories.FindAsync(categoryId)
                    ?? throw new KeyNotFoundException($"Category with id {categoryId} not found.");
         }
     }

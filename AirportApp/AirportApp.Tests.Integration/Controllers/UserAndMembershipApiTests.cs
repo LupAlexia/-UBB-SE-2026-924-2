@@ -1,6 +1,5 @@
 using System.Net;
 using System.Net.Http.Json;
-using AirportApp.ClassLibrary.Entity.Domain;
 using FluentAssertions;
 
 namespace AirportApp.Tests.Integration.Controllers;
@@ -20,7 +19,7 @@ public class UserAndMembershipApiTests : BaseApiIntegrationTest
     {
         var response = await client.GetAsync("/api/Membership/1");
         // We accept both because we don't know if ID 1 exists in the local DB without seeding
-        response.StatusCode.Should().Match(s => s == HttpStatusCode.OK || s == HttpStatusCode.NotFound);
+        response.StatusCode.Should().Match(statusCode => statusCode == HttpStatusCode.OK || statusCode == HttpStatusCode.NotFound);
     }
 
     [TestMethod]
@@ -35,6 +34,6 @@ public class UserAndMembershipApiTests : BaseApiIntegrationTest
     {
         // Fix: Use query parameter as expected by CustomerController
         var response = await client.GetAsync("/api/Customer/by-email?email=test@test.com");
-        response.StatusCode.Should().Match(s => s == HttpStatusCode.OK || s == HttpStatusCode.NotFound);
+        response.StatusCode.Should().Match(statusCode => statusCode == HttpStatusCode.OK || statusCode == HttpStatusCode.NotFound);
     }
 }

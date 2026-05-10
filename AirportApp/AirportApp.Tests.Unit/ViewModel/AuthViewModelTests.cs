@@ -4,8 +4,8 @@ using AirportApp.Src.ViewModel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using AirportApp.ClassLibrary.Entity.Domain;
-using AirportApp.Src.Service;
 using FluentAssertions;
+using AirportApp.Src.Service.Interfaces;
 
 namespace AirportApp.Tests.Unit.ViewModel
 {
@@ -60,7 +60,7 @@ namespace AirportApp.Tests.Unit.ViewModel
 
             // Assert
             authViewModel.IsAuthenticated.Should().BeTrue();
-            mockNavigationService.Received(1).NavigateTo(Arg.Is<Type>(t => t.Name == "FlightSearchPage"), Arg.Any<object>());
+            mockNavigationService.Received(1).NavigateTo(Arg.Is<Type>(pageType => pageType.Name == "FlightSearchPage"), Arg.Any<object>());
         }
 
         [TestMethod]

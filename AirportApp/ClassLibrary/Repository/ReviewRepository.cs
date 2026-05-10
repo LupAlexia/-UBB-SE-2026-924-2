@@ -3,32 +3,32 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using AirportApp.ClassLibrary.DataAccess;
-using AirportApp.ClassLibrary.Entity.Domain.Review;
 using AirportApp.ClassLibrary.Repository.Interfaces;
+using AirportApp.ClassLibrary.Entity.Domain;
 
 namespace AirportApp.ClassLibrary.Repository
 {
     public class ReviewRepository : IRepository<int, Review>
     {
-        private readonly AirportDbContext dataBaseContext;
+        private readonly AirportDbContext databaseContext;
 
-        public ReviewRepository(AirportDbContext context)
+        public ReviewRepository(AirportDbContext databaseContext)
         {
-            dataBaseContext = context ?? throw new ArgumentNullException(nameof(dataBaseContext));
+            this.databaseContext = databaseContext ?? throw new ArgumentNullException(nameof(databaseContext));
         }
 
         public async Task<Review> GetByIdAsync(int id)
         {
-            return await dataBaseContext.Reviews
-                .Include(r => r.User)
-                .FirstOrDefaultAsync(r => r.Id == id)
+            return await databaseContext.Reviews
+                .Include(review => review.User)
+                .FirstOrDefaultAsync(review => review.Id == id)
                 ?? throw new KeyNotFoundException($"Review with id {id} was not found.");
         }
 
         public async Task<IEnumerable<Review>> GetAllAsync()
         {
-            return await dataBaseContext.Reviews
-                .Include(r => r.User)
+            return await databaseContext.Reviews
+                .Include(review => review.User)
                 .ToListAsync();
         }
 
@@ -39,8 +39,8 @@ namespace AirportApp.ClassLibrary.Repository
                 throw new ArgumentNullException(nameof(reviewElement));
             }
 
-            dataBaseContext.Reviews.Add(reviewElement);
-            await dataBaseContext.SaveChangesAsync();
+            databaseContext.Reviews.Add(reviewElement);
+            await databaseContext.SaveChangesAsync();
             return reviewElement.Id;
         }
 
@@ -51,17 +51,17 @@ namespace AirportApp.ClassLibrary.Repository
                 throw new ArgumentNullException(nameof(reviewElement));
             }
 
-            dataBaseContext.Reviews.Update(reviewElement);
-            await dataBaseContext.SaveChangesAsync();
+            databaseContext.Reviews.Update(reviewElement);
+            await databaseContext.SaveChangesAsync();
         }
 
         public async Task DeleteByIdAsync(int id)
         {
-            var review = await dataBaseContext.Reviews.FindAsync(id);
+            var review = await databaseContext.Reviews.FindAsync(id);
             if (review != null)
             {
-                dataBaseContext.Reviews.Remove(review);
-                await dataBaseContext.SaveChangesAsync();
+                databaseContext.Reviews.Remove(review);
+                await databaseContext.SaveChangesAsync();
             }
         }
     }

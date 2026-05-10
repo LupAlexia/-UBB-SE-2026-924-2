@@ -1,5 +1,5 @@
 using System;
-using AirportApp.Src.Service;
+using AirportApp.Src.Service.Interfaces;
 
 namespace AirportApp.Src.View
 {

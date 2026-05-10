@@ -1,10 +1,9 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using AirportApp.ClassLibrary.Entity.Domain.Ticket;
 using AirportApp.ClassLibrary.Repository.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using AirportApp.ClassLibrary.Entity.Dto;
-
+using AirportApp.ClassLibrary.Entity.Domain;
 namespace Airport.Web.Controllers
 {
     [ApiController]
@@ -12,10 +11,20 @@ namespace Airport.Web.Controllers
     public class TicketController : ControllerBase
     {
         private readonly ITicketRepository ticketRepository;
+        private readonly IUserRepository userRepository;
+        private readonly ITicketCategoryRepository ticketCategoryRepository;
+        private readonly ITicketSubcategoryRepository ticketSubcategoryRepository;
 
-        public TicketController(ITicketRepository ticketRepository)
+        public TicketController(
+            ITicketRepository ticketRepository,
+            IUserRepository userRepository,
+            ITicketCategoryRepository ticketCategoryRepository,
+            ITicketSubcategoryRepository ticketSubcategoryRepository)
         {
             this.ticketRepository = ticketRepository;
+            this.userRepository = userRepository;
+            this.ticketCategoryRepository = ticketCategoryRepository;
+            this.ticketSubcategoryRepository = ticketSubcategoryRepository;
         }
 
         [HttpGet]
@@ -40,18 +49,18 @@ namespace Airport.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> CreateAsync([FromBody] CreateTicketDTO dto)
+        public async Task<ActionResult> CreateAsync([FromBody] CreateTicketDTO ticketCreationData)
         {
             var ticket = new ComplaintTicket
             {
-                CreatorId = dto.creatorId,
-                CategoryId = dto.categoryId,
-                SubcategoryId = dto.subcategoryId,
-                Subject = dto.subject,
-                Description = dto.description,
-                CreationTimestamp = dto.creationTimestamp,
-                CurrentStatus = dto.currentStatus,
-                UrgencyLevel = dto.urgencyLevel
+                Creator = await userRepository.GetByIdAsync(ticketCreationData.creatorId),
+                Category = await ticketCategoryRepository.GetByIdAsync(ticketCreationData.categoryId),
+                Subcategory = await ticketSubcategoryRepository.GetByIdAsync(ticketCreationData.subcategoryId),
+                Subject = ticketCreationData.subject,
+                Description = ticketCreationData.description,
+                CreationTimestamp = ticketCreationData.creationTimestamp,
+                CurrentStatus = ticketCreationData.currentStatus,
+                UrgencyLevel = ticketCreationData.urgencyLevel
             };
 
             int createdId = await ticketRepository.CreateNewEntityAsync(ticket);

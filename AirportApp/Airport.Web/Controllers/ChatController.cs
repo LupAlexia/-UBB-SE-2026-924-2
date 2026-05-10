@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using AirportApp.ClassLibrary.Entity.Domain.Chats;
+using AirportApp.ClassLibrary.Entity.Domain;
+using AirportApp.ClassLibrary.Entity.Dto;
 using AirportApp.ClassLibrary.Repository.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,10 +12,12 @@ namespace Airport.Web.Controllers
     public class ChatController : ControllerBase
     {
         private readonly IRepository<int, Chat> chatRepository;
+        private readonly IUserRepository userRepository;
 
-        public ChatController(IRepository<int, Chat> chatRepository)
+        public ChatController(IRepository<int, Chat> chatRepository, IUserRepository userRepository)
         {
             this.chatRepository = chatRepository;
+            this.userRepository = userRepository;
         }
 
         [HttpGet]
@@ -39,9 +42,13 @@ namespace Airport.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> CreateAsync([FromBody] Chat chat)
+        public async Task<ActionResult> CreateAsync([FromBody] CreateChatDTO chatCreationData)
         {
+            User user = await userRepository.GetByIdAsync(chatCreationData.userId);
+            var chat = new Chat(0, user, chatCreationData.status);
+
             int createdId = await chatRepository.CreateNewEntityAsync(chat);
+            chat.Id = createdId;
             return CreatedAtAction(nameof(GetByIdAsync), new { id = createdId }, chat);
         }
 

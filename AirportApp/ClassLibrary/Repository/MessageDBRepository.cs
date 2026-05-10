@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using AirportApp.ClassLibrary.Entity.Domain.Message;
-using AirportApp.ClassLibrary.Entity.Domain.Chats;
+using AirportApp.ClassLibrary.Entity.Domain;
 using AirportApp.ClassLibrary.Repository.Interfaces;
 using AirportApp.ClassLibrary.DataAccess;
 
@@ -12,11 +11,11 @@ namespace AirportApp.ClassLibrary.Repository.Interfaces
 {
     public class MessageDatabaseRepository : IMessageRepository
     {
-        private readonly AirportDbContext dataBaseContext;
+        private readonly AirportDbContext databaseContext;
 
-        public MessageDatabaseRepository(AirportDbContext dataBaseContext)
+        public MessageDatabaseRepository(AirportDbContext databaseContext)
         {
-            this.dataBaseContext = dataBaseContext ?? throw new ArgumentNullException(nameof(dataBaseContext));
+            this.databaseContext = databaseContext ?? throw new ArgumentNullException(nameof(databaseContext));
         }
 
         public async Task<int> CreateNewEntityAsync(Message newEntity)
@@ -26,18 +25,26 @@ namespace AirportApp.ClassLibrary.Repository.Interfaces
                 throw new ArgumentNullException(nameof(newEntity));
             }
 
-            this.dataBaseContext.Messages.Add(newEntity);
-            await this.dataBaseContext.SaveChangesAsync();
+            var chatId = newEntity.Chat?.Id ?? throw new InvalidOperationException("Message chat is required.");
+            var senderId = newEntity.Sender?.RetrieveUniqueDatabaseIdentifierForBot() ?? throw new InvalidOperationException("Message sender is required.");
+
+            this.databaseContext.Entry(newEntity).Property("ChatId").CurrentValue = chatId;
+            this.databaseContext.Entry(newEntity).Property("SenderId").CurrentValue = senderId;
+            newEntity.Chat = null!;
+            newEntity.Sender = null!;
+
+            this.databaseContext.Messages.Add(newEntity);
+            await this.databaseContext.SaveChangesAsync();
             return newEntity.Id;
         }
 
         public async Task DeleteByIdAsync(int identificationNumber)
         {
-            var message = await this.dataBaseContext.Messages.FirstOrDefaultAsync(m => m.Id == identificationNumber);
+            var message = await this.databaseContext.Messages.FirstOrDefaultAsync(messageEntity => messageEntity.Id == identificationNumber);
             if (message != null)
             {
-                this.dataBaseContext.Messages.Remove(message);
-                await this.dataBaseContext.SaveChangesAsync();
+                this.databaseContext.Messages.Remove(message);
+                await this.databaseContext.SaveChangesAsync();
             }
         }
 
@@ -48,38 +55,81 @@ namespace AirportApp.ClassLibrary.Repository.Interfaces
                 throw new ArgumentNullException(nameof(message));
             }
 
-            var existingMessage = await this.dataBaseContext.Messages.FirstOrDefaultAsync(m => m.Id == identificationNumber);
+            var existingMessage = await this.databaseContext.Messages.FirstOrDefaultAsync(messageEntity => messageEntity.Id == identificationNumber);
             if (existingMessage != null)
             {
-                await this.dataBaseContext.SaveChangesAsync();
+                await this.databaseContext.SaveChangesAsync();
             }
         }
 
         public async Task<IEnumerable<Message>> GetAllAsync()
         {
-            return await this.dataBaseContext.Messages.ToListAsync();
+            var messages = await this.databaseContext.Messages
+                .Include(messageEntity => messageEntity.Chat)
+                .ToListAsync();
+
+            await PopulateSendersAsync(messages);
+            return messages;
         }
 
         public async Task<Message> GetByIdAsync(int identificationNumber)
         {
-            var message = await this.dataBaseContext.Messages.FirstOrDefaultAsync(m => m.Id == identificationNumber);
+            var message = await this.databaseContext.Messages
+                .Include(messageEntity => messageEntity.Chat)
+                .FirstOrDefaultAsync(messageEntity => messageEntity.Id == identificationNumber);
+
+            if (message != null)
+            {
+                message.Sender = await ResolveSenderAsync(message);
+            }
+
             return message ?? throw new KeyNotFoundException($"Message with id {identificationNumber} not found.");
         }
 
         public async Task<IEnumerable<Message>> GetByChatIdAsync(int chatId)
         {
-            return await this.dataBaseContext.Messages
-                .Where(m => m.ChatId == chatId)
-                .OrderBy(m => m.Timestamp)
+            var messages = await this.databaseContext.Messages
+                .Include(messageEntity => messageEntity.Chat)
+                .Where(messageEntity => messageEntity.Chat.Id == chatId)
+                .OrderBy(messageEntity => messageEntity.Timestamp)
                 .ToListAsync();
+
+            await PopulateSendersAsync(messages);
+            return messages;
         }
 
         public async Task<IEnumerable<Message>> GetMessagesSinceAsync(int chatId, int firstMessageId)
         {
-            return await this.dataBaseContext.Messages
-                .Where(m => m.ChatId == chatId && m.Id >= firstMessageId)
-                .OrderBy(m => m.Timestamp)
+            var messages = await this.databaseContext.Messages
+                .Include(messageEntity => messageEntity.Chat)
+                .Where(messageEntity => messageEntity.Chat.Id == chatId && messageEntity.Id >= firstMessageId)
+                .OrderBy(messageEntity => messageEntity.Timestamp)
                 .ToListAsync();
+
+            await PopulateSendersAsync(messages);
+            return messages;
+        }
+
+        private async Task PopulateSendersAsync(IEnumerable<Message> messages)
+        {
+            foreach (var message in messages)
+            {
+                message.Sender = await ResolveSenderAsync(message);
+            }
+        }
+
+        private async Task<Sender> ResolveSenderAsync(Message message)
+        {
+            var senderId = databaseContext.Entry(message).Property<int>("SenderId").CurrentValue;
+
+            if (senderId == BotEngineIdentity.CONSTANT_IDENTIFIER_FOR_DEFAULT_BOT_SYSTEM_USER)
+            {
+                return new BotEngineIdentity(null);
+            }
+
+            return await databaseContext.Senders
+                .FirstOrDefaultAsync(sender => sender.Id == senderId)
+                ?? throw new KeyNotFoundException($"Sender with id {senderId} was not found.");
         }
     }
 }

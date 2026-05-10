@@ -18,17 +18,27 @@ namespace Airport.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<AddOn>>> GetAllAsync()
+        public async Task<ActionResult<IEnumerable<AirportApp.ClassLibrary.Entity.Dto.AddOnDTO>>> GetAllAsync()
         {
             IEnumerable<AddOn> addOns = await addOnRepository.GetAllAddOnsAsync();
-            return Ok(addOns);
+            var addOnTransferObjectList = new List<AirportApp.ClassLibrary.Entity.Dto.AddOnDTO>();
+            foreach (var addOn in addOns)
+            {
+                addOnTransferObjectList.Add(new AirportApp.ClassLibrary.Entity.Dto.AddOnDTO(addOn.Id, addOn.Name, addOn.BasePrice));
+            }
+            return Ok(addOnTransferObjectList);
         }
 
-        [HttpGet("by-ids")]
-        public async Task<ActionResult<IEnumerable<AddOn>>> GetByIdsAsync([FromQuery] List<int> ids)
+        [HttpPost("by-ids")]
+        public async Task<ActionResult<IEnumerable<AirportApp.ClassLibrary.Entity.Dto.AddOnDTO>>> GetByIdsAsync([FromBody] List<int> ids)
         {
             IEnumerable<AddOn> addOns = await addOnRepository.GetAddOnsByIdsAsync(ids);
-            return Ok(addOns);
+            var addOnTransferObjectList = new List<AirportApp.ClassLibrary.Entity.Dto.AddOnDTO>();
+            foreach (var addOn in addOns)
+            {
+                addOnTransferObjectList.Add(new AirportApp.ClassLibrary.Entity.Dto.AddOnDTO(addOn.Id, addOn.Name, addOn.BasePrice));
+            }
+            return Ok(addOnTransferObjectList);
         }
     }
 }

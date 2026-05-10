@@ -28,7 +28,7 @@ public class FlightTicketApiTests : BaseApiIntegrationTest
         var response = await client.PostAsJsonAsync("/api/FlightTicket/batch", new List<FlightTicket>());
 
         // Assert
-        response.StatusCode.Should().Match(s => s == HttpStatusCode.OK || s == HttpStatusCode.BadRequest);
+        response.StatusCode.Should().Match(statusCode => statusCode == HttpStatusCode.OK || statusCode == HttpStatusCode.BadRequest);
     }
 
     [TestMethod]

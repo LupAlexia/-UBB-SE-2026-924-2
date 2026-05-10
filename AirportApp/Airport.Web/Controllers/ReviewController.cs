@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using AirportApp.ClassLibrary.Entity.Domain.Review;
+using AirportApp.ClassLibrary.Entity.Domain;
 using AirportApp.ClassLibrary.Entity.Dto;
 using AirportApp.ClassLibrary.Repository.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -12,10 +12,11 @@ namespace Airport.Web.Controllers
     public class ReviewController : ControllerBase
     {
         private readonly IRepository<int, Review> reviewRepository;
-
-        public ReviewController(IRepository<int, Review> reviewRepository)
+        private readonly IUserRepository userRepository;
+        public ReviewController(IRepository<int, Review> reviewRepository, IUserRepository userRepository)
         {
             this.reviewRepository = reviewRepository;
+            this.userRepository = userRepository;
         }
 
         [HttpGet]
@@ -40,16 +41,22 @@ namespace Airport.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> CreateAsync([FromBody] CreateReviewDTO dto)
+        public async Task<ActionResult> CreateAsync([FromBody] CreateReviewDTO reviewCreationData)
         {
+            var user = await userRepository.GetByIdAsync(reviewCreationData.userId);
+            if (user == null)
+            {
+                return NotFound($"User with id {reviewCreationData.userId} not found.");
+            }
+
             var review = new Review
             {
-                UserId = dto.userId,
-                Message = dto.message,
-                DutyFreeRating = dto.dutyFreeRating,
-                FlightExperienceRating = dto.flightExperienceRating,
-                StaffFriendlinessRating = dto.staffFriendlinessRating,
-                CleanlinessRating = dto.cleanlinessRating
+                User = user,
+                Message = reviewCreationData.message,
+                DutyFreeRating = reviewCreationData.dutyFreeRating,
+                FlightExperienceRating = reviewCreationData.flightExperienceRating,
+                StaffFriendlinessRating = reviewCreationData.staffFriendlinessRating,
+                CleanlinessRating = reviewCreationData.cleanlinessRating
             };
             int createdId = await reviewRepository.CreateNewEntityAsync(review);
             return CreatedAtAction(nameof(GetByIdAsync), new { id = createdId }, review);

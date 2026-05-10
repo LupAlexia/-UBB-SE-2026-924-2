@@ -11,29 +11,29 @@ namespace AirportApp.ClassLibrary.Repository
 {
     public class MembershipRepository : IMembershipRepository
     {
-        private readonly AirportDbContext dataBaseContext;
+        private readonly AirportDbContext databaseContext;
 
-        public MembershipRepository(AirportDbContext dataBaseContext)
+        public MembershipRepository(AirportDbContext databaseContext)
         {
-            this.dataBaseContext = dataBaseContext ?? throw new ArgumentNullException(nameof(dataBaseContext));
+            this.databaseContext = databaseContext ?? throw new ArgumentNullException(nameof(databaseContext));
         }
 
         public async Task<Membership?> GetMembershipByIdAsync(int id)
         {
-            return await this.dataBaseContext.Memberships
-                .FirstOrDefaultAsync(m => m.Id == id);
+            return await this.databaseContext.Memberships
+                .FirstOrDefaultAsync(membershipEntity => membershipEntity.Id == id);
         }
 
         public async Task<IEnumerable<Membership>> GetAllMembershipsAsync()
         {
-            return await this.dataBaseContext.Memberships.ToListAsync();
+            return await this.databaseContext.Memberships.ToListAsync();
         }
 
         public async Task<IEnumerable<MembershipAddonDiscount>> GetAddonDiscountsAsync(int membershipId)
         {
-            return await this.dataBaseContext.MembershipAddonDiscounts
-                .Include(d => d.AddOn)
-                .Where(d => d.MembershipId == membershipId)
+            return await this.databaseContext.MembershipAddonDiscounts
+                .Include(discount => discount.AddOn)
+                .Where(discount => EF.Property<int>(discount, "MembershipId") == membershipId)
                 .ToListAsync();
         }
     }

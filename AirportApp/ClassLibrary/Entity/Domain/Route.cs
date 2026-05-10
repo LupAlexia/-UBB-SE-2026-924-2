@@ -10,20 +10,9 @@ namespace AirportApp.ClassLibrary.Entity.Domain
         [Key]
         [Column("Route_Id")]
         public int Id { get; set; }
-
-        [ForeignKey(nameof(CompanyId))]
         public Company Company { get; set; } = null!;
 
-        [Required]
-        [Column("Company_Id")]
-        public int CompanyId { get; set; }
-
-        [ForeignKey(nameof(AirportId))]
         public Airport Airport { get; set; } = null!;
-
-        [Required]
-        [Column("Airport_Id")]
-        public int AirportId { get; set; }
 
         [Required]
         [MaxLength(50)]
@@ -47,9 +36,7 @@ namespace AirportApp.ClassLibrary.Entity.Domain
         public Route(Company company, Airport airport, string routeType, DateTime departureTime, DateTime arrivalTime, int capacity)
         {
             Company = company;
-            CompanyId = company.Id;
             Airport = airport;
-            AirportId = airport.Id;
             RouteType = routeType;
             DepartureTime = departureTime;
             ArrivalTime = arrivalTime;
@@ -60,9 +47,7 @@ namespace AirportApp.ClassLibrary.Entity.Domain
         {
             Id = routeId;
             Company = company;
-            CompanyId = company.Id;
             Airport = airport;
-            AirportId = airport.Id;
             RouteType = routeType;
             DepartureTime = departureTime;
             ArrivalTime = arrivalTime;

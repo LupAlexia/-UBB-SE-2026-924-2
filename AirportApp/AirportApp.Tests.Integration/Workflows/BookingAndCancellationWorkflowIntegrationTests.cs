@@ -82,12 +82,6 @@ public class BookingAndCancellationWorkflowIntegrationTests : BaseIntegrationTes
         var tickets = bookingService.CreateTickets(flight!, user, passengers, BasePrice);
         tickets.Should().HaveCount(TwoPassengers);
 
-        foreach (var ticket in tickets)
-        {
-            ticket.UserId = user.Id;
-            ticket.FlightId = flight!.Id;
-        }
-
         var saveResult = await bookingService.SaveTicketsAsync(tickets);
         saveResult.Should().BeTrue();
 

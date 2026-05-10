@@ -2,32 +2,25 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Net.Http;
-using AirportApp.ClassLibrary.DataAccess;
 using AirportApp.ClassLibrary.Entity.Domain;
-using AirportApp.ClassLibrary.Entity.Domain.Chats;
-using AirportApp.ClassLibrary.Entity.Domain.Employee;
-using AirportApp.ClassLibrary.Entity.Domain.Faq.Bot;
-using AirportApp.ClassLibrary.Entity.Domain.Message;
-using AirportApp.ClassLibrary.Entity.Domain.Review;
-using AirportApp.ClassLibrary.Entity.Dto.MappingProfiles;
 using AirportApp.ClassLibrary.Entity.Repository.Database;
 using AirportApp.ClassLibrary.Repository;
 using AirportApp.ClassLibrary.Repository.Interfaces;
-using AirportApp.Src.Proxy;
 using AirportApp.Src.Service;
 using AirportApp.Src.Service.Bot.Strategy;
 using AirportApp.Src.Service.Implementation;
 using AirportApp.Src.Service.Interfaces;
 using AirportApp.Src.ViewModel;
-using AirportApp.Src.ViewModel.Chats;
-using AirportApp.Src.ViewModel.Faq;
-using AirportApp.Src.ViewModel.General;
-using AirportApp.Src.ViewModel.Review;
 using Microsoft.EntityFrameworkCore;
+using AirportApp.Src.ViewModel;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using AirportApp.ClassLibrary.Entity.Dto;
+using AirportApp.Src.Proxy;
+using AirportApp.ClassLibrary.DataAccess;
+using Microsoft.EntityFrameworkCore;
 
 namespace AirportApp
 {
@@ -55,11 +48,11 @@ namespace AirportApp
             {
                 Services = ConfigureServices();
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
                 System.IO.File.WriteAllText(
                 System.IO.Path.Combine(AppContext.BaseDirectory, "crash.txt"),
-                ex.ToString());
+                exception.ToString());
                 throw;
             }
 
@@ -79,7 +72,15 @@ namespace AirportApp
                 }
                 else
                 {
-                    User = await Services.GetService<IUserService>() !.GetByIdAsync(userId);
+                    var userService = Services.GetService<IUserService>();
+                    User = await userService !.GetByIdAsync(userId);
+
+                    // Temporary compatibility: seeded user IDs may be offset to avoid TPH key collisions.
+                    if (User == null && userId > 0 && userId < 100)
+                    {
+                        User = await userService.GetByIdAsync(userId + 100);
+                    }
+
                     return User != null;
                 }
             }
@@ -103,73 +104,74 @@ namespace AirportApp
                 BaseAddress = new Uri("http://localhost:5253/")
             });
 
-            services.AddAutoMapper(cfg =>
+            services.AddAutoMapper(mapperConfiguration =>
             {
-                cfg.AddProfile<UserMappingProfile>();
-                cfg.AddProfile<EmployeeMappingProfile>();
-                cfg.AddProfile<MessageMappingProfile>();
-                cfg.AddProfile<FAQEntryMappingProfile>();
-                cfg.AddProfile<ReviewMappingProfile>();
-                cfg.AddProfile<TicketMappingProfile>();
+                mapperConfiguration.AddProfile<UserMappingProfile>();
+                mapperConfiguration.AddProfile<EmployeeMappingProfile>();
+                mapperConfiguration.AddProfile<MessageMappingProfile>();
+                mapperConfiguration.AddProfile<FAQEntryMappingProfile>();
+                mapperConfiguration.AddProfile<ReviewMappingProfile>();
+                mapperConfiguration.AddProfile<TicketMappingProfile>();
             });
 
             // --- Servicii Mystery Inc (Customer Support) ---
             // Register EF DbContext using connection string from appsettings.json
             services.AddDbContext<AirportDbContext>(options =>
             {
-                var conn = configuration.GetConnectionString("DefaultConnection");
-                options.UseSqlServer(conn);
+                var connectionString = configuration.GetConnectionString("DefaultConnection");
+                options.UseSqlServer(connectionString);
             }, contextLifetime: Microsoft.Extensions.DependencyInjection.ServiceLifetime.Transient, optionsLifetime: Microsoft.Extensions.DependencyInjection.ServiceLifetime.Transient);
-
-            services.AddSingleton<IRepository<int, FAQNode>, FAQNodeRepositoryProxy>();
 
             services.AddTransient<IBotStrategy, DecisionTreeStrategy>();
             services.AddTransient<BotEngineIdentity>();
 
-            services.AddSingleton<IReviewService, ReviewServiceProxy>();
-            services.AddSingleton<IChatService, ChatServiceProxy>();
+            services.AddSingleton<IRepository<int, FAQNode>, DecisionTreeRepositoryProxy>();
             services.AddSingleton<IRepository<int, Chat>, ChatRepositoryProxy>();
             services.AddSingleton<IMessageRepository, MessageRepositoryProxy>();
-            services.AddSingleton<IRepository<int, Message>>(p => p.GetRequiredService<IMessageRepository>());
+            services.AddSingleton<IRepository<int, Message>>(serviceProvider => serviceProvider.GetRequiredService<IMessageRepository>());
+            services.AddSingleton<ITicketCategoryRepository, ComplaintTicketCategoryRepositoryProxy>();
+            services.AddSingleton<ITicketSubcategoryRepository, ComplaintTicketSubcategoryRepositoryProxy>();
+            services.AddSingleton<ITicketRepository, ComplaintTicketRepositoryProxy>();
+
+            services.AddSingleton<UserRepositoryProxy>();
+            services.AddSingleton<IUserRepository>(serviceProvider => serviceProvider.GetRequiredService<UserRepositoryProxy>());
+            services.AddSingleton<IRepository<int, User>>(serviceProvider => serviceProvider.GetRequiredService<UserRepositoryProxy>());
+
+            services.AddSingleton<IEmployeeRepository, EmployeeRepositoryProxy>();
+            services.AddSingleton<IFAQRepository, FAQRepositoryProxy>();
+            services.AddSingleton<IRepository<int, Review>, ReviewRepositoryProxy>();
+
+            services.AddSingleton<IEmployeeService, EmployeeService>();
+            services.AddSingleton<IUserService, UserService>();
             services.AddSingleton<IMessageService, MessageService>();
-
-            services.AddSingleton<IEmployeeService, EmployeeServiceProxy>();
-
-            services.AddSingleton<IUserService, UserServiceProxy>();
+            services.AddSingleton<IComplaintTicketService, ComplaintTicketService>();
+            services.AddSingleton<IComplaintTicketCategoryService, ComplaintTicketCategoryService>();
+            services.AddSingleton<IComplaintTicketSubcategoryService, ComplaintTicketSubcategoryService>();
+            services.AddSingleton<IFAQService, FAQService>();
+            services.AddSingleton<IReviewService, ReviewService>();
+            services.AddSingleton<IChatService, ChatService>();
 
             services.AddTransient<LandingViewModel>();
             services.AddTransient<AllReviewsViewModel>();
             services.AddTransient<AddReviewViewModel>();
             services.AddTransient<ChatViewModel>();
             services.AddTransient<UpperBarViewModel>();
-
-            services.AddSingleton<IComplaintTicketService, ComplaintTicketServiceProxy>();
-            services.AddSingleton<IComplaintTicketCategoryService, ComplaintTicketCategoryServiceProxy>();
-            services.AddSingleton<IComplaintTicketSubcategoryService, ComplaintTicketSubcategoryServiceProxy>();
-
             services.AddTransient<TicketsViewModel>();
-
-            services.AddSingleton<IFAQService, FAQServiceProxy>();
-
             services.AddTransient<FAQViewModel>();
 
             // --- Servicii CloudSpritzers (Flight Tickets) ---
-            services.AddSingleton(new HttpClient
-            {
-                BaseAddress = new Uri("http://localhost:5253/")
-            });
-            services.AddSingleton<IFlightRepository, FlightRepository>();
-            services.AddSingleton<IFlightTicketRepository, FlightTicketRepository>();
-            services.AddSingleton<IAddOnRepository, AddOnRepository>();
-            services.AddSingleton<IMembershipRepository, MembershipRepository>();
-            services.AddSingleton<ICustomerRepository, CustomerRepository>();
-            services.AddSingleton<IAuthService, AuthServiceProxy>();
-            services.AddSingleton<IFlightSearchService, FlightSearchServiceProxy>();
-            services.AddSingleton<IBookingService, BookingServiceProxy>();
+            services.AddSingleton<IFlightRepository, FlightRepositoryProxy>();
+            services.AddSingleton<IFlightTicketRepository, FlightTicketRepositoryProxy>();
+            services.AddSingleton<IAddOnRepository, AddOnRepositoryProxy>();
+            services.AddSingleton<IMembershipRepository, MembershipRepositoryProxy>();
+            services.AddSingleton<ICustomerRepository, CustomerRepositoryProxy>();
+            services.AddSingleton<IAuthService, AuthService>();
+            services.AddSingleton<IFlightSearchService, FlightSearchService>();
+            services.AddSingleton<IBookingService, BookingService>();
             services.AddSingleton<IPricingService, PricingService>();
-            services.AddSingleton<IDashboardService, DashboardServiceProxy>();
-            services.AddSingleton<ICancellationService, CancellationServiceProxy>();
-            services.AddSingleton<IMembershipService, MembershipServiceProxy>();
+            services.AddSingleton<IDashboardService, DashboardService>();
+            services.AddSingleton<ICancellationService, CancellationService>();
+            services.AddSingleton<IMembershipService, MembershipService>();
             services.AddSingleton<NavigationService>();
 
             var provider = services.BuildServiceProvider();
@@ -187,7 +189,7 @@ namespace AirportApp
             return provider;
         }
 
-        protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
+        protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs launchActivatedEventArgs)
         {
             Window = new MainWindow();
             var frame = new Frame();

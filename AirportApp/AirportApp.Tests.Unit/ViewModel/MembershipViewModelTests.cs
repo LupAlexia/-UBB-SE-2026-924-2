@@ -4,8 +4,8 @@ using System.Threading.Tasks;
 using Moq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using AirportApp.ClassLibrary.Entity.Domain;
-using AirportApp.Src.Service;
 using AirportApp.Src.ViewModel;
+using AirportApp.Src.Service.Interfaces;
 
 namespace AirportApp.Tests.Unit.ViewModel
 {

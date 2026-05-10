@@ -3,19 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using AirportApp.ClassLibrary.Entity.Domain.Chats;
 using AirportApp.ClassLibrary.Repository.Interfaces;
 using AirportApp.ClassLibrary.DataAccess;
+using AirportApp.ClassLibrary.Entity.Domain;
 
 namespace AirportApp.ClassLibrary.Repository
 {
     public class ChatDatabaseRepository : IRepository<int, Chat>
     {
-        private readonly AirportDbContext dataBaseContext;
+        private readonly AirportDbContext databaseContext;
 
-        public ChatDatabaseRepository(AirportDbContext dataBaseContext)
+        public ChatDatabaseRepository(AirportDbContext databaseContext)
         {
-            this.dataBaseContext = dataBaseContext ?? throw new ArgumentNullException(nameof(dataBaseContext));
+            this.databaseContext = databaseContext ?? throw new ArgumentNullException(nameof(databaseContext));
         }
 
         public async Task<int> CreateNewEntityAsync(Chat incomingChatEntityToBeSaved)
@@ -25,18 +25,29 @@ namespace AirportApp.ClassLibrary.Repository
                 throw new ArgumentNullException(nameof(incomingChatEntityToBeSaved));
             }
 
-            this.dataBaseContext.Chats.Add(incomingChatEntityToBeSaved);
-            await this.dataBaseContext.SaveChangesAsync();
-            return incomingChatEntityToBeSaved.Id;
+            if (incomingChatEntityToBeSaved.User == null || incomingChatEntityToBeSaved.User.Id <= 0)
+            {
+                throw new ArgumentException("Chat must contain a valid user id.", nameof(incomingChatEntityToBeSaved));
+            }
+
+            var chatToPersist = new Chat
+            {
+                Status = incomingChatEntityToBeSaved.Status
+            };
+
+            this.databaseContext.Chats.Add(chatToPersist);
+            this.databaseContext.Entry(chatToPersist).Property("UserId").CurrentValue = incomingChatEntityToBeSaved.User.Id;
+            await this.databaseContext.SaveChangesAsync();
+            return chatToPersist.Id;
         }
 
         public async Task DeleteByIdAsync(int identifierForChatToBeDeleted)
         {
-            var chat = await this.dataBaseContext.Chats.FirstOrDefaultAsync(c => c.Id == identifierForChatToBeDeleted);
+            var chat = await this.databaseContext.Chats.FirstOrDefaultAsync(chat => chat.Id == identifierForChatToBeDeleted);
             if (chat != null)
             {
-                this.dataBaseContext.Chats.Remove(chat);
-                await this.dataBaseContext.SaveChangesAsync();
+                this.databaseContext.Chats.Remove(chat);
+                await this.databaseContext.SaveChangesAsync();
             }
         }
 
@@ -47,22 +58,25 @@ namespace AirportApp.ClassLibrary.Repository
                 throw new ArgumentNullException(nameof(updatedChatEntityData));
             }
 
-            var chatFound = await this.dataBaseContext.Chats.FirstOrDefaultAsync(c => c.Id == identifierForChatToBeUpdated);
+            var chatFound = await this.databaseContext.Chats.FirstOrDefaultAsync(chatEntity => chatEntity.Id == identifierForChatToBeUpdated);
             if (chatFound != null)
             {
                 chatFound.Status = updatedChatEntityData.Status;
-                await this.dataBaseContext.SaveChangesAsync();
+                await this.databaseContext.SaveChangesAsync();
             }
         }
 
         public async Task<IEnumerable<Chat>> GetAllAsync()
         {
-            return await this.dataBaseContext.Chats.ToListAsync();
+            return await this.databaseContext.Chats.ToListAsync();
         }
 
         public async Task<Chat> GetByIdAsync(int identifierForRequestedChat)
         {
-            var chat = await this.dataBaseContext.Chats.FirstOrDefaultAsync(c => c.Id == identifierForRequestedChat);
+            var chat = await this.databaseContext.Chats
+                .Include(chatEntity => chatEntity.User)
+                .FirstOrDefaultAsync(chatEntity => chatEntity.Id == identifierForRequestedChat);
+
             return chat ?? throw new KeyNotFoundException($"Chat with id {identifierForRequestedChat} not found.");
         }
     }

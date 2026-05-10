@@ -5,6 +5,7 @@ using AirportApp.ClassLibrary.Repository.Interfaces;
 using AirportApp.Src.Service;
 using AirportApp.Tests.Unit.Fixtures;
 using AirportApp.ClassLibrary.DataAccess;
+using AirportApp.Src.Service.Interfaces;
 
 namespace AirportApp.Tests.Integration.Services;
 
@@ -48,7 +49,6 @@ public class PricingServiceIntegrationTests : BaseIntegrationTest
             Phone = MihaiPhone,
             PasswordHash = MihaiPassword,
             Membership = membership,
-            MembershipId = membership.Id
         };
         await userRepository.AddUserAsync(user);
         var databaseUser = await userRepository.GetByEmailAsync(user.Email);

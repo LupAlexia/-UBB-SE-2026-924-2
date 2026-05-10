@@ -5,107 +5,92 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using AirportApp.ClassLibrary.DataAccess;
-using AirportApp.ClassLibrary.Entity.Domain.Faq.Bot;
+using AirportApp.ClassLibrary.Entity.Domain;
 using AirportApp.ClassLibrary.Repository.Interfaces;
 
 namespace AirportApp.ClassLibrary.Entity.Repository.Database
 {
     public class DecisionTreeRepository : IRepository<int, FAQNode>
     {
-        private readonly AirportDbContext dataBaseContext;
+        private readonly AirportDbContext databaseContext;
 
-        public DecisionTreeRepository(AirportDbContext dataBaseContext)
+        public DecisionTreeRepository(AirportDbContext databaseContext)
         {
-            this.dataBaseContext = dataBaseContext ?? throw new ArgumentNullException(nameof(dataBaseContext));
+            this.databaseContext = databaseContext ?? throw new ArgumentNullException(nameof(databaseContext));
         }
 
         public async Task<FAQNode> GetByIdAsync(int id)
         {
-            var node = await this.dataBaseContext.FaqNodes
-                .Include(n => n.Options)
-                .FirstOrDefaultAsync(n => n.NodeId == id);
+            var node = await this.databaseContext.FaqNodes
+                .Include(nodeEntity => nodeEntity.Options)
+                .ThenInclude(option => option.NextOption)
+                .FirstOrDefaultAsync(nodeEntity => nodeEntity.NodeId == id);
 
-            if (node == null)
-            {
-                return null;
-            }
-
-            var options = node.Options
-                .Select(o => new FAQOption(o.Label, o.NextOptionId))
-                .ToImmutableArray();
-
-            return new FAQNode(node.NodeId, node.QuestionText, options, node.IsFinalAnswer);
+            return node ?? throw new KeyNotFoundException($"FAQNode with id {id} was not found.");
         }
 
         public async Task<int> CreateNewEntityAsync(FAQNode incomingFAQNodeEntityToBeSaved)
         {
-            var nodeEntity = new FAQNodeEntity
+            var nodeEntity = new FAQNode
             {
-                QuestionText = incomingFAQNodeEntityToBeSaved.questionText,
-                IsFinalAnswer = incomingFAQNodeEntityToBeSaved.isFinalAnswer
+                QuestionText = incomingFAQNodeEntityToBeSaved.QuestionText,
+                IsFinalAnswer = incomingFAQNodeEntityToBeSaved.IsFinalAnswer
             };
 
-            foreach (var opt in incomingFAQNodeEntityToBeSaved.options)
+            foreach (var option in incomingFAQNodeEntityToBeSaved.Options)
             {
-                nodeEntity.Options.Add(new FAQOptionEntity { Label = opt.label, NextOptionId = opt.nextOptionId });
+                var optionEntity = new FAQOption(option.Label, option.NextOption);
+                nodeEntity.Options.Add(optionEntity);
             }
 
-            this.dataBaseContext.FaqNodes.Add(nodeEntity);
-            await this.dataBaseContext.SaveChangesAsync();
+            this.databaseContext.FaqNodes.Add(nodeEntity);
+            await this.databaseContext.SaveChangesAsync();
 
             return nodeEntity.NodeId;
         }
 
-        public async Task DeleteByIdAsync(int id)
+        public async Task DeleteByIdAsync(int nodeIdentifier)
         {
-            var node = await this.dataBaseContext.FaqNodes.Include(n => n.Options).FirstOrDefaultAsync(n => n.NodeId == id);
+            var node = await this.databaseContext.FaqNodes.Include(nodeEntity => nodeEntity.Options).FirstOrDefaultAsync(nodeEntity => nodeEntity.NodeId == nodeIdentifier);
             if (node == null)
             {
                 return;
             }
 
-            if (node.Options != null && node.Options.Any())
-            {
-                this.dataBaseContext.FaqOptions.RemoveRange(node.Options);
-            }
-
-            this.dataBaseContext.FaqNodes.Remove(node);
-            await this.dataBaseContext.SaveChangesAsync();
+            this.databaseContext.FaqNodes.Remove(node);
+            await this.databaseContext.SaveChangesAsync();
         }
 
         public async Task UpdateByIdAsync(int id, FAQNode updatedFAQNodeEntityData)
         {
-            var node = await this.dataBaseContext.FaqNodes.Include(n => n.Options).FirstOrDefaultAsync(n => n.NodeId == id);
+            var node = await this.databaseContext.FaqNodes.Include(node => node.Options).FirstOrDefaultAsync(node => node.NodeId == id);
             if (node == null)
             {
                 return;
             }
 
-            node.QuestionText = updatedFAQNodeEntityData.questionText;
-            node.IsFinalAnswer = updatedFAQNodeEntityData.isFinalAnswer;
+            node.QuestionText = updatedFAQNodeEntityData.QuestionText;
+            node.IsFinalAnswer = updatedFAQNodeEntityData.IsFinalAnswer;
 
-            this.dataBaseContext.FaqOptions.RemoveRange(node.Options);
             node.Options.Clear();
 
-            foreach (var opt in updatedFAQNodeEntityData.options)
+            foreach (var option in updatedFAQNodeEntityData.Options)
             {
-                node.Options.Add(new FAQOptionEntity { NodeId = id, Label = opt.label, NextOptionId = opt.nextOptionId });
+                var optionEntity = new FAQOption(option.Label, option.NextOption);
+                node.Options.Add(optionEntity);
             }
 
-            await this.dataBaseContext.SaveChangesAsync();
+            await this.databaseContext.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<FAQNode>> GetAllAsync()
         {
-            var nodes = await this.dataBaseContext.FaqNodes
-                .Include(n => n.Options)
+            var nodes = await this.databaseContext.FaqNodes
+                .Include(node => node.Options)
+                .ThenInclude(option => option.NextOption)
                 .ToListAsync();
 
-            return nodes.Select(n => new FAQNode(
-                n.NodeId,
-                n.QuestionText,
-                n.Options.Select(o => new FAQOption(o.Label, o.NextOptionId)).ToImmutableArray(),
-                n.IsFinalAnswer));
+            return nodes;
         }
     }
 }

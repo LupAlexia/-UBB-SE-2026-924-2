@@ -3,8 +3,7 @@ using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using AirportApp.ClassLibrary.Entity.Domain;
-
-using AirportApp.Src.Service;
+using AirportApp.Src.Service.Interfaces;
 
 namespace AirportApp.Src.ViewModel
 {
@@ -172,9 +171,9 @@ namespace AirportApp.Src.ViewModel
                         UseShellExecute = true
                     });
                 }
-                catch (Exception ex)
+                catch (Exception exception)
                 {
-                    System.Diagnostics.Debug.WriteLine($"Failed to generate PDF: {ex.Message}");
+                    System.Diagnostics.Debug.WriteLine($"Failed to generate PDF: {exception.Message}");
                 }
             }
         }

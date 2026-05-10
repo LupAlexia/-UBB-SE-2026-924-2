@@ -12,8 +12,6 @@ namespace AirportApp.ClassLibrary.Entity.Dto
         public string Text { get; set; }
         public DateTimeOffset Timestamp { get; set; }
         public int ChatId { get; set; }
-        public int? SenderUserId { get; set; }
-        public int? SenderEmployeeId { get; set; }
-        public int SenderId => SenderUserId ?? 0;
+        public int SenderId { get; set; }
     }
 }

@@ -1,10 +1,6 @@
 using System.Text.Json.Serialization;
 using AirportApp.ClassLibrary.DataAccess;
 using AirportApp.ClassLibrary.Entity.Domain;
-using AirportApp.ClassLibrary.Entity.Domain.Chats;
-using AirportApp.ClassLibrary.Entity.Domain.Faq.Bot;
-using AirportApp.ClassLibrary.Entity.Domain.Message;
-using AirportApp.ClassLibrary.Entity.Domain.Review;
 using AirportApp.ClassLibrary.Entity.Repository.Database;
 using AirportApp.ClassLibrary.Repository;
 using AirportApp.ClassLibrary.Repository.Interfaces;
@@ -14,9 +10,9 @@ namespace Airport.Web
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static void Main(string[] arguments)
         {
-            var builder = WebApplication.CreateBuilder(args);
+            var builder = WebApplication.CreateBuilder(arguments);
             builder.WebHost.UseUrls("http://localhost:5253");
 
             builder.Services.AddDbContext<AirportDbContext>(options =>
@@ -37,6 +33,7 @@ namespace Airport.Web
             builder.Services.AddScoped<IRepository<int, Chat>, ChatDatabaseRepository>();
             builder.Services.AddScoped<IMessageRepository, MessageDatabaseRepository>();
             builder.Services.AddScoped<IRepository<int, Review>, ReviewRepository>();
+            builder.Services.AddScoped<IRepository<int, Sender>, SenderRepository>();
             builder.Services.AddScoped<IRepository<int, FAQNode>, DecisionTreeRepository>();
 
             builder.Services.AddControllers(options =>
