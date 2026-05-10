@@ -19,7 +19,6 @@ public static class UserFixture
             Username = username,
             Phone = phone,
             Membership = membership,
-            MembershipId = membership?.Id
         };
     }
 

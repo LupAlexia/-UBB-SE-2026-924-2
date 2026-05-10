@@ -29,10 +29,9 @@ namespace AirportApp.Tests.Unit.Services
             testUser = new User(1, "John Doe", "john@test.com");
             testChat = new Chat(1, testUser, ChatStatus.Active);
 
-            var options1 = ImmutableArray.Create(new FAQOption("Go to 2", 2));
-            fakeDatabase[1] = new FAQNode(1, "Root Node", options1, false);
-
             fakeDatabase[2] = new FAQNode(2, "Second Node", ImmutableArray<FAQOption>.Empty, true);
+            var options1 = ImmutableArray.Create(new FAQOption("Go to 2", fakeDatabase[2]));
+            fakeDatabase[1] = new FAQNode(1, "Root Node", options1, false);
 
             restartId = (int)BotStandardMessages.RestartConversation;
             if (!fakeDatabase.ContainsKey(restartId))
@@ -68,7 +67,7 @@ namespace AirportApp.Tests.Unit.Services
             var mockBotEngine = new BotEngineIdentity(strategy);
             var resultedSelectedNode = await strategy.ProcessIncomingUserMessageAndDetermineNextDecisionTreeNodeAsync(mockBotEngine, mockMessage);
 
-            Assert.AreEqual(fakeDatabase[restartId].questionText, resultedSelectedNode.GetMessage());
+            Assert.AreEqual(fakeDatabase[restartId].QuestionText, resultedSelectedNode.GetMessage());
         }
 
         [TestMethod]

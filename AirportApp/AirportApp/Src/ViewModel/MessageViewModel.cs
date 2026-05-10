@@ -61,7 +61,7 @@ namespace AirportApp.Src.ViewModel
 
             BotMessage botReply = await messageService.SendMessageAsync(chatId, sender, selectedOption);
 
-            Messages.Add(mapper.Map<MessageDTO>(new Message(sender, botReply.GetChat(), selectedOption.label)));
+            Messages.Add(mapper.Map<MessageDTO>(new Message(sender, botReply.GetChat(), selectedOption.Label)));
             Messages.Add(mapper.Map<MessageDTO>(botReply));
         }
     }

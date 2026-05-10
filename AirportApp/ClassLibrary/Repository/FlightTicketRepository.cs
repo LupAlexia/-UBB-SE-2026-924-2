@@ -39,7 +39,24 @@ namespace AirportApp.ClassLibrary.Repository
 
         public async Task AddTicketAsync(FlightTicket ticket)
         {
+            if (ticket == null)
+            {
+                throw new ArgumentNullException(nameof(ticket));
+            }
+
+            if (ticket.User == null || ticket.User.Id <= 0)
+            {
+                throw new ArgumentException("Flight ticket must contain a valid user.", nameof(ticket));
+            }
+
+            if (ticket.Flight == null || ticket.Flight.Id <= 0)
+            {
+                throw new ArgumentException("Flight ticket must contain a valid flight.", nameof(ticket));
+            }
+
             this.dataBaseContext.Add(ticket);
+            this.dataBaseContext.Entry(ticket).Property("UserId").CurrentValue = ticket.User.Id;
+            this.dataBaseContext.Entry(ticket).Property("FlightId").CurrentValue = ticket.Flight.Id;
             await this.dataBaseContext.SaveChangesAsync();
         }
 
@@ -108,13 +125,16 @@ namespace AirportApp.ClassLibrary.Repository
             {
                 for (int ticketIndex = 0; ticketIndex < tickets.Count; ticketIndex++)
                 {
-                    var ticket = tickets[ticketIndex];
+                        var ticket = tickets[ticketIndex];
+
+                        // Capture IDs before clearing navigation properties
+                        var userId = ticket.User?.Id ?? 0;
+                        var flightId = ticket.Flight?.Id ?? 0;
 
                     // Reset navigation properties to null to prevent EF re-insertion errors
                     ticket.User = null;
                     ticket.Flight = null;
 
-                    // Get add-on IDs for this ticket
                     var currentAddOnIds = (addOnIds != null && ticketIndex < addOnIds.Count)
                         ? addOnIds[ticketIndex]
                         : new List<int>();
@@ -139,6 +159,17 @@ namespace AirportApp.ClassLibrary.Repository
                     }
 
                     this.dataBaseContext.FlightTickets.Add(ticket);
+
+                    // Set shadow foreign key values so EF inserts correct FK columns
+                    if (userId > 0)
+                    {
+                        this.dataBaseContext.Entry(ticket).Property("UserId").CurrentValue = userId;
+                    }
+
+                    if (flightId > 0)
+                    {
+                        this.dataBaseContext.Entry(ticket).Property("FlightId").CurrentValue = flightId;
+                    }
                 }
 
                 await this.dataBaseContext.SaveChangesAsync();
@@ -147,7 +178,7 @@ namespace AirportApp.ClassLibrary.Repository
             catch (Exception ex)
             {
                 // Log the exception for debugging
-                System.Diagnostics.Debug.WriteLine($"Error saving tickets: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"Error saving tickets: {ex}");
                 return false;
             }
         }

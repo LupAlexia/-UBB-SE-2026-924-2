@@ -26,7 +26,7 @@ namespace AirportApp.Tests.Unit
             testUser = new User(1, "Alex", "alex@mail.com");
             testChat = new Chat(10, testUser, ChatStatus.Active);
             testMessage = new Message(testUser, testChat, "Hello");
-            testMessage.SenderUserId = testUser.Id; // Add this line
+            testMessage.Sender = testUser; // Add this line
         }
 
         [TestMethod]
@@ -58,7 +58,7 @@ namespace AirportApp.Tests.Unit
         {
             var resultMessageDataTransferObject = autoMapperInstance.Map<MessageDTO>(testMessage);
 
-            Assert.AreEqual(testUser.UserId, resultMessageDataTransferObject.SenderId);
+            Assert.AreEqual(testUser.UserId, resultMessageDataTransferObject.Sender.RetrieveUniqueDatabaseIdentifierForBot());
         }
 
         [TestMethod]
@@ -66,7 +66,7 @@ namespace AirportApp.Tests.Unit
         {
             var resultMessageDataTransferObject = autoMapperInstance.Map<MessageDTO>(testMessage);
 
-            Assert.AreEqual(testUser.RetrieveConfiguredDisplayFullNameForBot(), resultMessageDataTransferObject.SenderName);
+            Assert.AreEqual(testUser.RetrieveConfiguredDisplayFullNameForBot(), resultMessageDataTransferObject.Sender.RetrieveConfiguredDisplayFullNameForBot());
         }
 
         [TestMethod]

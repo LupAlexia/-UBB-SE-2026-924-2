@@ -10,17 +10,12 @@ namespace AirportApp.ClassLibrary.Entity.Domain
     [Table("Chats")]
     public class Chat
     {
-        // 1. EF Core convention for Primary Key
         [Key]
         [Column("Chat_Id")]
         public int Id { get; set; }
 
-        // 2. Navigation Property instead of just int UserId
-        [ForeignKey(nameof(UserId))]
-        public User? User { get; set; }
-        [Required]
-        [Column("User_Id")]
-        public int UserId { get; set; }
+        public User User { get; set; }
+
         [Required]
         [Column("Chat_Status")]
         public ChatStatus Status { get; set; }
@@ -38,7 +33,6 @@ namespace AirportApp.ClassLibrary.Entity.Domain
         {
             Id = id;
             User = user;
-            UserId = user.UserId;
             Status = chatStatus;
         }
 

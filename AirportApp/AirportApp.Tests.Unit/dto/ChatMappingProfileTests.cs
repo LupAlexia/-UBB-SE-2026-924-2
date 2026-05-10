@@ -39,7 +39,7 @@ public class ChatMappingProfileTests
     {
         var resultedDataTransferObject = mapper.Map<ChatDTO>(chat);
 
-        Assert.AreEqual(chat.UserId, resultedDataTransferObject.userId);
+        Assert.AreEqual(chat.User.Id, resultedDataTransferObject.userId);
     }
 
     [TestMethod]

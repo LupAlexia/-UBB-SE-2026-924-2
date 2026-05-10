@@ -37,14 +37,22 @@ namespace AirportApp.Src.Service.Bot.Strategy
 
             string extractedTextContentFromIncomingUserMessage = incomingUserMessage.Text;
 
-            FAQOption? selectedUserOptionMatchingIncomingMessageText = currentlyActiveConversationDecisionTreeNode.options.FirstOrDefault((option) => option.label.Equals(extractedTextContentFromIncomingUserMessage));
+            FAQOption? selectedUserOptionMatchingIncomingMessageText = currentlyActiveConversationDecisionTreeNode.Options.FirstOrDefault((option) => option.Label.Equals(extractedTextContentFromIncomingUserMessage));
             if (selectedUserOptionMatchingIncomingMessageText == null)
             {
                 var restartNode = await repositoryForAccessingFrequentlyAskedQuestionsDecisionNodes.GetByIdAsync((int)BotStandardMessages.RestartConversation);
                 return new BotMessage.BotMessageBuilder(activeBotEngineInstance, incomingUserMessage.GetChat(), CONSTANT_VALUE_REPRESENTING_UNASSIGNED_DATABASE_IDENTIFIER, restartNode).Build();
             }
 
-            FAQNode nextQuestion = await repositoryForAccessingFrequentlyAskedQuestionsDecisionNodes.GetByIdAsync(selectedUserOptionMatchingIncomingMessageText.nextOptionId);
+            FAQNode nextQuestion = selectedUserOptionMatchingIncomingMessageText.NextOption
+                ?? await repositoryForAccessingFrequentlyAskedQuestionsDecisionNodes.GetByIdAsync(1);
+
+            // Fetch the next node fully from repository to ensure its options are loaded
+            if (nextQuestion != null)
+            {
+                nextQuestion = await repositoryForAccessingFrequentlyAskedQuestionsDecisionNodes.GetByIdAsync(nextQuestion.NodeId);
+            }
+
             currentlyActiveConversationDecisionTreeNode = nextQuestion;
 
             return new BotMessage.BotMessageBuilder(activeBotEngineInstance, incomingUserMessage.GetChat(), CONSTANT_VALUE_REPRESENTING_UNASSIGNED_DATABASE_IDENTIFIER, nextQuestion).Build();
