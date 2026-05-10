@@ -27,14 +27,14 @@ namespace Airport.Web.Controllers
         public async Task<ActionResult<IEnumerable<MessageDTO>>> GetAllAsync()
         {
             IEnumerable<Message> messages = await messageRepository.GetAllAsync();
-            var dtos = messages.Select(m => new MessageDTO
+            var dtos = messages.Select(messageEntity => new MessageDTO
             {
-                MessageId = m.Id,
-                MessageText = m.Text,
-                Timestamp = m.Timestamp,
-                ChatId = m.Chat.Id,
-                SenderId = m.Sender.RetrieveUniqueDatabaseIdentifierForBot(),
-                Sender = m.Sender
+                MessageId = messageEntity.Id,
+                MessageText = messageEntity.Text,
+                Timestamp = messageEntity.Timestamp,
+                ChatId = messageEntity.Chat.Id,
+                SenderId = messageEntity.Sender.RetrieveUniqueDatabaseIdentifierForBot(),
+                Sender = messageEntity.Sender
             });
             return Ok(dtos);
         }
@@ -120,14 +120,14 @@ namespace Airport.Web.Controllers
         public async Task<ActionResult<IEnumerable<MessageDTO>>> GetByChatIdAsync(int chatId)
         {
             IEnumerable<Message> messages = await messageRepository.GetByChatIdAsync(chatId);
-            var dtos = messages.Select(m => new MessageDTO
+            var dtos = messages.Select(messageEntity => new MessageDTO
             {
-                MessageId = m.Id,
-                MessageText = m.Text,
-                Timestamp = m.Timestamp,
-                ChatId = m.Chat.Id,
-                SenderId = m.Sender.RetrieveUniqueDatabaseIdentifierForBot(),
-                Sender = m.Sender
+                MessageId = messageEntity.Id,
+                MessageText = messageEntity.Text,
+                Timestamp = messageEntity.Timestamp,
+                ChatId = messageEntity.Chat.Id,
+                SenderId = messageEntity.Sender.RetrieveUniqueDatabaseIdentifierForBot(),
+                Sender = messageEntity.Sender
             });
             return Ok(dtos);
         }
@@ -143,13 +143,13 @@ namespace Airport.Web.Controllers
         public async Task<ActionResult<IEnumerable<MessageDTO>>> GetByChatIdWithSendersAsync(int chatId)
         {
             var messages = await messageRepository.GetByChatIdAsync(chatId);
-            var result = messages.Select(m => new MessageDTO
+            var result = messages.Select(messageEntity => new MessageDTO
             {
-                MessageId = m.Id,
-                MessageText = m.Text,
-                Timestamp = m.Timestamp,
-                ChatId = m.Chat.Id,
-                Sender = m.Sender
+                MessageId = messageEntity.Id,
+                MessageText = messageEntity.Text,
+                Timestamp = messageEntity.Timestamp,
+                ChatId = messageEntity.Chat.Id,
+                Sender = messageEntity.Sender
             });
             return Ok(result);
         }

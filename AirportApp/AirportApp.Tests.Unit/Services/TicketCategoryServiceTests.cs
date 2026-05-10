@@ -55,7 +55,7 @@ namespace AirportApp.Tests.Unit.Src.Service
         [TestMethod]
         public async Task GetCategoryById_WhenRepositoryThrows_ServicePropagatesException()
         {
-            categoryRepositoryMock.GetByIdAsync(Arg.Any<int>()).Returns(x => Task.FromException<ComplaintTicketCategory>(new KeyNotFoundException()));
+            categoryRepositoryMock.GetByIdAsync(Arg.Any<int>()).Returns(response => Task.FromException<ComplaintTicketCategory>(new KeyNotFoundException()));
 
             await Assert.ThrowsExceptionAsync<KeyNotFoundException>(async () => await categoryService.GetCategoryByIdAsync(999));
         }

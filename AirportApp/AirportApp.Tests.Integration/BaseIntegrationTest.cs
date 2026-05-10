@@ -34,111 +34,111 @@ public abstract class BaseIntegrationTest
         return dbContext;
     }
 
-    private static void SeedTestData(AirportDbContext db)
+    private static void SeedTestData(AirportDbContext dataBaseContext)
     {
         // Minimal, idempotent seeding used by integration tests. Keep it small to
         // avoid depending on unrelated parts of the production seed.
-        if (!db.Users.Any())
+        if (!dataBaseContext.Users.Any())
         {
-            db.Users.AddRange(
+            dataBaseContext.Users.AddRange(
                 new User { Id = 101, FullName = "Alice Bot", EmailAddress = "alice@bot.com" },
                 new User { Id = 102, FullName = "Bob Chat", EmailAddress = "bob@chat.com" },
                 new User { Id = 103, FullName = "Mia Passenger", EmailAddress = "mia@example.com" });
-            db.SaveChanges();
+            dataBaseContext.SaveChanges();
         }
 
-        if (!db.Employees.Any())
+        if (!dataBaseContext.Employees.Any())
         {
-            db.Employees.AddRange(
+            dataBaseContext.Employees.AddRange(
                 new Employee { Id = 1, FullName = "Alice Smith", EmailAddress = "alice@acme.com", AssignedDepartment = EmployeeDepartment.MEDICAL },
                 new Employee { Id = 2, FullName = "Bob Johnson", EmailAddress = "bob@contoso.com", AssignedDepartment = EmployeeDepartment.LEGAL });
-            db.SaveChanges();
+            dataBaseContext.SaveChanges();
         }
 
-        if (!db.Companies.Any())
+        if (!dataBaseContext.Companies.Any())
         {
-            db.Companies.AddRange(
+            dataBaseContext.Companies.AddRange(
                 new Company { Id = 1, Name = "Acme Airlines" },
                 new Company { Id = 2, Name = "Contoso Air" });
-            db.SaveChanges();
+            dataBaseContext.SaveChanges();
         }
 
-        if (!db.Airports.Any())
+        if (!dataBaseContext.Airports.Any())
         {
-            db.Airports.AddRange(
+            dataBaseContext.Airports.AddRange(
                 new AirportApp.ClassLibrary.Entity.Domain.Airport { Id = 1, AirportCode = "LAX", City = "Los Angeles" },
                 new AirportApp.ClassLibrary.Entity.Domain.Airport { Id = 2, AirportCode = "JFK", City = "New York" });
-            db.SaveChanges();
+            dataBaseContext.SaveChanges();
         }
 
-        if (!db.Gates.Any())
+        if (!dataBaseContext.Gates.Any())
         {
-            var airport1 = db.Airports.FirstOrDefault(a => a.Id == 1);
-            var airport2 = db.Airports.FirstOrDefault(a => a.Id == 2);
+            var airport1 = dataBaseContext.Airports.FirstOrDefault(airport => airport.Id == 1);
+            var airport2 = dataBaseContext.Airports.FirstOrDefault(airport => airport.Id == 2);
             if (airport1 != null && airport2 != null)
             {
-                db.Gates.AddRange(
+                dataBaseContext.Gates.AddRange(
                     new Gate { Id = 1, GateName = "A1", Airport = airport1 },
                     new Gate { Id = 2, GateName = "B2", Airport = airport2 });
-                db.SaveChanges();
+                dataBaseContext.SaveChanges();
             }
         }
 
-        if (!db.Routes.Any())
+        if (!dataBaseContext.Routes.Any())
         {
-            var comp1 = db.Companies.FirstOrDefault(c => c.Id == 1);
-            var ap1 = db.Airports.FirstOrDefault(a => a.Id == 1);
+            var comp1 = dataBaseContext.Companies.FirstOrDefault(company => company.Id == 1);
+            var ap1 = dataBaseContext.Airports.FirstOrDefault(airport => airport.Id == 1);
             if (comp1 != null && ap1 != null)
             {
-                db.Routes.Add(new Route { Id = 1, Company = comp1, Airport = ap1, RouteType = "Departure", DepartureTime = DateTime.Now.AddDays(1), ArrivalTime = DateTime.Now.AddDays(1).AddHours(3), Capacity = 100 });
-                db.SaveChanges();
+                dataBaseContext.Routes.Add(new Route { Id = 1, Company = comp1, Airport = ap1, RouteType = "Departure", DepartureTime = DateTime.Now.AddDays(1), ArrivalTime = DateTime.Now.AddDays(1).AddHours(3), Capacity = 100 });
+                dataBaseContext.SaveChanges();
             }
         }
 
-        if (!db.Flights.Any())
+        if (!dataBaseContext.Flights.Any())
         {
-            var route = db.Routes.FirstOrDefault(r => r.Id == 1);
-            var gate = db.Gates.FirstOrDefault(g => g.Id == 1);
+            var route = dataBaseContext.Routes.FirstOrDefault(route => route.Id == 1);
+            var gate = dataBaseContext.Gates.FirstOrDefault(gate => gate.Id == 1);
             if (route != null && gate != null)
             {
-                db.Flights.Add(new AirportApp.ClassLibrary.Entity.Domain.Flight(1, route, gate, DateTime.Now.AddDays(1), "AC100"));
-                db.SaveChanges();
+                dataBaseContext.Flights.Add(new AirportApp.ClassLibrary.Entity.Domain.Flight(1, route, gate, DateTime.Now.AddDays(1), "AC100"));
+                dataBaseContext.SaveChanges();
             }
         }
 
         // Seed AddOns, Memberships and membership-addon discounts when model seeding was skipped
-        if (!db.AddOns.Any())
+        if (!dataBaseContext.AddOns.Any())
         {
-            db.AddOns.AddRange(
+            dataBaseContext.AddOns.AddRange(
                 new AddOn { Id = 1, Name = "Extra Baggage", BasePrice = 30f },
                 new AddOn { Id = 2, Name = "Priority Boarding", BasePrice = 15f },
                 new AddOn { Id = 3, Name = "Seat Selection", BasePrice = 12f },
                 new AddOn { Id = 4, Name = "Lounge Access", BasePrice = 45f });
-            db.SaveChanges();
+            dataBaseContext.SaveChanges();
         }
 
-        if (!db.Memberships.Any())
+        if (!dataBaseContext.Memberships.Any())
         {
-            db.Memberships.AddRange(
+            dataBaseContext.Memberships.AddRange(
                 new Membership { Id = 1, Name = "Silver", FlightDiscountPercentage = 5f },
                 new Membership { Id = 2, Name = "Gold", FlightDiscountPercentage = 15f },
                 new Membership { Id = 3, Name = "Platinum", FlightDiscountPercentage = 25f });
-            db.SaveChanges();
+            dataBaseContext.SaveChanges();
         }
 
-        if (!db.MembershipAddonDiscounts.Any())
+        if (!dataBaseContext.MembershipAddonDiscounts.Any())
         {
-            var m1 = db.Memberships.FirstOrDefault(m => m.Id == 1);
-            var m2 = db.Memberships.FirstOrDefault(m => m.Id == 2);
-            var m3 = db.Memberships.FirstOrDefault(m => m.Id == 3);
-            var a1 = db.AddOns.FirstOrDefault(a => a.Id == 1);
-            var a2 = db.AddOns.FirstOrDefault(a => a.Id == 2);
-            var a3 = db.AddOns.FirstOrDefault(a => a.Id == 3);
-            var a4 = db.AddOns.FirstOrDefault(a => a.Id == 4);
+            var m1 = dataBaseContext.Memberships.FirstOrDefault(membership => membership.Id == 1);
+            var m2 = dataBaseContext.Memberships.FirstOrDefault(membership => membership.Id == 2);
+            var m3 = dataBaseContext.Memberships.FirstOrDefault(membership => membership.Id == 3);
+            var a1 = dataBaseContext.AddOns.FirstOrDefault(addon => addon.Id == 1);
+            var a2 = dataBaseContext.AddOns.FirstOrDefault(addon => addon.Id == 2);
+            var a3 = dataBaseContext.AddOns.FirstOrDefault(addon => addon.Id == 3);
+            var a4 = dataBaseContext.AddOns.FirstOrDefault(addon => addon.Id == 4);
 
             if (m1 != null && m2 != null && m3 != null && a1 != null && a2 != null)
             {
-                db.MembershipAddonDiscounts.AddRange(
+                dataBaseContext.MembershipAddonDiscounts.AddRange(
                     new MembershipAddonDiscount(m1, a1, 10f),
                     new MembershipAddonDiscount(m1, a2, 10f),
                     new MembershipAddonDiscount(m2, a1, 20f),
@@ -147,24 +147,24 @@ public abstract class BaseIntegrationTest
                 // extra discounts for premium
                 if (a3 != null)
                 {
-                    db.MembershipAddonDiscounts.Add(new MembershipAddonDiscount(m3, a3, 30f));
+                    dataBaseContext.MembershipAddonDiscounts.Add(new MembershipAddonDiscount(m3, a3, 30f));
                 }
                 if (a4 != null)
                 {
-                    db.MembershipAddonDiscounts.Add(new MembershipAddonDiscount(m3, a4, 35f));
+                    dataBaseContext.MembershipAddonDiscounts.Add(new MembershipAddonDiscount(m3, a4, 35f));
                 }
 
-                db.SaveChanges();
+                dataBaseContext.SaveChanges();
             }
         }
 
-        if (!db.Chats.Any())
+        if (!dataBaseContext.Chats.Any())
         {
-            var u101 = db.Users.FirstOrDefault(u => u.Id == 101);
+            var u101 = dataBaseContext.Users.FirstOrDefault(user => user.Id == 101);
             if (u101 != null)
             {
-                db.Chats.Add(new Chat { Id = 1, User = u101, Status = ChatStatus.Active });
-                db.SaveChanges();
+                dataBaseContext.Chats.Add(new Chat { Id = 1, User = u101, Status = ChatStatus.Active });
+                dataBaseContext.SaveChanges();
             }
         }
     }
@@ -173,8 +173,8 @@ public abstract class BaseIntegrationTest
     protected int GetFirstAvailableFlightId(AirportDbContext dbContext)
     {
         var flight = dbContext.Flights
-            .OrderBy(f => f.Date > DateTime.Now ? 0 : 1)
-            .ThenBy(f => f.Date)
+            .OrderBy(flightItem => flightItem.Date > DateTime.Now ? 0 : 1)
+            .ThenBy(flightItem => flightItem.Date)
             .FirstOrDefault();
 
         if (flight == null)

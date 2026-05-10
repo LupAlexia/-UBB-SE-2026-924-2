@@ -11,7 +11,7 @@ public class FlightAndTicketApiTests : BaseApiIntegrationTest
     public async Task GetFlightByIdAsync_ReturnsOkOrNotFound()
     {
         var response = await client.GetAsync("/api/Flight/1");
-        response.StatusCode.Should().Match(s => s == HttpStatusCode.OK || s == HttpStatusCode.NotFound);
+        response.StatusCode.Should().Match(statusCode => statusCode == HttpStatusCode.OK || statusCode == HttpStatusCode.NotFound);
     }
 
     [TestMethod]
@@ -39,6 +39,6 @@ public class FlightAndTicketApiTests : BaseApiIntegrationTest
     public async Task GetTicketByIdAsync_ReturnsOkOrNotFound()
     {
         var response = await client.GetAsync("/api/Ticket/1");
-        response.StatusCode.Should().Match(s => s == HttpStatusCode.OK || s == HttpStatusCode.NotFound);
+        response.StatusCode.Should().Match(statusCode => statusCode == HttpStatusCode.OK || statusCode == HttpStatusCode.NotFound);
     }
 }

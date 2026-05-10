@@ -86,15 +86,15 @@ namespace AirportApp.Src.Proxy
                         PassengerLastName = dto.passengerLastName,
                         PassengerEmail = dto.passengerEmail,
                         PassengerPhone = dto.passengerPhone,
-                        SelectedAddOns = dto.selectedAddOns?.Select(a => new AddOn(a.id, a.name, a.basePrice)).ToList() ?? new List<AddOn>(),
+                        SelectedAddOns = dto.selectedAddOns?.Select(addOnObject => new AddOn(addOnObject.id, addOnObject.name, addOnObject.basePrice)).ToList() ?? new List<AddOn>(),
                     };
                     tickets.Add(ticket);
                 }
                 return tickets;
             }
-            catch (HttpRequestException ex)
+            catch (HttpRequestException exception)
             {
-                throw new InvalidOperationException($"Failed to retrieve tickets for user {userId}.", ex);
+                throw new InvalidOperationException($"Failed to retrieve tickets for user {userId}.", exception);
             }
         }
 
@@ -102,7 +102,7 @@ namespace AirportApp.Src.Proxy
         {
             try
             {
-                var dto = new AirportApp.ClassLibrary.Entity.Dto.FlightTicketDTO(
+                var dataTransferObject = new AirportApp.ClassLibrary.Entity.Dto.FlightTicketDTO(
                     ticket.Id,
                     ticket.User.Id,
                     ticket.Flight.Id,
@@ -113,9 +113,9 @@ namespace AirportApp.Src.Proxy
                     ticket.PassengerLastName,
                     ticket.PassengerEmail,
                     ticket.PassengerPhone,
-                    ticket.SelectedAddOns?.Select(a => new AirportApp.ClassLibrary.Entity.Dto.AddOnDTO(a.Id, a.Name, a.BasePrice)).ToList() ?? new List<AirportApp.ClassLibrary.Entity.Dto.AddOnDTO>());
+                    ticket.SelectedAddOns?.Select(addOnObject => new AirportApp.ClassLibrary.Entity.Dto.AddOnDTO(addOnObject.Id, addOnObject.Name, addOnObject.BasePrice)).ToList() ?? new List<AirportApp.ClassLibrary.Entity.Dto.AddOnDTO>());
 
-                var response = await httpClient.PostAsJsonAsync(BaseUrl, dto);
+                var response = await httpClient.PostAsJsonAsync(BaseUrl, dataTransferObject);
                 response.EnsureSuccessStatusCode();
             }
             catch (HttpRequestException ex)
@@ -131,9 +131,9 @@ namespace AirportApp.Src.Proxy
                 var response = await httpClient.PutAsJsonAsync($"{BaseUrl}/{ticketId}/status", status);
                 response.EnsureSuccessStatusCode();
             }
-            catch (HttpRequestException ex)
+            catch (HttpRequestException exception)
             {
-                throw new InvalidOperationException($"Failed to update status for ticket {ticketId}.", ex);
+                throw new InvalidOperationException($"Failed to update status for ticket {ticketId}.", exception);
             }
         }
 
@@ -191,7 +191,7 @@ namespace AirportApp.Src.Proxy
                     ticket.PassengerLastName,
                     ticket.PassengerEmail,
                     ticket.PassengerPhone,
-                    ticket.SelectedAddOns?.Select(a => new AirportApp.ClassLibrary.Entity.Dto.AddOnDTO(a.Id, a.Name, a.BasePrice)).ToList() ?? new List<AirportApp.ClassLibrary.Entity.Dto.AddOnDTO>())).ToList();
+                    ticket.SelectedAddOns?.Select(addOnEntity => new AirportApp.ClassLibrary.Entity.Dto.AddOnDTO(addOnEntity.Id, addOnEntity.Name, addOnEntity.BasePrice)).ToList() ?? new List<AirportApp.ClassLibrary.Entity.Dto.AddOnDTO>())).ToList();
 
                 var request = new AirportApp.ClassLibrary.Entity.Dto.SaveTicketsRequestDTO
                 {

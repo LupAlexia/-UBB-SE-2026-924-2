@@ -128,14 +128,14 @@ namespace AirportApp
             services.AddSingleton<IRepository<int, FAQNode>, DecisionTreeRepositoryProxy>();
             services.AddSingleton<IRepository<int, Chat>, ChatRepositoryProxy>();
             services.AddSingleton<IMessageRepository, MessageRepositoryProxy>();
-            services.AddSingleton<IRepository<int, Message>>(p => p.GetRequiredService<IMessageRepository>());
+            services.AddSingleton<IRepository<int, Message>>(serviceProvider => serviceProvider.GetRequiredService<IMessageRepository>());
             services.AddSingleton<ITicketCategoryRepository, ComplaintTicketCategoryRepositoryProxy>();
             services.AddSingleton<ITicketSubcategoryRepository, ComplaintTicketSubcategoryRepositoryProxy>();
             services.AddSingleton<ITicketRepository, ComplaintTicketRepositoryProxy>();
 
             services.AddSingleton<UserRepositoryProxy>();
-            services.AddSingleton<IUserRepository>(p => p.GetRequiredService<UserRepositoryProxy>());
-            services.AddSingleton<IRepository<int, User>>(p => p.GetRequiredService<UserRepositoryProxy>());
+            services.AddSingleton<IUserRepository>(serviceProvider => serviceProvider.GetRequiredService<UserRepositoryProxy>());
+            services.AddSingleton<IRepository<int, User>>(serviceProvider => serviceProvider.GetRequiredService<UserRepositoryProxy>());
 
             services.AddSingleton<IEmployeeRepository, EmployeeRepositoryProxy>();
             services.AddSingleton<IFAQRepository, FAQRepositoryProxy>();

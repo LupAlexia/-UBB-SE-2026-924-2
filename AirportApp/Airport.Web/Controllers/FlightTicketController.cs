@@ -39,7 +39,7 @@ namespace Airport.Web.Controllers
                     ticket.PassengerLastName,
                     ticket.PassengerEmail,
                     ticket.PassengerPhone,
-                    ticket.SelectedAddOns?.Select(a => new AirportApp.ClassLibrary.Entity.Dto.AddOnDTO(a.Id, a.Name, a.BasePrice)).ToList() ?? new List<AirportApp.ClassLibrary.Entity.Dto.AddOnDTO>(),
+                    ticket.SelectedAddOns?.Select(addOn => new AirportApp.ClassLibrary.Entity.Dto.AddOnDTO(addOn.Id, addOn.Name, addOn.BasePrice)).ToList() ?? new List<AirportApp.ClassLibrary.Entity.Dto.AddOnDTO>(),
                     ticket.Flight != null ? new AirportApp.ClassLibrary.Entity.Dto.FlightDTO(
                         ticket.Flight.Id,
                         ticket.Flight.Route.Id,
@@ -118,9 +118,9 @@ namespace Airport.Web.Controllers
             var tickets = new List<FlightTicket>();
             var addOnIds = request.AddOnIds ?? new List<List<int>>();
 
-            for (int i = 0; i < request.Tickets.Count; i++)
+            for (int counter = 0; counter < request.Tickets.Count; counter++)
             {
-                var dto = request.Tickets[i];
+                var dto = request.Tickets[counter];
                 tickets.Add(new FlightTicket
                 {
                     Id = dto.id,
@@ -135,9 +135,9 @@ namespace Airport.Web.Controllers
                     PassengerPhone = dto.passengerPhone
                 });
 
-                if (addOnIds.Count <= i && dto.selectedAddOns != null)
+                if (addOnIds.Count <= counter && dto.selectedAddOns != null)
                 {
-                    addOnIds.Add(dto.selectedAddOns.Select(a => a.id).ToList());
+                    addOnIds.Add(dto.selectedAddOns.Select(addOn => addOn.id).ToList());
                 }
             }
 

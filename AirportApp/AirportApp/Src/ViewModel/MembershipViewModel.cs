@@ -24,11 +24,11 @@ namespace AirportApp.Src.ViewModel
 
         public ObservableCollection<string> AddonBenefits { get; set; }
 
-        public MembershipDisplayModel(Membership m)
+        public MembershipDisplayModel(Membership memebershipToDisplay)
         {
-            MembershipId = m.Id;
-            Name = m.Name;
-            DiscountText = $"{m.FlightDiscountPercentage}% Off Flights";
+            MembershipId = memebershipToDisplay.Id;
+            Name = memebershipToDisplay.Name;
+            DiscountText = $"{memebershipToDisplay.FlightDiscountPercentage}% Off Flights";
 
             CardColor = Name.ToLower() switch
             {
@@ -39,9 +39,9 @@ namespace AirportApp.Src.ViewModel
             };
 
             AddonBenefits = new ObservableCollection<string>();
-            if (m.AddonDiscounts != null)
+            if (memebershipToDisplay.AddonDiscounts != null)
             {
-                foreach (var discount in m.AddonDiscounts)
+                foreach (var discount in memebershipToDisplay.AddonDiscounts)
                 {
                     AddonBenefits.Add($"• {discount.DiscountPercentage}% Off {discount.AddOn.Name}");
                 }
@@ -96,9 +96,9 @@ namespace AirportApp.Src.ViewModel
         private async Task LoadMembershipsAsync()
         {
             var memberships = await this.membershipService.GetAllMembershipsAsync();
-            foreach (var m in memberships)
+            foreach (var memebershipEntity in memberships)
             {
-                this.Memberships.Add(new MembershipDisplayModel(m));
+                this.Memberships.Add(new MembershipDisplayModel(memebershipEntity));
             }
         }
 
