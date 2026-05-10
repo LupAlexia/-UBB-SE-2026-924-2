@@ -87,7 +87,7 @@
           SelectionMode="None">
             <ListView.ItemTemplate>
                 <DataTemplate x:DataType="dto:MessageDTO">
-                    <view:MessageView Margin="0,5" />
+                    <view:MessageControl Margin="0,5" />
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>

@@ -3,11 +3,11 @@ using Microsoft.UI.Xaml.Controls;
 
 namespace AirportApp.Src.View.Message
 {
-    public sealed partial class MessageView : UserControl
+    public sealed partial class MessageControl : UserControl
     {
         public MessageDTO DataTransferObjectContainingMessageDetailsForViewModelBinding => (MessageDTO)DataContext;
 
-        public MessageView()
+        public MessageControl()
         {
             this.InitializeComponent();
             this.DataContextChanged += (senderObjectTriggeringEvent, eventArgumentsContainingDataContextInformation) =>

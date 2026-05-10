@@ -4,11 +4,11 @@ using Microsoft.UI.Xaml.Controls;
 
 namespace AirportApp.Src.View.Review
 {
-    public sealed partial class EmployeeSeeReviews : Page
+    public sealed partial class EmployeeSeeReviewsPage : Page
     {
         public AllReviewsViewModel ViewModel { get; }
 
-        public EmployeeSeeReviews()
+        public EmployeeSeeReviewsPage()
         {
             this.InitializeComponent();
 

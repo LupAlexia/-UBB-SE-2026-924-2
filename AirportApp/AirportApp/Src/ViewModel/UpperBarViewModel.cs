@@ -56,14 +56,14 @@ namespace AirportApp.Src.ViewModel
 
         // Navigation targets are resolved here so the view does not contain branching logic
         public Type LandingPageType => typeof(AirportApp.Src.View.General.LandingPage);
-        public Type FAQPageType => typeof(AirportApp.Src.View.Faq.FAQView);
+        public Type FAQPageType => typeof(AirportApp.Src.View.Faq.FAQPage);
         public Type ChatPageType => typeof(AirportApp.Src.View.Chat.ChatPage);
         public Type TicketsPageType => IsClientView
-            ? typeof(AirportApp.Src.View.Ticket.TicketsView)
-            : typeof(AirportApp.Src.View.Ticket.TicketEmployeeView);
+            ? typeof(AirportApp.Src.View.Ticket.ComplaintTicketPage)
+            : typeof(AirportApp.Src.View.Ticket.TicketEmployeePage);
         public Type ReviewsPageType => IsClientView
             ? typeof(AirportApp.Src.View.Review.ReviewPage)
-            : typeof(AirportApp.Src.View.Review.EmployeeSeeReviews);
+            : typeof(AirportApp.Src.View.Review.EmployeeSeeReviewsPage);
         public Type ChoosingPageType => typeof(AirportApp.Src.View.General.ChoosingPage);
     }
 }

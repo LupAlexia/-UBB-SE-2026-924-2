@@ -29,7 +29,7 @@ namespace AirportApp.Src.View.Review
 
         private async void OnAlertRequested(object? sender, (string Title, string Message) args)
         {
-            var dialog = new MaiBoule(args.Message, args.Title)
+            var dialog = new ErrorDialog(args.Message, args.Title)
             {
                 XamlRoot = this.Content.XamlRoot
             };
@@ -41,7 +41,7 @@ namespace AirportApp.Src.View.Review
         {
             var button = sender as Button;
 
-            Frame.Navigate(typeof(TicketsView));
+            Frame.Navigate(typeof(ComplaintTicketPage));
         }
     }
 }

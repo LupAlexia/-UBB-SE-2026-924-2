@@ -12,7 +12,7 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <general:UpperBar Grid.Row="0" />
+        <general:UpperBarControl Grid.Row="0" />
 
         <Grid Grid.Row="1">
             <ScrollViewer>

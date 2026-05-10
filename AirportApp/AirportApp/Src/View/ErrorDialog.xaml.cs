@@ -8,7 +8,7 @@ namespace AirportApp.Src.View.General
     /// Uses MaiBouleViewModel for data binding.
     /// </summary>
     ///
-    public sealed partial class MaiBoule : ContentDialog
+    public sealed partial class ErrorDialog : ContentDialog
     {
         /// <summary>
         /// The ViewModel containing the dialog's title and message.
@@ -18,7 +18,7 @@ namespace AirportApp.Src.View.General
         /// <summary>
         /// Initializes a new instance of the MaiBoule dialog with default values.
         /// </summary>
-        public MaiBoule()
+        public ErrorDialog()
         {
             ViewModel = new MaiBouleViewModel();
             this.InitializeComponent();
@@ -30,7 +30,7 @@ namespace AirportApp.Src.View.General
         /// </summary>
         /// <param name="errorMessage">The message to display in the dialog.</param>
         /// <param name="textTitle">The title to display in the dialog. Defaults to Warning </param>
-        public MaiBoule(string errorMessage, string textTitle = "Warning") : this()
+        public ErrorDialog(string errorMessage, string textTitle = "Warning") : this()
         {
             ViewModel.Message = errorMessage;
             ViewModel.Title = textTitle;
