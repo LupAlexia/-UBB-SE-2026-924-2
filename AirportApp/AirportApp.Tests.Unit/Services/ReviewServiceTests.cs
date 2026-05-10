@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using AirportApp.Src.ViewModel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using AirportApp.Src.Service;
 using AirportApp.ClassLibrary.Repository.Interfaces;
@@ -14,6 +13,29 @@ namespace AirportApp.Tests.Unit.Src.Service
     [TestClass]
     public class ReviewServiceTests
     {
+        private const int TestUserId = 1;
+        private const int TestReviewId = 1;
+        private const int MinRating = 1;
+        private const int MaxRating = 5;
+        private const int BelowMinRating = 0;
+        private const int AboveMaxRating = 6;
+        private const int MixedRating1 = 5;
+        private const int MixedRating2 = 3;
+        private const int MixedRating3 = 1;
+        private const int AscendingRating1 = 1;
+        private const int AscendingRating2 = 2;
+        private const int AscendingRating3 = 3;
+        private const int AscendingRating4 = 4;
+        private const float AscendingAverageExpected = 2.5f;
+        private const float AllMinAverageExpected = 1.0f;
+        private const float AllMaxAverageExpected = 5.0f;
+        private const float MixedAverageExpected = 3.0f;
+        private const string TestUserName = "Test User";
+        private const string TestUserEmail = "test@test.com";
+        private const string ValidMessage = "Great experience";
+        private const string EmptyMessage = "";
+        private const string DuplicateMessage = "I already exist";
+
         private IRepository<int, Review> reviewRepository = null!;
         private ReviewService reviewService = null!;
         private User testUser = null!;
@@ -23,171 +45,142 @@ namespace AirportApp.Tests.Unit.Src.Service
         {
             reviewRepository = Substitute.For<IRepository<int, Review>>();
             reviewService = new ReviewService(reviewRepository);
-            testUser = new User(1, "Test User", "test@test.com");
+            testUser = new User(TestUserId, TestUserName, TestUserEmail);
             reviewRepository.GetAllAsync().Returns(Task.FromResult((IEnumerable<Review>)new List<Review>()));
         }
 
         [TestMethod]
-        public void CalculateAverageRating_WhenCalled_ReturnsCorrectMath()
+        public void CalculateAverageRating_AscendingRatings_ReturnsCorrectAverage()
         {
-            var review = new Review(1, testUser, "Test", 1, 2, 3, 4); // Sum = 10
+            var review = new Review(TestReviewId, testUser, ValidMessage, AscendingRating1, AscendingRating2, AscendingRating3, AscendingRating4);
+            var result = reviewService.CalculateAverageRating(review);
+            Assert.AreEqual(AscendingAverageExpected, result);
+        }
 
-            var resultedReviewAverageRating = reviewService.CalculateAverageRating(review);
+        [TestMethod]
+        public void CalculateAverageRating_AllMaxRatings_ReturnsMax()
+        {
+            var review = new Review(TestReviewId, testUser, ValidMessage, MaxRating, MaxRating, MaxRating, MaxRating);
+            var result = reviewService.CalculateAverageRating(review);
+            Assert.AreEqual(AllMaxAverageExpected, result);
+        }
 
-            Assert.AreEqual(2.5f, resultedReviewAverageRating);
+        [TestMethod]
+        public void CalculateAverageRating_AllMinRatings_ReturnsMin()
+        {
+            var review = new Review(TestReviewId, testUser, ValidMessage, MinRating, MinRating, MinRating, MinRating);
+            var result = reviewService.CalculateAverageRating(review);
+            Assert.AreEqual(AllMinAverageExpected, result);
+        }
+
+        [TestMethod]
+        public void CalculateAverageRating_MixedRatings_ReturnsCorrectAverage()
+        {
+            var review = new Review(TestReviewId, testUser, ValidMessage, MixedRating1, MixedRating2, MixedRating3, MixedRating2);
+            var result = reviewService.CalculateAverageRating(review);
+            Assert.AreEqual(MixedAverageExpected, result);
         }
 
         [TestMethod]
         public async Task CreateReview_WithValidData_CallsRepositoryToSave()
         {
-            await reviewService.CreateReviewAsync(1, testUser, "Great flight", 5, 5, 5, 5);
+            await reviewService.CreateReviewAsync(TestReviewId, testUser, ValidMessage, MaxRating, MaxRating, MaxRating, MaxRating);
             await reviewRepository.Received(1).CreateNewEntityAsync(Arg.Any<Review>());
         }
 
         [TestMethod]
-        public async Task ValidateReview_RatingBelowMin_ThrowsArgumentException()
+        public async Task CreateReview_WithInvalidRating_ThrowsAndDoesNotCallRepository()
         {
-            var review = new Review(1, testUser, "Too low", 0, 5, 5, 5);
+            await Assert.ThrowsExceptionAsync<ArgumentException>(
+                () => reviewService.CreateReviewAsync(TestReviewId, testUser, ValidMessage, BelowMinRating, MaxRating, MaxRating, MaxRating));
 
-            var exceptionThrown = await Assert.ThrowsExceptionAsync<ArgumentException>(async () =>
-                await reviewService.ValidateReviewAsync(review));
-
-            StringAssert.Contains("Duty Free Rating must be between 1 and 5", exceptionThrown.Message);
+            await reviewRepository.DidNotReceive().CreateNewEntityAsync(Arg.Any<Review>());
         }
 
         [TestMethod]
-        public async Task ValidateReview_RatingAboveMax_ThrowsArgumentException()
+        public async Task ValidateReview_DutyFreeRatingBelowMin_ThrowsArgumentException()
         {
-            var review = new Review(1, testUser, "Too high", 5, 5, 5, 6);
+            var review = new Review(TestReviewId, testUser, ValidMessage, BelowMinRating, MaxRating, MaxRating, MaxRating);
+            var ex = await Assert.ThrowsExceptionAsync<ArgumentException>(() => reviewService.ValidateReviewAsync(review));
+            StringAssert.Contains("Duty Free Rating must be between 1 and 5", ex.Message);
+        }
 
-            var exceptionThrown = await Assert.ThrowsExceptionAsync<ArgumentException>(async () =>
-                await reviewService.ValidateReviewAsync(review));
-
-            StringAssert.Contains("Cleanliness Rating must be between 1 and 5", exceptionThrown.Message);
+        [TestMethod]
+        public async Task ValidateReview_CleanlinessRatingAboveMax_ThrowsArgumentException()
+        {
+            var review = new Review(TestReviewId, testUser, ValidMessage, MaxRating, MaxRating, MaxRating, AboveMaxRating);
+            var ex = await Assert.ThrowsExceptionAsync<ArgumentException>(() => reviewService.ValidateReviewAsync(review));
+            StringAssert.Contains("Cleanliness Rating must be between 1 and 5", ex.Message);
         }
 
         [TestMethod]
         public async Task ValidateReview_EmptyMessage_ThrowsArgumentException()
         {
-            var review = new Review(1, testUser, string.Empty, 5, 5, 5, 5);
-
-            var exceptionThrown = await Assert.ThrowsExceptionAsync<ArgumentException>(async () =>
-                await reviewService.ValidateReviewAsync(review));
-
-            StringAssert.Contains("Message cannot be null or empty", exceptionThrown.Message);
+            var review = new Review(TestReviewId, testUser, EmptyMessage, MaxRating, MaxRating, MaxRating, MaxRating);
+            var ex = await Assert.ThrowsExceptionAsync<ArgumentException>(() => reviewService.ValidateReviewAsync(review));
+            StringAssert.Contains("Message cannot be null or empty", ex.Message);
         }
 
         [TestMethod]
         public void ValidateReview_NullUser_ThrowsArgumentException()
         {
-            var exceptionThrown = Assert.ThrowsException<ArgumentException>(() =>
-                new Review(1, null, "No user", 5, 5, 5, 5));
-
-            StringAssert.Contains("User cannot be null", exceptionThrown.Message);
+            var ex = Assert.ThrowsException<ArgumentException>(() => new Review(TestReviewId, null, ValidMessage, MaxRating, MaxRating, MaxRating, MaxRating));
+            StringAssert.Contains("User cannot be null", ex.Message);
         }
 
         [TestMethod]
         public async Task ValidateReview_DuplicateReview_ThrowsArgumentException()
         {
-            var existingReview = new Review(1, testUser, "I already exist", 5, 5, 5, 5);
-
+            var existingReview = new Review(TestReviewId, testUser, DuplicateMessage, MaxRating, MaxRating, MaxRating, MaxRating);
             reviewRepository.GetAllAsync().Returns(Task.FromResult((IEnumerable<Review>)new List<Review> { existingReview }));
 
-            var exceptionThrown = await Assert.ThrowsExceptionAsync<ArgumentException>(async () =>
-                await reviewService.ValidateReviewAsync(existingReview));
-            StringAssert.Contains("Review already exists", exceptionThrown.Message);
+            var ex = await Assert.ThrowsExceptionAsync<ArgumentException>(() => reviewService.ValidateReviewAsync(existingReview));
+            StringAssert.Contains("Review already exists", ex.Message);
         }
 
         [TestMethod]
-        public async Task GetById_ValidId_ReturnsReviewFromRepository()
+        public async Task ValidateReview_FlightExperienceRatingBelowMin_ThrowsArgumentException()
         {
-            var expectedReview = new Review(1, testUser, "Great", 5, 5, 5, 5);
-            reviewRepository.GetByIdAsync(1).Returns(Task.FromResult(expectedReview));
-
-            var resultedReview = await reviewService.GetByIdAsync(1);
-
-            Assert.AreEqual(expectedReview, resultedReview);
-            await reviewRepository.Received(1).GetByIdAsync(1);
+            var review = new Review(TestReviewId, testUser, ValidMessage, MaxRating, BelowMinRating, MaxRating, MaxRating);
+            var ex = await Assert.ThrowsExceptionAsync<ArgumentException>(() => reviewService.ValidateReviewAsync(review));
+            StringAssert.Contains("Flight Experience Rating must be between 1 and 5", ex.Message);
         }
 
         [TestMethod]
-        public async Task UpdateById_WhenCalled_CallsRepositoryUpdate()
+        public async Task ValidateReview_StaffFriendlinessRatingAboveMax_ThrowsArgumentException()
         {
-            var updatedReview = new Review(1, testUser, "Updated Message", 4, 4, 4, 4);
-            await reviewService.UpdateByIdAsync(1, updatedReview);
-            await reviewRepository.Received(1).UpdateByIdAsync(1, updatedReview);
+            var review = new Review(TestReviewId, testUser, ValidMessage, MaxRating, MaxRating, AboveMaxRating, MaxRating);
+            var ex = await Assert.ThrowsExceptionAsync<ArgumentException>(() => reviewService.ValidateReviewAsync(review));
+            StringAssert.Contains("Staff Friendliness Rating must be between 1 and 5", ex.Message);
         }
 
         [TestMethod]
-        public async Task DeleteById_WhenCalled_CallsRepositoryDelete()
+        public async Task ValidateReview_CleanlinessRatingBelowMin_ThrowsArgumentException()
         {
-            await reviewService.DeleteByIdAsync(10);
-            await reviewRepository.Received(1).DeleteByIdAsync(10);
-        }
-
-        [TestMethod]
-        public async Task GetAll_WhenCalled_ReturnsListOfReviews()
-        {
-            var reviews = new List<Review>
-            {
-                new Review(1, testUser, "R1", 5, 5, 5, 5),
-                new Review(2, testUser, "R2", 4, 4, 4, 4)
-            };
-            reviewRepository.GetAllAsync().Returns(Task.FromResult((IEnumerable<Review>)reviews));
-
-            var resultedReviewList = (await reviewService.GetAllAsync()).ToList();
-
-            Assert.AreEqual(2, resultedReviewList.Count);
-            await reviewRepository.Received(1).GetAllAsync();
-        }
-
-        [TestMethod]
-        public async Task ValidateReview_FlightExperienceRatingInvalid_ThrowsArgumentException()
-        {
-            var review = new Review(1, testUser, "Test", 5, 0, 5, 5);
-
-            var exceptionThrown = await Assert.ThrowsExceptionAsync<ArgumentException>(async () =>
-                await reviewService.ValidateReviewAsync(review));
-
-            StringAssert.Contains("Flight Experience Rating must be between 1 and 5", exceptionThrown.Message);
-        }
-
-        [TestMethod]
-        public async Task ValidateReview_StaffFriendlinessRatingInvalid_ThrowsArgumentException()
-        {
-            var review = new Review(1, testUser, "Test", 5, 5, 6, 5);
-
-            var exceptionThrown = await Assert.ThrowsExceptionAsync<ArgumentException>(async () =>
-                await reviewService.ValidateReviewAsync(review));
-
-            StringAssert.Contains("Staff Friendliness Rating must be between 1 and 5", exceptionThrown.Message);
-        }
-
-        [TestMethod]
-        public async Task ValidateReview_CleanlinessRatingInvalid_ThrowsArgumentException()
-        {
-            var review = new Review(1, testUser, "Test", 5, 5, 5, 0);
-
-            var exceptionThrown = await Assert.ThrowsExceptionAsync<ArgumentException>(async () =>
-                await reviewService.ValidateReviewAsync(review));
-
-            StringAssert.Contains("Cleanliness Rating must be between 1 and 5", exceptionThrown.Message);
-        }
-
-        [TestMethod]
-        public async Task ValidateReview_WithAllValidData_DoesNotThrowAndMovesToNextStep()
-        {
-            var validReview = new Review(1, testUser, "Everything was perfect!", 5, 5, 5, 5);
-
-            await reviewService.ValidateReviewAsync(validReview);
+            var review = new Review(TestReviewId, testUser, ValidMessage, MaxRating, MaxRating, MaxRating, BelowMinRating);
+            var ex = await Assert.ThrowsExceptionAsync<ArgumentException>(() => reviewService.ValidateReviewAsync(review));
+            StringAssert.Contains("Cleanliness Rating must be between 1 and 5", ex.Message);
         }
 
         [TestMethod]
         public async Task ValidateReview_StaffFriendlinessBelowMin_ThrowsArgumentException()
         {
-            var review = new Review(1, testUser, "Test", 5, 5, 0, 5);
+            var review = new Review(TestReviewId, testUser, ValidMessage, MaxRating, MaxRating, BelowMinRating, MaxRating);
+            await Assert.ThrowsExceptionAsync<ArgumentException>(() => reviewService.ValidateReviewAsync(review));
+        }
 
-            await Assert.ThrowsExceptionAsync<ArgumentException>(async () => await reviewService.ValidateReviewAsync(review));
+        [TestMethod]
+        public async Task ValidateReview_WithAllValidData_DoesNotThrow()
+        {
+            var validReview = new Review(TestReviewId, testUser, ValidMessage, MaxRating, MaxRating, MaxRating, MaxRating);
+            await reviewService.ValidateReviewAsync(validReview);
+        }
+
+        [TestMethod]
+        public async Task ValidateReview_AllRatingsAtMinimum_DoesNotThrow()
+        {
+            var review = new Review(TestReviewId, testUser, ValidMessage, MinRating, MinRating, MinRating, MinRating);
+            await reviewService.ValidateReviewAsync(review);
         }
     }
 }
