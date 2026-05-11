@@ -22,7 +22,7 @@ namespace AirportApp.Tests.Unit
         public void Setup()
         {
             loggerFactory = Substitute.For<ILoggerFactory>();
-            var configuration = new MapperConfiguration(mapperConfiguration => cfg.AddProfile<TicketMappingProfile>(), loggerFactory);
+            var configuration = new MapperConfiguration(mapperConfiguration => mapperConfiguration.AddProfile<TicketMappingProfile>(), loggerFactory);
             mapper = configuration.CreateMapper();
 
             testUser = new User(101, "Jane Doe", "jane@example.com");

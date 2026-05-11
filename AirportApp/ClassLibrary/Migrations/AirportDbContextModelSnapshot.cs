@@ -22,30 +22,30 @@ namespace AirportApp.ClassLibrary.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("AirportApp.ClassLibrary.Entity.Domain.AddOn", b =>
+            modelBuilder.Entity("AirportApp.ClassLibrary.Entity.Domain.AddOn", builder =>
                 {
-                    b.Property<int>("Id")
+                    builder.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasColumnName("AddOn_Id");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(builder.Property<int>("Id"));
 
-                    b.Property<float>("BasePrice")
+                    builder.Property<float>("BasePrice")
                         .HasColumnType("real")
                         .HasColumnName("Base_Price");
 
-                    b.Property<string>("Name")
+                    builder.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)")
                         .HasColumnName("Name");
 
-                    b.HasKey("Id");
+                    builder.HasKey("Id");
 
-                    b.ToTable("AddOns");
+                    builder.ToTable("AddOns");
 
-                    b.HasData(
+                    builder.HasData(
                         new
                         {
                             Id = 1,
@@ -72,32 +72,32 @@ namespace AirportApp.ClassLibrary.Migrations
                         });
                 });
 
-            modelBuilder.Entity("AirportApp.ClassLibrary.Entity.Domain.Airport", b =>
+            modelBuilder.Entity("AirportApp.ClassLibrary.Entity.Domain.Airport", builder =>
                 {
-                    b.Property<int>("Id")
+                    builder.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasColumnName("Airport_Id");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(builder.Property<int>("Id"));
 
-                    b.Property<string>("AirportCode")
+                    builder.Property<string>("AirportCode")
                         .IsRequired()
                         .HasMaxLength(3)
                         .HasColumnType("nvarchar(3)")
                         .HasColumnName("Airport_Code");
 
-                    b.Property<string>("City")
+                    builder.Property<string>("City")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)")
                         .HasColumnName("City");
 
-                    b.HasKey("Id");
+                    builder.HasKey("Id");
 
-                    b.ToTable("Airports");
+                    builder.ToTable("Airports");
 
-                    b.HasData(
+                    builder.HasData(
                         new
                         {
                             Id = 1,
@@ -118,29 +118,29 @@ namespace AirportApp.ClassLibrary.Migrations
                         });
                 });
 
-            modelBuilder.Entity("AirportApp.ClassLibrary.Entity.Domain.Chat", b =>
+            modelBuilder.Entity("AirportApp.ClassLibrary.Entity.Domain.Chat", builder =>
                 {
-                    b.Property<int>("Id")
+                    builder.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasColumnName("Chat_Id");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(builder.Property<int>("Id"));
 
-                    b.Property<int>("Status")
+                    builder.Property<int>("Status")
                         .HasColumnType("int")
                         .HasColumnName("Chat_Status");
 
-                    b.Property<int>("UserId")
+                    builder.Property<int>("UserId")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
+                    builder.HasKey("Id");
 
-                    b.HasIndex("UserId");
+                    builder.HasIndex("UserId");
 
-                    b.ToTable("Chats");
+                    builder.ToTable("Chats");
 
-                    b.HasData(
+                    builder.HasData(
                         new
                         {
                             Id = 1,
@@ -161,26 +161,26 @@ namespace AirportApp.ClassLibrary.Migrations
                         });
                 });
 
-            modelBuilder.Entity("AirportApp.ClassLibrary.Entity.Domain.Company", b =>
+            modelBuilder.Entity("AirportApp.ClassLibrary.Entity.Domain.Company", bulder =>
                 {
-                    b.Property<int>("Id")
+                    bulder.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasColumnName("Company_Id");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(bulder.Property<int>("Id"));
 
-                    b.Property<string>("Name")
+                    bulder.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)")
                         .HasColumnName("Name");
 
-                    b.HasKey("Id");
+                    bulder.HasKey("Id");
 
-                    b.ToTable("Companies");
+                    bulder.ToTable("Companies");
 
-                    b.HasData(
+                    bulder.HasData(
                         new
                         {
                             Id = 1,
@@ -198,58 +198,58 @@ namespace AirportApp.ClassLibrary.Migrations
                         });
                 });
 
-            modelBuilder.Entity("AirportApp.ClassLibrary.Entity.Domain.ComplaintTicket", b =>
+            modelBuilder.Entity("AirportApp.ClassLibrary.Entity.Domain.ComplaintTicket", builder =>
                 {
-                    b.Property<int>("Id")
+                    builder.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasColumnName("Ticket_Id");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(builder.Property<int>("Id"));
 
-                    b.Property<int>("CategoryId")
+                    builder.Property<int>("CategoryId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("CreationTimestamp")
+                    builder.Property<DateTime>("CreationTimestamp")
                         .HasColumnType("datetime2")
                         .HasColumnName("Creation_Timestamp");
 
-                    b.Property<int>("CreatorId")
+                    builder.Property<int>("CreatorId")
                         .HasColumnType("int");
 
-                    b.Property<int>("CurrentStatus")
+                    builder.Property<int>("CurrentStatus")
                         .HasColumnType("int")
                         .HasColumnName("Status");
 
-                    b.Property<string>("Description")
+                    builder.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("NVARCHAR(MAX)")
                         .HasColumnName("Description");
 
-                    b.Property<int>("SubcategoryId")
+                    builder.Property<int>("SubcategoryId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Subject")
+                    builder.Property<string>("Subject")
                         .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)")
                         .HasColumnName("Subject");
 
-                    b.Property<int>("UrgencyLevel")
+                    builder.Property<int>("UrgencyLevel")
                         .HasColumnType("int")
                         .HasColumnName("Urgency_Level");
 
-                    b.HasKey("Id");
+                    builder.HasKey("Id");
 
-                    b.HasIndex("CategoryId");
+                    builder.HasIndex("CategoryId");
 
-                    b.HasIndex("CreatorId");
+                    builder.HasIndex("CreatorId");
 
-                    b.HasIndex("SubcategoryId");
+                    builder.HasIndex("SubcategoryId");
 
-                    b.ToTable("Tickets");
+                    builder.ToTable("Tickets");
 
-                    b.HasData(
+                    builder.HasData(
                         new
                         {
                             Id = 1,
@@ -300,30 +300,30 @@ namespace AirportApp.ClassLibrary.Migrations
                         });
                 });
 
-            modelBuilder.Entity("AirportApp.ClassLibrary.Entity.Domain.ComplaintTicketCategory", b =>
+            modelBuilder.Entity("AirportApp.ClassLibrary.Entity.Domain.ComplaintTicketCategory", build =>
                 {
-                    b.Property<int>("Id")
+                    build.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasColumnName("Category_Id");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(build.Property<int>("Id"));
 
-                    b.Property<string>("CategoryName")
+                    build.Property<string>("CategoryName")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)")
                         .HasColumnName("Category_Name");
 
-                    b.Property<int>("CategoryUrgencyLevel")
+                    build.Property<int>("CategoryUrgencyLevel")
                         .HasColumnType("int")
                         .HasColumnName("Default_Urgency_Level");
 
-                    b.HasKey("Id");
+                    build.HasKey("Id");
 
-                    b.ToTable("TicketCategories");
+                    build.ToTable("TicketCategories");
 
-                    b.HasData(
+                    build.HasData(
                         new
                         {
                             Id = 1,
@@ -344,35 +344,35 @@ namespace AirportApp.ClassLibrary.Migrations
                         });
                 });
 
-            modelBuilder.Entity("AirportApp.ClassLibrary.Entity.Domain.ComplaintTicketSubcategory", b =>
+            modelBuilder.Entity("AirportApp.ClassLibrary.Entity.Domain.ComplaintTicketSubcategory", build =>
                 {
-                    b.Property<int>("Id")
+                    build.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasColumnName("Subcategory_Id");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(build.Property<int>("Id"));
 
-                    b.Property<int>("ParentCategoryId")
+                    build.Property<int>("ParentCategoryId")
                         .HasColumnType("int");
 
-                    b.Property<int>("SubcategoryExternalReferenceId")
+                    build.Property<int>("SubcategoryExternalReferenceId")
                         .HasColumnType("int")
                         .HasColumnName("External_Reference_Id");
 
-                    b.Property<string>("SubcategoryName")
+                    build.Property<string>("SubcategoryName")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)")
                         .HasColumnName("Subcategory_Name");
 
-                    b.HasKey("Id");
+                    build.HasKey("Id");
 
-                    b.HasIndex("ParentCategoryId");
+                    build.HasIndex("ParentCategoryId");
 
-                    b.ToTable("TicketSubcategories");
+                    build.ToTable("TicketSubcategories");
 
-                    b.HasData(
+                    build.HasData(
                         new
                         {
                             Id = 1,
@@ -410,48 +410,48 @@ namespace AirportApp.ClassLibrary.Migrations
                         });
                 });
 
-            modelBuilder.Entity("AirportApp.ClassLibrary.Entity.Domain.Customer", b =>
+            modelBuilder.Entity("AirportApp.ClassLibrary.Entity.Domain.Customer", build =>
                 {
-                    b.Property<int>("Id")
+                    build.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasColumnName("Customer_Id");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(build.Property<int>("Id"));
 
-                    b.Property<string>("Email")
+                    build.Property<string>("Email")
                         .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)")
                         .HasColumnName("Email");
 
-                    b.Property<int?>("MembershipId")
+                    build.Property<int?>("MembershipId")
                         .HasColumnType("int");
 
-                    b.Property<string>("PasswordHash")
+                    build.Property<string>("PasswordHash")
                         .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)")
                         .HasColumnName("Password_Hash");
 
-                    b.Property<string>("Phone")
+                    build.Property<string>("Phone")
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)")
                         .HasColumnName("Phone");
 
-                    b.Property<string>("Username")
+                    build.Property<string>("Username")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)")
                         .HasColumnName("Username");
 
-                    b.HasKey("Id");
+                    build.HasKey("Id");
 
-                    b.HasIndex("MembershipId");
+                    build.HasIndex("MembershipId");
 
-                    b.ToTable("Customers");
+                    build.ToTable("Customers");
 
-                    b.HasData(
+                    build.HasData(
                         new
                         {
                             Id = 101,
@@ -481,47 +481,47 @@ namespace AirportApp.ClassLibrary.Migrations
                         });
                 });
 
-            modelBuilder.Entity("AirportApp.ClassLibrary.Entity.Domain.FAQEntry", b =>
+            modelBuilder.Entity("AirportApp.ClassLibrary.Entity.Domain.FAQEntry", build =>
                 {
-                    b.Property<int>("Id")
+                    build.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasColumnName("FAQ_Id");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(build.Property<int>("Id"));
 
-                    b.Property<string>("Answer")
+                    build.Property<string>("Answer")
                         .IsRequired()
                         .HasColumnType("NVARCHAR(MAX)")
                         .HasColumnName("Answer_Text");
 
-                    b.Property<int>("Category")
+                    build.Property<int>("Category")
                         .HasColumnType("int")
                         .HasColumnName("Category");
 
-                    b.Property<int>("HelpfulVotesCount")
+                    build.Property<int>("HelpfulVotesCount")
                         .HasColumnType("int")
                         .HasColumnName("Helpful_Votes");
 
-                    b.Property<int>("NotHelpfulVotesCount")
+                    build.Property<int>("NotHelpfulVotesCount")
                         .HasColumnType("int")
                         .HasColumnName("Not_Helpful_Votes");
 
-                    b.Property<string>("Question")
+                    build.Property<string>("Question")
                         .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)")
                         .HasColumnName("Question_Text");
 
-                    b.Property<int>("ViewCount")
+                    build.Property<int>("ViewCount")
                         .HasColumnType("int")
                         .HasColumnName("View_Count");
 
-                    b.HasKey("Id");
+                    build.HasKey("Id");
 
-                    b.ToTable("FAQs");
+                    build.ToTable("FAQs");
 
-                    b.HasData(
+                    build.HasData(
                         new
                         {
                             Id = 1,
@@ -574,29 +574,29 @@ namespace AirportApp.ClassLibrary.Migrations
                         });
                 });
 
-            modelBuilder.Entity("AirportApp.ClassLibrary.Entity.Domain.FAQNode", b =>
+            modelBuilder.Entity("AirportApp.ClassLibrary.Entity.Domain.FAQNode", build =>
                 {
-                    b.Property<int>("NodeId")
+                    build.Property<int>("NodeId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasColumnName("node_id");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("NodeId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(build.Property<int>("NodeId"));
 
-                    b.Property<bool>("IsFinalAnswer")
+                    build.Property<bool>("IsFinalAnswer")
                         .HasColumnType("bit")
                         .HasColumnName("is_final_answer");
 
-                    b.Property<string>("QuestionText")
+                    build.Property<string>("QuestionText")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("question_text");
 
-                    b.HasKey("NodeId");
+                    build.HasKey("NodeId");
 
-                    b.ToTable("FAQNode", (string)null);
+                    build.ToTable("FAQNode", (string)null);
 
-                    b.HasData(
+                    build.HasData(
                         new
                         {
                             NodeId = 1,
@@ -635,37 +635,37 @@ namespace AirportApp.ClassLibrary.Migrations
                         });
                 });
 
-            modelBuilder.Entity("AirportApp.ClassLibrary.Entity.Domain.FAQOption", b =>
+            modelBuilder.Entity("AirportApp.ClassLibrary.Entity.Domain.FAQOption", build =>
                 {
-                    b.Property<int>("OptionId")
+                    build.Property<int>("OptionId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasColumnName("option_id");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("OptionId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(build.Property<int>("OptionId"));
 
-                    b.Property<string>("Label")
+                    build.Property<string>("Label")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("label");
 
-                    b.Property<int?>("NextOptionId")
+                    build.Property<int?>("NextOptionId")
                         .HasColumnType("int")
                         .HasColumnName("next_option_id");
 
-                    b.Property<int>("NodeId")
+                    build.Property<int>("NodeId")
                         .HasColumnType("int")
                         .HasColumnName("node_id");
 
-                    b.HasKey("OptionId");
+                    build.HasKey("OptionId");
 
-                    b.HasIndex("NextOptionId");
+                    build.HasIndex("NextOptionId");
 
-                    b.HasIndex("NodeId");
+                    build.HasIndex("NodeId");
 
-                    b.ToTable("FAQOption", (string)null);
+                    build.ToTable("FAQOption", (string)null);
 
-                    b.HasData(
+                    build.HasData(
                         new
                         {
                             OptionId = 1,
@@ -703,40 +703,40 @@ namespace AirportApp.ClassLibrary.Migrations
                         });
                 });
 
-            modelBuilder.Entity("AirportApp.ClassLibrary.Entity.Domain.Flight", b =>
+            modelBuilder.Entity("AirportApp.ClassLibrary.Entity.Domain.Flight", build =>
                 {
-                    b.Property<int>("Id")
+                    build.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasColumnName("Flight_Id");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(build.Property<int>("Id"));
 
-                    b.Property<DateTime>("Date")
+                    build.Property<DateTime>("Date")
                         .HasColumnType("datetime2")
                         .HasColumnName("Departure_Date");
 
-                    b.Property<string>("FlightNumber")
+                    build.Property<string>("FlightNumber")
                         .IsRequired()
                         .HasMaxLength(10)
                         .HasColumnType("nvarchar(10)")
                         .HasColumnName("Flight_Number");
 
-                    b.Property<int>("GateId")
+                    build.Property<int>("GateId")
                         .HasColumnType("int");
 
-                    b.Property<int>("RouteId")
+                    build.Property<int>("RouteId")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
+                    build.HasKey("Id");
 
-                    b.HasIndex("GateId");
+                    build.HasIndex("GateId");
 
-                    b.HasIndex("RouteId");
+                    build.HasIndex("RouteId");
 
-                    b.ToTable("Flights");
+                    build.ToTable("Flights");
 
-                    b.HasData(
+                    build.HasData(
                         new
                         {
                             Id = 1,
@@ -779,70 +779,70 @@ namespace AirportApp.ClassLibrary.Migrations
                         });
                 });
 
-            modelBuilder.Entity("AirportApp.ClassLibrary.Entity.Domain.FlightTicket", b =>
+            modelBuilder.Entity("AirportApp.ClassLibrary.Entity.Domain.FlightTicket", build =>
                 {
-                    b.Property<int>("Id")
+                    build.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasColumnName("Ticket_Id");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(build.Property<int>("Id"));
 
-                    b.Property<int>("FlightId")
+                    build.Property<int>("FlightId")
                         .HasColumnType("int");
 
-                    b.Property<string>("PassengerEmail")
+                    build.Property<string>("PassengerEmail")
                         .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)")
                         .HasColumnName("Passenger_Email");
 
-                    b.Property<string>("PassengerFirstName")
+                    build.Property<string>("PassengerFirstName")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)")
                         .HasColumnName("Passenger_First_Name");
 
-                    b.Property<string>("PassengerLastName")
+                    build.Property<string>("PassengerLastName")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)")
                         .HasColumnName("Passenger_Last_Name");
 
-                    b.Property<string>("PassengerPhone")
+                    build.Property<string>("PassengerPhone")
                         .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)")
                         .HasColumnName("Passenger_Phone");
 
-                    b.Property<float>("Price")
+                    build.Property<float>("Price")
                         .HasColumnType("real")
                         .HasColumnName("Price");
 
-                    b.Property<string>("Seat")
+                    build.Property<string>("Seat")
                         .IsRequired()
                         .HasMaxLength(10)
                         .HasColumnType("nvarchar(10)")
                         .HasColumnName("Seat");
 
-                    b.Property<string>("Status")
+                    build.Property<string>("Status")
                         .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)")
                         .HasColumnName("Status");
 
-                    b.Property<int>("UserId")
+                    build.Property<int>("UserId")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
+                    build.HasKey("Id");
 
-                    b.HasIndex("FlightId");
+                    build.HasIndex("FlightId");
 
-                    b.HasIndex("UserId");
+                    build.HasIndex("UserId");
 
-                    b.ToTable("FlightTickets");
+                    build.ToTable("FlightTickets");
 
-                    b.HasData(
+                    build.HasData(
                         new
                         {
                             Id = 1,
@@ -897,31 +897,31 @@ namespace AirportApp.ClassLibrary.Migrations
                         });
                 });
 
-            modelBuilder.Entity("AirportApp.ClassLibrary.Entity.Domain.Gate", b =>
+            modelBuilder.Entity("AirportApp.ClassLibrary.Entity.Domain.Gate", build =>
                 {
-                    b.Property<int>("Id")
+                    build.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasColumnName("Gate_Id");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(build.Property<int>("Id"));
 
-                    b.Property<int>("AirportId")
+                    build.Property<int>("AirportId")
                         .HasColumnType("int");
 
-                    b.Property<string>("GateName")
+                    build.Property<string>("GateName")
                         .IsRequired()
                         .HasMaxLength(10)
                         .HasColumnType("nvarchar(10)")
                         .HasColumnName("Gate_Name");
 
-                    b.HasKey("Id");
+                    build.HasKey("Id");
 
-                    b.HasIndex("AirportId");
+                    build.HasIndex("AirportId");
 
-                    b.ToTable("Gates");
+                    build.ToTable("Gates");
 
-                    b.HasData(
+                    build.HasData(
                         new
                         {
                             Id = 1,
@@ -948,30 +948,30 @@ namespace AirportApp.ClassLibrary.Migrations
                         });
                 });
 
-            modelBuilder.Entity("AirportApp.ClassLibrary.Entity.Domain.Membership", b =>
+            modelBuilder.Entity("AirportApp.ClassLibrary.Entity.Domain.Membership", build =>
                 {
-                    b.Property<int>("Id")
+                    build.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasColumnName("Membership_Id");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(build.Property<int>("Id"));
 
-                    b.Property<float>("FlightDiscountPercentage")
+                    build.Property<float>("FlightDiscountPercentage")
                         .HasColumnType("real")
                         .HasColumnName("Flight_Discount_Percentage");
 
-                    b.Property<string>("Name")
+                    build.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)")
                         .HasColumnName("Name");
 
-                    b.HasKey("Id");
+                    build.HasKey("Id");
 
-                    b.ToTable("Memberships");
+                    build.ToTable("Memberships");
 
-                    b.HasData(
+                    build.HasData(
                         new
                         {
                             Id = 1,
@@ -992,27 +992,27 @@ namespace AirportApp.ClassLibrary.Migrations
                         });
                 });
 
-            modelBuilder.Entity("AirportApp.ClassLibrary.Entity.Domain.MembershipAddonDiscount", b =>
+            modelBuilder.Entity("AirportApp.ClassLibrary.Entity.Domain.MembershipAddonDiscount", build =>
                 {
-                    b.Property<int>("MembershipId")
+                    build.Property<int>("MembershipId")
                         .HasColumnType("int")
                         .HasColumnName("Membership_Id");
 
-                    b.Property<int>("AddOnId")
+                    build.Property<int>("AddOnId")
                         .HasColumnType("int")
                         .HasColumnName("AddOn_Id");
 
-                    b.Property<float>("DiscountPercentage")
+                    build.Property<float>("DiscountPercentage")
                         .HasColumnType("real")
                         .HasColumnName("Discount_Percentage");
 
-                    b.HasKey("MembershipId", "AddOnId");
+                    build.HasKey("MembershipId", "AddOnId");
 
-                    b.HasIndex("AddOnId");
+                    build.HasIndex("AddOnId");
 
-                    b.ToTable("Membership_Addon_Discounts", (string)null);
+                    build.ToTable("Membership_Addon_Discounts", (string)null);
 
-                    b.HasData(
+                    build.HasData(
                         new
                         {
                             MembershipId = 1,
@@ -1063,39 +1063,39 @@ namespace AirportApp.ClassLibrary.Migrations
                         });
                 });
 
-            modelBuilder.Entity("AirportApp.ClassLibrary.Entity.Domain.Message", b =>
+            modelBuilder.Entity("AirportApp.ClassLibrary.Entity.Domain.Message", build =>
                 {
-                    b.Property<int>("Id")
+                    build.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasColumnName("Message_Id");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(build.Property<int>("Id"));
 
-                    b.Property<int>("ChatId")
+                    build.Property<int>("ChatId")
                         .HasColumnType("int");
 
-                    b.Property<int>("SenderId")
+                    build.Property<int>("SenderId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Text")
+                    build.Property<string>("Text")
                         .IsRequired()
                         .HasColumnType("NVARCHAR(MAX)")
                         .HasColumnName("Message_Text");
 
-                    b.Property<DateTimeOffset>("Timestamp")
+                    build.Property<DateTimeOffset>("Timestamp")
                         .HasColumnType("datetimeoffset")
                         .HasColumnName("Timestamp");
 
-                    b.HasKey("Id");
+                    build.HasKey("Id");
 
-                    b.HasIndex("ChatId");
+                    build.HasIndex("ChatId");
 
-                    b.HasIndex("SenderId");
+                    build.HasIndex("SenderId");
 
-                    b.ToTable("Messages");
+                    build.ToTable("Messages");
 
-                    b.HasData(
+                    build.HasData(
                         new
                         {
                             Id = 1,
@@ -1122,87 +1122,87 @@ namespace AirportApp.ClassLibrary.Migrations
                         });
                 });
 
-            modelBuilder.Entity("AirportApp.ClassLibrary.Entity.Domain.Review", b =>
+            modelBuilder.Entity("AirportApp.ClassLibrary.Entity.Domain.Review", build =>
                 {
-                    b.Property<int>("Id")
+                    build.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasColumnName("Review_Id");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(build.Property<int>("Id"));
 
-                    b.Property<int>("CleanlinessRating")
+                    build.Property<int>("CleanlinessRating")
                         .HasColumnType("int")
                         .HasColumnName("Cleanliness_Rating");
 
-                    b.Property<int>("DutyFreeRating")
+                    build.Property<int>("DutyFreeRating")
                         .HasColumnType("int")
                         .HasColumnName("Duty_Free_Rating");
 
-                    b.Property<int>("FlightExperienceRating")
+                    build.Property<int>("FlightExperienceRating")
                         .HasColumnType("int")
                         .HasColumnName("Flight_Experience_Rating");
 
-                    b.Property<string>("Message")
+                    build.Property<string>("Message")
                         .IsRequired()
                         .HasColumnType("NVARCHAR(MAX)")
                         .HasColumnName("Message");
 
-                    b.Property<int>("StaffFriendlinessRating")
+                    build.Property<int>("StaffFriendlinessRating")
                         .HasColumnType("int")
                         .HasColumnName("Staff_Friendliness_Rating");
 
-                    b.Property<int>("UserId")
+                    build.Property<int>("UserId")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
+                    build.HasKey("Id");
 
-                    b.HasIndex("UserId");
+                    build.HasIndex("UserId");
 
-                    b.ToTable("Reviews");
+                    build.ToTable("Reviews");
                 });
 
-            modelBuilder.Entity("AirportApp.ClassLibrary.Entity.Domain.Route", b =>
+            modelBuilder.Entity("AirportApp.ClassLibrary.Entity.Domain.Route", build =>
                 {
-                    b.Property<int>("Id")
+                    build.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasColumnName("Route_Id");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(build.Property<int>("Id"));
 
-                    b.Property<int>("AirportId")
+                    build.Property<int>("AirportId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("ArrivalTime")
+                    build.Property<DateTime>("ArrivalTime")
                         .HasColumnType("datetime2")
                         .HasColumnName("Arrival_Time");
 
-                    b.Property<int>("Capacity")
+                    build.Property<int>("Capacity")
                         .HasColumnType("int");
 
-                    b.Property<int>("CompanyId")
+                    build.Property<int>("CompanyId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("DepartureTime")
+                    build.Property<DateTime>("DepartureTime")
                         .HasColumnType("datetime2")
                         .HasColumnName("Departure_Time");
 
-                    b.Property<string>("RouteType")
+                    build.Property<string>("RouteType")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)")
                         .HasColumnName("Route_Type");
 
-                    b.HasKey("Id");
+                    build.HasKey("Id");
 
-                    b.HasIndex("AirportId");
+                    build.HasIndex("AirportId");
 
-                    b.HasIndex("CompanyId");
+                    build.HasIndex("CompanyId");
 
-                    b.ToTable("Routes");
+                    build.ToTable("Routes");
 
-                    b.HasData(
+                    build.HasData(
                         new
                         {
                             Id = 1,
@@ -1255,40 +1255,40 @@ namespace AirportApp.ClassLibrary.Migrations
                         });
                 });
 
-            modelBuilder.Entity("AirportApp.ClassLibrary.Entity.Domain.Sender", b =>
+            modelBuilder.Entity("AirportApp.ClassLibrary.Entity.Domain.Sender", build =>
                 {
-                    b.Property<int>("Id")
+                    build.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasColumnName("Sender_Id");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(build.Property<int>("Id"));
 
-                    b.Property<string>("Discriminator")
+                    build.Property<string>("Discriminator")
                         .IsRequired()
                         .HasMaxLength(8)
                         .HasColumnType("nvarchar(8)")
                         .HasColumnName("Discriminator");
 
-                    b.Property<string>("EmailAddress")
+                    build.Property<string>("EmailAddress")
                         .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)")
                         .HasColumnName("Email_Address");
 
-                    b.Property<string>("FullName")
+                    build.Property<string>("FullName")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)")
                         .HasColumnName("Full_Name");
 
-                    b.HasKey("Id");
+                    build.HasKey("Id");
 
-                    b.ToTable("Senders");
+                    build.ToTable("Senders");
 
-                    b.UseTptMappingStrategy();
+                    build.UseTptMappingStrategy();
 
-                    b.HasData(
+                    build.HasData(
                         new
                         {
                             Id = -1,
@@ -1298,32 +1298,32 @@ namespace AirportApp.ClassLibrary.Migrations
                         });
                 });
 
-            modelBuilder.Entity("FlightTicket_AddOns", b =>
+            modelBuilder.Entity("FlightTicket_AddOns", build =>
                 {
-                    b.Property<int>("Ticket_Id")
+                    build.Property<int>("Ticket_Id")
                         .HasColumnType("int");
 
-                    b.Property<int>("AddOn_Id")
+                    build.Property<int>("AddOn_Id")
                         .HasColumnType("int");
 
-                    b.HasKey("Ticket_Id", "AddOn_Id");
+                    build.HasKey("Ticket_Id", "AddOn_Id");
 
-                    b.HasIndex("AddOn_Id");
+                    build.HasIndex("AddOn_Id");
 
-                    b.ToTable("FlightTicket_AddOns", (string)null);
+                    build.ToTable("FlightTicket_AddOns", (string)null);
                 });
 
-            modelBuilder.Entity("AirportApp.ClassLibrary.Entity.Domain.Employee", b =>
+            modelBuilder.Entity("AirportApp.ClassLibrary.Entity.Domain.Employee", build =>
                 {
-                    b.HasBaseType("AirportApp.ClassLibrary.Entity.Domain.Sender");
+                    build.HasBaseType("AirportApp.ClassLibrary.Entity.Domain.Sender");
 
-                    b.Property<int>("AssignedDepartment")
+                    build.Property<int>("AssignedDepartment")
                         .HasColumnType("int")
                         .HasColumnName("Department");
 
-                    b.ToTable("Employees", (string)null);
+                    build.ToTable("Employees", (string)null);
 
-                    b.HasData(
+                    build.HasData(
                         new
                         {
                             Id = 1,
@@ -1358,13 +1358,13 @@ namespace AirportApp.ClassLibrary.Migrations
                         });
                 });
 
-            modelBuilder.Entity("AirportApp.ClassLibrary.Entity.Domain.User", b =>
+            modelBuilder.Entity("AirportApp.ClassLibrary.Entity.Domain.User", build =>
                 {
-                    b.HasBaseType("AirportApp.ClassLibrary.Entity.Domain.Sender");
+                    build.HasBaseType("AirportApp.ClassLibrary.Entity.Domain.Sender");
 
-                    b.ToTable("Users", (string)null);
+                    build.ToTable("Users", (string)null);
 
-                    b.HasData(
+                    build.HasData(
                         new
                         {
                             Id = 101,
@@ -1388,208 +1388,208 @@ namespace AirportApp.ClassLibrary.Migrations
                         });
                 });
 
-            modelBuilder.Entity("AirportApp.ClassLibrary.Entity.Domain.Chat", b =>
+            modelBuilder.Entity("AirportApp.ClassLibrary.Entity.Domain.Chat", build =>
                 {
-                    b.HasOne("AirportApp.ClassLibrary.Entity.Domain.User", "User")
+                    build.HasOne("AirportApp.ClassLibrary.Entity.Domain.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("User");
+                    build.Navigation("User");
                 });
 
-            modelBuilder.Entity("AirportApp.ClassLibrary.Entity.Domain.ComplaintTicket", b =>
+            modelBuilder.Entity("AirportApp.ClassLibrary.Entity.Domain.ComplaintTicket", build =>
                 {
-                    b.HasOne("AirportApp.ClassLibrary.Entity.Domain.ComplaintTicketCategory", "Category")
+                    build.HasOne("AirportApp.ClassLibrary.Entity.Domain.ComplaintTicketCategory", "Category")
                         .WithMany()
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("AirportApp.ClassLibrary.Entity.Domain.User", "Creator")
+                    build.HasOne("AirportApp.ClassLibrary.Entity.Domain.User", "Creator")
                         .WithMany()
                         .HasForeignKey("CreatorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("AirportApp.ClassLibrary.Entity.Domain.ComplaintTicketSubcategory", "Subcategory")
+                    build.HasOne("AirportApp.ClassLibrary.Entity.Domain.ComplaintTicketSubcategory", "Subcategory")
                         .WithMany()
                         .HasForeignKey("SubcategoryId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("Category");
+                    build.Navigation("Category");
 
-                    b.Navigation("Creator");
+                    build.Navigation("Creator");
 
-                    b.Navigation("Subcategory");
+                    build.Navigation("Subcategory");
                 });
 
-            modelBuilder.Entity("AirportApp.ClassLibrary.Entity.Domain.ComplaintTicketSubcategory", b =>
+            modelBuilder.Entity("AirportApp.ClassLibrary.Entity.Domain.ComplaintTicketSubcategory", build =>
                 {
-                    b.HasOne("AirportApp.ClassLibrary.Entity.Domain.ComplaintTicketCategory", "ParentCategory")
+                    build.HasOne("AirportApp.ClassLibrary.Entity.Domain.ComplaintTicketCategory", "ParentCategory")
                         .WithMany()
                         .HasForeignKey("ParentCategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("ParentCategory");
+                    build.Navigation("ParentCategory");
                 });
 
-            modelBuilder.Entity("AirportApp.ClassLibrary.Entity.Domain.Customer", b =>
+            modelBuilder.Entity("AirportApp.ClassLibrary.Entity.Domain.Customer", build =>
                 {
-                    b.HasOne("AirportApp.ClassLibrary.Entity.Domain.Membership", "Membership")
+                    build.HasOne("AirportApp.ClassLibrary.Entity.Domain.Membership", "Membership")
                         .WithMany()
                         .HasForeignKey("MembershipId")
                         .OnDelete(DeleteBehavior.SetNull);
 
-                    b.Navigation("Membership");
+                    build.Navigation("Membership");
                 });
 
-            modelBuilder.Entity("AirportApp.ClassLibrary.Entity.Domain.FAQOption", b =>
+            modelBuilder.Entity("AirportApp.ClassLibrary.Entity.Domain.FAQOption", build =>
                 {
-                    b.HasOne("AirportApp.ClassLibrary.Entity.Domain.FAQNode", "NextOption")
+                    build.HasOne("AirportApp.ClassLibrary.Entity.Domain.FAQNode", "NextOption")
                         .WithMany()
                         .HasForeignKey("NextOptionId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("AirportApp.ClassLibrary.Entity.Domain.FAQNode", null)
+                    build.HasOne("AirportApp.ClassLibrary.Entity.Domain.FAQNode", null)
                         .WithMany("Options")
                         .HasForeignKey("NodeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("NextOption");
+                    build.Navigation("NextOption");
                 });
 
-            modelBuilder.Entity("AirportApp.ClassLibrary.Entity.Domain.Flight", b =>
+            modelBuilder.Entity("AirportApp.ClassLibrary.Entity.Domain.Flight", build =>
                 {
-                    b.HasOne("AirportApp.ClassLibrary.Entity.Domain.Gate", "Gate")
+                    build.HasOne("AirportApp.ClassLibrary.Entity.Domain.Gate", "Gate")
                         .WithMany()
                         .HasForeignKey("GateId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("AirportApp.ClassLibrary.Entity.Domain.Route", "Route")
+                    build.HasOne("AirportApp.ClassLibrary.Entity.Domain.Route", "Route")
                         .WithMany()
                         .HasForeignKey("RouteId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Gate");
+                    build.Navigation("Gate");
 
-                    b.Navigation("Route");
+                    build.Navigation("Route");
                 });
 
-            modelBuilder.Entity("AirportApp.ClassLibrary.Entity.Domain.FlightTicket", b =>
+            modelBuilder.Entity("AirportApp.ClassLibrary.Entity.Domain.FlightTicket", build =>
                 {
-                    b.HasOne("AirportApp.ClassLibrary.Entity.Domain.Flight", "Flight")
+                    build.HasOne("AirportApp.ClassLibrary.Entity.Domain.Flight", "Flight")
                         .WithMany()
                         .HasForeignKey("FlightId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("AirportApp.ClassLibrary.Entity.Domain.Customer", "User")
+                    build.HasOne("AirportApp.ClassLibrary.Entity.Domain.Customer", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Flight");
+                    build.Navigation("Flight");
 
-                    b.Navigation("User");
+                    build.Navigation("User");
                 });
 
-            modelBuilder.Entity("AirportApp.ClassLibrary.Entity.Domain.Gate", b =>
+            modelBuilder.Entity("AirportApp.ClassLibrary.Entity.Domain.Gate", build =>
                 {
-                    b.HasOne("AirportApp.ClassLibrary.Entity.Domain.Airport", "Airport")
+                    build.HasOne("AirportApp.ClassLibrary.Entity.Domain.Airport", "Airport")
                         .WithMany("Gates")
                         .HasForeignKey("AirportId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Airport");
+                    build.Navigation("Airport");
                 });
 
-            modelBuilder.Entity("AirportApp.ClassLibrary.Entity.Domain.MembershipAddonDiscount", b =>
+            modelBuilder.Entity("AirportApp.ClassLibrary.Entity.Domain.MembershipAddonDiscount", build =>
                 {
-                    b.HasOne("AirportApp.ClassLibrary.Entity.Domain.AddOn", "AddOn")
+                    build.HasOne("AirportApp.ClassLibrary.Entity.Domain.AddOn", "AddOn")
                         .WithMany()
                         .HasForeignKey("AddOnId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("AirportApp.ClassLibrary.Entity.Domain.Membership", "Membership")
+                    build.HasOne("AirportApp.ClassLibrary.Entity.Domain.Membership", "Membership")
                         .WithMany("AddonDiscounts")
                         .HasForeignKey("MembershipId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("AddOn");
+                    build.Navigation("AddOn");
 
-                    b.Navigation("Membership");
+                    build.Navigation("Membership");
                 });
 
-            modelBuilder.Entity("AirportApp.ClassLibrary.Entity.Domain.Message", b =>
+            modelBuilder.Entity("AirportApp.ClassLibrary.Entity.Domain.Message", build =>
                 {
-                    b.HasOne("AirportApp.ClassLibrary.Entity.Domain.Chat", "Chat")
+                    build.HasOne("AirportApp.ClassLibrary.Entity.Domain.Chat", "Chat")
                         .WithMany("Messages")
                         .HasForeignKey("ChatId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("AirportApp.ClassLibrary.Entity.Domain.Sender", "Sender")
+                    build.HasOne("AirportApp.ClassLibrary.Entity.Domain.Sender", "Sender")
                         .WithMany()
                         .HasForeignKey("SenderId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("Chat");
+                    build.Navigation("Chat");
 
-                    b.Navigation("Sender");
+                    build.Navigation("Sender");
                 });
 
-            modelBuilder.Entity("AirportApp.ClassLibrary.Entity.Domain.Review", b =>
+            modelBuilder.Entity("AirportApp.ClassLibrary.Entity.Domain.Review", build =>
                 {
-                    b.HasOne("AirportApp.ClassLibrary.Entity.Domain.User", "User")
+                    build.HasOne("AirportApp.ClassLibrary.Entity.Domain.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("User");
+                    build.Navigation("User");
                 });
 
-            modelBuilder.Entity("AirportApp.ClassLibrary.Entity.Domain.Route", b =>
+            modelBuilder.Entity("AirportApp.ClassLibrary.Entity.Domain.Route", build =>
                 {
-                    b.HasOne("AirportApp.ClassLibrary.Entity.Domain.Airport", "Airport")
+                    build.HasOne("AirportApp.ClassLibrary.Entity.Domain.Airport", "Airport")
                         .WithMany()
                         .HasForeignKey("AirportId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("AirportApp.ClassLibrary.Entity.Domain.Company", "Company")
+                    build.HasOne("AirportApp.ClassLibrary.Entity.Domain.Company", "Company")
                         .WithMany()
                         .HasForeignKey("CompanyId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("Airport");
+                    build.Navigation("Airport");
 
-                    b.Navigation("Company");
+                    build.Navigation("Company");
                 });
 
-            modelBuilder.Entity("FlightTicket_AddOns", b =>
+            modelBuilder.Entity("FlightTicket_AddOns", build =>
                 {
-                    b.HasOne("AirportApp.ClassLibrary.Entity.Domain.AddOn", null)
+                    build.HasOne("AirportApp.ClassLibrary.Entity.Domain.AddOn", null)
                         .WithMany()
                         .HasForeignKey("AddOn_Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("FK_FlightTicketAddOns_AddOn");
 
-                    b.HasOne("AirportApp.ClassLibrary.Entity.Domain.FlightTicket", null)
+                    build.HasOne("AirportApp.ClassLibrary.Entity.Domain.FlightTicket", null)
                         .WithMany()
                         .HasForeignKey("Ticket_Id")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1597,42 +1597,42 @@ namespace AirportApp.ClassLibrary.Migrations
                         .HasConstraintName("FK_FlightTicketAddOns_FlightTicket");
                 });
 
-            modelBuilder.Entity("AirportApp.ClassLibrary.Entity.Domain.Employee", b =>
+            modelBuilder.Entity("AirportApp.ClassLibrary.Entity.Domain.Employee", build =>
                 {
-                    b.HasOne("AirportApp.ClassLibrary.Entity.Domain.Sender", null)
+                    build.HasOne("AirportApp.ClassLibrary.Entity.Domain.Sender", null)
                         .WithOne()
                         .HasForeignKey("AirportApp.ClassLibrary.Entity.Domain.Employee", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("AirportApp.ClassLibrary.Entity.Domain.User", b =>
+            modelBuilder.Entity("AirportApp.ClassLibrary.Entity.Domain.User", build =>
                 {
-                    b.HasOne("AirportApp.ClassLibrary.Entity.Domain.Sender", null)
+                    build.HasOne("AirportApp.ClassLibrary.Entity.Domain.Sender", null)
                         .WithOne()
                         .HasForeignKey("AirportApp.ClassLibrary.Entity.Domain.User", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("AirportApp.ClassLibrary.Entity.Domain.Airport", b =>
+            modelBuilder.Entity("AirportApp.ClassLibrary.Entity.Domain.Airport", build =>
                 {
-                    b.Navigation("Gates");
+                    build.Navigation("Gates");
                 });
 
-            modelBuilder.Entity("AirportApp.ClassLibrary.Entity.Domain.Chat", b =>
+            modelBuilder.Entity("AirportApp.ClassLibrary.Entity.Domain.Chat", build =>
                 {
-                    b.Navigation("Messages");
+                    build.Navigation("Messages");
                 });
 
-            modelBuilder.Entity("AirportApp.ClassLibrary.Entity.Domain.FAQNode", b =>
+            modelBuilder.Entity("AirportApp.ClassLibrary.Entity.Domain.FAQNode", build =>
                 {
-                    b.Navigation("Options");
+                    build.Navigation("Options");
                 });
 
-            modelBuilder.Entity("AirportApp.ClassLibrary.Entity.Domain.Membership", b =>
+            modelBuilder.Entity("AirportApp.ClassLibrary.Entity.Domain.Membership", build =>
                 {
-                    b.Navigation("AddonDiscounts");
+                    build.Navigation("AddonDiscounts");
                 });
 #pragma warning restore 612, 618
         }
