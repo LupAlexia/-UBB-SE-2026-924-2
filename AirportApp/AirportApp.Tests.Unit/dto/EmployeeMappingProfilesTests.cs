@@ -22,7 +22,7 @@ public class EmployeeMappingProfileTests
     public void Setup()
     {
         loggerFactory = Substitute.For<ILoggerFactory>();
-        var configuration = new MapperConfiguration(mapperConfiguration => cfg.AddProfile<EmployeeMappingProfile>(), loggerFactory);
+        var configuration = new MapperConfiguration(mapperConfiguration => mapperConfiguration.AddProfile<EmployeeMappingProfile>(), loggerFactory);
         mapper = configuration.CreateMapper();
     }
 
@@ -49,7 +49,7 @@ public class EmployeeMappingProfileTests
     [TestMethod]
     public void Map_EmployeeToEmployeeDTO_ValidConfiguration()
     {
-        var configuration = new MapperConfiguration(mapperConfiguration => cfg.AddProfile<EmployeeMappingProfile>(), loggerFactory);
+        var configuration = new MapperConfiguration(mapperConfiguration => mapperConfiguration.AddProfile<EmployeeMappingProfile>(), loggerFactory);
         configuration.AssertConfigurationIsValid();
     }
 }

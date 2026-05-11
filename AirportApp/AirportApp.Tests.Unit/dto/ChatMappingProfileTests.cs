@@ -19,7 +19,7 @@ public class ChatMappingProfileTests
     public void Setup()
     {
         loggerFactory = Substitute.For<ILoggerFactory>();
-        var configuration = new MapperConfiguration(mapperConfiguration => cfg.AddProfile<ChatMappingProfile>(), loggerFactory);
+        var configuration = new MapperConfiguration(mapperConfiguration => mapperConfiguration.AddProfile<ChatMappingProfile>(), loggerFactory);
 
         mapper = configuration.CreateMapper();
         testUser = new User(10, "Test User", "test@test.com");
@@ -60,7 +60,7 @@ public class ChatMappingProfileTests
     [TestMethod]
     public void Map_ChatToChatDTO_ValidConfiguration()
     {
-        var configuration = new MapperConfiguration(mapperConfiguration => cfg.AddProfile<ChatMappingProfile>(), loggerFactory);
+        var configuration = new MapperConfiguration(mapperConfiguration => mapperConfiguration.AddProfile<ChatMappingProfile>(), loggerFactory);
 
         configuration.AssertConfigurationIsValid();
     }
