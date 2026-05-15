@@ -24,7 +24,7 @@ namespace AirportApp.Src.Service
             this.passwordHasher = new PasswordHasher<Customer>();
         }
 
-        public async Task<Customer> LoginAsync(string email, string password)
+        public async Task<Customer> LoginAsync(string email, string password, int? currentUserId = null)
         {
             if (string.IsNullOrWhiteSpace(email))
             {
@@ -43,10 +43,15 @@ namespace AirportApp.Src.Service
                 throw new InvalidOperationException("No account found with this email.");
             }
 
-            PasswordVerificationResult passwordVerificationResult =
+            if (currentUserId.HasValue && existingUser.Id != currentUserId.Value)
+            {
+                throw new InvalidOperationException("This account does not belong to the current user.");
+            }
+
+            PasswordVerificationResult result =
                 this.passwordHasher.VerifyHashedPassword(existingUser, existingUser.PasswordHash, password);
 
-            if (passwordVerificationResult == PasswordVerificationResult.Failed)
+            if (result == PasswordVerificationResult.Failed)
             {
                 throw new InvalidOperationException("Invalid email or password.");
             }

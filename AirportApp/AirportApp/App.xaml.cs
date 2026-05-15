@@ -63,6 +63,8 @@ namespace AirportApp
         {
             User = null;
             Employee = null;
+            App.AuthService.Logout();
+
             try
             {
                 if (IsEmployee)
@@ -101,8 +103,8 @@ namespace AirportApp
 
             services.AddSingleton<HttpClient>(sp => new HttpClient
             {
-                BaseAddress = new Uri("http://172.30.246.135")
-                // BaseAddress = new Uri("http://localhost:5253/")
+                // BaseAddress = new Uri("http://172.30.246.135")
+                BaseAddress = new Uri("http://localhost:5253/")
             });
             services.AddAutoMapper(mapperConfiguration =>
             {
