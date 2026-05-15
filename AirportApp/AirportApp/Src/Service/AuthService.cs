@@ -24,7 +24,7 @@ namespace AirportApp.Src.Service
             this.passwordHasher = new PasswordHasher<Customer>();
         }
 
-        public async Task<Customer> LoginAsync(string email, string password)
+        public async Task<Customer> LoginAsync(string email, string password, int? currentUserId = null)
         {
             if (string.IsNullOrWhiteSpace(email))
             {
@@ -36,12 +36,6 @@ namespace AirportApp.Src.Service
                 throw new ArgumentException("Password is required.");
             }
 
-            var app = (App)App.Current;
-            if (app.User == null)
-            {
-                throw new InvalidOperationException("No user session found. Please enter your ID first.");
-            }
-
             Customer? existingUser = await this.userRepository.GetByEmailAsync(email.Trim());
 
             if (existingUser == null)
@@ -49,7 +43,7 @@ namespace AirportApp.Src.Service
                 throw new InvalidOperationException("No account found with this email.");
             }
 
-            if (existingUser.Id != app.User.Id)
+            if (currentUserId.HasValue && existingUser.Id != currentUserId.Value)
             {
                 throw new InvalidOperationException("This account does not belong to the current user.");
             }

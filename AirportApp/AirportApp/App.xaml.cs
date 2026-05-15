@@ -63,6 +63,8 @@ namespace AirportApp
         {
             User = null;
             Employee = null;
+            App.AuthService.Logout();
+
             try
             {
                 if (IsEmployee)

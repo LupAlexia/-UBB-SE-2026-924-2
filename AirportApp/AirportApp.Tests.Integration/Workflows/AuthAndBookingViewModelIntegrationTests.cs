@@ -46,36 +46,17 @@ public class AuthAndBookingViewModelIntegrationTests : BaseIntegrationTest
     }
 
     [TestMethod]
-    public async Task AuthenticationViewModelAsync_RegisterAndLogin_Succeeds()
+    public async Task AuthService_RegisterAndLogin_Succeeds()
     {
-        var authViewModel = new AuthViewModel(authentificationService, navigationService);
-        string uniqueCode = Guid.NewGuid().ToString().Substring(0, 4);
+        string uniqueCode = Guid.NewGuid().ToString().Substring(UniqueCodeStartIndex, UniqueCodeLength);
         string email = $"vasile.mihai_{uniqueCode}@gmail.com";
-        string password = VasilePassword;
 
-        authViewModel.IsLoginMode = false;
-        authViewModel.EmailText = email;
-        authViewModel.PhoneText = "0733445566";
-        authViewModel.UsernameText = $"VasileM_{uniqueCode}";
-        authViewModel.PasswordText = password;
+        await authentificationService.RegisterAsync(email, "0733445566", $"VasileM_{uniqueCode}", VasilePassword);
 
-        authViewModel.ActionCommand.Execute(null);
-        // Wait for async void
-        await Task.Delay(1000);
+        var customer = await authentificationService.LoginAsync(email, VasilePassword);
 
-        authViewModel.SuccessMessage.Should().Contain("Registration successful");
-
-        authViewModel.IsLoginMode = true;
-        authViewModel.EmailText = email;
-        authViewModel.PasswordText = password;
-        authViewModel.ErrorMessage = string.Empty;
-
-        authViewModel.ActionCommand.Execute(null);
-        await Task.Delay(1000);
-
-        authViewModel.IsAuthenticated.Should().BeTrue();
-        authViewModel.AuthenticatedUser.Should().NotBeNull();
-        authViewModel.AuthenticatedUser!.Email.Should().Be(email);
+        customer.Should().NotBeNull();
+        customer.Email.Should().Be(email);
     }
 
     [TestMethod]

@@ -241,7 +241,8 @@ namespace AirportApp.Src.ViewModel
                 ErrorMessage = string.Empty;
                 SuccessMessage = string.Empty;
 
-                Customer user = await authService.LoginAsync(EmailText, PasswordText);
+                int? currentUserId = ((App)App.Current).User?.Id;
+                Customer user = await authService.LoginAsync(EmailText, PasswordText, currentUserId);
 
                 AuthenticatedUser = user;
                 IsAuthenticated = true;
