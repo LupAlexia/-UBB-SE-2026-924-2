@@ -19,16 +19,7 @@
             <TextBox x:Name="emailInput" PlaceholderText="Email" Width="300" 
                      Text="{x:Bind ViewModel.EmailText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                      InputScope="EmailSmtpAddress" />
-
-            <!-- Username/Phone: visibility bound to IsRegisterFieldsVisible -->
-            <TextBox x:Name="usernameInput" PlaceholderText="Username" Width="300" 
-                     Text="{x:Bind ViewModel.UsernameText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                     Visibility="{x:Bind ViewModel.IsRegisterFieldsVisible, Mode=OneWay}" />
-            <TextBox x:Name="phoneInput" PlaceholderText="Phone Number" Width="300" 
-                     Text="{x:Bind ViewModel.PhoneText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                     InputScope="TelephoneNumber"
-                     Visibility="{x:Bind ViewModel.IsRegisterFieldsVisible, Mode=OneWay}" />
-
+            
             <!-- Password (PasswordBox doesn't support two-way binding, synced in code-behind) -->
             <PasswordBox x:Name="passwordInput" PlaceholderText="Password" Width="300" 
                          PasswordChanged="Password_PasswordChanged" />
@@ -40,14 +31,6 @@
                     Width="300" Height="40" CornerRadius="8" 
                     FontWeight="Bold" Margin="0,10,0,0"
                     HorizontalAlignment="Center" HorizontalContentAlignment="Center"/>
-
-            <!-- Toggle link: labels bound to ViewModel, command handles mode switch -->
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="5" Margin="0,10,0,0">
-                <TextBlock Text="{x:Bind ViewModel.TogglePromptLabel, Mode=OneWay}" VerticalAlignment="Center" Foreground="Gray"/>
-                <HyperlinkButton Content="{x:Bind ViewModel.ToggleButtonLabel, Mode=OneWay}" 
-                                 Command="{x:Bind ViewModel.ToggleModeCommand}"
-                                 Foreground="#2bb8c0" FontWeight="SemiBold"/>
-            </StackPanel>
         </StackPanel>
     </Grid>
 </Page>
