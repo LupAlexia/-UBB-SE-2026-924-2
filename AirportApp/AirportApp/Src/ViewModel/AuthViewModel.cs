@@ -24,9 +24,9 @@ namespace AirportApp.Src.ViewModel
         private string titleText = "Flight Security Access";
         private string subtitleText = "To protect your flight details and personal data, please complete this quick security verification.";
         private string actionButtonLabel = "Sign In";
-        private string togglePromptLabel = "Don't have an account?";
-        private string toggleButtonLabel = "Create one";
-        private bool isRegisterFieldsVisible = false;
+        // private string togglePromptLabel = "Don't have an account?";
+        // private string toggleButtonLabel = "Create one";
+         private bool isRegisterFieldsVisible = false;
 
         public AuthViewModel(IAuthService authService, INavigationService navigationService)
         {
@@ -34,7 +34,6 @@ namespace AirportApp.Src.ViewModel
             this.navigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
 
             ActionCommand = new RelayCommand(async parameter => await ExecuteActionAsync(), parameter => IsFormValid);
-            ToggleModeCommand = new RelayCommand(parameter => ToggleMode());
         }
 
         public string EmailText
@@ -161,26 +160,6 @@ namespace AirportApp.Src.ViewModel
             }
         }
 
-        public string TogglePromptLabel
-        {
-            get => togglePromptLabel;
-            set
-            {
-                togglePromptLabel = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public string ToggleButtonLabel
-        {
-            get => toggleButtonLabel;
-            set
-            {
-                toggleButtonLabel = value;
-                OnPropertyChanged();
-            }
-        }
-
         public bool IsRegisterFieldsVisible
         {
             get => isRegisterFieldsVisible;
@@ -211,7 +190,6 @@ namespace AirportApp.Src.ViewModel
         }
 
         public ICommand ActionCommand { get; }
-        public ICommand ToggleModeCommand { get; }
 
         private async Task ExecuteActionAsync()
         {
@@ -237,28 +215,12 @@ namespace AirportApp.Src.ViewModel
             }
             else
             {
-                await RegisterAsync();
-
+                // await RegisterAsync();
                 if (string.IsNullOrWhiteSpace(ErrorMessage))
                 {
                     SetLoginMode();
                 }
             }
-        }
-
-        private void ToggleMode()
-        {
-            if (IsLoginMode)
-            {
-                SetRegisterMode();
-            }
-            else
-            {
-                SetLoginMode();
-            }
-
-            ClearMessages();
-            RaiseActionCanExecuteChanged();
         }
 
         private void SetLoginMode()
@@ -267,20 +229,9 @@ namespace AirportApp.Src.ViewModel
             TitleText = "Welcome to WizzErr";
             SubtitleText = "Please sign in to manage your tickets";
             ActionButtonLabel = "Sign In";
-            TogglePromptLabel = "Don't have an account?";
-            ToggleButtonLabel = "Create one";
+           // TogglePromptLabel = "Don't have an account?";
+           //  ToggleButtonLabel = "Create one";
             IsRegisterFieldsVisible = false;
-        }
-
-        private void SetRegisterMode()
-        {
-            IsLoginMode = false;
-            TitleText = "Create a WizzErr Account";
-            SubtitleText = "Fill in the details to register";
-            ActionButtonLabel = "Register";
-            TogglePromptLabel = "Already have an account?";
-            ToggleButtonLabel = "Sign in";
-            IsRegisterFieldsVisible = true;
         }
 
         private async Task LoginAsync()
@@ -300,23 +251,6 @@ namespace AirportApp.Src.ViewModel
             {
                 IsAuthenticated = false;
                 AuthenticatedUser = null;
-                ErrorMessage = exception.Message;
-            }
-        }
-
-        private async Task RegisterAsync()
-        {
-            try
-            {
-                ErrorMessage = string.Empty;
-                SuccessMessage = string.Empty;
-
-                await authService.RegisterAsync(EmailText, PhoneText, UsernameText, PasswordText);
-
-                SuccessMessage = "Registration successful. You can now sign in.";
-            }
-            catch (Exception exception)
-            {
                 ErrorMessage = exception.Message;
             }
         }
