@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using AirportApp.ClassLibrary.Entity.Dto;
 using CommunityToolkit.Mvvm.ComponentModel;
-using AirportApp.Src.Service.Interfaces;
+using AirportApp.ClassLibrary.Service.Interfaces;
 
 namespace AirportApp.Src.ViewModel
 {

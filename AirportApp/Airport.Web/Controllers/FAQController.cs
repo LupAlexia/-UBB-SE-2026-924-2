@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AirportApp.ClassLibrary.Entity.Domain;
-using AirportApp.ClassLibrary.Repository.Interfaces;
+using AirportApp.ClassLibrary.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Airport.Web.Controllers
@@ -10,17 +10,17 @@ namespace Airport.Web.Controllers
     [Route("api/[controller]")]
     public class FAQController : ControllerBase
     {
-        private readonly IFAQRepository faqRepository;
+        private readonly IFAQService faqService;
 
-        public FAQController(IFAQRepository faqRepository)
+        public FAQController(IFAQService faqService)
         {
-            this.faqRepository = faqRepository;
+            this.faqService = faqService;
         }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<FAQEntry>>> GetAllAsync()
         {
-            IEnumerable<FAQEntry> entries = await faqRepository.GetAllAsync();
+            List<FAQEntry> entries = await faqService.GetAllAsync();
             return Ok(entries);
         }
 
@@ -29,7 +29,9 @@ namespace Airport.Web.Controllers
         {
             try
             {
-                FAQEntry entry = await faqRepository.GetByIdAsync(id);
+                List<FAQEntry> entries = await faqService.GetAllAsync();
+                FAQEntry entry = entries.Find(e => e.Id == id)
+                    ?? throw new KeyNotFoundException();
                 return Ok(entry);
             }
             catch (KeyNotFoundException)
@@ -41,37 +43,66 @@ namespace Airport.Web.Controllers
         [HttpGet("by-category")]
         public async Task<ActionResult<IEnumerable<FAQEntry>>> GetByCategoryAsync([FromQuery] FAQCategoryEnum category)
         {
-            List<FAQEntry> entries = await faqRepository.GetByCategoryAsync(category);
+            List<FAQEntry> entries = await faqService.GetByCategoryAsync(category);
             return Ok(entries);
         }
 
         [HttpPost("{id}/increment-view")]
         public async Task<ActionResult> IncrementViewCountAsync(int id)
         {
-            await faqRepository.IncrementViewCountAsync(id);
-            return NoContent();
+            try
+            {
+                List<FAQEntry> entries = await faqService.GetAllAsync();
+                FAQEntry entry = entries.Find(e => e.Id == id)
+                    ?? throw new KeyNotFoundException();
+                await faqService.IncrementViewCountAsync(entry);
+                return NoContent();
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound();
+            }
         }
 
         [HttpPost("{id}/increment-helpful")]
         public async Task<ActionResult> IncrementHelpfulAsync(int id)
         {
-            await faqRepository.IncrementWasHelpfulVotesAsync(id);
-            return NoContent();
+            try
+            {
+                List<FAQEntry> entries = await faqService.GetAllAsync();
+                FAQEntry entry = entries.Find(e => e.Id == id)
+                    ?? throw new KeyNotFoundException();
+                await faqService.IncrementWasHelpfulVotesAsync(entry);
+                return NoContent();
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound();
+            }
         }
 
         [HttpPost("{id}/increment-not-helpful")]
         public async Task<ActionResult> IncrementNotHelpfulAsync(int id)
         {
-            await faqRepository.IncrementWasNotHelpfulVotesAsync(id);
-            return NoContent();
+            try
+            {
+                List<FAQEntry> entries = await faqService.GetAllAsync();
+                FAQEntry entry = entries.Find(e => e.Id == id)
+                    ?? throw new KeyNotFoundException();
+                await faqService.IncrementWasNotHelpfulVotesAsync(entry);
+                return NoContent();
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound();
+            }
         }
 
-        // adaugate de dede pentru proxy
         [HttpPost]
         public async Task<ActionResult> CreateAsync([FromBody] FAQEntry entry)
         {
-            int createdId = await faqRepository.CreateNewEntityAsync(entry);
-            return CreatedAtAction(nameof(GetByIdAsync), new { id = createdId }, entry);
+            await faqService.AddFAQEntryAsync(entry);
+            return CreatedAtAction(nameof(GetByIdAsync), new { id = entry.Id }, entry);
         }
 
         [HttpPut("{id}")]
@@ -81,14 +112,15 @@ namespace Airport.Web.Controllers
             {
                 return BadRequest("ID in URL does not match ID in body.");
             }
-            await faqRepository.UpdateByIdAsync(id, entry);
+
+            await faqService.EditFAQEntryAsync(entry, id);
             return NoContent();
         }
 
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteAsync(int id)
         {
-            await faqRepository.DeleteByIdAsync(id);
+            await faqService.DeleteFAQEntryAsync(id);
             return NoContent();
         }
     }

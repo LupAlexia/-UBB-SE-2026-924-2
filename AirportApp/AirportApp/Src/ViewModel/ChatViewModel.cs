@@ -10,7 +10,7 @@ using AirportApp.ClassLibrary.Repository.Interfaces;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.UI.Xaml.Controls;
-using AirportApp.Src.Service.Interfaces;
+using AirportApp.ClassLibrary.Service.Interfaces;
 
 namespace AirportApp.Src.ViewModel
 {

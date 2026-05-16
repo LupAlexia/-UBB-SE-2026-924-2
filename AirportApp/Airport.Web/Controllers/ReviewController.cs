@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using AirportApp.ClassLibrary.Entity.Domain;
 using AirportApp.ClassLibrary.Entity.Dto;
-using AirportApp.ClassLibrary.Repository.Interfaces;
+using AirportApp.ClassLibrary.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Airport.Web.Controllers
@@ -11,18 +11,19 @@ namespace Airport.Web.Controllers
     [Route("api/[controller]")]
     public class ReviewController : ControllerBase
     {
-        private readonly IRepository<int, Review> reviewRepository;
-        private readonly IUserRepository userRepository;
-        public ReviewController(IRepository<int, Review> reviewRepository, IUserRepository userRepository)
+        private readonly IReviewService reviewService;
+        private readonly IUserService userService;
+
+        public ReviewController(IReviewService reviewService, IUserService userService)
         {
-            this.reviewRepository = reviewRepository;
-            this.userRepository = userRepository;
+            this.reviewService = reviewService;
+            this.userService = userService;
         }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Review>>> GetAllAsync()
         {
-            IEnumerable<Review> reviews = await reviewRepository.GetAllAsync();
+            IEnumerable<Review> reviews = await reviewService.GetAllAsync();
             return Ok(reviews);
         }
 
@@ -31,7 +32,7 @@ namespace Airport.Web.Controllers
         {
             try
             {
-                Review review = await reviewRepository.GetByIdAsync(id);
+                Review review = await reviewService.GetByIdAsync(id);
                 return Ok(review);
             }
             catch (KeyNotFoundException)
@@ -43,7 +44,7 @@ namespace Airport.Web.Controllers
         [HttpPost]
         public async Task<ActionResult> CreateAsync([FromBody] CreateReviewDTO reviewCreationData)
         {
-            var user = await userRepository.GetByIdAsync(reviewCreationData.userId);
+            User user = await userService.GetByIdAsync(reviewCreationData.userId);
             if (user == null)
             {
                 return NotFound($"User with id {reviewCreationData.userId} not found.");
@@ -58,7 +59,8 @@ namespace Airport.Web.Controllers
                 StaffFriendlinessRating = reviewCreationData.staffFriendlinessRating,
                 CleanlinessRating = reviewCreationData.cleanlinessRating
             };
-            int createdId = await reviewRepository.CreateNewEntityAsync(review);
+
+            int createdId = await reviewService.AddAsync(review);
             return CreatedAtAction(nameof(GetByIdAsync), new { id = createdId }, review);
         }
 
@@ -70,14 +72,14 @@ namespace Airport.Web.Controllers
                 return BadRequest("ID in URL does not match ID in body.");
             }
 
-            await reviewRepository.UpdateByIdAsync(id, review);
+            await reviewService.UpdateByIdAsync(id, review);
             return NoContent();
         }
 
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteAsync(int id)
         {
-            await reviewRepository.DeleteByIdAsync(id);
+            await reviewService.DeleteByIdAsync(id);
             return NoContent();
         }
     }

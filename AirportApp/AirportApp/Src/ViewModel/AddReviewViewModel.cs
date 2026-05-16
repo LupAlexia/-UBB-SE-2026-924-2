@@ -2,7 +2,7 @@ using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using AirportApp.ClassLibrary.Entity.Domain;
-using AirportApp.Src.Service.Interfaces;
+using AirportApp.ClassLibrary.Service.Interfaces;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 

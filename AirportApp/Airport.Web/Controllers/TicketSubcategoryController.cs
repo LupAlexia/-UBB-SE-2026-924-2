@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AirportApp.ClassLibrary.Entity.Domain;
-using AirportApp.ClassLibrary.Repository.Interfaces;
+using AirportApp.ClassLibrary.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Airport.Web.Controllers
@@ -10,18 +10,11 @@ namespace Airport.Web.Controllers
     [Route("api/[controller]")]
     public class TicketSubcategoryController : ControllerBase
     {
-        private readonly ITicketSubcategoryRepository ticketSubcategoryRepository;
+        private readonly IComplaintTicketSubcategoryService ticketSubcategoryService;
 
-        public TicketSubcategoryController(ITicketSubcategoryRepository ticketSubcategoryRepository)
+        public TicketSubcategoryController(IComplaintTicketSubcategoryService ticketSubcategoryService)
         {
-            this.ticketSubcategoryRepository = ticketSubcategoryRepository;
-        }
-
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<ComplaintTicketSubcategory>>> GetAllAsync()
-        {
-            IEnumerable<ComplaintTicketSubcategory> subcategories = await ticketSubcategoryRepository.GetAllAsync();
-            return Ok(subcategories);
+            this.ticketSubcategoryService = ticketSubcategoryService;
         }
 
         [HttpGet("{id}")]
@@ -29,7 +22,7 @@ namespace Airport.Web.Controllers
         {
             try
             {
-                ComplaintTicketSubcategory subcategory = await ticketSubcategoryRepository.GetByIdAsync(id);
+                ComplaintTicketSubcategory subcategory = await ticketSubcategoryService.GetSubcategoryByIdAsync(id);
                 return Ok(subcategory);
             }
             catch (KeyNotFoundException)
@@ -41,7 +34,7 @@ namespace Airport.Web.Controllers
         [HttpGet("by-category/{categoryId}")]
         public async Task<ActionResult<IEnumerable<ComplaintTicketSubcategory>>> GetByCategoryIdAsync(int categoryId)
         {
-            IEnumerable<ComplaintTicketSubcategory> subcategories = await ticketSubcategoryRepository.GetByCategoryIdAsync(categoryId);
+            IEnumerable<ComplaintTicketSubcategory> subcategories = await ticketSubcategoryService.GetSubcategoriesByCategoryIdAsync(categoryId);
             return Ok(subcategories);
         }
     }

@@ -6,7 +6,7 @@ using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using AutoMapper;
 using AirportApp.ClassLibrary.Entity.Dto;
-using AirportApp.Src.Service.Interfaces;
+using AirportApp.ClassLibrary.Service.Interfaces;
 using AirportApp.Src.View.Faq;
 using AirportApp.Src.View;
 using AirportApp.ClassLibrary.Entity.Domain;

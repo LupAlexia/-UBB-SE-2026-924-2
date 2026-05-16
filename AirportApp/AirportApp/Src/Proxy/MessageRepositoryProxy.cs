@@ -99,5 +99,18 @@ namespace AirportApp.Src.Proxy
 
             return new Message(messageTransferObject.MessageId, sender, new Chat { Id = messageTransferObject.ChatId }, messageTransferObject.MessageText, messageTransferObject.Timestamp);
         }
+
+        public async Task<Sender> GetSenderByIdAsync(int senderId)
+        {
+            if (senderId == BotEngineIdentity.CONSTANT_IDENTIFIER_FOR_DEFAULT_BOT_SYSTEM_USER)
+            {
+                return new BotEngineIdentity(null);
+            }
+
+            var user = await httpClient.GetFromJsonAsync<User>($"api/user/{senderId}")
+                ?? throw new KeyNotFoundException($"Sender with id {senderId} not found.");
+
+            return user;
+        }
     }
 }

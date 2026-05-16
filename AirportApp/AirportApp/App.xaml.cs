@@ -9,7 +9,7 @@ using AirportApp.ClassLibrary.Repository.Interfaces;
 using AirportApp.Src.Service;
 using AirportApp.Src.Service.Bot.Strategy;
 using AirportApp.Src.Service.Implementation;
-using AirportApp.Src.Service.Interfaces;
+using AirportApp.ClassLibrary.Service.Interfaces;
 using AirportApp.Src.ViewModel;
 using Microsoft.EntityFrameworkCore;
 using AirportApp.Src.ViewModel;

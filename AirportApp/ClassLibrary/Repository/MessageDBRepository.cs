@@ -131,5 +131,12 @@ namespace AirportApp.ClassLibrary.Repository.Interfaces
                 .FirstOrDefaultAsync(sender => sender.Id == senderId)
                 ?? throw new KeyNotFoundException($"Sender with id {senderId} was not found.");
         }
+
+        public async Task<Sender> GetSenderByIdAsync(int senderId)
+        {
+            return await databaseContext.Senders
+                .FirstOrDefaultAsync(sender => sender.Id == senderId)
+                ?? throw new KeyNotFoundException($"Sender with id {senderId} was not found.");
+        }
     }
 }

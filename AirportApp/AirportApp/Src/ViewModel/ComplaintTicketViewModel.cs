@@ -5,9 +5,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using AirportApp.ClassLibrary.Entity.Dto;
-using AirportApp.Src.Service.Interfaces;
+using AirportApp.ClassLibrary.Service.Interfaces;
 
-using AirportApp.Src.Service;
 using AirportApp.ClassLibrary.Entity.Domain;
 
 namespace AirportApp.Src.ViewModel
@@ -175,13 +174,5 @@ namespace AirportApp.Src.ViewModel
                 Subcategories.Add(subcategoryEntity);
             }
         }
-    }
-
-    public enum TicketFilterStatusEnum
-    {
-        ALL,
-        OPEN,
-        IN_PROGRESS,
-        RESOLVED
     }
 }

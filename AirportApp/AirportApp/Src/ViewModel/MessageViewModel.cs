@@ -5,8 +5,8 @@ using AutoMapper;
 using AirportApp.ClassLibrary.Entity.Dto;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using AirportApp.Src.Service.Interfaces;
 using AirportApp.ClassLibrary.Entity.Domain;
+using AirportApp.ClassLibrary.Service.Interfaces;
 
 namespace AirportApp.Src.ViewModel
 {

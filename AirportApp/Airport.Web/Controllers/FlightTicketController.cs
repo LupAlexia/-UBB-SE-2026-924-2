@@ -1,7 +1,9 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AirportApp.ClassLibrary.Entity.Domain;
-using AirportApp.ClassLibrary.Repository.Interfaces;
+using AirportApp.ClassLibrary.Entity.Dto;
+using AirportApp.ClassLibrary.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Airport.Web.Controllers
@@ -10,25 +12,25 @@ namespace Airport.Web.Controllers
     [Route("api/[controller]")]
     public class FlightTicketController : ControllerBase
     {
-        private readonly IFlightTicketRepository flightTicketRepository;
-        private readonly ICustomerRepository customerRepository;
-        private readonly IFlightRepository flightRepository;
+        private readonly IDashboardService dashboardService;
+        private readonly IAuthService authService;
+        private readonly IFlightSearchService flightSearchService;
 
-        public FlightTicketController(IFlightTicketRepository flightTicketRepository, ICustomerRepository customerRepository, IFlightRepository flightRepository)
+        public FlightTicketController(IDashboardService dashboardService, IAuthService authService, IFlightSearchService flightSearchService)
         {
-            this.flightTicketRepository = flightTicketRepository;
-            this.flightRepository = flightRepository;
-            this.customerRepository = customerRepository;
+            this.dashboardService = dashboardService;
+            this.authService = authService;
+            this.flightSearchService = flightSearchService;
         }
 
         [HttpGet("user/{userId}")]
-        public async Task<ActionResult<IEnumerable<AirportApp.ClassLibrary.Entity.Dto.FlightTicketDTO>>> GetByUserIdAsync(int userId)
+        public async Task<ActionResult<IEnumerable<FlightTicketDTO>>> GetByUserIdAsync(int userId)
         {
-            IEnumerable<FlightTicket> tickets = await flightTicketRepository.GetTicketsByUserIdAsync(userId);
-            var flightTicketTransferObjectList = new List<AirportApp.ClassLibrary.Entity.Dto.FlightTicketDTO>();
+            IEnumerable<FlightTicket> tickets = await dashboardService.GetTicketsByUserIdAsync(userId);
+            var flightTicketTransferObjectList = new List<FlightTicketDTO>();
             foreach (var ticket in tickets)
             {
-                flightTicketTransferObjectList.Add(new AirportApp.ClassLibrary.Entity.Dto.FlightTicketDTO(
+                flightTicketTransferObjectList.Add(new FlightTicketDTO(
                     ticket.Id,
                     ticket.User.Id,
                     ticket.Flight.Id,
@@ -39,33 +41,34 @@ namespace Airport.Web.Controllers
                     ticket.PassengerLastName,
                     ticket.PassengerEmail,
                     ticket.PassengerPhone,
-                    ticket.SelectedAddOns?.Select(addOn => new AirportApp.ClassLibrary.Entity.Dto.AddOnDTO(addOn.Id, addOn.Name, addOn.BasePrice)).ToList() ?? new List<AirportApp.ClassLibrary.Entity.Dto.AddOnDTO>(),
-                    ticket.Flight != null ? new AirportApp.ClassLibrary.Entity.Dto.FlightDTO(
+                    ticket.SelectedAddOns?.Select(addOn => new AddOnDTO(addOn.Id, addOn.Name, addOn.BasePrice)).ToList() ?? new List<AddOnDTO>(),
+                    ticket.Flight != null ? new FlightDTO(
                         ticket.Flight.Id,
                         ticket.Flight.Route.Id,
                         ticket.Flight.Gate.Id,
                         ticket.Flight.Date,
                         ticket.Flight.FlightNumber,
-                        ticket.Flight.Route != null ? new AirportApp.ClassLibrary.Entity.Dto.RouteDTO(
+                        ticket.Flight.Route != null ? new RouteDTO(
                             ticket.Flight.Route.Id,
                             ticket.Flight.Route.RouteType,
                             ticket.Flight.Route.DepartureTime,
                             ticket.Flight.Route.ArrivalTime,
                             ticket.Flight.Route.Capacity,
-                            ticket.Flight.Route.Airport != null ? new AirportApp.ClassLibrary.Entity.Dto.AirportDTO(ticket.Flight.Route.Airport.Id, ticket.Flight.Route.Airport.AirportCode, ticket.Flight.Route.Airport.City) : null,
-                            ticket.Flight.Route.Company != null ? new AirportApp.ClassLibrary.Entity.Dto.CompanyDTO(ticket.Flight.Route.Company.Id, ticket.Flight.Route.Company.Name) : null) : null) : null));
+                            ticket.Flight.Route.Airport != null ? new AirportDTO(ticket.Flight.Route.Airport.Id, ticket.Flight.Route.Airport.AirportCode, ticket.Flight.Route.Airport.City) : null,
+                            ticket.Flight.Route.Company != null ? new CompanyDTO(ticket.Flight.Route.Company.Id, ticket.Flight.Route.Company.Name) : null) : null) : null));
             }
+
             return Ok(flightTicketTransferObjectList);
         }
 
         [HttpPost]
-        public async Task<ActionResult> AddTicketAsync([FromBody] AirportApp.ClassLibrary.Entity.Dto.FlightTicketDTO flightTicketData)
+        public async Task<ActionResult> AddTicketAsync([FromBody] FlightTicketDTO flightTicketData)
         {
             var ticket = new FlightTicket
             {
                 Id = flightTicketData.id,
-                User = await customerRepository.GetByIdAsync(flightTicketData.userId),
-                Flight = await flightRepository.GetFlightByIdAsync(flightTicketData.flightId),
+                User = await authService.GetByIdAsync(flightTicketData.userId),
+                Flight = await flightSearchService.GetFlightByIdAsync(flightTicketData.flightId),
                 Seat = flightTicketData.seat,
                 Price = flightTicketData.price,
                 Status = flightTicketData.status,
@@ -73,42 +76,42 @@ namespace Airport.Web.Controllers
                 PassengerLastName = flightTicketData.passengerLastName,
                 PassengerEmail = flightTicketData.passengerEmail,
                 PassengerPhone = flightTicketData.passengerPhone
-                // Add-ons are usually handled via separate endpoint or batch
             };
-            await flightTicketRepository.AddTicketAsync(ticket);
+
+            await dashboardService.AddTicketAsync(ticket);
             return Ok(flightTicketData);
         }
 
         [HttpPut("{ticketId}/status")]
         public async Task<ActionResult> UpdateTicketStatusAsync(int ticketId, [FromBody] string status)
         {
-            await flightTicketRepository.UpdateTicketStatusAsync(ticketId, status);
+            await dashboardService.UpdateTicketStatusAsync(ticketId, status);
             return NoContent();
         }
 
         [HttpPost("{ticketId}/addons")]
         public async Task<ActionResult> AddTicketAddOnsAsync(int ticketId, [FromBody] IEnumerable<int> addOnIds)
         {
-            await flightTicketRepository.AddTicketAddOnsAsync(ticketId, addOnIds);
+            await dashboardService.AddTicketAddOnsAsync(ticketId, addOnIds);
             return NoContent();
         }
 
         [HttpGet("flight/{flightId}/occupied-seats")]
         public async Task<ActionResult<IEnumerable<string>>> GetOccupiedSeatsAsync(int flightId)
         {
-            IEnumerable<string> seats = await flightTicketRepository.GetOccupiedSeatsAsync(flightId);
+            IEnumerable<string> seats = await dashboardService.GetOccupiedSeatsAsync(flightId);
             return Ok(seats);
         }
 
         [HttpGet("flight/{flightId}/seat-available/{seat}")]
         public async Task<ActionResult<bool>> IsSeatAvailableAsync(int flightId, string seat)
         {
-            bool isAvailable = await flightTicketRepository.IsSeatAvailableAsync(flightId, seat);
+            bool isAvailable = await dashboardService.IsSeatAvailableAsync(flightId, seat);
             return Ok(isAvailable);
         }
 
         [HttpPost("batch")]
-        public async Task<ActionResult<bool>> SaveTicketsWithAddOnsAsync([FromBody] AirportApp.ClassLibrary.Entity.Dto.SaveTicketsRequestDTO request)
+        public async Task<ActionResult<bool>> SaveTicketsWithAddOnsAsync([FromBody] SaveTicketsRequestDTO request)
         {
             if (request?.Tickets == null)
             {
@@ -124,8 +127,8 @@ namespace Airport.Web.Controllers
                 tickets.Add(new FlightTicket
                 {
                     Id = ticketTransferObject.id,
-                    User = await customerRepository.GetByIdAsync(ticketTransferObject.userId),
-                    Flight = await flightRepository.GetFlightByIdAsync(ticketTransferObject.flightId),
+                    User = await authService.GetByIdAsync(ticketTransferObject.userId),
+                    Flight = await flightSearchService.GetFlightByIdAsync(ticketTransferObject.flightId),
                     Seat = ticketTransferObject.seat,
                     Price = ticketTransferObject.price,
                     Status = ticketTransferObject.status,
@@ -141,7 +144,7 @@ namespace Airport.Web.Controllers
                 }
             }
 
-            bool isSuccess = await flightTicketRepository.SaveTicketsWithAddOnsAsync(tickets, addOnIds);
+            bool isSuccess = await dashboardService.SaveTicketsWithAddOnsAsync(tickets, addOnIds);
             if (!isSuccess)
             {
                 return BadRequest();

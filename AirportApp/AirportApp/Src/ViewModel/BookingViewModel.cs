@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using AirportApp.ClassLibrary.Entity.Domain;
 using AirportApp.Src.Service.Interfaces;
+using AirportApp.ClassLibrary.Service.Interfaces;
 
 namespace AirportApp.Src.ViewModel
 {

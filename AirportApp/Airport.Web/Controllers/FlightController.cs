@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using AirportApp.ClassLibrary.Entity.Domain;
 using AirportApp.ClassLibrary.Repository.Interfaces;
+using AirportApp.ClassLibrary.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Airport.Web.Controllers
@@ -11,17 +12,17 @@ namespace Airport.Web.Controllers
     [Route("api/[controller]")]
     public class FlightController : ControllerBase
     {
-        private readonly IFlightRepository flightRepository;
+        private readonly IFlightSearchService flightService;
 
         public FlightController(IFlightRepository flightRepository)
         {
-            this.flightRepository = flightRepository;
+            this.flightService = flightService;
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<AirportApp.ClassLibrary.Entity.Dto.FlightDTO>> GetByIdAsync(int id)
         {
-            Flight? flight = await flightRepository.GetFlightByIdAsync(id);
+            Flight? flight = await flightService.GetFlightByIdAsync(id);
             if (flight == null)
             {
                 return NotFound();
@@ -51,7 +52,7 @@ namespace Airport.Web.Controllers
             [FromQuery] string routeType,
             [FromQuery] DateTime? date)
         {
-            IEnumerable<Flight> flights = await flightRepository.GetFlightsByRouteAsync(location, routeType, date);
+            IEnumerable<Flight> flights = await flightService.GetFlightsByRouteAsync(location, routeType, date);
             var flightTransferObjectList = new List<AirportApp.ClassLibrary.Entity.Dto.FlightDTO>();
             foreach (var flight in flights)
             {
@@ -76,7 +77,7 @@ namespace Airport.Web.Controllers
         [HttpGet("{flightId}/occupied-seat-count")]
         public async Task<ActionResult<int>> GetOccupiedSeatCountAsync(int flightId)
         {
-            int count = await flightRepository.GetOccupiedSeatCountAsync(flightId);
+            int count = await flightService.GetOccupiedSeatCountAsync(flightId);
             return Ok(count);
         }
     }

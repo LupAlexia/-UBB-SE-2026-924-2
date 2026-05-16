@@ -12,4 +12,12 @@ namespace AirportApp.ClassLibrary.Entity.Domain
         IN_PROGRESS,
         RESOLVED
     }
+
+    public enum TicketFilterStatusEnum
+    {
+        ALL,
+        OPEN,
+        IN_PROGRESS,
+        RESOLVED
+    }
 }

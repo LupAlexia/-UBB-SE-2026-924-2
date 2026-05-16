@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AirportApp.ClassLibrary.Entity.Domain;
-using AirportApp.ClassLibrary.Repository.Interfaces;
+using AirportApp.ClassLibrary.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Airport.Web.Controllers
@@ -10,17 +10,17 @@ namespace Airport.Web.Controllers
     [Route("api/[controller]")]
     public class EmployeeController : ControllerBase
     {
-        private readonly IEmployeeRepository employeeRepository;
+        private readonly IEmployeeService employeeService;
 
-        public EmployeeController(IEmployeeRepository employeeRepository)
+        public EmployeeController(IEmployeeService employeeService)
         {
-            this.employeeRepository = employeeRepository;
+            this.employeeService = employeeService;
         }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Employee>>> GetAllAsync()
         {
-            IEnumerable<Employee> employees = await employeeRepository.GetAllAsync();
+            IEnumerable<Employee> employees = await employeeService.GetAllEmployeesAsync();
             return Ok(employees);
         }
 
@@ -29,7 +29,7 @@ namespace Airport.Web.Controllers
         {
             try
             {
-                Employee employee = await employeeRepository.GetByIdAsync(id);
+                Employee employee = await employeeService.GetEmployeeByIdAsync(id);
                 return Ok(employee);
             }
             catch (KeyNotFoundException)
@@ -41,7 +41,7 @@ namespace Airport.Web.Controllers
         [HttpPost]
         public async Task<ActionResult> CreateAsync([FromBody] Employee employee)
         {
-            int createdId = await employeeRepository.CreateNewEntityAsync(employee);
+            int createdId = await employeeService.AddEmployeeAsync(employee);
             return CreatedAtAction(nameof(GetByIdAsync), new { id = createdId }, employee);
         }
 
@@ -53,14 +53,14 @@ namespace Airport.Web.Controllers
                 return BadRequest("ID in URL does not match ID in body.");
             }
 
-            await employeeRepository.UpdateByIdAsync(id, employee);
+            await employeeService.UpdateEmployeeByIdAsync(id, employee);
             return NoContent();
         }
 
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteAsync(int id)
         {
-            await employeeRepository.DeleteByIdAsync(id);
+            await employeeService.DeleteEmployeeByIdAsync(id);
             return NoContent();
         }
     }

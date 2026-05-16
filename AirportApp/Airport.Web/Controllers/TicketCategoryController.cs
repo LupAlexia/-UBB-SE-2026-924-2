@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AirportApp.ClassLibrary.Entity.Domain;
-using AirportApp.ClassLibrary.Repository.Interfaces;
+using AirportApp.ClassLibrary.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Airport.Web.Controllers
@@ -10,17 +10,17 @@ namespace Airport.Web.Controllers
     [Route("api/[controller]")]
     public class TicketCategoryController : ControllerBase
     {
-        private readonly ITicketCategoryRepository ticketCategoryRepository;
+        private readonly IComplaintTicketCategoryService ticketCategoryService;
 
-        public TicketCategoryController(ITicketCategoryRepository ticketCategoryRepository)
+        public TicketCategoryController(IComplaintTicketCategoryService ticketCategoryService)
         {
-            this.ticketCategoryRepository = ticketCategoryRepository;
+            this.ticketCategoryService = ticketCategoryService;
         }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ComplaintTicketCategory>>> GetAllAsync()
         {
-            IEnumerable<ComplaintTicketCategory> categories = await ticketCategoryRepository.GetAllAsync();
+            IEnumerable<ComplaintTicketCategory> categories = await ticketCategoryService.GetAllCategoriesAsync();
             return Ok(categories);
         }
 
@@ -29,7 +29,7 @@ namespace Airport.Web.Controllers
         {
             try
             {
-                ComplaintTicketCategory category = await ticketCategoryRepository.GetByIdAsync(id);
+                ComplaintTicketCategory category = await ticketCategoryService.GetCategoryByIdAsync(id);
                 return Ok(category);
             }
             catch (KeyNotFoundException)
