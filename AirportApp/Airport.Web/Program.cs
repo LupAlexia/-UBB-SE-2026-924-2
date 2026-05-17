@@ -4,6 +4,8 @@ using AirportApp.ClassLibrary.Entity.Domain;
 using AirportApp.ClassLibrary.Entity.Repository.Database;
 using AirportApp.ClassLibrary.Repository;
 using AirportApp.ClassLibrary.Repository.Interfaces;
+using AirportApp.ClassLibrary.Service;
+using AirportApp.ClassLibrary.Service.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace Airport.Web
@@ -29,12 +31,34 @@ namespace Airport.Web
             builder.Services.AddScoped<ITicketCategoryRepository, ComplaintTicketCategoryRepository>();
             builder.Services.AddScoped<ITicketSubcategoryRepository, ComplaintTicketSubcategoryRepository>();
             builder.Services.AddScoped<IUserRepository, UserRepository>();
+            builder.Services.AddScoped<IRepository<int, User>, UserRepository>();
 
             builder.Services.AddScoped<IRepository<int, Chat>, ChatDatabaseRepository>();
             builder.Services.AddScoped<IMessageRepository, MessageDatabaseRepository>();
             builder.Services.AddScoped<IRepository<int, Review>, ReviewRepository>();
             builder.Services.AddScoped<IRepository<int, Sender>, SenderRepository>();
             builder.Services.AddScoped<IRepository<int, FAQNode>, DecisionTreeRepository>();
+
+            builder.Services.AddScoped<IBotStrategy, DecisionTreeStrategy>();
+            builder.Services.AddScoped<BotEngineIdentity>();
+
+            builder.Services.AddScoped<IAuthService, AuthService>();
+            builder.Services.AddScoped<IBookingService, BookingService>();
+            builder.Services.AddScoped<ICancellationService, CancellationService>();
+            builder.Services.AddScoped<IChatService, ChatService>();
+            builder.Services.AddScoped<IComplaintTicketService, ComplaintTicketService>();
+            builder.Services.AddScoped<IComplaintTicketCategoryService, ComplaintTicketCategoryService>();
+            builder.Services.AddScoped<IComplaintTicketSubcategoryService, ComplaintTicketSubcategoryService>();
+            builder.Services.AddScoped<IDashboardService, DashboardService>();
+            builder.Services.AddScoped<IDecisionTreeService, DecisionTreeService>();
+            builder.Services.AddScoped<IEmployeeService, EmployeeService>();
+            builder.Services.AddScoped<IFAQService, FAQService>();
+            builder.Services.AddScoped<IFlightSearchService, FlightSearchService>();
+            builder.Services.AddScoped<IMembershipService, MembershipService>();
+            builder.Services.AddScoped<IMessageService, MessageService>();
+            builder.Services.AddScoped<IPricingService, PricingService>();
+            builder.Services.AddScoped<IReviewService, ReviewService>();
+            builder.Services.AddScoped<IUserService, UserService>();
 
             builder.Services.AddControllers(options =>
                 {

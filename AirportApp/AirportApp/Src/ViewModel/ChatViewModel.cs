@@ -6,11 +6,10 @@ using System.Threading.Tasks;
 using AutoMapper;
 using AirportApp.ClassLibrary.Entity.Domain;
 using AirportApp.ClassLibrary.Entity.Dto;
-using AirportApp.ClassLibrary.Repository.Interfaces;
+using AirportApp.ClassLibrary.Service.Interfaces;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.UI.Xaml.Controls;
-using AirportApp.ClassLibrary.Service.Interfaces;
 
 namespace AirportApp.Src.ViewModel
 {
@@ -22,21 +21,20 @@ namespace AirportApp.Src.ViewModel
         private IMessageService messageService;
         private IChatService chatService;
         private IUserService userService;
+        private IDecisionTreeService decisionTreeService;
         private IMapper mapper;
-        private IRepository<int, FAQNode> faqRepository;
         private Chat chat;
         private User user;
-        private const int FIRST_OPTION = 1;
+        private const int FirstOptionNodeId = 1;
 
-        public ChatViewModel(IMessageService msgService, IChatService chatService, IMapper mapper, IUserService userService, IRepository<int, FAQNode> faqRepository, User testUser = null)
+        public ChatViewModel(IMessageService messageService, IChatService chatService, IMapper mapper, IUserService userService, IDecisionTreeService decisionTreeService, User testUser = null)
         {
-            messageService = msgService;
+            this.messageService = messageService;
             this.chatService = chatService;
             this.mapper = mapper;
             this.userService = userService;
-            this.faqRepository = faqRepository;
+            this.decisionTreeService = decisionTreeService;
 
-            // uses the injected user for tests, otherwise fallback to App.Current
             user = testUser ?? (App.Current as App)?.User;
 
             if (user == null)
@@ -128,15 +126,16 @@ namespace AirportApp.Src.ViewModel
             }
             else
             {
-                var restartNode = await faqRepository.GetByIdAsync(FIRST_OPTION);
+                var restartNode = await decisionTreeService.GetNodeByIdAsync(FirstOptionNodeId);
                 CurrentOptions.Add(new FAQOption("Restart Chat", restartNode));
             }
         }
 
         private async Task LoadFirstMessageAsync()
         {
-            var firstNode = await faqRepository.GetByIdAsync(FIRST_OPTION);
+            var firstNode = await decisionTreeService.GetNodeByIdAsync(FirstOptionNodeId);
             await HandleOptionClickAsync(new FAQOption("Hello! I need help.", firstNode));
         }
     }
 }
+

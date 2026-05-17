@@ -3,24 +3,14 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Net.Http;
 using AirportApp.ClassLibrary.Entity.Domain;
-using AirportApp.ClassLibrary.Entity.Repository.Database;
-using AirportApp.ClassLibrary.Repository;
-using AirportApp.ClassLibrary.Repository.Interfaces;
-using AirportApp.Src.Service;
-using AirportApp.Src.Service.Bot.Strategy;
-using AirportApp.Src.Service.Implementation;
+using AirportApp.ClassLibrary.Entity.Dto;
+using AirportApp.ClassLibrary.Proxy.ServiceProxies;
 using AirportApp.ClassLibrary.Service.Interfaces;
+using AirportApp.Src.Service;
 using AirportApp.Src.ViewModel;
-using Microsoft.EntityFrameworkCore;
-using AirportApp.Src.ViewModel;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using AirportApp.ClassLibrary.Entity.Dto;
-using AirportApp.Src.Proxy;
-using AirportApp.ClassLibrary.DataAccess;
-using Microsoft.EntityFrameworkCore;
 
 namespace AirportApp
 {
@@ -32,7 +22,6 @@ namespace AirportApp
         public Employee? Employee { get; private set; }
         public bool IsEmployee = false;
 
-        // Static services din App2 (CloudSpritzers) — accesibile global
         public static IAuthService AuthService { get; private set; } = null!;
         public static IFlightSearchService FlightSearchService { get; private set; } = null!;
         public static IBookingService BookingService { get; private set; } = null!;
@@ -69,15 +58,14 @@ namespace AirportApp
             {
                 if (IsEmployee)
                 {
-                    Employee = await Services.GetService<IEmployeeService>() !.GetEmployeeByIdAsync(userId);
+                    Employee = await Services.GetService<IEmployeeService>()!.GetEmployeeByIdAsync(userId);
                     return Employee != null;
                 }
                 else
                 {
                     var userService = Services.GetService<IUserService>();
-                    User = await userService !.GetByIdAsync(userId);
+                    User = await userService!.GetByIdAsync(userId);
 
-                    // Temporary compatibility: seeded user IDs may be offset to avoid TPH key collisions.
                     if (User == null && userId > 0 && userId < 100)
                     {
                         User = await userService.GetByIdAsync(userId + 100);
@@ -94,18 +82,14 @@ namespace AirportApp
 
         private static IServiceProvider ConfigureServices()
         {
-            var configuration = new Microsoft.Extensions.Configuration.ConfigurationBuilder()
-                .AddJsonFile(System.IO.Path.Combine(AppContext.BaseDirectory, "appsettings.json"), optional: false, reloadOnChange: true)
-                .Build();
-
             var services = new ServiceCollection();
             services.AddLogging();
 
-            services.AddSingleton<HttpClient>(sp => new HttpClient
+            services.AddSingleton<HttpClient>(serviceProvider => new HttpClient
             {
-                // BaseAddress = new Uri("http://172.30.246.135")
                 BaseAddress = new Uri("http://localhost:5253/")
             });
+
             services.AddAutoMapper(mapperConfiguration =>
             {
                 mapperConfiguration.AddProfile<UserMappingProfile>();
@@ -116,42 +100,25 @@ namespace AirportApp
                 mapperConfiguration.AddProfile<TicketMappingProfile>();
             });
 
-            // --- Servicii Mystery Inc (Customer Support) ---
-            // Register EF DbContext using connection string from appsettings.json
-            services.AddDbContext<AirportDbContext>(options =>
-            {
-                var connectionString = configuration.GetConnectionString("DefaultConnection");
-                options.UseSqlServer(connectionString);
-            }, contextLifetime: Microsoft.Extensions.DependencyInjection.ServiceLifetime.Transient, optionsLifetime: Microsoft.Extensions.DependencyInjection.ServiceLifetime.Transient);
+            services.AddSingleton<IAuthService, AuthServiceProxy>();
+            services.AddSingleton<IBookingService, BookingServiceProxy>();
+            services.AddSingleton<ICancellationService, CancellationServiceProxy>();
+            services.AddSingleton<IChatService, ChatServiceProxy>();
+            services.AddSingleton<IComplaintTicketService, ComplaintTicketServiceProxy>();
+            services.AddSingleton<IComplaintTicketCategoryService, ComplaintTicketCategoryServiceProxy>();
+            services.AddSingleton<IComplaintTicketSubcategoryService, ComplaintTicketSubcategoryServiceProxy>();
+            services.AddSingleton<IDashboardService, DashboardServiceProxy>();
+            services.AddSingleton<IDecisionTreeService, DecisionTreeServiceProxy>();
+            services.AddSingleton<IEmployeeService, EmployeeServiceProxy>();
+            services.AddSingleton<IFAQService, FAQServiceProxy>();
+            services.AddSingleton<IFlightSearchService, FlightSearchServiceProxy>();
+            services.AddSingleton<IMembershipService, MembershipServiceProxy>();
+            services.AddSingleton<IMessageService, MessageServiceProxy>();
+            services.AddSingleton<IPricingService, PricingServiceProxy>();
+            services.AddSingleton<IReviewService, ReviewServiceProxy>();
+            services.AddSingleton<IUserService, UserServiceProxy>();
 
-            services.AddTransient<IBotStrategy, DecisionTreeStrategy>();
-            services.AddTransient<BotEngineIdentity>();
-
-            services.AddSingleton<IRepository<int, FAQNode>, DecisionTreeRepositoryProxy>();
-            services.AddSingleton<IRepository<int, Chat>, ChatRepositoryProxy>();
-            services.AddSingleton<IMessageRepository, MessageRepositoryProxy>();
-            services.AddSingleton<IRepository<int, Message>>(serviceProvider => serviceProvider.GetRequiredService<IMessageRepository>());
-            services.AddSingleton<ITicketCategoryRepository, ComplaintTicketCategoryRepositoryProxy>();
-            services.AddSingleton<ITicketSubcategoryRepository, ComplaintTicketSubcategoryRepositoryProxy>();
-            services.AddSingleton<ITicketRepository, ComplaintTicketRepositoryProxy>();
-
-            services.AddSingleton<UserRepositoryProxy>();
-            services.AddSingleton<IUserRepository>(serviceProvider => serviceProvider.GetRequiredService<UserRepositoryProxy>());
-            services.AddSingleton<IRepository<int, User>>(serviceProvider => serviceProvider.GetRequiredService<UserRepositoryProxy>());
-
-            services.AddSingleton<IEmployeeRepository, EmployeeRepositoryProxy>();
-            services.AddSingleton<IFAQRepository, FAQRepositoryProxy>();
-            services.AddSingleton<IRepository<int, Review>, ReviewRepositoryProxy>();
-
-            services.AddSingleton<IEmployeeService, EmployeeService>();
-            services.AddSingleton<IUserService, UserService>();
-            services.AddSingleton<IMessageService, MessageService>();
-            services.AddSingleton<IComplaintTicketService, ComplaintTicketService>();
-            services.AddSingleton<IComplaintTicketCategoryService, ComplaintTicketCategoryService>();
-            services.AddSingleton<IComplaintTicketSubcategoryService, ComplaintTicketSubcategoryService>();
-            services.AddSingleton<IFAQService, FAQService>();
-            services.AddSingleton<IReviewService, ReviewService>();
-            services.AddSingleton<IChatService, ChatService>();
+            services.AddSingleton<NavigationService>();
 
             services.AddTransient<LandingViewModel>();
             services.AddTransient<AllReviewsViewModel>();
@@ -161,24 +128,8 @@ namespace AirportApp
             services.AddTransient<TicketsViewModel>();
             services.AddTransient<FAQViewModel>();
 
-            // --- Servicii CloudSpritzers (Flight Tickets) ---
-            services.AddSingleton<IFlightRepository, FlightRepositoryProxy>();
-            services.AddSingleton<IFlightTicketRepository, FlightTicketRepositoryProxy>();
-            services.AddSingleton<IAddOnRepository, AddOnRepositoryProxy>();
-            services.AddSingleton<IMembershipRepository, MembershipRepositoryProxy>();
-            services.AddSingleton<ICustomerRepository, CustomerRepositoryProxy>();
-            services.AddSingleton<IAuthService, AuthService>();
-            services.AddSingleton<IFlightSearchService, FlightSearchService>();
-            services.AddSingleton<IBookingService, BookingService>();
-            services.AddSingleton<IPricingService, PricingService>();
-            services.AddSingleton<IDashboardService, DashboardService>();
-            services.AddSingleton<ICancellationService, CancellationService>();
-            services.AddSingleton<IMembershipService, MembershipService>();
-            services.AddSingleton<NavigationService>();
-
             var provider = services.BuildServiceProvider();
 
-            // Initializare servicii statice (compatibilitate cu codul CloudSpritzers existent)
             AuthService = provider.GetRequiredService<IAuthService>();
             FlightSearchService = provider.GetRequiredService<IFlightSearchService>();
             BookingService = provider.GetRequiredService<IBookingService>();

@@ -7,8 +7,6 @@ using System.Threading.Tasks;
 using AutoMapper;
 using AirportApp.ClassLibrary.Entity.Dto;
 using AirportApp.ClassLibrary.Service.Interfaces;
-using AirportApp.Src.View.Faq;
-using AirportApp.Src.View;
 using AirportApp.ClassLibrary.Entity.Domain;
 
 namespace AirportApp.Src.ViewModel

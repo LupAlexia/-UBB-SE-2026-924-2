@@ -3,8 +3,8 @@ using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using AirportApp.ClassLibrary.Entity.Domain;
-using AirportApp.Src.Service.Interfaces;
 using AirportApp.ClassLibrary.Service.Interfaces;
+using INavigationService = AirportApp.Src.Service.Interfaces.INavigationService;
 
 namespace AirportApp.Src.ViewModel
 {
@@ -89,7 +89,6 @@ namespace AirportApp.Src.ViewModel
         {
             if (parameter is User user)
             {
-                // UserSession.CurrentUser = user;
             }
         }
 
