@@ -22,7 +22,26 @@ namespace AirportApp.ClassLibrary.Proxy.ServiceProxies
 
         public async Task<IEnumerable<FlightTicket>> GetUserTicketsAsync(int userId, string ticketFilter)
         {
-            return await GetTicketsByUserIdAsync(userId);
+            try
+            {
+                List<FlightTicketDTO> ticketTransferObjectList = await httpClient.GetFromJsonAsync<List<FlightTicketDTO>>($"{BaseUrl}/user/{userId}/filter?filter={Uri.EscapeDataString(ticketFilter)}");
+                if (ticketTransferObjectList == null)
+                {
+                    return new List<FlightTicket>();
+                }
+
+                var tickets = new List<FlightTicket>();
+                foreach (FlightTicketDTO ticketTransferObject in ticketTransferObjectList)
+                {
+                    tickets.Add(MapFlightTicketFromTransferObject(ticketTransferObject));
+                }
+
+                return tickets;
+            }
+            catch (HttpRequestException httpRequestException)
+            {
+                throw new InvalidOperationException($"Failed to retrieve filtered tickets for user {userId}.", httpRequestException);
+            }
         }
 
         public async Task<IEnumerable<FlightTicket>> GetTicketsByUserIdAsync(int userId)

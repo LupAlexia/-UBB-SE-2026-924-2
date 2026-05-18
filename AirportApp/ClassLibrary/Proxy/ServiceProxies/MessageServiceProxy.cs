@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
@@ -19,9 +20,73 @@ namespace AirportApp.ClassLibrary.Proxy.ServiceProxies
             this.httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
         }
 
-        public Task<BotMessage> SendMessageAsync(int chatId, Sender sender, FAQOption selectedOption)
+        public async Task<BotMessage> SendMessageAsync(int chatId, Sender sender, FAQOption selectedOption)
         {
-            throw new NotSupportedException("SendMessageAsync involves bot logic and is not available through the service proxy.");
+            try
+            {
+                var request = new SendMessageRequestDTO
+                {
+                    ChatId = chatId,
+                    SenderId = sender.RetrieveUniqueDatabaseIdentifierForBot(),
+                    OptionLabel = selectedOption.Label,
+                    NextNode = selectedOption.NextOption != null ? MapFAQNodeToDTO(selectedOption.NextOption) : null
+                };
+
+                HttpResponseMessage response = await httpClient.PostAsJsonAsync($"{BaseUrl}/send", request);
+                response.EnsureSuccessStatusCode();
+
+                var replyDTO = await response.Content.ReadFromJsonAsync<BotReplyDTO>();
+                if (replyDTO == null)
+                {
+                    throw new InvalidOperationException("Received null bot reply from server.");
+                }
+
+                var botMessage = new BotMessage
+                {
+                    Id = replyDTO.MessageId,
+                    Text = replyDTO.Text,
+                    Timestamp = replyDTO.Timestamp,
+                    FAQOptions = replyDTO.FAQOptions?.Select(o => MapFAQOptionFromDTO(o)).ToList() ?? new List<FAQOption>()
+                };
+
+                return botMessage;
+            }
+            catch (HttpRequestException httpRequestException)
+            {
+                throw new InvalidOperationException("Failed to send message through the service proxy.", httpRequestException);
+            }
+        }
+
+        private static FAQNodeDTO MapFAQNodeToDTO(FAQNode node)
+        {
+            return new FAQNodeDTO
+            {
+                NodeId = node.NodeId,
+                QuestionText = node.QuestionText,
+                IsFinalAnswer = node.IsFinalAnswer,
+                Options = node.Options?.Select(o => new FAQOptionDTO
+                {
+                    OptionId = o.OptionId,
+                    Label = o.Label,
+                    NextOption = o.NextOption != null ? MapFAQNodeToDTO(o.NextOption) : null
+                }).ToList() ?? new List<FAQOptionDTO>()
+            };
+        }
+
+        private static FAQOption MapFAQOptionFromDTO(FAQOptionDTO dto)
+        {
+            return new FAQOption
+            {
+                OptionId = dto.OptionId,
+                Label = dto.Label,
+                NextOption = dto.NextOption != null ? new FAQNode
+                {
+                    NodeId = dto.NextOption.NodeId,
+                    QuestionText = dto.NextOption.QuestionText,
+                    IsFinalAnswer = dto.NextOption.IsFinalAnswer,
+                    Options = dto.NextOption.Options?.Select(o => MapFAQOptionFromDTO(o)).ToList() ?? new List<FAQOption>()
+                } : null
+            };
         }
 
         public Task<IMessage> GetMessageAsync(int chatId, int messageId)
@@ -33,8 +98,13 @@ namespace AirportApp.ClassLibrary.Proxy.ServiceProxies
         {
             try
             {
-                IEnumerable<Message> messages = await httpClient.GetFromJsonAsync<IEnumerable<Message>>($"{BaseUrl}/chat/{chatId}");
-                return messages ?? new List<Message>();
+                List<MessageDTO> dtos = await httpClient.GetFromJsonAsync<List<MessageDTO>>($"{BaseUrl}/chat/{chatId}");
+                if (dtos == null)
+                {
+                    return new List<Message>();
+                }
+
+                return dtos.Select(dto => MapMessageFromDTO(dto)).ToList();
             }
             catch (HttpRequestException httpRequestException)
             {
@@ -133,8 +203,13 @@ namespace AirportApp.ClassLibrary.Proxy.ServiceProxies
         {
             try
             {
-                IEnumerable<Message> messages = await httpClient.GetFromJsonAsync<IEnumerable<Message>>($"{BaseUrl}/chat/{chatId}");
-                return messages ?? new List<Message>();
+                List<MessageDTO> dtos = await httpClient.GetFromJsonAsync<List<MessageDTO>>($"{BaseUrl}/chat/{chatId}");
+                if (dtos == null)
+                {
+                    return new List<Message>();
+                }
+
+                return dtos.Select(dto => MapMessageFromDTO(dto)).ToList();
             }
             catch (HttpRequestException httpRequestException)
             {
@@ -153,6 +228,18 @@ namespace AirportApp.ClassLibrary.Proxy.ServiceProxies
             {
                 throw new InvalidOperationException($"Failed to retrieve messages since {firstMessageId} for chat {chatId}.", httpRequestException);
             }
+        }
+
+        private static Message MapMessageFromDTO(MessageDTO dto)
+        {
+            return new Message
+            {
+                Id = dto.MessageId,
+                Text = dto.MessageText ?? string.Empty,
+                Timestamp = dto.Timestamp,
+                Chat = new Chat { Id = dto.ChatId },
+                Sender = new User(dto.SenderId, string.Empty, string.Empty)
+            };
         }
     }
 }

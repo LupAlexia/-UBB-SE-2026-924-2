@@ -27,38 +27,69 @@ namespace Airport.Web.Controllers
         public async Task<ActionResult<IEnumerable<FlightTicketDTO>>> GetByUserIdAsync(int userId)
         {
             IEnumerable<FlightTicket> tickets = await dashboardService.GetTicketsByUserIdAsync(userId);
-            var flightTicketTransferObjectList = new List<FlightTicketDTO>();
-            foreach (var ticket in tickets)
+            return Ok(tickets.Select(MapTicketToDTO));
+        }
+
+        [HttpGet("user/{userId}/filter")]
+        public async Task<ActionResult<IEnumerable<FlightTicketDTO>>> GetFilteredByUserIdAsync(int userId, [FromQuery] string filter)
+        {
+            IEnumerable<FlightTicket> tickets = await dashboardService.GetUserTicketsAsync(userId, filter);
+            return Ok(tickets.Select(MapTicketToDTO));
+        }
+
+        private static FlightTicketDTO MapTicketToDTO(FlightTicket ticket)
+        {
+            return new FlightTicketDTO(
+                ticket.Id,
+                ticket.User.Id,
+                ticket.Flight.Id,
+                ticket.Seat,
+                ticket.Price,
+                ticket.Status,
+                ticket.PassengerFirstName,
+                ticket.PassengerLastName,
+                ticket.PassengerEmail,
+                ticket.PassengerPhone,
+                ticket.SelectedAddOns?.Select(addOn => new AddOnDTO(addOn.Id, addOn.Name, addOn.BasePrice)).ToList()
+                    ?? new List<AddOnDTO>(),
+                MapFlightToDTO(ticket.Flight));
+        }
+
+        private static FlightDTO? MapFlightToDTO(Flight? flight)
+        {
+            if (flight == null)
             {
-                flightTicketTransferObjectList.Add(new FlightTicketDTO(
-                    ticket.Id,
-                    ticket.User.Id,
-                    ticket.Flight.Id,
-                    ticket.Seat,
-                    ticket.Price,
-                    ticket.Status,
-                    ticket.PassengerFirstName,
-                    ticket.PassengerLastName,
-                    ticket.PassengerEmail,
-                    ticket.PassengerPhone,
-                    ticket.SelectedAddOns?.Select(addOn => new AddOnDTO(addOn.Id, addOn.Name, addOn.BasePrice)).ToList() ?? new List<AddOnDTO>(),
-                    ticket.Flight != null ? new FlightDTO(
-                        ticket.Flight.Id,
-                        ticket.Flight.Route.Id,
-                        ticket.Flight.Gate.Id,
-                        ticket.Flight.Date,
-                        ticket.Flight.FlightNumber,
-                        ticket.Flight.Route != null ? new RouteDTO(
-                            ticket.Flight.Route.Id,
-                            ticket.Flight.Route.RouteType,
-                            ticket.Flight.Route.DepartureTime,
-                            ticket.Flight.Route.ArrivalTime,
-                            ticket.Flight.Route.Capacity,
-                            ticket.Flight.Route.Airport != null ? new AirportDTO(ticket.Flight.Route.Airport.Id, ticket.Flight.Route.Airport.AirportCode, ticket.Flight.Route.Airport.City) : null,
-                            ticket.Flight.Route.Company != null ? new CompanyDTO(ticket.Flight.Route.Company.Id, ticket.Flight.Route.Company.Name) : null) : null) : null));
+                return null;
             }
 
-            return Ok(flightTicketTransferObjectList);
+            return new FlightDTO(
+                flight.Id,
+                flight.Route?.Id ?? 0,
+                flight.Gate?.Id ?? 0,
+                flight.Date,
+                flight.FlightNumber,
+                MapRouteToDTO(flight.Route));
+        }
+
+        private static RouteDTO? MapRouteToDTO(Route? route)
+        {
+            if (route == null)
+            {
+                return null;
+            }
+
+            return new RouteDTO(
+                route.Id,
+                route.RouteType,
+                route.DepartureTime,
+                route.ArrivalTime,
+                route.Capacity,
+                route.Airport != null
+                    ? new AirportDTO(route.Airport.Id, route.Airport.AirportCode, route.Airport.City)
+                    : null,
+                route.Company != null
+                    ? new CompanyDTO(route.Company.Id, route.Company.Name)
+                    : null);
         }
 
         [HttpPost]

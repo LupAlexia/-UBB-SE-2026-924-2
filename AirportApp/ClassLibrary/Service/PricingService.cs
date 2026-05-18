@@ -82,6 +82,7 @@ namespace AirportApp.Src.Service
             foreach (var ticket in tickets)
             {
                 ticket.User = user;
+                ticket.Price = basePrice;
                 finalTotal += await CalculateTotalPriceAsync(ticket);
             }
 

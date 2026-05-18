@@ -14,10 +14,12 @@ namespace Airport.Web.Controllers
     public class MessageController : ControllerBase
     {
         private readonly IMessageService messageService;
+        private readonly IUserService userService;
 
-        public MessageController(IMessageService messageService)
+        public MessageController(IMessageService messageService, IUserService userService)
         {
             this.messageService = messageService;
+            this.userService = userService;
         }
 
         [HttpGet]
@@ -141,6 +143,78 @@ namespace Airport.Web.Controllers
                 Sender = messageEntity.Sender
             });
             return Ok(result);
+        }
+
+        [HttpPost("send")]
+        public async Task<ActionResult<BotReplyDTO>> SendMessageAsync([FromBody] SendMessageRequestDTO request)
+        {
+            try
+            {
+                var sender = await userService.GetByIdAsync(request.SenderId);
+                if (sender == null)
+                {
+                    return NotFound(new { Message = $"User with id {request.SenderId} was not found." });
+                }
+
+                var faqOption = new FAQOption
+                {
+                    Label = request.OptionLabel,
+                    NextOption = request.NextNode != null ? MapFAQNodeFromDTO(request.NextNode) : null
+                };
+
+                BotMessage botReply = await messageService.SendMessageAsync(request.ChatId, sender, faqOption);
+
+                var replyDTO = new BotReplyDTO
+                {
+                    MessageId = botReply.Id,
+                    Text = botReply.Text,
+                    Timestamp = botReply.Timestamp,
+                    FAQOptions = botReply.FAQOptions?.Select(o => MapFAQOptionToDTO(o)).ToList() ?? new List<FAQOptionDTO>()
+                };
+
+                return Ok(replyDTO);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { Message = ex.Message });
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { Message = ex.Message });
+            }
+        }
+
+        private static FAQNode MapFAQNodeFromDTO(FAQNodeDTO dto)
+        {
+            var node = new FAQNode
+            {
+                NodeId = dto.NodeId,
+                QuestionText = dto.QuestionText,
+                IsFinalAnswer = dto.IsFinalAnswer,
+                Options = dto.Options?.Select(o => new FAQOption
+                {
+                    OptionId = o.OptionId,
+                    Label = o.Label,
+                    NextOption = o.NextOption != null ? MapFAQNodeFromDTO(o.NextOption) : null
+                }).ToList() ?? new List<FAQOption>()
+            };
+            return node;
+        }
+
+        private static FAQOptionDTO MapFAQOptionToDTO(FAQOption option)
+        {
+            return new FAQOptionDTO
+            {
+                OptionId = option.OptionId,
+                Label = option.Label,
+                NextOption = option.NextOption != null ? new FAQNodeDTO
+                {
+                    NodeId = option.NextOption.NodeId,
+                    QuestionText = option.NextOption.QuestionText,
+                    IsFinalAnswer = option.NextOption.IsFinalAnswer,
+                    Options = option.NextOption.Options?.Select(o => MapFAQOptionToDTO(o)).ToList() ?? new List<FAQOptionDTO>()
+                } : null
+            };
         }
     }
 }
