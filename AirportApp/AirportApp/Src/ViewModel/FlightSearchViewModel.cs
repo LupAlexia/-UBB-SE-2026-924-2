@@ -110,7 +110,8 @@ namespace AirportApp.Src.ViewModel
 
             foreach (var flight in results)
             {
-                AvailableFlights.Add(new FlightDisplayModel(flight, pricingService.CalculateBasePrice(flight)));
+                float basePrice = await pricingService.CalculateBasePriceAsync(flight);
+                AvailableFlights.Add(new FlightDisplayModel(flight, basePrice));
                 hasResults = true;
             }
 

@@ -35,7 +35,7 @@ namespace AirportApp.Src.ViewModel
             {
                 string realName = review.User.RetrieveConfiguredDisplayFullNameForBot();
 
-                float averageRating = reviewService.CalculateAverageRating(review);
+                float averageRating = await reviewService.CalculateAverageRatingAsync(review);
 
                 var reviewDateTime = mapper.Map<ReviewDTO>(review);
 

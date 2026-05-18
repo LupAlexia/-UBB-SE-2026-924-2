@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,6 +16,6 @@ namespace AirportApp.ClassLibrary.Service.Interfaces
         Task<List<Review>?> GetAllAsync();
         Task CreateReviewAsync(int identificationNumber, User user, string message, int dutyFreeRating, int flightExperienceRating, int staffFriendlinessRating, int cleanlinessRating);
         Task ValidateReviewAsync(Review review);
-        float CalculateAverageRating(Review review);
+        Task<float> CalculateAverageRatingAsync(Review review);
     }
 }

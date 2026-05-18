@@ -123,29 +123,23 @@ namespace AirportApp.ClassLibrary.Proxy.ServiceProxies
             }
         }
 
-        public async Task<List<FAQEntry>> FilterFAQEntryAsync(FAQCategoryEnum category, string searchQuery)
+        public async Task<List<FAQEntry>> FilterFAQEntryAsync(FAQCategoryEnum category, string? searchQuery)
         {
-            List<FAQEntry> frequentlyAskedQuestions;
-
-            if (category != FAQCategoryEnum.All)
+            try
             {
-                frequentlyAskedQuestions = await GetByCategoryAsync(category);
-            }
-            else
-            {
-                frequentlyAskedQuestions = await GetAllAsync();
-            }
+                string query = $"{BaseUrl}/filter?category={category}";
+                if (!string.IsNullOrWhiteSpace(searchQuery))
+                {
+                    query += $"&searchQuery={Uri.EscapeDataString(searchQuery)}";
+                }
 
-            if (!string.IsNullOrWhiteSpace(searchQuery))
-            {
-                frequentlyAskedQuestions = frequentlyAskedQuestions
-                    .Where(question =>
-                        (question.Question?.Contains(searchQuery, StringComparison.OrdinalIgnoreCase) ?? false) ||
-                        (question.Answer?.Contains(searchQuery, StringComparison.OrdinalIgnoreCase) ?? false))
-                    .ToList();
+                List<FAQEntry> entries = await httpClient.GetFromJsonAsync<List<FAQEntry>>(query);
+                return entries ?? new List<FAQEntry>();
             }
-
-            return frequentlyAskedQuestions;
+            catch (HttpRequestException httpRequestException)
+            {
+                throw new InvalidOperationException("Failed to filter FAQ entries.", httpRequestException);
+            }
         }
     }
 }

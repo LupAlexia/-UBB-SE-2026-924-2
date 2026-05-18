@@ -27,6 +27,6 @@ namespace AirportApp.ClassLibrary.Service.Interfaces
 
         Task UpdateStatusAsync(int ticketId, ComplaintTicketStatusEnum newStatus);
 
-        IEnumerable<TicketDTO> FilterTicketsByStatus(IEnumerable<TicketDTO> tickets, TicketFilterStatusEnum filter);
+        Task<IEnumerable<TicketDTO>> FilterTicketsByStatusAsync(IEnumerable<TicketDTO> tickets, TicketFilterStatusEnum filter);
     }
 }

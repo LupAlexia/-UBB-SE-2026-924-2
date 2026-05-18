@@ -79,7 +79,7 @@ public class CompleteBookingFlowIntegrationTests : BaseIntegrationTest
         var flight = await GetTestFlightAsync();
         var tickets = new List<FlightTicket> { new FlightTicket { Price = TicketPrice } };
 
-        var priceBreakdown = pricingService.CalculatePriceBreakdown(flight, user, tickets);
+        var priceBreakdown = await pricingService.CalculatePriceBreakdownAsync(flight, user, tickets);
 
         priceBreakdown.MembershipSavings.Should().BeGreaterThan(0);
         priceBreakdown.FinalTotal.Should().BeLessThan(TicketPrice);

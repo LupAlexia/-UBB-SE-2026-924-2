@@ -27,7 +27,17 @@ namespace AirportApp.ClassLibrary.Proxy.ServiceProxies
 
         public int? ParsePassengerCount(string input)
         {
-            throw new NotSupportedException("ParsePassengerCount is not available through the service proxy.");
+            if (string.IsNullOrWhiteSpace(input))
+            {
+                return null;
+            }
+
+            if (int.TryParse(input, out var parsed) && parsed > 0)
+            {
+                return parsed;
+            }
+
+            return 1;
         }
 
         public async Task<Flight?> GetFlightByIdAsync(int id)

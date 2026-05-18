@@ -62,7 +62,7 @@ namespace AirportApp.Src.ViewModel
                 if (selectedFilter != value)
                 {
                     selectedFilter = value;
-                    ApplyFilterLogic();
+                    _ = ApplyFilterLogicAsync();
                 }
             }
         }
@@ -94,17 +94,17 @@ namespace AirportApp.Src.ViewModel
                 AllTickets.Add(ticketDateTime);
             }
 
-            ApplyFilterLogic();
+            await ApplyFilterLogicAsync();
         }
 
         // =================================
         // FILTER
         // =================================
-        private void ApplyFilterLogic()
+        private async Task ApplyFilterLogicAsync()
         {
             filteredTicketsForDisplay.Clear();
 
-            IEnumerable<TicketDTO> filteredResults = ticketService.FilterTicketsByStatus(
+            IEnumerable<TicketDTO> filteredResults = await ticketService.FilterTicketsByStatusAsync(
                 AllTickets,
                 SelectedFilterStatus);
 

@@ -5,7 +5,7 @@ using AirportApp.ClassLibrary.Repository.Interfaces;
 using AirportApp.Src.Service;
 using AirportApp.Tests.Unit.Fixtures;
 using AirportApp.ClassLibrary.DataAccess;
-using AirportApp.Src.Service.Interfaces;
+using AirportApp.ClassLibrary.Service.Interfaces;
 
 namespace AirportApp.Tests.Integration.Services;
 
@@ -59,7 +59,7 @@ public class PricingServiceIntegrationTests : BaseIntegrationTest
         var ticket2 = new FlightTicket { Price = TicketPrice2, SelectedAddOns = new List<AddOn>() };
         var tickets = new List<FlightTicket> { ticket1, ticket2 };
 
-        var breakdown = pricingService.CalculatePriceBreakdown(flight, databaseUser, tickets);
+        var breakdown = await pricingService.CalculatePriceBreakdownAsync(flight, databaseUser, tickets);
 
         breakdown.BasePriceTotal.Should().BeGreaterThan(0);
         breakdown.FinalTotal.Should().BeGreaterThan(0);

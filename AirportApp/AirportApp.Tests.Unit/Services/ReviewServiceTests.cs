@@ -50,34 +50,34 @@ namespace AirportApp.Tests.Unit.Src.Service
         }
 
         [TestMethod]
-        public void CalculateAverageRating_AscendingRatings_ReturnsCorrectAverage()
+        public async Task CalculateAverageRating_AscendingRatings_ReturnsCorrectAverage()
         {
             var review = new Review(TestReviewId, testUser, ValidMessage, AscendingRating1, AscendingRating2, AscendingRating3, AscendingRating4);
-            var result = reviewService.CalculateAverageRating(review);
+            var result = await reviewService.CalculateAverageRatingAsync(review);
             Assert.AreEqual(AscendingAverageExpected, result);
         }
 
         [TestMethod]
-        public void CalculateAverageRating_AllMaxRatings_ReturnsMax()
+        public async Task CalculateAverageRating_AllMaxRatings_ReturnsMax()
         {
             var review = new Review(TestReviewId, testUser, ValidMessage, MaxRating, MaxRating, MaxRating, MaxRating);
-            var result = reviewService.CalculateAverageRating(review);
+            var result = await reviewService.CalculateAverageRatingAsync(review);
             Assert.AreEqual(AllMaxAverageExpected, result);
         }
 
         [TestMethod]
-        public void CalculateAverageRating_AllMinRatings_ReturnsMin()
+        public async Task CalculateAverageRating_AllMinRatings_ReturnsMin()
         {
             var review = new Review(TestReviewId, testUser, ValidMessage, MinRating, MinRating, MinRating, MinRating);
-            var result = reviewService.CalculateAverageRating(review);
+            var result = await reviewService.CalculateAverageRatingAsync(review);
             Assert.AreEqual(AllMinAverageExpected, result);
         }
 
         [TestMethod]
-        public void CalculateAverageRating_MixedRatings_ReturnsCorrectAverage()
+        public async Task CalculateAverageRating_MixedRatings_ReturnsCorrectAverage()
         {
             var review = new Review(TestReviewId, testUser, ValidMessage, MixedRating1, MixedRating2, MixedRating3, MixedRating2);
-            var result = reviewService.CalculateAverageRating(review);
+            var result = await reviewService.CalculateAverageRatingAsync(review);
             Assert.AreEqual(MixedAverageExpected, result);
         }
 

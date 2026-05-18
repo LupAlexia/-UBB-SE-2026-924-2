@@ -11,13 +11,13 @@ namespace AirportApp.ClassLibrary.Service.Interfaces
         Task<List<AddOn>> GetAvailableAddOnsAsync();
         Task<List<AddOn>> GetAddOnsByIdsAsync(List<int> ids);
         Task<List<string>> GetOccupiedSeatsAsync(int flightId);
-        string ValidatePassengers(List<PassengerData> passengers);
-        int CalculateMaxPassengers(int routeCapacity, int occupiedSeatCount, int requestedPassengerCount);
+        Task<string> ValidatePassengersAsync(List<PassengerData> passengers);
+        Task<int> CalculateMaxPassengersAsync(int routeCapacity, int occupiedSeatCount, int requestedPassengerCount);
         BookingParametersResult ParseBookingParameters(object parameter);
         void StorePendingBooking(Flight flight, int requestedPassengers);
-        (List<SeatDescriptor> Layout, int RowCount) BuildSeatMapLayout(int capacity);
+        Task<(List<SeatDescriptor> Layout, int RowCount)> BuildSeatMapLayoutAsync(int capacity);
         IList<string> ApplySeatSelection(IList<string> currentSeats, int targetPassengerIndex, string clickedSeat);
         void ApplyAddOnUpdates(IList<AddOn> currentAddOns, IEnumerable<AddOn> toAdd, IEnumerable<AddOn> toRemove);
-        int GetInitialPassengerCount(int maxPassengers, int requestedCount);
+        Task<int> GetInitialPassengerCountAsync(int maxPassengers, int requestedCount);
     }
 }

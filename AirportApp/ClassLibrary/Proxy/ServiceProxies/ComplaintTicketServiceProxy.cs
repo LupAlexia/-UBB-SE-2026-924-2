@@ -164,18 +164,19 @@ namespace AirportApp.ClassLibrary.Proxy.ServiceProxies
             }
         }
 
-        public IEnumerable<TicketDTO> FilterTicketsByStatus(IEnumerable<TicketDTO> tickets, TicketFilterStatusEnum filter)
+        public async Task<IEnumerable<TicketDTO>> FilterTicketsByStatusAsync(IEnumerable<TicketDTO> tickets, TicketFilterStatusEnum filter)
         {
-            switch (filter)
+            try
             {
-                case TicketFilterStatusEnum.OPEN:
-                    return tickets.Where(ticket => ticket.currentStatus == ComplaintTicketStatusEnum.OPEN);
-                case TicketFilterStatusEnum.IN_PROGRESS:
-                    return tickets.Where(ticket => ticket.currentStatus == ComplaintTicketStatusEnum.IN_PROGRESS);
-                case TicketFilterStatusEnum.RESOLVED:
-                    return tickets.Where(ticket => ticket.currentStatus == ComplaintTicketStatusEnum.RESOLVED);
-                default:
-                    return tickets;
+                HttpResponseMessage response = await httpClient.PostAsJsonAsync($"{BaseUrl}/filter?filter={filter}", tickets);
+                response.EnsureSuccessStatusCode();
+
+                IEnumerable<TicketDTO> filteredTickets = await response.Content.ReadFromJsonAsync<IEnumerable<TicketDTO>>();
+                return filteredTickets ?? new List<TicketDTO>();
+            }
+            catch (HttpRequestException httpRequestException)
+            {
+                throw new InvalidOperationException("Failed to filter tickets by status.", httpRequestException);
             }
         }
     }

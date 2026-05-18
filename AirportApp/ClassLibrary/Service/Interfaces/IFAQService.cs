@@ -15,6 +15,6 @@ namespace AirportApp.ClassLibrary.Service.Interfaces
         Task IncrementWasHelpfulVotesAsync(FAQEntry entry);
         Task IncrementWasNotHelpfulVotesAsync(FAQEntry entry);
 
-        Task<List<FAQEntry>> FilterFAQEntryAsync(FAQCategoryEnum category, string searchQuery);
+        Task<List<FAQEntry>> FilterFAQEntryAsync(FAQCategoryEnum category, string? searchQuery);
     }
 }

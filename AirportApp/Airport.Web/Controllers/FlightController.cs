@@ -14,7 +14,7 @@ namespace Airport.Web.Controllers
     {
         private readonly IFlightSearchService flightService;
 
-        public FlightController(IFlightRepository flightRepository)
+        public FlightController(IFlightSearchService flightService)
         {
             this.flightService = flightService;
         }

@@ -1,12 +1,12 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using AirportApp.ClassLibrary.Entity.Domain;
 
 namespace AirportApp.ClassLibrary.Service.Interfaces
 {
     public interface IPricingService
     {
-        float CalculateBasePrice(Flight flight);
-        float CalculateTotalPrice(FlightTicket flightTicket);
-        PriceBreakdown CalculatePriceBreakdown(Flight flight, Customer user, List<FlightTicket> tickets);
+        Task<float> CalculateBasePriceAsync(Flight flight);
+        Task<float> CalculateTotalPriceAsync(FlightTicket flightTicket);
+        Task<PriceBreakdown> CalculatePriceBreakdownAsync(Flight flight, Customer user, List<FlightTicket> tickets);
     }
 }

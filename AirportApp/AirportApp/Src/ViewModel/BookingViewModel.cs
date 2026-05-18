@@ -177,8 +177,8 @@ namespace AirportApp.Src.ViewModel
             this.pricingService = pricingService;
             this.navigationService = navigationService;
 
-            AddPassengerCommand = new RelayCommand(parameter => AddPassenger());
-            RemovePassengerCommand = new RelayCommand(parameter => RemovePassenger(parameter as PassengerFormViewModel));
+            AddPassengerCommand = new RelayCommand(async parameter => await AddPassengerAsync());
+            RemovePassengerCommand = new RelayCommand(async parameter => await RemovePassengerAsync(parameter as PassengerFormViewModel));
             confirmBookingCommand = new RelayCommand(async parameter => await ConfirmBookingAsync(), parameter => CanConfirmBooking);
             ConfirmBookingCommand = confirmBookingCommand;
         }
@@ -267,10 +267,10 @@ namespace AirportApp.Src.ViewModel
             }
 
             int capacity = flight?.Route?.Capacity ?? DefaultFlightCapacity;
-            MaximumPassengers = bookingService.CalculateMaxPassengers(capacity, OccupiedSeats.Count, requestedPassengerCount);
+            MaximumPassengers = await bookingService.CalculateMaxPassengersAsync(capacity, OccupiedSeats.Count, requestedPassengerCount);
 
             Passengers.Clear();
-            int initialCount = bookingService.GetInitialPassengerCount(MaximumPassengers, requestedPassengerCount);
+            int initialCount = await bookingService.GetInitialPassengerCountAsync(MaximumPassengers, requestedPassengerCount);
 
             if (initialCount < 1)
             {
@@ -285,24 +285,24 @@ namespace AirportApp.Src.ViewModel
             }
 
             UpdatePassengerLabels();
-            UpdatePrices();
+            await UpdatePricesAsync();
             OnPropertyChanged(nameof(CanAddPassenger));
             OnPropertyChanged(nameof(CanRemovePassenger));
-            RefreshBookingState();
-            BuildSeatMapLayout();
+            await RefreshBookingStateAsync();
+            await BuildSeatMapLayoutAsync();
         }
 
-        public void BuildSeatMapLayout()
+        public async Task BuildSeatMapLayoutAsync()
         {
             int capacity = CurrentFlight?.Route?.Capacity ?? DefaultFlightCapacity;
-            var (layout, rowCount) = bookingService.BuildSeatMapLayout(capacity);
+            var (layout, rowCount) = await bookingService.BuildSeatMapLayoutAsync(capacity);
             SeatMapLayout = layout;
             SeatMapRowCount = rowCount;
             OnPropertyChanged(nameof(SeatMapLayout));
             OnPropertyChanged(nameof(SeatMapRowCount));
         }
 
-        private void AddPassenger()
+        private async Task AddPassengerAsync()
         {
             if (!CanAddPassenger)
             {
@@ -313,22 +313,22 @@ namespace AirportApp.Src.ViewModel
             RegisterPassenger(passenger);
             Passengers.Add(passenger);
             UpdatePassengerLabels();
-            UpdatePrices();
+            _ = UpdatePricesAsync();
             OnPropertyChanged(nameof(CanAddPassenger));
             OnPropertyChanged(nameof(CanRemovePassenger));
-            RefreshBookingState();
+            await RefreshBookingStateAsync();
         }
 
-        private void RemovePassenger(PassengerFormViewModel? passenger)
+        private async Task RemovePassengerAsync(PassengerFormViewModel? passenger)
         {
             if (passenger != null && Passengers.Count > 1)
             {
                 Passengers.Remove(passenger);
                 UpdatePassengerLabels();
-                UpdatePrices();
+                _ = UpdatePricesAsync();
                 OnPropertyChanged(nameof(CanAddPassenger));
                 OnPropertyChanged(nameof(CanRemovePassenger));
-                RefreshBookingState();
+                await RefreshBookingStateAsync();
             }
         }
 
@@ -347,20 +347,20 @@ namespace AirportApp.Src.ViewModel
                 passenger.SelectedAddOns = new ObservableCollection<AddOn>();
             }
 
-            passenger.SelectedAddOns.CollectionChanged += (sender, eventArgs) => UpdatePrices();
-            passenger.PropertyChanged += (sender, eventArgs) =>
+            passenger.SelectedAddOns.CollectionChanged += (sender, eventArgs) => _ = UpdatePricesAsync();
+            passenger.PropertyChanged += async (sender, eventArgs) =>
             {
                 if (eventArgs.PropertyName == nameof(passenger.SelectedSeat) ||
                     eventArgs.PropertyName == nameof(passenger.FirstName) ||
                     eventArgs.PropertyName == nameof(passenger.LastName) ||
                     eventArgs.PropertyName == nameof(passenger.Email))
                 {
-                    RefreshBookingState();
+                    await RefreshBookingStateAsync();
                 }
 
                 if (eventArgs.PropertyName == nameof(passenger.SelectedSeat))
                 {
-                    UpdatePrices();
+                    _ = UpdatePricesAsync();
                 }
             };
         }
@@ -378,7 +378,7 @@ namespace AirportApp.Src.ViewModel
             }).ToList();
         }
 
-        private void RefreshBookingState()
+        private async Task RefreshBookingStateAsync()
         {
             ValidationMessage = string.Empty;
 
@@ -390,7 +390,7 @@ namespace AirportApp.Src.ViewModel
             else
             {
                 var passengerData = MapPassengersToData();
-                ValidationMessage = bookingService.ValidatePassengers(passengerData);
+                ValidationMessage = await bookingService.ValidatePassengersAsync(passengerData);
                 passengersValid = string.IsNullOrEmpty(ValidationMessage);
             }
 
@@ -398,17 +398,17 @@ namespace AirportApp.Src.ViewModel
             confirmBookingCommand.RaiseCanExecuteChanged();
         }
 
-        public void UpdatePrices()
+        public async Task UpdatePricesAsync()
         {
             if (CurrentFlight == null)
             {
                 return;
             }
 
-            float basePrice = pricingService.CalculateBasePrice(CurrentFlight);
+            float basePrice = await pricingService.CalculateBasePriceAsync(CurrentFlight);
             var passengerData = MapPassengersToData();
             var tickets = bookingService.CreateTickets(CurrentFlight, CurrentUser, passengerData, basePrice);
-            var breakdown = pricingService.CalculatePriceBreakdown(CurrentFlight, CurrentUser, tickets);
+            var breakdown = await pricingService.CalculatePriceBreakdownAsync(CurrentFlight, CurrentUser, tickets);
 
             BasePricePerPerson = breakdown.BasePricePerPerson;
             BasePriceTotal = breakdown.BasePriceTotal;
@@ -422,7 +422,7 @@ namespace AirportApp.Src.ViewModel
             OnPropertyChanged(nameof(MembershipSavingsDisplay));
             OnPropertyChanged(nameof(FinalTotalPriceDisplay));
 
-            RefreshBookingState();
+            await RefreshBookingStateAsync();
         }
 
         private async Task ConfirmBookingAsync()
@@ -432,12 +432,12 @@ namespace AirportApp.Src.ViewModel
                 return;
             }
 
-            float basePrice = pricingService.CalculateBasePrice(CurrentFlight);
+            float basePrice = await pricingService.CalculateBasePriceAsync(CurrentFlight);
             var passengerData = MapPassengersToData();
             var tickets = bookingService.CreateTickets(CurrentFlight, CurrentUser, passengerData, basePrice);
             foreach (var ticket in tickets)
             {
-                ticket.Price = pricingService.CalculateTotalPrice(ticket);
+                ticket.Price = await pricingService.CalculateTotalPriceAsync(ticket);
             }
 
             isSaving = true;

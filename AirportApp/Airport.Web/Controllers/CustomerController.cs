@@ -75,6 +75,42 @@ namespace Airport.Web.Controllers
                 null));
         }
 
+        [HttpPost("login")]
+        public async Task<ActionResult<CustomerDTO>> LoginAsync([FromBody] LoginRequestDTO request)
+        {
+            try
+            {
+                var customer = await authService.LoginAsync(request.Email, request.Password, request.CurrentUserId);
+                return Ok(MapToDTO(customer));
+            }
+            catch (System.InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (System.ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost("register")]
+        public async Task<ActionResult> RegisterAsync([FromBody] RegisterRequestDTO request)
+        {
+            try
+            {
+                await authService.RegisterAsync(request.Email, request.Phone, request.Username, request.Password);
+                return Ok();
+            }
+            catch (System.InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (System.ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         [HttpPut("{id}/membership")]
         public async Task<ActionResult> UpdateMembershipAsync(int id, [FromBody] int newMembershipId)
         {

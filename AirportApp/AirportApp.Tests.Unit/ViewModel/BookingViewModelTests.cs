@@ -4,6 +4,7 @@ using FluentAssertions;
 using Moq;
 using AirportApp.ClassLibrary.Entity.Domain;
 using AirportApp.Src.ViewModel;
+using AirportApp.ClassLibrary.Service.Interfaces;
 using AirportApp.Src.Service.Interfaces;
 
 namespace AirportApp.Tests.Unit.ViewModel;
@@ -94,8 +95,8 @@ public class BookingViewModelTests
             .Returns(new List<FlightTicket> { new FlightTicket() });
         mockBookingService.Setup(bookingServiceReturningSuccessfulSave => bookingServiceReturningSuccessfulSave.SaveTicketsAsync(It.IsAny<List<FlightTicket>>())).ReturnsAsync(true);
         mockBookingService.Setup(bookingServiceReturningValidPassengers => bookingServiceReturningValidPassengers.ValidatePassengers(It.IsAny<List<PassengerData>>())).Returns(string.Empty);
-        mockPricingService.Setup(pricingServiceReturningBreakdown => pricingServiceReturningBreakdown.CalculatePriceBreakdown(It.IsAny<Flight>(), It.IsAny<Customer>(), It.IsAny<List<FlightTicket>>()))
-            .Returns(new PriceBreakdown { FinalTotal = BaseTicketPrice });
+        mockPricingService.Setup(pricingServiceReturningBreakdown => pricingServiceReturningBreakdown.CalculatePriceBreakdownAsync(It.IsAny<Flight>(), It.IsAny<Customer>(), It.IsAny<List<FlightTicket>>()))
+            .ReturnsAsync(new PriceBreakdown { FinalTotal = BaseTicketPrice });
 
         await viewModel.InitializeAsync(flight, customer, DefaultRequestedPassengers);
 

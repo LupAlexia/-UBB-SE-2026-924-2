@@ -95,19 +95,25 @@ namespace AirportApp.Src.Service
         {
             await ticketRepository.UpdateStatusByIdAsync(ticketId, newStatus);
         }
-        public IEnumerable<TicketDTO> FilterTicketsByStatus(IEnumerable<TicketDTO> tickets, TicketFilterStatusEnum filter)
+        public Task<IEnumerable<TicketDTO>> FilterTicketsByStatusAsync(IEnumerable<TicketDTO> tickets, TicketFilterStatusEnum filter)
         {
+            IEnumerable<TicketDTO> filteredTickets;
             switch (filter)
             {
                 case TicketFilterStatusEnum.OPEN:
-                    return tickets.Where(IsStatusOpen);
+                    filteredTickets = tickets.Where(IsStatusOpen);
+                    break;
                 case TicketFilterStatusEnum.IN_PROGRESS:
-                    return tickets.Where(IsStatusInProgress);
+                    filteredTickets = tickets.Where(IsStatusInProgress);
+                    break;
                 case TicketFilterStatusEnum.RESOLVED:
-                    return tickets.Where(IsStatusResolved);
+                    filteredTickets = tickets.Where(IsStatusResolved);
+                    break;
                 default:
-                    return tickets;
+                    filteredTickets = tickets;
+                    break;
             }
+            return Task.FromResult(filteredTickets);
         }
 
         private bool IsStatusOpen(TicketDTO ticket) => ticket.currentStatus == ComplaintTicketStatusEnum.OPEN;

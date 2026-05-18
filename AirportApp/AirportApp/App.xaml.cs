@@ -57,7 +57,8 @@ namespace AirportApp
             {
                 if (IsEmployee)
                 {
-                    Employee = await Services.GetService<IEmployeeService>()!.GetEmployeeByIdAsync(userId);
+                    var employeeService = Services.GetService<IEmployeeService>();
+                    Employee = await employeeService!.GetEmployeeByIdAsync(userId);
                     return Employee != null;
                 }
                 else

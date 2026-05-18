@@ -123,5 +123,12 @@ namespace Airport.Web.Controllers
             await faqService.DeleteFAQEntryAsync(id);
             return NoContent();
         }
+
+        [HttpGet("filter")]
+        public async Task<ActionResult<IEnumerable<FAQEntry>>> FilterAsync([FromQuery] FAQCategoryEnum category, [FromQuery] string? searchQuery)
+        {
+            List<FAQEntry> entries = await faqService.FilterFAQEntryAsync(category, searchQuery);
+            return Ok(entries);
+        }
     }
 }

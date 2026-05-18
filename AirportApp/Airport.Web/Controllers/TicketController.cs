@@ -100,6 +100,13 @@ namespace Airport.Web.Controllers
             await ticketService.UpdateUrgencyLevelAsync(id, request.UrgencyLevel);
             return NoContent();
         }
+
+        [HttpPost("filter")]
+        public async Task<ActionResult<IEnumerable<TicketDTO>>> FilterAsync([FromQuery] TicketFilterStatusEnum filter, [FromBody] IEnumerable<TicketDTO> tickets)
+        {
+            IEnumerable<TicketDTO> filteredTickets = await ticketService.FilterTicketsByStatusAsync(tickets, filter);
+            return Ok(filteredTickets);
+        }
     }
 
     public class UpdateStatusRequest

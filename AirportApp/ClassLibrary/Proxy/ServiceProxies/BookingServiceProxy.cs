@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
@@ -22,7 +23,27 @@ namespace AirportApp.ClassLibrary.Proxy.ServiceProxies
 
         public List<FlightTicket> CreateTickets(Flight flight, Customer user, List<PassengerData> passengers, float basePrice)
         {
-            throw new NotSupportedException("CreateTickets is not available through the service proxy.");
+            var tickets = new List<FlightTicket>();
+
+            foreach (var passenger in passengers)
+            {
+                var ticket = new FlightTicket
+                {
+                    Flight = flight,
+                    User = user,
+                    PassengerFirstName = passenger.FirstName,
+                    PassengerLastName = passenger.LastName,
+                    PassengerEmail = passenger.Email,
+                    PassengerPhone = passenger.Phone,
+                    Seat = passenger.SelectedSeat,
+                    Price = basePrice,
+                    Status = "Active",
+                    SelectedAddOns = passenger.SelectedAddOns != null ? new List<AddOn>(passenger.SelectedAddOns) : new List<AddOn>()
+                };
+                tickets.Add(ticket);
+            }
+
+            return tickets;
         }
 
         public async Task<bool> SaveTicketsAsync(List<FlightTicket> tickets)
@@ -146,44 +167,155 @@ namespace AirportApp.ClassLibrary.Proxy.ServiceProxies
             }
         }
 
-        public string ValidatePassengers(List<PassengerData> passengers)
+        public async Task<string> ValidatePassengersAsync(List<PassengerData> passengers)
         {
-            throw new NotSupportedException("ValidatePassengers is not available through the service proxy.");
+            try
+            {
+                var dtos = passengers.Select(p => new PassengerDataDTO
+                {
+                    FirstName = p.FirstName ?? string.Empty,
+                    LastName = p.LastName ?? string.Empty,
+                    Email = p.Email ?? string.Empty,
+                    Phone = p.Phone ?? string.Empty,
+                    SelectedSeat = p.SelectedSeat ?? string.Empty,
+                    SelectedAddOns = p.SelectedAddOns?.Select(a => new PricingAddOnDTO { Id = a.Id, BasePrice = a.BasePrice }).ToList() ?? new List<PricingAddOnDTO>()
+                }).ToList();
+
+                HttpResponseMessage response = await httpClient.PostAsJsonAsync("api/booking/validate-passengers", dtos);
+                response.EnsureSuccessStatusCode();
+                return await response.Content.ReadAsStringAsync();
+            }
+            catch (HttpRequestException ex)
+            {
+                throw new InvalidOperationException("Failed to validate passengers.", ex);
+            }
         }
 
-        public int CalculateMaxPassengers(int routeCapacity, int occupiedSeatCount, int requestedPassengerCount)
+        public async Task<int> CalculateMaxPassengersAsync(int routeCapacity, int occupiedSeatCount, int requestedPassengerCount)
         {
-            throw new NotSupportedException("CalculateMaxPassengers is not available through the service proxy.");
+            try
+            {
+                return await httpClient.GetFromJsonAsync<int>($"api/booking/calculate-max-passengers?routeCapacity={routeCapacity}&occupiedSeatCount={occupiedSeatCount}&requestedPassengerCount={requestedPassengerCount}");
+            }
+            catch (HttpRequestException ex)
+            {
+                throw new InvalidOperationException("Failed to calculate max passengers.", ex);
+            }
         }
 
         public BookingParametersResult ParseBookingParameters(object parameter)
         {
-            throw new NotSupportedException("ParseBookingParameters is not available through the service proxy.");
+            Flight? selectedFlight = null;
+            Customer? user = null;
+            int requestedPassengers = 0;
+
+            if (parameter is object[] arguments && arguments.Length > 0)
+            {
+                selectedFlight = arguments[0] as Flight;
+
+                if (arguments.Length >= 3)
+                {
+                    user = arguments[1] as Customer;
+                    if (arguments[2] is int count)
+                    {
+                        requestedPassengers = count;
+                    }
+                }
+                else if (arguments.Length >= 2)
+                {
+                    if (arguments[1] is int count)
+                    {
+                        requestedPassengers = count;
+                    }
+                    else
+                    {
+                        user = arguments[1] as Customer;
+                    }
+                }
+            }
+
+            user ??= UserSession.CurrentUser;
+
+            return new BookingParametersResult
+            {
+                Flight = selectedFlight!,
+                User = user!,
+                RequestedPassengers = requestedPassengers
+            };
         }
 
         public void StorePendingBooking(Flight flight, int requestedPassengers)
         {
-            throw new NotSupportedException("StorePendingBooking is not available through the service proxy.");
+            UserSession.PendingBookingParameters = new object[] { flight, requestedPassengers };
         }
 
-        public (List<SeatDescriptor> Layout, int RowCount) BuildSeatMapLayout(int capacity)
+        public async Task<(List<SeatDescriptor> Layout, int RowCount)> BuildSeatMapLayoutAsync(int capacity)
         {
-            throw new NotSupportedException("BuildSeatMapLayout is not available through the service proxy.");
+            try
+            {
+                var response = await httpClient.GetFromJsonAsync<SeatMapResponseDTO>($"api/booking/build-seat-map?capacity={capacity}");
+                if (response != null)
+                {
+                    return (response.Layout, response.RowCount);
+                }
+                return (new List<SeatDescriptor>(), 0);
+            }
+            catch (HttpRequestException ex)
+            {
+                throw new InvalidOperationException("Failed to build seat map layout.", ex);
+            }
         }
 
         public IList<string> ApplySeatSelection(IList<string> currentSeats, int targetPassengerIndex, string clickedSeat)
         {
-            throw new NotSupportedException("ApplySeatSelection is not available through the service proxy.");
+            var updated = new List<string>(currentSeats);
+
+            if (updated[targetPassengerIndex] == clickedSeat)
+            {
+                updated[targetPassengerIndex] = string.Empty;
+            }
+            else
+            {
+                for (int index = 0; index < updated.Count; index++)
+                {
+                    if (updated[index] == clickedSeat)
+                    {
+                        updated[index] = string.Empty;
+                    }
+                }
+
+                updated[targetPassengerIndex] = clickedSeat;
+            }
+
+            return updated;
         }
 
         public void ApplyAddOnUpdates(IList<AddOn> currentAddOns, IEnumerable<AddOn> toAdd, IEnumerable<AddOn> toRemove)
         {
-            throw new NotSupportedException("ApplyAddOnUpdates is not available through the service proxy.");
+            foreach (var addOn in toAdd)
+            {
+                if (!currentAddOns.Contains(addOn))
+                {
+                    currentAddOns.Add(addOn);
+                }
+            }
+
+            foreach (var addOn in toRemove)
+            {
+                currentAddOns.Remove(addOn);
+            }
         }
 
-        public int GetInitialPassengerCount(int maxPassengers, int requestedCount)
+        public async Task<int> GetInitialPassengerCountAsync(int maxPassengers, int requestedCount)
         {
-            throw new NotSupportedException("GetInitialPassengerCount is not available through the service proxy.");
+            try
+            {
+                return await httpClient.GetFromJsonAsync<int>($"api/booking/initial-passenger-count?maxPassengers={maxPassengers}&requestedCount={requestedCount}");
+            }
+            catch (HttpRequestException ex)
+            {
+                throw new InvalidOperationException("Failed to get initial passenger count.", ex);
+            }
         }
     }
 }

@@ -56,11 +56,11 @@ namespace AirportApp.Src.Service
             return tickets;
         }
 
-        public string ValidatePassengers(List<PassengerData> passengers)
+        public Task<string> ValidatePassengersAsync(List<PassengerData> passengers)
         {
             if (passengers == null || passengers.Count == 0)
             {
-                return "At least one passenger is required.";
+                return Task.FromResult("At least one passenger is required.");
             }
 
             for (int index = 0; index < passengers.Count; index++)
@@ -70,38 +70,38 @@ namespace AirportApp.Src.Service
 
                 if (string.IsNullOrWhiteSpace(passenger.FirstName))
                 {
-                    return $"Passenger {passengerNumber}: first name is required.";
+                    return Task.FromResult($"Passenger {passengerNumber}: first name is required.");
                 }
 
                 if (string.IsNullOrWhiteSpace(passenger.LastName))
                 {
-                    return $"Passenger {passengerNumber}: last name is required.";
+                    return Task.FromResult($"Passenger {passengerNumber}: last name is required.");
                 }
 
                 if (!string.IsNullOrWhiteSpace(passenger.Email) && !ValidationHelper.IsValidEmail(passenger.Email))
                 {
-                    return $"Passenger {passengerNumber}: email format is invalid.";
+                    return Task.FromResult($"Passenger {passengerNumber}: email format is invalid.");
                 }
 
                 if (string.IsNullOrWhiteSpace(passenger.SelectedSeat))
                 {
-                    return $"Passenger {passengerNumber}: please select a seat.";
+                    return Task.FromResult($"Passenger {passengerNumber}: please select a seat.");
                 }
             }
 
-            return string.Empty;
+            return Task.FromResult(string.Empty);
         }
 
-        public int CalculateMaxPassengers(int routeCapacity, int occupiedSeatCount, int requestedPassengerCount)
+        public Task<int> CalculateMaxPassengersAsync(int routeCapacity, int occupiedSeatCount, int requestedPassengerCount)
         {
             int remainingCapacity = routeCapacity - occupiedSeatCount;
 
             if (requestedPassengerCount > 0)
             {
-                return Math.Min(requestedPassengerCount, remainingCapacity);
+                return Task.FromResult(Math.Min(requestedPassengerCount, remainingCapacity));
             }
 
-            return remainingCapacity;
+            return Task.FromResult(remainingCapacity);
         }
 
         public async Task<bool> SaveTicketsAsync(List<FlightTicket> tickets)
@@ -192,7 +192,7 @@ namespace AirportApp.Src.Service
             UserSession.PendingBookingParameters = new object[] { flight, requestedPassengers };
         }
 
-        public (List<SeatDescriptor> Layout, int RowCount) BuildSeatMapLayout(int capacity)
+        public Task<(List<SeatDescriptor> Layout, int RowCount)> BuildSeatMapLayoutAsync(int capacity)
         {
             var layout = new List<SeatDescriptor>();
             char[] seatLetters = { 'A', 'B', 'C', 'D', 'E', 'F' };
@@ -212,7 +212,7 @@ namespace AirportApp.Src.Service
                 }
             }
 
-            return (layout, rowCount);
+            return Task.FromResult((layout, rowCount));
         }
 
         public IList<string> ApplySeatSelection(IList<string> currentSeats, int targetPassengerIndex, string clickedSeat)
@@ -255,10 +255,10 @@ namespace AirportApp.Src.Service
             }
         }
 
-        public int GetInitialPassengerCount(int maxPassengers, int requestedCount)
+        public Task<int> GetInitialPassengerCountAsync(int maxPassengers, int requestedCount)
         {
             int initial = requestedCount > 0 ? requestedCount : DefaultInitialPassengerCount;
-            return Math.Min(initial, maxPassengers);
+            return Task.FromResult(Math.Min(initial, maxPassengers));
         }
 
         public async Task<List<AddOn>> GetAddOnsByIdsAsync(List<int> ids)

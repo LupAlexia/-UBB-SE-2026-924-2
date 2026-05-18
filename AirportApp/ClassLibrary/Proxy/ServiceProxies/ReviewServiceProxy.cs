@@ -115,13 +115,11 @@ namespace AirportApp.ClassLibrary.Proxy.ServiceProxies
             throw new NotSupportedException("ValidateReviewAsync is not available through the service proxy.");
         }
 
-        public float CalculateAverageRating(Review review)
+        public async Task<float> CalculateAverageRatingAsync(Review review)
         {
-            const int numberOfRatings = 4;
-            return (review.DutyFreeRating +
-                    review.FlightExperienceRating +
-                    review.StaffFriendlinessRating +
-                    review.CleanlinessRating) / (float)numberOfRatings;
+            HttpResponseMessage response = await httpClient.PostAsJsonAsync($"{BaseUrl}/calculate-average", review);
+            response.EnsureSuccessStatusCode();
+            return await response.Content.ReadFromJsonAsync<float>();
         }
     }
 }

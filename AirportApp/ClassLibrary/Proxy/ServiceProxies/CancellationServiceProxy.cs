@@ -19,7 +19,22 @@ namespace AirportApp.ClassLibrary.Proxy.ServiceProxies
 
         public (bool CanCancel, string Reason) CanCancelTicket(FlightTicket ticket)
         {
-            throw new NotSupportedException("CanCancelTicket is not available through the service proxy.");
+            if (ticket == null)
+            {
+                return (false, "Ticket not found.");
+            }
+
+            if (string.Equals(ticket.Status, "Cancelled", StringComparison.OrdinalIgnoreCase))
+            {
+                return (false, "This ticket is already cancelled.");
+            }
+
+            if (ticket.Flight != null && ticket.Flight.Date < DateTime.Now)
+            {
+                return (false, "This flight is already in the past and cannot be cancelled.");
+            }
+
+            return (true, string.Empty);
         }
 
         public async Task CancelTicketAsync(int ticketId)

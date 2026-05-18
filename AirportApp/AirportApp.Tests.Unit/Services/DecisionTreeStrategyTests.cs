@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AirportApp.ClassLibrary.Entity.Domain;
 using AirportApp.ClassLibrary.Repository.Interfaces;
+using AirportApp.ClassLibrary.Service.Interfaces;
 using AirportApp.Src.Service.Bot;
 using AirportApp.Src.Service.Bot.Strategy;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -14,7 +15,7 @@ namespace AirportApp.Tests.Unit.Services
     [TestClass]
     public class DecisionTreeStrategyTests
     {
-        private IRepository<int, FAQNode> mockRepository = null!;
+        private IDecisionTreeService mockRepository = null!;
         private DecisionTreeStrategy strategy = null!;
         private Dictionary<int, FAQNode> fakeDatabase = null!;
         private int restartId;
@@ -24,7 +25,7 @@ namespace AirportApp.Tests.Unit.Services
         [TestInitialize]
         public void Setup()
         {
-            mockRepository = Substitute.For<IRepository<int, FAQNode>>();
+            mockRepository = Substitute.For<IDecisionTreeService>();
             fakeDatabase = new Dictionary<int, FAQNode>();
             testUser = new User(1, "John Doe", "john@test.com");
             testChat = new Chat(1, testUser, ChatStatus.Active);
@@ -39,7 +40,7 @@ namespace AirportApp.Tests.Unit.Services
                 fakeDatabase[restartId] = new FAQNode(restartId, "Restarting...", ImmutableArray<FAQOption>.Empty, true);
             }
 
-            mockRepository.GetByIdAsync(Arg.Any<int>()).Returns(callInfo => Task.FromResult(fakeDatabase[callInfo.Arg<int>()]));
+            mockRepository.GetNodeByIdAsync(Arg.Any<int>()).Returns(callInfo => Task.FromResult(fakeDatabase[callInfo.Arg<int>()]));
 
             strategy = new DecisionTreeStrategy(mockRepository);
         }

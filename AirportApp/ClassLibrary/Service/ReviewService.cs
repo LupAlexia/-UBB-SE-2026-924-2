@@ -95,12 +95,13 @@ namespace AirportApp.Src.Service
             }
         }
 
-        public float CalculateAverageRating(Review review)
+        public Task<float> CalculateAverageRatingAsync(Review review)
         {
-            return (review.DutyFreeRating +
-                    review.FlightExperienceRating +
-                    review.StaffFriendlinessRating +
-                    review.CleanlinessRating) / (float)NumberOfRatings;
+            float average = (review.DutyFreeRating +
+                             review.FlightExperienceRating +
+                             review.StaffFriendlinessRating +
+                             review.CleanlinessRating) / (float)NumberOfRatings;
+            return Task.FromResult(average);
         }
     }
 }

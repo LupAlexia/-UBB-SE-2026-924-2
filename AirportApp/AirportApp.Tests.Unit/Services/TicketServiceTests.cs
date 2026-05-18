@@ -150,7 +150,7 @@ namespace AirportApp.Tests.Unit.Src.Service
         }
 
         [TestMethod]
-        public void FilterTicketsByStatus_WithInProgressFilter_ReturnsOnlyInProgressTickets()
+        public async Task FilterTicketsByStatus_WithInProgressFilter_ReturnsOnlyInProgressTickets()
         {
             var tickets = new List<TicketDTO>
             {
@@ -158,14 +158,14 @@ namespace AirportApp.Tests.Unit.Src.Service
                 new TicketDTO(TicketId2, UserId, TicketEmail1, ComplaintTicketUrgencyLevelEnum.LOW, ComplaintTicketStatusEnum.OPEN, CategoryId, TicketDomain, SubcategoryId, TicketSubdomain, TicketSubject2, TicketDesc2, DateTime.Now)
             };
 
-            var result = ticketService.FilterTicketsByStatus(tickets, TicketFilterStatusEnum.IN_PROGRESS).ToList();
+            var result = (await ticketService.FilterTicketsByStatusAsync(tickets, TicketFilterStatusEnum.IN_PROGRESS)).ToList();
 
             Assert.AreEqual(1, result.Count);
             Assert.AreEqual(ComplaintTicketStatusEnum.IN_PROGRESS, result.First().currentStatus);
         }
 
         [TestMethod]
-        public void FilterTicketsByStatus_WithResolvedFilter_ReturnsOnlyResolvedTickets()
+        public async Task FilterTicketsByStatus_WithResolvedFilter_ReturnsOnlyResolvedTickets()
         {
             var tickets = new List<TicketDTO>
             {
@@ -173,14 +173,14 @@ namespace AirportApp.Tests.Unit.Src.Service
                 new TicketDTO(TicketId2, UserId, TicketEmail1, ComplaintTicketUrgencyLevelEnum.LOW, ComplaintTicketStatusEnum.OPEN, CategoryId, TicketDomain, SubcategoryId, TicketSubdomain, TicketSubject2, TicketDesc2, DateTime.Now)
             };
 
-            var result = ticketService.FilterTicketsByStatus(tickets, TicketFilterStatusEnum.RESOLVED).ToList();
+            var result = (await ticketService.FilterTicketsByStatusAsync(tickets, TicketFilterStatusEnum.RESOLVED)).ToList();
 
             Assert.AreEqual(1, result.Count);
             Assert.AreEqual(ComplaintTicketStatusEnum.RESOLVED, result.First().currentStatus);
         }
 
         [TestMethod]
-        public void FilterTicketsByStatus_WithOpenFilter_ReturnsOnlyOpenTickets()
+        public async Task FilterTicketsByStatus_WithOpenFilter_ReturnsOnlyOpenTickets()
         {
             var tickets = new List<TicketDTO>
             {
@@ -188,14 +188,14 @@ namespace AirportApp.Tests.Unit.Src.Service
                 new TicketDTO(TicketId2, UserId, TicketEmail1, ComplaintTicketUrgencyLevelEnum.LOW, ComplaintTicketStatusEnum.RESOLVED, CategoryId, TicketDomain, SubcategoryId, TicketSubdomain, TicketSubject2, TicketDesc2, DateTime.Now)
             };
 
-            var result = ticketService.FilterTicketsByStatus(tickets, TicketFilterStatusEnum.OPEN).ToList();
+            var result = (await ticketService.FilterTicketsByStatusAsync(tickets, TicketFilterStatusEnum.OPEN)).ToList();
 
             Assert.AreEqual(1, result.Count);
             Assert.AreEqual(ComplaintTicketStatusEnum.OPEN, result.First().currentStatus);
         }
 
         [TestMethod]
-        public void FilterTicketsByStatus_WithUndefinedFilter_ReturnsAllTickets()
+        public async Task FilterTicketsByStatus_WithUndefinedFilter_ReturnsAllTickets()
         {
             var tickets = new List<TicketDTO>
             {
@@ -204,7 +204,7 @@ namespace AirportApp.Tests.Unit.Src.Service
             };
 
             var unknownFilter = (TicketFilterStatusEnum)999;
-            var result = ticketService.FilterTicketsByStatus(tickets, unknownFilter).ToList();
+            var result = (await ticketService.FilterTicketsByStatusAsync(tickets, unknownFilter)).ToList();
 
             Assert.AreEqual(2, result.Count);
         }

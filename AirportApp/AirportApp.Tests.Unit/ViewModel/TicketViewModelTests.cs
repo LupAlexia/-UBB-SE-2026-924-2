@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using AirportApp.ClassLibrary.Entity.Dto;
 using AirportApp.ClassLibrary.Entity.Domain;
-using AirportApp.Src.Service.Interfaces;
+using AirportApp.ClassLibrary.Service.Interfaces;
 using AirportApp.Src.ViewModel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
@@ -123,12 +123,15 @@ namespace AirportApp.Tests.Unit.ViewModel
         public void FilterByStatus_WhenCalled_ShouldUpdateFilteredDisplayCollection()
         {
             var filteredResults = new List<TicketDTO> { ticketsViewModel.AllTickets[0] };
-            ticketService.FilterTicketsByStatus(Arg.Any<IEnumerable<TicketDTO>>(), TicketFilterStatusEnum.OPEN).Returns(filteredResults);
+            ticketService.FilterTicketsByStatusAsync(Arg.Any<IEnumerable<TicketDTO>>(), TicketFilterStatusEnum.OPEN).Returns(Task.FromResult((IEnumerable<TicketDTO>)filteredResults));
 
             ticketsViewModel.SelectedFilterStatus = TicketFilterStatusEnum.OPEN;
 
+            // Note: Since ApplyFilterLogicAsync is fired and forgotten in the setter,
+            // verifying the exact count immediately might have race conditions in a real async environment,
+            // but for this NSubstitute mock without delay, it usually executes inline.
             Assert.AreEqual(1, ticketsViewModel.FilteredTicketsForDisplay.Count);
-            ticketService.Received().FilterTicketsByStatus(Arg.Any<IEnumerable<TicketDTO>>(), TicketFilterStatusEnum.OPEN);
+            ticketService.Received().FilterTicketsByStatusAsync(Arg.Any<IEnumerable<TicketDTO>>(), TicketFilterStatusEnum.OPEN);
         }
 
         [TestMethod]

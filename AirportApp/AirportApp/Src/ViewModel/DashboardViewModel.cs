@@ -85,8 +85,6 @@ namespace AirportApp.Src.ViewModel
 
             CancelTicketCommand = new RelayCommand(ExecuteCancelTicket);
             DownloadPdfCommand = new RelayCommand(ExecuteDownloadPdf);
-
-            _ = LoadUserTicketsAsync();
         }
 
         public async Task LoadUserTicketsAsync()

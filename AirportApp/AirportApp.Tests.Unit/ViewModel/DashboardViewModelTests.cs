@@ -6,6 +6,7 @@ using FluentAssertions;
 using Moq;
 using AirportApp.Src.ViewModel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using AirportApp.ClassLibrary.Service.Interfaces;
 using AirportApp.Src.Service.Interfaces;
 
 namespace AirportApp.Tests.Unit.ViewModel;

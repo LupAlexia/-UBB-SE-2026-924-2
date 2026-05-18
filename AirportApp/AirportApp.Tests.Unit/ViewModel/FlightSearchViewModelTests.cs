@@ -6,6 +6,7 @@ using Moq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using AirportApp.ClassLibrary.Entity.Domain;
 using AirportApp.Src.ViewModel;
+using AirportApp.ClassLibrary.Service.Interfaces;
 using AirportApp.Src.Service.Interfaces;
 using AirportEntity = AirportApp.ClassLibrary.Entity.Domain.Airport;
 
@@ -65,7 +66,7 @@ namespace AirportApp.Tests.Unit.ViewModel
 
             mockFlightSearchService.Setup(service => service.ParsePassengerCount(ExpectedPassengerCount.ToString())).Returns(ExpectedPassengerCount);
             mockFlightSearchService.Setup(service => service.SearchFlightsAsync(ValidLocation, true, It.IsAny<DateTime?>(), ExpectedPassengerCount)).ReturnsAsync(flightList);
-            mockPricingService.Setup(service => service.CalculateBasePrice(It.IsAny<Flight>())).Returns(DefaultBasePrice);
+            mockPricingService.Setup(service => service.CalculateBasePriceAsync(It.IsAny<Flight>())).ReturnsAsync(DefaultBasePrice);
 
             viewModel.SearchCommand.Execute(null);
 

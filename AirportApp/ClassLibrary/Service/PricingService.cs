@@ -13,19 +13,19 @@ namespace AirportApp.Src.Service
         private const float PercentageDivisor = 100.0f;
         private const float ZeroPrice = 0f;
 
-        public float CalculateBasePrice(Flight flight)
+        public Task<float> CalculateBasePriceAsync(Flight flight)
         {
             if (flight?.Route == null)
             {
-                return ZeroPrice;
+                return Task.FromResult(ZeroPrice);
             }
 
             TimeSpan duration = flight.Route.ArrivalTime - flight.Route.DepartureTime;
             float calculatedPrice = (float)duration.TotalMinutes * PricePerMinuteMultiplier;
-            return Math.Max(calculatedPrice, MinimumFlightPrice);
+            return Task.FromResult(Math.Max(calculatedPrice, MinimumFlightPrice));
         }
 
-        public float CalculateTotalPrice(FlightTicket ticket)
+        public Task<float> CalculateTotalPriceAsync(FlightTicket ticket)
         {
             float finalTotal = ticket.Price;
 
@@ -62,17 +62,17 @@ namespace AirportApp.Src.Service
                 }
             }
 
-            return finalTotal;
+            return Task.FromResult(finalTotal);
         }
 
-        public PriceBreakdown CalculatePriceBreakdown(Flight flight, Customer user, List<FlightTicket> tickets)
+        public async Task<PriceBreakdown> CalculatePriceBreakdownAsync(Flight flight, Customer user, List<FlightTicket> tickets)
         {
             if (flight == null || tickets == null || tickets.Count == 0)
             {
                 return new PriceBreakdown();
             }
 
-            float basePrice = CalculateBasePrice(flight);
+            float basePrice = await CalculateBasePriceAsync(flight);
             float basePriceTotal = basePrice * tickets.Count;
 
             float addOnsWithoutMembership = tickets.Sum(ticket => ticket.SelectedAddOns.Sum(addOn => addOn.BasePrice));
@@ -82,7 +82,7 @@ namespace AirportApp.Src.Service
             foreach (var ticket in tickets)
             {
                 ticket.User = user;
-                finalTotal += CalculateTotalPrice(ticket);
+                finalTotal += await CalculateTotalPriceAsync(ticket);
             }
 
             float membershipSavings = Math.Max(0, totalWithoutMembership - finalTotal);

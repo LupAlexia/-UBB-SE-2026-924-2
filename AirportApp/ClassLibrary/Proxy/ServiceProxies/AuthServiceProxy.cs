@@ -5,101 +5,64 @@ using System.Threading.Tasks;
 using AirportApp.ClassLibrary.Entity.Domain;
 using AirportApp.ClassLibrary.Entity.Dto;
 using AirportApp.ClassLibrary.Service.Interfaces;
-using Microsoft.AspNetCore.Identity;
+
 
 namespace AirportApp.ClassLibrary.Proxy.ServiceProxies
 {
     public class AuthServiceProxy : IAuthService
     {
         private readonly HttpClient httpClient;
-        private readonly PasswordHasher<Customer> passwordHasher;
+
         private const string BaseUrl = "api/customer";
 
         public AuthServiceProxy(HttpClient httpClient)
         {
             this.httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
-            this.passwordHasher = new PasswordHasher<Customer>();
         }
 
         public async Task<Customer> LoginAsync(string email, string password, int? currentUserId = null)
         {
-            if (string.IsNullOrWhiteSpace(email))
+            var request = new LoginRequestDTO
             {
-                throw new ArgumentException("Email is required.");
+                Email = email?.Trim() ?? string.Empty,
+                Password = password ?? string.Empty,
+                CurrentUserId = currentUserId
+            };
+
+            HttpResponseMessage response = await httpClient.PostAsJsonAsync($"{BaseUrl}/login", request);
+            
+            if (!response.IsSuccessStatusCode)
+            {
+                string errorMessage = await response.Content.ReadAsStringAsync();
+                throw new InvalidOperationException(errorMessage);
             }
 
-            if (string.IsNullOrWhiteSpace(password))
+            var customerDTO = await response.Content.ReadFromJsonAsync<CustomerDTO>();
+            if (customerDTO == null)
             {
-                throw new ArgumentException("Password is required.");
+                throw new InvalidOperationException("Failed to read user data from server.");
             }
 
-            Customer existingUser = await GetByEmailAsync(email.Trim());
-
-            if (existingUser == null)
-            {
-                throw new InvalidOperationException("No account found with this email.");
-            }
-
-            if (currentUserId.HasValue && existingUser.Id != currentUserId.Value)
-            {
-                throw new InvalidOperationException("This account does not belong to the current user.");
-            }
-
-            PasswordVerificationResult result =
-                passwordHasher.VerifyHashedPassword(existingUser, existingUser.PasswordHash, password);
-
-            if (result == PasswordVerificationResult.Failed)
-            {
-                throw new InvalidOperationException("Invalid email or password.");
-            }
-
-            return existingUser;
+            return MapCustomerFromTransferObject(customerDTO);
         }
 
         public async Task RegisterAsync(string email, string phone, string username, string password)
         {
-            string normalizedEmail = email?.Trim();
-            string normalizedUsername = username?.Trim();
-            string normalizedPhone = phone?.Trim();
-
-            if (string.IsNullOrWhiteSpace(normalizedEmail))
+            var request = new RegisterRequestDTO
             {
-                throw new ArgumentException("Email is required.");
-            }
-
-            if (string.IsNullOrWhiteSpace(normalizedUsername))
-            {
-                throw new ArgumentException("Username is required.");
-            }
-
-            if (string.IsNullOrWhiteSpace(normalizedPhone))
-            {
-                throw new ArgumentException("Phone is required.");
-            }
-
-            if (string.IsNullOrWhiteSpace(password) || password.Length < 6)
-            {
-                throw new ArgumentException("Password must be at least 6 characters long.");
-            }
-
-            Customer existingUser = await GetByEmailAsync(normalizedEmail);
-            if (existingUser != null)
-            {
-                throw new InvalidOperationException("An account with this email already exists.");
-            }
-
-            Customer newUser = new Customer
-            {
-                Email = normalizedEmail,
-                Phone = normalizedPhone,
-                Username = normalizedUsername,
-                Membership = null
+                Email = email?.Trim() ?? string.Empty,
+                Phone = phone?.Trim() ?? string.Empty,
+                Username = username?.Trim() ?? string.Empty,
+                Password = password ?? string.Empty
             };
 
-            string hashedPassword = passwordHasher.HashPassword(newUser, password);
-            newUser.PasswordHash = hashedPassword;
+            HttpResponseMessage response = await httpClient.PostAsJsonAsync($"{BaseUrl}/register", request);
 
-            await AddUserAsync(newUser);
+            if (!response.IsSuccessStatusCode)
+            {
+                string errorMessage = await response.Content.ReadAsStringAsync();
+                throw new InvalidOperationException(errorMessage);
+            }
         }
 
         public void Logout()

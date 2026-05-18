@@ -82,5 +82,12 @@ namespace Airport.Web.Controllers
             await reviewService.DeleteByIdAsync(id);
             return NoContent();
         }
+
+        [HttpPost("calculate-average")]
+        public async Task<ActionResult<float>> CalculateAverageAsync([FromBody] Review review)
+        {
+            float average = await reviewService.CalculateAverageRatingAsync(review);
+            return Ok(average);
+        }
     }
 }

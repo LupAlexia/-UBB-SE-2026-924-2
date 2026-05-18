@@ -57,7 +57,7 @@ namespace AirportApp.Src.Service.Implementation
             await faqRepository.IncrementWasNotHelpfulVotesAsync(entry.Id);
         }
 
-        public async Task<List<FAQEntry>> FilterFAQEntryAsync(FAQCategoryEnum category, string searchQuery)
+        public async Task<List<FAQEntry>> FilterFAQEntryAsync(FAQCategoryEnum category, string? searchQuery)
         {
             IEnumerable<FAQEntry> frequentlyAskedQuestions;
 
