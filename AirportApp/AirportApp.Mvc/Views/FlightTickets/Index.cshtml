@@ -1,0 +1,89 @@
+﻿@model IEnumerable<AirportApp.ClassLibrary.Entity.Domain.FlightTicket>
+
+@{
+    ViewData["Title"] = "Flight Tickets";
+    var userId = ViewBag.UserId as int?;
+}
+
+<h1>Flight Tickets</h1>
+
+<p>
+    @if (userId.HasValue)
+    {
+        <a asp-action="Create" asp-route-userId="@userId">Create New Ticket</a>
+    }
+    else
+    {
+        <form asp-action="Index" method="get" class="mb-3">
+            <label for="userId" class="form-label">User ID</label>
+            <div class="input-group" style="max-width: 320px;">
+                <input id="userId" name="userId" type="number" class="form-control" placeholder="Enter user id" />
+                <button type="submit" class="btn btn-primary">Load tickets</button>
+            </div>
+        </form>
+    }
+</p>
+@if (userId.HasValue)
+{
+    <p class="text-muted">Showing tickets for user ID @userId.</p>
+}
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Seat)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Price)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Status)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PassengerFirstName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PassengerLastName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PassengerEmail)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PassengerPhone)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Seat)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Price)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Status)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PassengerFirstName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PassengerLastName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PassengerEmail)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PassengerPhone)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id" asp-route-userId="@userId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id" asp-route-userId="@userId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id" asp-route-userId="@userId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
