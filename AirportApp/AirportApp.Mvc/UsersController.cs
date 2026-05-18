@@ -7,22 +7,23 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using AirportApp.ClassLibrary.DataAccess;
 using AirportApp.ClassLibrary.Entity.Domain;
+using AirportApp.ClassLibrary.Service.Interfaces;
 
 namespace AirportApp.Mvc
 {
     public class UsersController : Controller
     {
-        private readonly AirportDbContext context;
+        private readonly IUserService userService;
 
-        public UsersController(AirportDbContext context)
+        public UsersController(IUserService userService)
         {
-            this.context = context;
+            this.userService = userService;
         }
 
         // GET: Users
         public async Task<IActionResult> Index()
         {
-            return View(await context.Users.ToListAsync());
+            return View(await userService.GetAllUsersAsync());
         }
 
         // GET: Users/Details/5
@@ -33,8 +34,7 @@ namespace AirportApp.Mvc
                 return NotFound();
             }
 
-            var user = await context.Users
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var user = await userService.GetByIdAsync(id.Value);
             if (user == null)
             {
                 return NotFound();
@@ -58,8 +58,7 @@ namespace AirportApp.Mvc
         {
             if (ModelState.IsValid)
             {
-                context.Add(user);
-                await context.SaveChangesAsync();
+                await userService.AddUserAsync(user);
                 return RedirectToAction(nameof(Index));
             }
             return View(user);
@@ -73,7 +72,7 @@ namespace AirportApp.Mvc
                 return NotFound();
             }
 
-            var user = await context.Users.FindAsync(id);
+            var user = await userService.GetByIdAsync(id.Value);
             if (user == null)
             {
                 return NotFound();
@@ -95,22 +94,7 @@ namespace AirportApp.Mvc
 
             if (ModelState.IsValid)
             {
-                try
-                {
-                    context.Update(user);
-                    await context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!UserExists(user.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                await userService.UpdateUserByIdAsync(id, user);
                 return RedirectToAction(nameof(Index));
             }
             return View(user);
@@ -124,8 +108,7 @@ namespace AirportApp.Mvc
                 return NotFound();
             }
 
-            var user = await context.Users
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var user = await userService.GetByIdAsync(id.Value);
             if (user == null)
             {
                 return NotFound();
@@ -139,19 +122,9 @@ namespace AirportApp.Mvc
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var user = await context.Users.FindAsync(id);
-            if (user != null)
-            {
-                context.Users.Remove(user);
-            }
-
-            await context.SaveChangesAsync();
+            await userService.DeleteUserByIdAsync(id);
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool UserExists(int id)
-        {
-            return context.Users.Any(e => e.Id == id);
         }
     }
 }
+
