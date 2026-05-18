@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Json;
+using System.Linq;
 using System.Threading.Tasks;
 using AirportApp.ClassLibrary.Entity.Domain;
 using AirportApp.ClassLibrary.Service.Interfaces;
@@ -122,9 +123,29 @@ namespace AirportApp.ClassLibrary.Proxy.ServiceProxies
             }
         }
 
-        public Task<List<FAQEntry>> FilterFAQEntryAsync(FAQCategoryEnum category, string searchQuery)
+        public async Task<List<FAQEntry>> FilterFAQEntryAsync(FAQCategoryEnum category, string searchQuery)
         {
-            throw new NotSupportedException("FilterFAQEntryAsync is not available through the service proxy.");
+            List<FAQEntry> frequentlyAskedQuestions;
+
+            if (category != FAQCategoryEnum.All)
+            {
+                frequentlyAskedQuestions = await GetByCategoryAsync(category);
+            }
+            else
+            {
+                frequentlyAskedQuestions = await GetAllAsync();
+            }
+
+            if (!string.IsNullOrWhiteSpace(searchQuery))
+            {
+                frequentlyAskedQuestions = frequentlyAskedQuestions
+                    .Where(question =>
+                        (question.Question?.Contains(searchQuery, StringComparison.OrdinalIgnoreCase) ?? false) ||
+                        (question.Answer?.Contains(searchQuery, StringComparison.OrdinalIgnoreCase) ?? false))
+                    .ToList();
+            }
+
+            return frequentlyAskedQuestions;
         }
     }
 }

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Json;
+using System.Linq;
 using System.Threading.Tasks;
 using AirportApp.ClassLibrary.Entity.Domain;
 using AirportApp.ClassLibrary.Entity.Dto;
@@ -165,7 +166,17 @@ namespace AirportApp.ClassLibrary.Proxy.ServiceProxies
 
         public IEnumerable<TicketDTO> FilterTicketsByStatus(IEnumerable<TicketDTO> tickets, TicketFilterStatusEnum filter)
         {
-            throw new NotSupportedException("FilterTicketsByStatus is not available through the service proxy.");
+            switch (filter)
+            {
+                case TicketFilterStatusEnum.OPEN:
+                    return tickets.Where(ticket => ticket.currentStatus == ComplaintTicketStatusEnum.OPEN);
+                case TicketFilterStatusEnum.IN_PROGRESS:
+                    return tickets.Where(ticket => ticket.currentStatus == ComplaintTicketStatusEnum.IN_PROGRESS);
+                case TicketFilterStatusEnum.RESOLVED:
+                    return tickets.Where(ticket => ticket.currentStatus == ComplaintTicketStatusEnum.RESOLVED);
+                default:
+                    return tickets;
+            }
         }
     }
 }

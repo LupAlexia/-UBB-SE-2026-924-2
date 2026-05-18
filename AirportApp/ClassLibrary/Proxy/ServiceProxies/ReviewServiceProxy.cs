@@ -104,9 +104,10 @@ namespace AirportApp.ClassLibrary.Proxy.ServiceProxies
             }
         }
 
-        public Task CreateReviewAsync(int identificationNumber, User user, string message, int dutyFreeRating, int flightExperienceRating, int staffFriendlinessRating, int cleanlinessRating)
+        public async Task CreateReviewAsync(int identificationNumber, User user, string message, int dutyFreeRating, int flightExperienceRating, int staffFriendlinessRating, int cleanlinessRating)
         {
-            throw new NotSupportedException("CreateReviewAsync is not available through the service proxy. Use AddAsync instead.");
+            Review review = new Review(identificationNumber, user, message, dutyFreeRating, flightExperienceRating, staffFriendlinessRating, cleanlinessRating);
+            await AddAsync(review);
         }
 
         public Task ValidateReviewAsync(Review review)
@@ -116,7 +117,11 @@ namespace AirportApp.ClassLibrary.Proxy.ServiceProxies
 
         public float CalculateAverageRating(Review review)
         {
-            throw new NotSupportedException("CalculateAverageRating is not available through the service proxy.");
+            const int numberOfRatings = 4;
+            return (review.DutyFreeRating +
+                    review.FlightExperienceRating +
+                    review.StaffFriendlinessRating +
+                    review.CleanlinessRating) / (float)numberOfRatings;
         }
     }
 }
