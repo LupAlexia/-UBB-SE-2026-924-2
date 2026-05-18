@@ -1,7 +1,8 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AirportApp.ClassLibrary.Entity.Domain;
-using AirportApp.ClassLibrary.Repository.Interfaces;
+using AirportApp.ClassLibrary.Entity.Dto;
+using AirportApp.ClassLibrary.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Airport.Web.Controllers
@@ -10,34 +11,36 @@ namespace Airport.Web.Controllers
     [Route("api/[controller]")]
     public class AddOnController : ControllerBase
     {
-        private readonly IAddOnRepository addOnRepository;
+        private readonly IBookingService bookingService;
 
-        public AddOnController(IAddOnRepository addOnRepository)
+        public AddOnController(IBookingService bookingService)
         {
-            this.addOnRepository = addOnRepository;
+            this.bookingService = bookingService;
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<AirportApp.ClassLibrary.Entity.Dto.AddOnDTO>>> GetAllAsync()
+        public async Task<ActionResult<IEnumerable<AddOnDTO>>> GetAllAsync()
         {
-            IEnumerable<AddOn> addOns = await addOnRepository.GetAllAddOnsAsync();
-            var addOnTransferObjectList = new List<AirportApp.ClassLibrary.Entity.Dto.AddOnDTO>();
+            List<AddOn> addOns = await bookingService.GetAvailableAddOnsAsync();
+            var addOnTransferObjectList = new List<AddOnDTO>();
             foreach (var addOn in addOns)
             {
-                addOnTransferObjectList.Add(new AirportApp.ClassLibrary.Entity.Dto.AddOnDTO(addOn.Id, addOn.Name, addOn.BasePrice));
+                addOnTransferObjectList.Add(new AddOnDTO(addOn.Id, addOn.Name, addOn.BasePrice));
             }
+
             return Ok(addOnTransferObjectList);
         }
 
         [HttpPost("by-ids")]
-        public async Task<ActionResult<IEnumerable<AirportApp.ClassLibrary.Entity.Dto.AddOnDTO>>> GetByIdsAsync([FromBody] List<int> ids)
+        public async Task<ActionResult<IEnumerable<AddOnDTO>>> GetByIdsAsync([FromBody] List<int> ids)
         {
-            IEnumerable<AddOn> addOns = await addOnRepository.GetAddOnsByIdsAsync(ids);
-            var addOnTransferObjectList = new List<AirportApp.ClassLibrary.Entity.Dto.AddOnDTO>();
+            List<AddOn> addOns = await bookingService.GetAddOnsByIdsAsync(ids);
+            var addOnTransferObjectList = new List<AddOnDTO>();
             foreach (var addOn in addOns)
             {
-                addOnTransferObjectList.Add(new AirportApp.ClassLibrary.Entity.Dto.AddOnDTO(addOn.Id, addOn.Name, addOn.BasePrice));
+                addOnTransferObjectList.Add(new AddOnDTO(addOn.Id, addOn.Name, addOn.BasePrice));
             }
+
             return Ok(addOnTransferObjectList);
         }
     }

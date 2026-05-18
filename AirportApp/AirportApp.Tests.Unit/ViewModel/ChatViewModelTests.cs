@@ -12,7 +12,7 @@ using AirportApp.ClassLibrary.Repository.Interfaces;
 using AirportApp.Src.Service;
 using AirportApp.Src.Service.Bot;
 using AirportApp.Src.Service.Bot.Strategy;
-using AirportApp.Src.Service.Interfaces;
+using AirportApp.ClassLibrary.Service.Interfaces;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 
@@ -22,9 +22,9 @@ namespace AirportApp.Tests.Unit.ViewModel
     public class ChatViewModelTests
     {
         private IRepository<int, Chat> chatRepositoryMock;
-        private IRepository<int, Message> messageRepositoryMock;
+        private IMessageRepository messageRepositoryMock;
         private IRepository<int, User> userRepositoryMock;
-        private IRepository<int, FAQNode> faqRepositoryMock;
+        private IDecisionTreeService faqRepositoryMock;
         private IBotStrategy strategyMock;
         private IUserService userService;
         private IMapper mapper;
@@ -40,9 +40,9 @@ namespace AirportApp.Tests.Unit.ViewModel
         public void Setup()
         {
             chatRepositoryMock = Substitute.For<IRepository<int, Chat>>();
-            messageRepositoryMock = Substitute.For<IRepository<int, Message>>();
+            messageRepositoryMock = Substitute.For<IMessageRepository>();
             userRepositoryMock = Substitute.For<IRepository<int, User>>();
-            faqRepositoryMock = Substitute.For<IRepository<int, FAQNode>>();
+            faqRepositoryMock = Substitute.For<IDecisionTreeService>();
             strategyMock = Substitute.For<IBotStrategy>();
             userService = Substitute.For<IUserService>();
             mapper = Substitute.For<IMapper>();
@@ -77,10 +77,10 @@ namespace AirportApp.Tests.Unit.ViewModel
 
             // Mock FAQ node for RestartChat
             var faqNode1 = new FAQNode(1, "Test Question", ImmutableArray<FAQOption>.Empty, false);
-            faqRepositoryMock.GetByIdAsync(1).Returns(Task.FromResult(faqNode1));
+            faqRepositoryMock.GetNodeByIdAsync(1).Returns(Task.FromResult(faqNode1));
         }
 
-        private ChatViewModel CreateViewModel(List<Message> initialMessages = null)
+        private ChatViewModel CreateViewModel(List<Message>? initialMessages = null)
         {
             if (initialMessages != null)
             {

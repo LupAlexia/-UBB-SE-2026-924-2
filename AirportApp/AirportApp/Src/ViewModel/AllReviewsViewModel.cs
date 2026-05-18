@@ -6,7 +6,7 @@ using AutoMapper;
 using AirportApp.ClassLibrary.Entity.Dto;
 using CommunityToolkit.Mvvm.ComponentModel;
 using ReviewEntity = AirportApp.ClassLibrary.Entity.Domain.Review;
-using AirportApp.Src.Service.Interfaces;
+using AirportApp.ClassLibrary.Service.Interfaces;
 
 namespace AirportApp.Src.ViewModel
 {

@@ -1,36 +1,37 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using AirportApp.ClassLibrary.Repository.Interfaces;
-using Microsoft.AspNetCore.Mvc;
+using AirportApp.ClassLibrary.Service.Interfaces;
 using AirportApp.ClassLibrary.Entity.Dto;
 using AirportApp.ClassLibrary.Entity.Domain;
+using Microsoft.AspNetCore.Mvc;
+
 namespace Airport.Web.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
     public class TicketController : ControllerBase
     {
-        private readonly ITicketRepository ticketRepository;
-        private readonly IUserRepository userRepository;
-        private readonly ITicketCategoryRepository ticketCategoryRepository;
-        private readonly ITicketSubcategoryRepository ticketSubcategoryRepository;
+        private readonly IComplaintTicketService ticketService;
+        private readonly IUserService userService;
+        private readonly IComplaintTicketCategoryService ticketCategoryService;
+        private readonly IComplaintTicketSubcategoryService ticketSubcategoryService;
 
         public TicketController(
-            ITicketRepository ticketRepository,
-            IUserRepository userRepository,
-            ITicketCategoryRepository ticketCategoryRepository,
-            ITicketSubcategoryRepository ticketSubcategoryRepository)
+            IComplaintTicketService ticketService,
+            IUserService userService,
+            IComplaintTicketCategoryService ticketCategoryService,
+            IComplaintTicketSubcategoryService ticketSubcategoryService)
         {
-            this.ticketRepository = ticketRepository;
-            this.userRepository = userRepository;
-            this.ticketCategoryRepository = ticketCategoryRepository;
-            this.ticketSubcategoryRepository = ticketSubcategoryRepository;
+            this.ticketService = ticketService;
+            this.userService = userService;
+            this.ticketCategoryService = ticketCategoryService;
+            this.ticketSubcategoryService = ticketSubcategoryService;
         }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ComplaintTicket>>> GetAllAsync()
         {
-            IEnumerable<ComplaintTicket> tickets = await ticketRepository.GetAllAsync();
+            IEnumerable<ComplaintTicket> tickets = await ticketService.GetAllTicketsAsync();
             return Ok(tickets);
         }
 
@@ -39,7 +40,7 @@ namespace Airport.Web.Controllers
         {
             try
             {
-                ComplaintTicket ticket = await ticketRepository.GetByIdAsync(id);
+                ComplaintTicket ticket = await ticketService.GetTicketByIdAsync(id);
                 return Ok(ticket);
             }
             catch (KeyNotFoundException)
@@ -53,9 +54,9 @@ namespace Airport.Web.Controllers
         {
             var ticket = new ComplaintTicket
             {
-                Creator = await userRepository.GetByIdAsync(ticketCreationData.creatorId),
-                Category = await ticketCategoryRepository.GetByIdAsync(ticketCreationData.categoryId),
-                Subcategory = await ticketSubcategoryRepository.GetByIdAsync(ticketCreationData.subcategoryId),
+                Creator = await userService.GetByIdAsync(ticketCreationData.creatorId),
+                Category = await ticketCategoryService.GetCategoryByIdAsync(ticketCreationData.categoryId),
+                Subcategory = await ticketSubcategoryService.GetSubcategoryByIdAsync(ticketCreationData.subcategoryId),
                 Subject = ticketCreationData.subject,
                 Description = ticketCreationData.description,
                 CreationTimestamp = ticketCreationData.creationTimestamp,
@@ -63,14 +64,14 @@ namespace Airport.Web.Controllers
                 UrgencyLevel = ticketCreationData.urgencyLevel
             };
 
-            int createdId = await ticketRepository.CreateNewEntityAsync(ticket);
-            return CreatedAtAction(nameof(GetByIdAsync), new { id = createdId }, ticket);
+            await ticketService.AddTicketAsync(ticket);
+            return CreatedAtAction(nameof(GetByIdAsync), new { id = ticket.Id }, ticket);
         }
 
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteAsync(int id)
         {
-            await ticketRepository.DeleteByIdAsync(id);
+            await ticketService.DeleteTicketByIdAsync(id);
             return NoContent();
         }
 
@@ -82,22 +83,29 @@ namespace Airport.Web.Controllers
                 return BadRequest("ID in URL does not match ID in body.");
             }
 
-            await ticketRepository.UpdateByIdAsync(id, ticket);
+            await ticketService.UpdateTicketByIdAsync(id, ticket);
             return NoContent();
         }
 
         [HttpPut("{id}/status")]
         public async Task<ActionResult> UpdateStatusAsync(int id, [FromBody] UpdateStatusRequest request)
         {
-            await ticketRepository.UpdateStatusByIdAsync(id, request.CurrentStatus);
+            await ticketService.UpdateStatusAsync(id, request.CurrentStatus);
             return NoContent();
         }
 
         [HttpPut("{id}/urgency")]
         public async Task<ActionResult> UpdateUrgencyAsync(int id, [FromBody] UpdateUrgencyRequest request)
         {
-            await ticketRepository.UpdateUrgencyLevelByIdAsync(id, request.UrgencyLevel);
+            await ticketService.UpdateUrgencyLevelAsync(id, request.UrgencyLevel);
             return NoContent();
+        }
+
+        [HttpPost("filter")]
+        public async Task<ActionResult<IEnumerable<TicketDTO>>> FilterAsync([FromQuery] TicketFilterStatusEnum filter, [FromBody] IEnumerable<TicketDTO> tickets)
+        {
+            IEnumerable<TicketDTO> filteredTickets = await ticketService.FilterTicketsByStatusAsync(tickets, filter);
+            return Ok(filteredTickets);
         }
     }
 

@@ -9,5 +9,7 @@ namespace AirportApp.ClassLibrary.Repository.Interfaces
         Task<IEnumerable<Message>> GetByChatIdAsync(int chatId);
 
         Task<IEnumerable<Message>> GetMessagesSinceAsync(int chatId, int firstMessageId);
+
+        Task<Sender> GetSenderByIdAsync(int senderId);
     }
 }

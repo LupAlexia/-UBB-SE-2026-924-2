@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using AirportApp.ClassLibrary.Entity.Dto;
 using CommunityToolkit.Mvvm.ComponentModel;
-using AirportApp.Src.Service.Interfaces;
+using AirportApp.ClassLibrary.Service.Interfaces;
 
 namespace AirportApp.Src.ViewModel
 {
@@ -35,7 +35,7 @@ namespace AirportApp.Src.ViewModel
             {
                 string realName = review.User.RetrieveConfiguredDisplayFullNameForBot();
 
-                float averageRating = reviewService.CalculateAverageRating(review);
+                float averageRating = await reviewService.CalculateAverageRatingAsync(review);
 
                 var reviewDateTime = mapper.Map<ReviewDTO>(review);
 

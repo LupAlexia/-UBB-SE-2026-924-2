@@ -16,7 +16,7 @@ namespace AirportApp.Tests.Unit.Src.Service
     public class MessageServiceTests
     {
         private IRepository<int, Chat> mockChatRepository = null!;
-        private IRepository<int, Message> mockMessageRepository = null!;
+        private IMessageRepository mockMessageRepository = null!;
         private IBotStrategy mockStrategy = null!;
         private BotEngineIdentity realBotEngine = null!;
         private MessageService messageService = null!;
@@ -34,7 +34,7 @@ namespace AirportApp.Tests.Unit.Src.Service
         public void Setup()
         {
             mockChatRepository = Substitute.For<IRepository<int, Chat>>();
-            mockMessageRepository = Substitute.For<IRepository<int, Message>>();
+            mockMessageRepository = Substitute.For<IMessageRepository>();
             mockStrategy = Substitute.For<IBotStrategy>();
             realBotEngine = new BotEngineIdentity(mockStrategy);
             messageService = new MessageService(mockChatRepository, mockMessageRepository, realBotEngine);

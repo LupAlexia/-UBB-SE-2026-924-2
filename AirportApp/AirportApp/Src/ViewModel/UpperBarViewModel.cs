@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using AirportApp.ClassLibrary.Entity.Domain;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml;

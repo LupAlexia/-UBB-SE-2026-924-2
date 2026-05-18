@@ -1,7 +1,8 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AirportApp.ClassLibrary.Entity.Domain;
-using AirportApp.ClassLibrary.Repository.Interfaces;
+using AirportApp.ClassLibrary.Service.Interfaces;
+
 using Microsoft.AspNetCore.Mvc;
 
 namespace Airport.Web.Controllers
@@ -10,17 +11,17 @@ namespace Airport.Web.Controllers
     [Route("api/[controller]")]
     public class MembershipController : ControllerBase
     {
-        private readonly IMembershipRepository membershipRepository;
+        private readonly IMembershipService membershipService;
 
-        public MembershipController(IMembershipRepository membershipRepository)
+        public MembershipController(IMembershipService membershipService)
         {
-            this.membershipRepository = membershipRepository;
+            this.membershipService = membershipService;
         }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<AirportApp.ClassLibrary.Entity.Dto.MembershipDTO>>> GetAllAsync()
         {
-            IEnumerable<Membership> memberships = await membershipRepository.GetAllMembershipsAsync();
+            IEnumerable<Membership> memberships = await membershipService.GetAllMembershipsAsync();
             var membershipTransferObjectList = new List<AirportApp.ClassLibrary.Entity.Dto.MembershipDTO>();
             foreach (var membership in memberships)
             {
@@ -32,7 +33,7 @@ namespace Airport.Web.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<AirportApp.ClassLibrary.Entity.Dto.MembershipDTO>> GetByIdAsync(int id)
         {
-            Membership? membership = await membershipRepository.GetMembershipByIdAsync(id);
+            Membership? membership = await membershipService.GetMembershipByIdAsync(id);
             if (membership == null)
             {
                 return NotFound();
@@ -45,7 +46,7 @@ namespace Airport.Web.Controllers
         [HttpGet("{id}/addon-discounts")]
         public async Task<ActionResult<IEnumerable<AirportApp.ClassLibrary.Entity.Dto.MembershipAddonDiscountDTO>>> GetAddonDiscountsAsync(int id)
         {
-            IEnumerable<MembershipAddonDiscount> discounts = await membershipRepository.GetAddonDiscountsAsync(id);
+            IEnumerable<MembershipAddonDiscount> discounts = await membershipService.GetAddonDiscountsAsync(id);
             var membershipAddonDiscountTransferObjectList = new List<AirportApp.ClassLibrary.Entity.Dto.MembershipAddonDiscountDTO>();
             foreach (var discount in discounts)
             {

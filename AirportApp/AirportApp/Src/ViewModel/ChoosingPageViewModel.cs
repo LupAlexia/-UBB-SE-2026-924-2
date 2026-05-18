@@ -1,19 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System;
-using System.Text;
-using System.Threading.Tasks;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace AirportApp.Src.ViewModel
 {
-	public class ChoosingPageViewModel
-	{
+    public class ChoosingPageViewModel
+    {
         public void SetUserRole(string roleTag)
         {
             bool isEmployee = roleTag == "Employee";
@@ -23,4 +13,3 @@ namespace AirportApp.Src.ViewModel
         }
     }
 }
-

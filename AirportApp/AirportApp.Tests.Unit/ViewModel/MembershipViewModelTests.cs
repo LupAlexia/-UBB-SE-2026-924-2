@@ -5,6 +5,7 @@ using Moq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using AirportApp.ClassLibrary.Entity.Domain;
 using AirportApp.Src.ViewModel;
+using AirportApp.ClassLibrary.Service.Interfaces;
 using AirportApp.Src.Service.Interfaces;
 
 namespace AirportApp.Tests.Unit.ViewModel

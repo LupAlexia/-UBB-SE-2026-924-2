@@ -1,9 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using AirportApp.ClassLibrary.Entity.Dto;
-using AirportApp.ClassLibrary.Repository.Interfaces;
+using AirportApp.ClassLibrary.Service.Interfaces;
 using AirportApp.ClassLibrary.Entity.Domain;
 
 namespace Airport.Web.Controllers
@@ -12,21 +13,19 @@ namespace Airport.Web.Controllers
     [Route("api/[controller]")]
     public class MessageController : ControllerBase
     {
-        private readonly IMessageRepository messageRepository;
-        private readonly IRepository<int, Chat> chatRepository;
-        private readonly IRepository<int, Sender> senderRepository;
+        private readonly IMessageService messageService;
+        private readonly IUserService userService;
 
-        public MessageController(IMessageRepository messageRepository, IRepository<int, Chat> chatRepository, IRepository<int, Sender> senderRepository)
+        public MessageController(IMessageService messageService, IUserService userService)
         {
-            this.messageRepository = messageRepository;
-            this.chatRepository = chatRepository;
-            this.senderRepository = senderRepository;
+            this.messageService = messageService;
+            this.userService = userService;
         }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<MessageDTO>>> GetAllAsync()
         {
-            IEnumerable<Message> messages = await messageRepository.GetAllAsync();
+            IEnumerable<Message> messages = await messageService.GetAllAsync();
             var dtos = messages.Select(messageEntity => new MessageDTO
             {
                 MessageId = messageEntity.Id,
@@ -44,7 +43,7 @@ namespace Airport.Web.Controllers
         {
             try
             {
-                Message message = await messageRepository.GetByIdAsync(id);
+                Message message = await messageService.GetByIdAsync(id);
                 return Ok(message);
             }
             catch (KeyNotFoundException)
@@ -71,21 +70,13 @@ namespace Airport.Web.Controllers
 
             try
             {
-                Chat chat = await chatRepository.GetByIdAsync(messageCreationData.chatId);
-                Sender sender = await senderRepository.GetByIdAsync(messageCreationData.senderId);
+                int createdId = await messageService.CreateMessageAsync(
+                    messageCreationData.chatId,
+                    messageCreationData.senderId,
+                    messageCreationData.text,
+                    messageCreationData.timestamp);
 
-                if (chat == null || sender == null)
-                {
-                    return NotFound(new { Message = "Chat or Sender not found." });
-                }
-
-                var message = new Message(chat, messageCreationData.text, sender)
-                {
-                    Timestamp = messageCreationData.timestamp == default ? DateTimeOffset.UtcNow : messageCreationData.timestamp
-                };
-
-                int createdId = await messageRepository.CreateNewEntityAsync(message);
-                return CreatedAtAction(nameof(GetByIdAsync), new { id = createdId }, message);
+                return CreatedAtAction(nameof(GetByIdAsync), new { id = createdId }, null);
             }
             catch (KeyNotFoundException keyNotFoundException)
             {
@@ -105,21 +96,21 @@ namespace Airport.Web.Controllers
                 return BadRequest("ID in URL does not match ID in body.");
             }
 
-            await messageRepository.UpdateByIdAsync(id, message);
+            await messageService.UpdateByIdAsync(id, message);
             return NoContent();
         }
 
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteAsync(int id)
         {
-            await messageRepository.DeleteByIdAsync(id);
+            await messageService.DeleteByIdAsync(id);
             return NoContent();
         }
 
         [HttpGet("chat/{chatId}")]
         public async Task<ActionResult<IEnumerable<MessageDTO>>> GetByChatIdAsync(int chatId)
         {
-            IEnumerable<Message> messages = await messageRepository.GetByChatIdAsync(chatId);
+            IEnumerable<Message> messages = await messageService.GetByChatIdAsync(chatId);
             var dtos = messages.Select(messageEntity => new MessageDTO
             {
                 MessageId = messageEntity.Id,
@@ -135,14 +126,14 @@ namespace Airport.Web.Controllers
         [HttpGet("chat/{chatId}/since/{firstMessageId}")]
         public async Task<ActionResult<IEnumerable<Message>>> GetMessagesSinceAsync(int chatId, int firstMessageId)
         {
-            IEnumerable<Message> messages = await messageRepository.GetMessagesSinceAsync(chatId, firstMessageId);
+            IEnumerable<Message> messages = await messageService.GetMessagesSinceAsync(chatId, firstMessageId);
             return Ok(messages);
         }
 
         [HttpGet("chat/{chatId}/with-senders")]
         public async Task<ActionResult<IEnumerable<MessageDTO>>> GetByChatIdWithSendersAsync(int chatId)
         {
-            var messages = await messageRepository.GetByChatIdAsync(chatId);
+            var messages = await messageService.GetByChatIdAsync(chatId);
             var result = messages.Select(messageEntity => new MessageDTO
             {
                 MessageId = messageEntity.Id,
@@ -152,6 +143,78 @@ namespace Airport.Web.Controllers
                 Sender = messageEntity.Sender
             });
             return Ok(result);
+        }
+
+        [HttpPost("send")]
+        public async Task<ActionResult<BotReplyDTO>> SendMessageAsync([FromBody] SendMessageRequestDTO request)
+        {
+            try
+            {
+                var sender = await userService.GetByIdAsync(request.SenderId);
+                if (sender == null)
+                {
+                    return NotFound(new { Message = $"User with id {request.SenderId} was not found." });
+                }
+
+                var faqOption = new FAQOption
+                {
+                    Label = request.OptionLabel,
+                    NextOption = request.NextNode != null ? MapFAQNodeFromDTO(request.NextNode) : null
+                };
+
+                BotMessage botReply = await messageService.SendMessageAsync(request.ChatId, sender, faqOption);
+
+                var replyDTO = new BotReplyDTO
+                {
+                    MessageId = botReply.Id,
+                    Text = botReply.Text,
+                    Timestamp = botReply.Timestamp,
+                    FAQOptions = botReply.FAQOptions?.Select(o => MapFAQOptionToDTO(o)).ToList() ?? new List<FAQOptionDTO>()
+                };
+
+                return Ok(replyDTO);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { Message = ex.Message });
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { Message = ex.Message });
+            }
+        }
+
+        private static FAQNode MapFAQNodeFromDTO(FAQNodeDTO dto)
+        {
+            var node = new FAQNode
+            {
+                NodeId = dto.NodeId,
+                QuestionText = dto.QuestionText,
+                IsFinalAnswer = dto.IsFinalAnswer,
+                Options = dto.Options?.Select(o => new FAQOption
+                {
+                    OptionId = o.OptionId,
+                    Label = o.Label,
+                    NextOption = o.NextOption != null ? MapFAQNodeFromDTO(o.NextOption) : null
+                }).ToList() ?? new List<FAQOption>()
+            };
+            return node;
+        }
+
+        private static FAQOptionDTO MapFAQOptionToDTO(FAQOption option)
+        {
+            return new FAQOptionDTO
+            {
+                OptionId = option.OptionId,
+                Label = option.Label,
+                NextOption = option.NextOption != null ? new FAQNodeDTO
+                {
+                    NodeId = option.NextOption.NodeId,
+                    QuestionText = option.NextOption.QuestionText,
+                    IsFinalAnswer = option.NextOption.IsFinalAnswer,
+                    Options = option.NextOption.Options?.Select(o => MapFAQOptionToDTO(o)).ToList() ?? new List<FAQOptionDTO>()
+                } : null
+            };
         }
     }
 }

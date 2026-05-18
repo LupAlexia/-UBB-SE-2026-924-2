@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using AirportApp.ClassLibrary.Entity.Domain;
 using AirportApp.ClassLibrary.Entity.Dto;
-using AirportApp.ClassLibrary.Repository.Interfaces;
+using AirportApp.ClassLibrary.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Airport.Web.Controllers
@@ -11,19 +11,19 @@ namespace Airport.Web.Controllers
     [Route("api/[controller]")]
     public class ChatController : ControllerBase
     {
-        private readonly IRepository<int, Chat> chatRepository;
-        private readonly IUserRepository userRepository;
+        private readonly IChatService chatService;
+        private readonly IUserService userService;
 
-        public ChatController(IRepository<int, Chat> chatRepository, IUserRepository userRepository)
+        public ChatController(IChatService chatService, IUserService userService)
         {
-            this.chatRepository = chatRepository;
-            this.userRepository = userRepository;
+            this.chatService = chatService;
+            this.userService = userService;
         }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Chat>>> GetAllAsync()
         {
-            IEnumerable<Chat> chats = await chatRepository.GetAllAsync();
+            IEnumerable<Chat> chats = await chatService.GetAllChatsAsync();
             return Ok(chats);
         }
 
@@ -32,7 +32,7 @@ namespace Airport.Web.Controllers
         {
             try
             {
-                Chat chat = await chatRepository.GetByIdAsync(id);
+                Chat chat = await chatService.GetChatByIdAsync(id);
                 return Ok(chat);
             }
             catch (KeyNotFoundException)
@@ -44,12 +44,9 @@ namespace Airport.Web.Controllers
         [HttpPost]
         public async Task<ActionResult> CreateAsync([FromBody] CreateChatDTO chatCreationData)
         {
-            User user = await userRepository.GetByIdAsync(chatCreationData.userId);
-            var chat = new Chat(0, user, chatCreationData.status);
-
-            int createdId = await chatRepository.CreateNewEntityAsync(chat);
-            chat.Id = createdId;
-            return CreatedAtAction(nameof(GetByIdAsync), new { id = createdId }, chat);
+            User user = await userService.GetByIdAsync(chatCreationData.userId);
+            Chat chat = await chatService.OpenChatAsync(user);
+            return CreatedAtAction(nameof(GetByIdAsync), new { id = chat.Id }, chat);
         }
 
         [HttpPut("{id}")]
@@ -60,14 +57,14 @@ namespace Airport.Web.Controllers
                 return BadRequest("ID in URL does not match ID in body.");
             }
 
-            await chatRepository.UpdateByIdAsync(id, chat);
+            await chatService.UpdateChatAsync(id, chat);
             return NoContent();
         }
 
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteAsync(int id)
         {
-            await chatRepository.DeleteByIdAsync(id);
+            await chatService.CloseChatAsync(id);
             return NoContent();
         }
     }

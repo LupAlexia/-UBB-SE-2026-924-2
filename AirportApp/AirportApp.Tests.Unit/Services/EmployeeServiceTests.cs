@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AirportApp.ClassLibrary.Repository.Interfaces;
 using AirportApp.Src.Service;
-using AirportApp.Src.Service.Interfaces;
+using AirportApp.ClassLibrary.Service.Interfaces;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using AirportApp.ClassLibrary.Entity.Domain;

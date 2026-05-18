@@ -2,7 +2,8 @@ using System;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using AirportApp.ClassLibrary.Entity.Domain;
-using AirportApp.Src.Service.Interfaces;
+using AirportApp.ClassLibrary.Service.Interfaces;
+using INavigationService = AirportApp.Src.Service.Interfaces.INavigationService;
 
 namespace AirportApp.Src.ViewModel
 {
@@ -24,9 +25,7 @@ namespace AirportApp.Src.ViewModel
         private string titleText = "Flight Security Access";
         private string subtitleText = "To protect your flight details and personal data, please complete this quick security verification.";
         private string actionButtonLabel = "Sign In";
-        // private string togglePromptLabel = "Don't have an account?";
-        // private string toggleButtonLabel = "Create one";
-         private bool isRegisterFieldsVisible = false;
+        private bool isRegisterFieldsVisible = false;
 
         public AuthViewModel(IAuthService authService, INavigationService navigationService)
         {
@@ -215,7 +214,6 @@ namespace AirportApp.Src.ViewModel
             }
             else
             {
-                // await RegisterAsync();
                 if (string.IsNullOrWhiteSpace(ErrorMessage))
                 {
                     SetLoginMode();
@@ -229,8 +227,6 @@ namespace AirportApp.Src.ViewModel
             TitleText = "Welcome to WizzErr";
             SubtitleText = "Please sign in to manage your tickets";
             ActionButtonLabel = "Sign In";
-           // TogglePromptLabel = "Don't have an account?";
-           //  ToggleButtonLabel = "Create one";
             IsRegisterFieldsVisible = false;
         }
 

@@ -7,7 +7,7 @@ using AutoMapper;
 using AirportApp.ClassLibrary.Entity.Dto;
 using AirportApp.ClassLibrary.Repository.Interfaces;
 using AirportApp.Src.Service.Implementation;
-using AirportApp.Src.Service.Interfaces;
+using AirportApp.ClassLibrary.Service.Interfaces;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using NSubstitute.Core;

@@ -3,7 +3,8 @@ using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using AirportApp.ClassLibrary.Entity.Domain;
-using AirportApp.Src.Service.Interfaces;
+using AirportApp.ClassLibrary.Service.Interfaces;
+using INavigationService = AirportApp.Src.Service.Interfaces.INavigationService;
 
 namespace AirportApp.Src.ViewModel
 {
@@ -88,7 +89,6 @@ namespace AirportApp.Src.ViewModel
         {
             if (parameter is User user)
             {
-                // UserSession.CurrentUser = user;
             }
         }
 
@@ -110,7 +110,8 @@ namespace AirportApp.Src.ViewModel
 
             foreach (var flight in results)
             {
-                AvailableFlights.Add(new FlightDisplayModel(flight, pricingService.CalculateBasePrice(flight)));
+                float basePrice = await pricingService.CalculateBasePriceAsync(flight);
+                AvailableFlights.Add(new FlightDisplayModel(flight, basePrice));
                 hasResults = true;
             }
 
