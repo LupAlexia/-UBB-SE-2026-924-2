@@ -47,7 +47,7 @@ namespace AirportApp.Tests.Unit.ViewModel
             userService = Substitute.For<IUserService>();
             mapper = Substitute.For<IMapper>();
             botEngine = new BotEngineIdentity(strategyMock);
-            messageService = new MessageService(chatRepositoryMock, messageRepositoryMock, botEngine);
+            messageService = new MessageService(chatRepositoryMock, messageRepositoryMock, faqRepositoryMock, botEngine);
             chatService = new ChatService(chatRepositoryMock, userRepositoryMock);
 
             testUser = new User(42, "Test User", "test@test.com");
@@ -68,10 +68,6 @@ namespace AirportApp.Tests.Unit.ViewModel
                 }
                 return dataTransferObject;
             });
-
-            var defaultBotReply = new BotMessage.BotMessageBuilder(testUser, testChat, 2).Build();
-            strategyMock.ProcessIncomingUserMessageAndDetermineNextDecisionTreeNodeAsync(Arg.Any<BotEngineIdentity>(), Arg.Any<IMessage>())
-                .Returns(Task.FromResult(defaultBotReply));
 
             userService.GetByIdAsync(42).Returns(Task.FromResult(testUser));
 
@@ -97,13 +93,13 @@ namespace AirportApp.Tests.Unit.ViewModel
         [TestMethod]
         public async Task Constructor_HistoryIsEmpty_LoadsFirstMessage()
         {
-            strategyMock.ClearReceivedCalls();
+            faqRepositoryMock.ClearReceivedCalls();
 
             var newViewModel = CreateViewModel(new List<Message>());
             // Give some time for background tasks if any, though constructor starts them
             await Task.Delay(100);
 
-            await strategyMock.ReceivedWithAnyArgs(1).ProcessIncomingUserMessageAndDetermineNextDecisionTreeNodeAsync(Arg.Any<BotEngineIdentity>(), Arg.Any<IMessage>());
+            await faqRepositoryMock.Received(1).GetNodeByIdAsync(1);
         }
 
         [TestMethod]
@@ -144,6 +140,7 @@ namespace AirportApp.Tests.Unit.ViewModel
             messageRepositoryMock.ClearReceivedCalls();
             var nextNode = new FAQNode(2, "Next Question", ImmutableArray<FAQOption>.Empty, false);
             var selectedChatOption = new FAQOption("Test", nextNode);
+            faqRepositoryMock.GetNodeByIdAsync(2).Returns(Task.FromResult(nextNode));
 
             mockViewModel.HandleOptionClickCommand.Execute(selectedChatOption);
             await Task.Delay(100);

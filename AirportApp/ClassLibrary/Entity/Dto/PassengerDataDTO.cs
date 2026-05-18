@@ -9,6 +9,6 @@ namespace AirportApp.ClassLibrary.Entity.Dto
         public string Email { get; set; } = string.Empty;
         public string Phone { get; set; } = string.Empty;
         public string SelectedSeat { get; set; } = string.Empty;
-        public List<PricingAddOnDTO> SelectedAddOns { get; set; } = new();
+        public List<PricingAddOnDTO> SelectedAddOns { get; set; } = new ();
     }
 }

@@ -14,8 +14,8 @@ namespace AirportApp.ClassLibrary.Entity.Dto
     {
         public float BasePrice { get; set; }
         public float FlightDiscountPercentage { get; set; }
-        public List<PricingAddOnDTO> SelectedAddOns { get; set; } = new();
-        public List<PricingAddOnDiscountDTO> AddonDiscounts { get; set; } = new();
+        public List<PricingAddOnDTO> SelectedAddOns { get; set; } = new ();
+        public List<PricingAddOnDiscountDTO> AddonDiscounts { get; set; } = new ();
     }
 
     public class PricingAddOnDTO
@@ -32,9 +32,9 @@ namespace AirportApp.ClassLibrary.Entity.Dto
 
     public class CalculatePriceBreakdownRequestDTO
     {
-        public CalculateBasePriceRequestDTO FlightData { get; set; } = new();
+        public CalculateBasePriceRequestDTO FlightData { get; set; } = new ();
         public float FlightDiscountPercentage { get; set; }
-        public List<PricingAddOnDiscountDTO> AddonDiscounts { get; set; } = new();
-        public List<List<PricingAddOnDTO>> TicketsAddOns { get; set; } = new();
+        public List<PricingAddOnDiscountDTO> AddonDiscounts { get; set; } = new ();
+        public List<List<PricingAddOnDTO>> TicketsAddOns { get; set; } = new ();
     }
 }

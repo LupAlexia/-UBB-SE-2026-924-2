@@ -9,7 +9,7 @@ namespace AirportApp.ClassLibrary.DataAccess
 {
     public class AirportDbContext : DbContext
     {
-        public AirportDbContext(DbContextOptions options) : base(options)
+        public AirportDbContext(DbContextOptions<AirportDbContext> options) : base(options)
         {
         }
 

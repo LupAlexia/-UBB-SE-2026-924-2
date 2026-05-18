@@ -17,6 +17,7 @@ namespace AirportApp.Tests.Unit.Src.Service
     {
         private IRepository<int, Chat> mockChatRepository = null!;
         private IMessageRepository mockMessageRepository = null!;
+        private IDecisionTreeService mockDecisionTreeService = null!;
         private IBotStrategy mockStrategy = null!;
         private BotEngineIdentity realBotEngine = null!;
         private MessageService messageService = null!;
@@ -35,9 +36,10 @@ namespace AirportApp.Tests.Unit.Src.Service
         {
             mockChatRepository = Substitute.For<IRepository<int, Chat>>();
             mockMessageRepository = Substitute.For<IMessageRepository>();
+            mockDecisionTreeService = Substitute.For<IDecisionTreeService>();
             mockStrategy = Substitute.For<IBotStrategy>();
             realBotEngine = new BotEngineIdentity(mockStrategy);
-            messageService = new MessageService(mockChatRepository, mockMessageRepository, realBotEngine);
+            messageService = new MessageService(mockChatRepository, mockMessageRepository, mockDecisionTreeService, realBotEngine);
             testUser = new User(1, "Test", "test@test.com");
             testSender = new TestSender();
         }
@@ -45,19 +47,25 @@ namespace AirportApp.Tests.Unit.Src.Service
         [TestMethod]
         public void Constructor_WithNullChatRepo_ThrowsArgumentNullException()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => new MessageService(null!, mockMessageRepository, realBotEngine));
+            Assert.ThrowsException<ArgumentNullException>(() => new MessageService(null!, mockMessageRepository, mockDecisionTreeService, realBotEngine));
         }
 
         [TestMethod]
         public void Constructor_WithNullMessageRepo_ThrowsArgumentNullException()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => new MessageService(mockChatRepository, null!, realBotEngine));
+            Assert.ThrowsException<ArgumentNullException>(() => new MessageService(mockChatRepository, null!, mockDecisionTreeService, realBotEngine));
         }
 
         [TestMethod]
         public void Constructor_WithNullBotEngine_ThrowsArgumentNullException()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => new MessageService(mockChatRepository, mockMessageRepository, null!));
+            Assert.ThrowsException<ArgumentNullException>(() => new MessageService(mockChatRepository, mockMessageRepository, mockDecisionTreeService, null!));
+        }
+
+        [TestMethod]
+        public void Constructor_WithNullDecisionTreeService_ThrowsArgumentNullException()
+        {
+            Assert.ThrowsException<ArgumentNullException>(() => new MessageService(mockChatRepository, mockMessageRepository, null!, realBotEngine));
         }
 
         [TestMethod]
@@ -96,12 +104,11 @@ namespace AirportApp.Tests.Unit.Src.Service
             mockChatRepository.GetByIdAsync(1).Returns(activeChat);
             var nextNode = new FAQNode(2, "Next", ImmutableArray<FAQOption>.Empty, false);
             var selectedChatOption = new FAQOption("Help me", nextNode);
-            var expectedReply = new BotMessage.BotMessageBuilder(realBotEngine, activeChat, 2).WithMessage("I can help").Build();
-            mockStrategy.ProcessIncomingUserMessageAndDetermineNextDecisionTreeNodeAsync(Arg.Any<BotEngineIdentity>(), Arg.Any<IMessage>()).Returns(expectedReply);
+            mockDecisionTreeService.GetNodeByIdAsync(2).Returns(nextNode);
 
             var resultedChatMessage = await messageService.SendMessageAsync(1, testSender, selectedChatOption);
 
-            Assert.AreEqual("I can help", resultedChatMessage.GetMessage());
+            Assert.AreEqual("Next", resultedChatMessage.GetMessage());
         }
 
         [TestMethod]
@@ -111,8 +118,7 @@ namespace AirportApp.Tests.Unit.Src.Service
             mockChatRepository.GetByIdAsync(1).Returns(activeChat);
             var nextNode = new FAQNode(2, "Next", ImmutableArray<FAQOption>.Empty, false);
             var selectedChatOption = new FAQOption("Help me", nextNode);
-            var expectedReply = new BotMessage.BotMessageBuilder(realBotEngine, activeChat, 2).WithMessage("I can help").Build();
-            mockStrategy.ProcessIncomingUserMessageAndDetermineNextDecisionTreeNodeAsync(Arg.Any<BotEngineIdentity>(), Arg.Any<IMessage>()).Returns(expectedReply);
+            mockDecisionTreeService.GetNodeByIdAsync(2).Returns(nextNode);
 
             await messageService.SendMessageAsync(1, testSender, selectedChatOption);
 
@@ -126,12 +132,11 @@ namespace AirportApp.Tests.Unit.Src.Service
             mockChatRepository.GetByIdAsync(1).Returns(activeChat);
             var restartNode = new FAQNode(1, "Restart", ImmutableArray<FAQOption>.Empty, true);
             var restartOption = new FAQOption("Restart", restartNode);
-            var expectedReply = new BotMessage.BotMessageBuilder(realBotEngine, activeChat, 1).WithMessage("Restarting").Build();
-            mockStrategy.ProcessIncomingUserMessageAndDetermineNextDecisionTreeNodeAsync(Arg.Any<BotEngineIdentity>(), Arg.Any<IMessage>()).Returns(expectedReply);
+            mockDecisionTreeService.GetNodeByIdAsync(1).Returns(restartNode);
 
             await messageService.SendMessageAsync(1, testSender, restartOption);
 
-            await mockStrategy.Received(1).ResetCurrentlyActiveConversationNodeToInitialStartingPointAsync();
+            await mockDecisionTreeService.Received(1).GetNodeByIdAsync(1);
         }
 
         [TestMethod]

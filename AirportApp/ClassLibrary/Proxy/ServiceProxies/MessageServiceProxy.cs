@@ -29,7 +29,7 @@ namespace AirportApp.ClassLibrary.Proxy.ServiceProxies
                     ChatId = chatId,
                     SenderId = sender.RetrieveUniqueDatabaseIdentifierForBot(),
                     OptionLabel = selectedOption.Label,
-                    NextNode = selectedOption.NextOption != null ? MapFAQNodeToDTO(selectedOption.NextOption) : null
+                    NextNodeId = selectedOption.NextOption?.NodeId
                 };
 
                 HttpResponseMessage response = await httpClient.PostAsJsonAsync($"{BaseUrl}/send", request);
@@ -57,35 +57,17 @@ namespace AirportApp.ClassLibrary.Proxy.ServiceProxies
             }
         }
 
-        private static FAQNodeDTO MapFAQNodeToDTO(FAQNode node)
-        {
-            return new FAQNodeDTO
-            {
-                NodeId = node.NodeId,
-                QuestionText = node.QuestionText,
-                IsFinalAnswer = node.IsFinalAnswer,
-                Options = node.Options?.Select(o => new FAQOptionDTO
-                {
-                    OptionId = o.OptionId,
-                    Label = o.Label,
-                    NextOption = o.NextOption != null ? MapFAQNodeToDTO(o.NextOption) : null
-                }).ToList() ?? new List<FAQOptionDTO>()
-            };
-        }
-
         private static FAQOption MapFAQOptionFromDTO(FAQOptionDTO dto)
         {
             return new FAQOption
             {
                 OptionId = dto.OptionId,
                 Label = dto.Label,
-                NextOption = dto.NextOption != null ? new FAQNode
+                NextOption = dto.NextNodeId.HasValue ? new FAQNode
                 {
-                    NodeId = dto.NextOption.NodeId,
-                    QuestionText = dto.NextOption.QuestionText,
-                    IsFinalAnswer = dto.NextOption.IsFinalAnswer,
-                    Options = dto.NextOption.Options?.Select(o => MapFAQOptionFromDTO(o)).ToList() ?? new List<FAQOption>()
-                } : null
+                    NodeId = dto.NextNodeId.Value
+                }
+                : null
             };
         }
 

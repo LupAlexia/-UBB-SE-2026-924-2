@@ -12,15 +12,18 @@ namespace AirportApp.Src.Service
     {
         private readonly IRepository<int, Chat> chatRepository;
         private readonly IMessageRepository messageRepository;
+        private readonly IDecisionTreeService decisionTreeService;
         private readonly BotEngineIdentity botEngine;
 
         public MessageService(
             IRepository<int, Chat> chatRepository,
             IMessageRepository messageRepository,
+            IDecisionTreeService decisionTreeService,
             BotEngineIdentity botEngine)
         {
             this.chatRepository = chatRepository ?? throw new ArgumentNullException(nameof(chatRepository));
             this.messageRepository = messageRepository ?? throw new ArgumentNullException(nameof(messageRepository));
+            this.decisionTreeService = decisionTreeService ?? throw new ArgumentNullException(nameof(decisionTreeService));
             this.botEngine = botEngine ?? throw new ArgumentNullException(nameof(botEngine));
         }
 
@@ -40,7 +43,16 @@ namespace AirportApp.Src.Service
             var userMessage = new Message(chat, selectedOption.Label, sender);
             await messageRepository.CreateNewEntityAsync(userMessage);
 
-            BotMessage botReply = await botEngine.GenerateAppropriateResponseBasedOnCurrentStrategyAsync(userMessage);
+            BotMessage botReply;
+            if (selectedOption.NextOption != null)
+            {
+                FAQNode nextNode = await decisionTreeService.GetNodeByIdAsync(selectedOption.NextOption.NodeId);
+                botReply = new BotMessage.BotMessageBuilder(botEngine, chat, -1, nextNode).Build();
+            }
+            else
+            {
+                botReply = await botEngine.GenerateAppropriateResponseBasedOnCurrentStrategyAsync(userMessage);
+            }
 
             var botRow = new Message(chat, botReply.GetMessage(), botEngine);
             await messageRepository.CreateNewEntityAsync(botRow);
