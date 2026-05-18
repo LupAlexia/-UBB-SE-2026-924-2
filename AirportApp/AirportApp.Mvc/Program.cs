@@ -10,6 +10,9 @@ var apiBaseUrl = builder.Configuration["ApiBaseUrl"] !;
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
+builder.Services.AddDbContext<AirportDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
 // Dede Service Proxies:
 builder.Services.AddHttpClient<IUserService, UserServiceProxy>(client =>
 {

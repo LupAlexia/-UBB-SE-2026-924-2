@@ -58,6 +58,7 @@ namespace AirportApp.Mvc
         {
             if (ModelState.IsValid)
             {
+                review.User = null; // temporar, pana introducem autentificarea !!
                 await reviewService.AddAsync(review);
                 return RedirectToAction(nameof(Index));
             }
