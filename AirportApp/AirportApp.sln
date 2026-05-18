@@ -1,4 +1,4 @@
-
+﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.14.36603.0
@@ -12,6 +12,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AirportApp.Tests.Unit", "AirportApp.Tests.Unit\AirportApp.Tests.Unit.csproj", "{2D1F9017-6E4B-48FF-AC9C-F8171596A320}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AirportApp.Tests.Integration", "AirportApp.Tests.Integration\AirportApp.Tests.Integration.csproj", "{3481D752-1DC3-4324-9AFE-3163DBE4C820}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AirportApp.Mvc", "AirportApp.Mvc\AirportApp.Mvc.csproj", "{2F247465-689C-429F-A350-E842B82E27CC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -111,6 +113,22 @@ Global
 		{3481D752-1DC3-4324-9AFE-3163DBE4C820}.Release|x64.Build.0 = Release|Any CPU
 		{3481D752-1DC3-4324-9AFE-3163DBE4C820}.Release|x86.ActiveCfg = Release|Any CPU
 		{3481D752-1DC3-4324-9AFE-3163DBE4C820}.Release|x86.Build.0 = Release|Any CPU
+		{2F247465-689C-429F-A350-E842B82E27CC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2F247465-689C-429F-A350-E842B82E27CC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2F247465-689C-429F-A350-E842B82E27CC}.Debug|ARM64.ActiveCfg = Debug|Any CPU
+		{2F247465-689C-429F-A350-E842B82E27CC}.Debug|ARM64.Build.0 = Debug|Any CPU
+		{2F247465-689C-429F-A350-E842B82E27CC}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{2F247465-689C-429F-A350-E842B82E27CC}.Debug|x64.Build.0 = Debug|Any CPU
+		{2F247465-689C-429F-A350-E842B82E27CC}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{2F247465-689C-429F-A350-E842B82E27CC}.Debug|x86.Build.0 = Debug|Any CPU
+		{2F247465-689C-429F-A350-E842B82E27CC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2F247465-689C-429F-A350-E842B82E27CC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2F247465-689C-429F-A350-E842B82E27CC}.Release|ARM64.ActiveCfg = Release|Any CPU
+		{2F247465-689C-429F-A350-E842B82E27CC}.Release|ARM64.Build.0 = Release|Any CPU
+		{2F247465-689C-429F-A350-E842B82E27CC}.Release|x64.ActiveCfg = Release|Any CPU
+		{2F247465-689C-429F-A350-E842B82E27CC}.Release|x64.Build.0 = Release|Any CPU
+		{2F247465-689C-429F-A350-E842B82E27CC}.Release|x86.ActiveCfg = Release|Any CPU
+		{2F247465-689C-429F-A350-E842B82E27CC}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
