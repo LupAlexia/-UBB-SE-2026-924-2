@@ -7,22 +7,23 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using AirportApp.ClassLibrary.DataAccess;
 using AirportApp.ClassLibrary.Entity.Domain;
+using AirportApp.ClassLibrary.Service.Interfaces;
 
 namespace AirportApp.Mvc
 {
     public class ReviewsController : Controller
     {
-        private readonly AirportDbContext _context;
+        private readonly IReviewService reviewService;
 
-        public ReviewsController(AirportDbContext context)
+        public ReviewsController(IReviewService reviewService)
         {
-            _context = context;
+            this.reviewService = reviewService;
         }
 
         // GET: Reviews
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Reviews.ToListAsync());
+            return View(await reviewService.GetAllAsync());
         }
 
         // GET: Reviews/Details/5
@@ -33,8 +34,7 @@ namespace AirportApp.Mvc
                 return NotFound();
             }
 
-            var review = await _context.Reviews
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var review = await reviewService.GetByIdAsync(id.Value);
             if (review == null)
             {
                 return NotFound();
@@ -58,8 +58,7 @@ namespace AirportApp.Mvc
         {
             if (ModelState.IsValid)
             {
-                _context.Add(review);
-                await _context.SaveChangesAsync();
+                await reviewService.AddAsync(review);
                 return RedirectToAction(nameof(Index));
             }
             return View(review);
@@ -73,7 +72,7 @@ namespace AirportApp.Mvc
                 return NotFound();
             }
 
-            var review = await _context.Reviews.FindAsync(id);
+            var review = await reviewService.GetByIdAsync(id.Value);
             if (review == null)
             {
                 return NotFound();
@@ -95,22 +94,7 @@ namespace AirportApp.Mvc
 
             if (ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(review);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!ReviewExists(review.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                await reviewService.UpdateByIdAsync(id, review);
                 return RedirectToAction(nameof(Index));
             }
             return View(review);
@@ -124,8 +108,7 @@ namespace AirportApp.Mvc
                 return NotFound();
             }
 
-            var review = await _context.Reviews
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var review = await reviewService.GetByIdAsync(id.Value);
             if (review == null)
             {
                 return NotFound();
@@ -139,19 +122,18 @@ namespace AirportApp.Mvc
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var review = await _context.Reviews.FindAsync(id);
+            var review = await reviewService.GetByIdAsync(id);
             if (review != null)
             {
-                _context.Reviews.Remove(review);
+                await reviewService.DeleteByIdAsync(id);
             }
 
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool ReviewExists(int id)
         {
-            return _context.Reviews.Any(e => e.Id == id);
+            return reviewService.GetByIdAsync(id) != null;
         }
     }
 }

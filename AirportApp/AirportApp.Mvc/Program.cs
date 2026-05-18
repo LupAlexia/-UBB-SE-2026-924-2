@@ -1,11 +1,25 @@
 using AirportApp.ClassLibrary.DataAccess;
 using Microsoft.EntityFrameworkCore;
+// Dede imports :
+using AirportApp.ClassLibrary.Proxy.ServiceProxies;
+using AirportApp.ClassLibrary.Service.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddDbContext<AirportDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+var apiBaseUrl = builder.Configuration["ApiBaseUrl"] !;
+
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+// Dede Service Proxies:
+builder.Services.AddHttpClient<IUserService, UserServiceProxy>(client =>
+{
+    client.BaseAddress = new Uri(apiBaseUrl);
+});
+
+builder.Services.AddHttpClient<IReviewService, ReviewServiceProxy>(client =>
+{
+    client.BaseAddress = new Uri(apiBaseUrl);
+});
 
 var app = builder.Build();
 
