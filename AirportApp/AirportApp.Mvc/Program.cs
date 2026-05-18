@@ -24,6 +24,11 @@ builder.Services.AddHttpClient<IReviewService, ReviewServiceProxy>(client =>
     client.BaseAddress = new Uri(apiBaseUrl);
 });
 
+builder.Services.AddHttpClient<IFAQService, FAQServiceProxy>(client =>
+{
+    client.BaseAddress = new Uri(apiBaseUrl);
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
