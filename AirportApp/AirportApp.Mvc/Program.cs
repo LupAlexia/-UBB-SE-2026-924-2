@@ -18,7 +18,12 @@ builder.Services.AddHttpClient<IDashboardService, DashboardServiceProxy>(client 
     client.BaseAddress = new Uri(apiBaseUrl));
 builder.Services.AddHttpClient<IEmployeeService, EmployeeServiceProxy>(client =>
     client.BaseAddress = new Uri(apiBaseUrl));
-
+builder.Services.AddHttpClient<IAuthService, AuthServiceProxy>(client =>
+    client.BaseAddress = new Uri(apiBaseUrl));
+builder.Services.AddHttpClient<IMembershipService, MembershipServiceProxy>(client =>
+    client.BaseAddress = new Uri(apiBaseUrl));
+builder.Services.AddHttpClient<IDecisionTreeService, DecisionTreeServiceProxy>(client =>
+    client.BaseAddress = new Uri(apiBaseUrl));
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
