@@ -39,6 +39,10 @@ namespace Airport.Web.Controllers
 
         private static FlightTicketDTO MapTicketToDTO(FlightTicket ticket)
         {
+            var addOns = ticket.SelectedAddOns?
+                .Select(addOn => new AddOnDTO(addOn.Id, addOn.Name, addOn.BasePrice))
+                .ToList() ?? new List<AddOnDTO>();
+
             return new FlightTicketDTO(
                 ticket.Id,
                 ticket.User.Id,
@@ -50,8 +54,7 @@ namespace Airport.Web.Controllers
                 ticket.PassengerLastName,
                 ticket.PassengerEmail,
                 ticket.PassengerPhone,
-                ticket.SelectedAddOns?.Select(addOn => new AddOnDTO(addOn.Id, addOn.Name, addOn.BasePrice)).ToList()
-                    ?? new List<AddOnDTO>(),
+                addOns,
                 MapFlightToDTO(ticket.Flight));
         }
 
@@ -71,12 +74,20 @@ namespace Airport.Web.Controllers
                 MapRouteToDTO(flight.Route));
         }
 
-        private static RouteDTO? MapRouteToDTO(Route? route)
+        private static RouteDTO? MapRouteToDTO(AirportApp.ClassLibrary.Entity.Domain.Route? route)
         {
             if (route == null)
             {
                 return null;
             }
+
+            AirportDTO? airportDto = route.Airport != null
+                ? new AirportDTO(route.Airport.Id, route.Airport.AirportCode, route.Airport.City)
+                : null;
+
+            CompanyDTO? companyDto = route.Company != null
+                ? new CompanyDTO(route.Company.Id, route.Company.Name)
+                : null;
 
             return new RouteDTO(
                 route.Id,
@@ -84,12 +95,8 @@ namespace Airport.Web.Controllers
                 route.DepartureTime,
                 route.ArrivalTime,
                 route.Capacity,
-                route.Airport != null
-                    ? new AirportDTO(route.Airport.Id, route.Airport.AirportCode, route.Airport.City)
-                    : null,
-                route.Company != null
-                    ? new CompanyDTO(route.Company.Id, route.Company.Name)
-                    : null);
+                airportDto,
+                companyDto);
         }
 
         [HttpPost]
