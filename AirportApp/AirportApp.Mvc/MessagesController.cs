@@ -128,7 +128,11 @@ namespace AirportApp.Mvc
             {
                 return NotFound();
             }
-
+            if (message.Sender == null)
+            {
+                ModelState.AddModelError(string.Empty, "Sender is required.");
+                return View(message);
+            }
             if (!chatId.HasValue)
             {
                 var existingMessage = await messageService.GetByIdAsync(message.Id);
