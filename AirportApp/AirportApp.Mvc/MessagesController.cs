@@ -102,7 +102,6 @@ namespace AirportApp.Mvc
         // GET: Messages/Edit/5
         public async Task<IActionResult> Edit(int? id, int? chatId)
         {
-            ViewBag.ChatId = chatId;
             if (id == null)
             {
                 return NotFound();
@@ -113,6 +112,8 @@ namespace AirportApp.Mvc
             {
                 return NotFound();
             }
+
+            ViewBag.ChatId = chatId ?? message.Chat?.Id;
             return View(message);
         }
 
@@ -128,7 +129,21 @@ namespace AirportApp.Mvc
                 return NotFound();
             }
 
+            if (!chatId.HasValue)
+            {
+                var existingMessage = await messageService.GetByIdAsync(message.Id);
+                chatId = existingMessage?.Chat?.Id;
+            }
+
+            if (!chatId.HasValue)
+            {
+                ModelState.AddModelError(string.Empty, "ChatId is required.");
+                ViewBag.ChatId = null;
+                return View(message);
+            }
+
             ModelState.Remove(nameof(Message.Chat));
+            message.Chat = new Chat { Id = chatId.Value };
             ModelState.Remove(nameof(Message.Sender));
 
             if (ModelState.IsValid)
