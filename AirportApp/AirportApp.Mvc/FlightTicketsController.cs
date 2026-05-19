@@ -5,13 +5,13 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using AirportApp.ClassLibrary.Entity.Domain;
 using AirportApp.ClassLibrary.Service.Interfaces;
+using AirportApp.Src.Service;
 
 namespace AirportApp.Mvc
 {
     public class FlightTicketsController : Controller
     {
         private readonly IDashboardService dashboardService;
-
         public FlightTicketsController(IDashboardService dashboard)
         {
             this.dashboardService = dashboard;
