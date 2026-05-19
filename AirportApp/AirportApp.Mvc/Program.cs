@@ -1,8 +1,7 @@
 using AirportApp.ClassLibrary.DataAccess;
-using Microsoft.EntityFrameworkCore;
-// Dede imports :
 using AirportApp.ClassLibrary.Proxy.ServiceProxies;
 using AirportApp.ClassLibrary.Service.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 var apiBaseUrl = builder.Configuration["ApiBaseUrl"] !;
@@ -47,7 +46,7 @@ app.UseRouting();
 
 app.UseAuthorization();
 
-// app.MapStaticAssets();
+app.UseStaticFiles();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
