@@ -22,14 +22,14 @@ namespace AirportApp.Mvc
             return UserSession.CurrentUser;
         }
 
-        private static int? ResolveUserId(int? userId)
+        private static int? ResolveUserId()
         {
-            return userId ?? GetCurrentUser()?.Id;
+            return GetCurrentUser()?.Id;
         }
 
-        private async Task<FlightTicket?> GetCurrentUsersTicketAsync(int ticketId, int? userId)
+        private async Task<FlightTicket?> GetCurrentUsersTicketAsync(int ticketId)
         {
-            int? resolvedUserId = ResolveUserId(userId);
+            int? resolvedUserId = ResolveUserId();
             if (!resolvedUserId.HasValue)
             {
                 return null;
@@ -40,9 +40,9 @@ namespace AirportApp.Mvc
         }
 
         // GET: FlightTickets
-        public async Task<IActionResult> Index(int? userId)
+        public async Task<IActionResult> Index()
         {
-            int? resolvedUserId = ResolveUserId(userId);
+            int? resolvedUserId = ResolveUserId();
             IEnumerable<FlightTicket> tickets = resolvedUserId.HasValue
                 ? await this.dashboardService.GetTicketsByUserIdAsync(resolvedUserId.Value)
                 : new List<FlightTicket>();
@@ -52,16 +52,16 @@ namespace AirportApp.Mvc
         }
 
         // GET: FlightTickets/Details/5
-        public async Task<IActionResult> Details(int? id, int? userId)
+        public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            ViewBag.UserId = ResolveUserId(userId);
+            ViewBag.UserId = ResolveUserId();
 
-            FlightTicket? flightTicket = await GetCurrentUsersTicketAsync((int)id, userId);
+            FlightTicket? flightTicket = await GetCurrentUsersTicketAsync((int)id);
             if (flightTicket == null)
             {
                 return NotFound();
@@ -71,9 +71,9 @@ namespace AirportApp.Mvc
         }
 
         // GET: FlightTickets/Create
-        public IActionResult Create(int? userId)
+        public IActionResult Create()
         {
-            ViewBag.UserId = ResolveUserId(userId);
+            ViewBag.UserId = ResolveUserId();
             return View();
         }
 
@@ -82,9 +82,9 @@ namespace AirportApp.Mvc
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(int? userId, [Bind("Id,Seat,Price,Status,PassengerFirstName,PassengerLastName,PassengerEmail,PassengerPhone")] FlightTicket flightTicket)
+        public async Task<IActionResult> Create([Bind("Id,Seat,Price,Status,PassengerFirstName,PassengerLastName,PassengerEmail,PassengerPhone")] FlightTicket flightTicket)
         {
-            int? resolvedUserId = ResolveUserId(userId);
+            int? resolvedUserId = ResolveUserId();
             if (!resolvedUserId.HasValue)
             {
                 ModelState.AddModelError(string.Empty, "A user id is required to create a flight ticket.");
@@ -104,7 +104,7 @@ namespace AirportApp.Mvc
                 }
 
                 await this.dashboardService.AddTicketAsync(flightTicket);
-                return RedirectToAction(nameof(Index), new { userId = resolvedUserId });
+                return RedirectToAction(nameof(Index));
             }
 
             ViewBag.UserId = resolvedUserId;
@@ -112,16 +112,16 @@ namespace AirportApp.Mvc
         }
 
         // GET: FlightTickets/Edit/5
-        public async Task<IActionResult> Edit(int? id, int? userId)
+        public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            ViewBag.UserId = ResolveUserId(userId);
+            ViewBag.UserId = ResolveUserId();
 
-            FlightTicket? flightTicket = await GetCurrentUsersTicketAsync((int)id, userId);
+            FlightTicket? flightTicket = await GetCurrentUsersTicketAsync((int)id);
             if (flightTicket == null)
             {
                 return NotFound();
@@ -134,7 +134,7 @@ namespace AirportApp.Mvc
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, int? userId, [Bind("Id,Status")] FlightTicket flightTicket)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Status")] FlightTicket flightTicket)
         {
             if (id != flightTicket.Id)
             {
@@ -150,7 +150,7 @@ namespace AirportApp.Mvc
             ModelState.Remove(nameof(FlightTicket.User));
             ModelState.Remove(nameof(FlightTicket.Flight));
 
-            int? resolvedUserId = ResolveUserId(userId);
+            int? resolvedUserId = ResolveUserId();
             if (!resolvedUserId.HasValue)
             {
                 return BadRequest("A user id is required to edit a flight ticket.");
@@ -158,14 +158,14 @@ namespace AirportApp.Mvc
 
             if (ModelState.IsValid)
             {
-                FlightTicket? existingTicket = await GetCurrentUsersTicketAsync(id, resolvedUserId);
+                FlightTicket? existingTicket = await GetCurrentUsersTicketAsync(id);
                 if (existingTicket == null)
                 {
                     return NotFound();
                 }
 
                 await this.dashboardService.UpdateTicketStatusAsync(id, flightTicket.Status);
-                return RedirectToAction(nameof(Index), new { userId = resolvedUserId });
+                return RedirectToAction(nameof(Index));
             }
 
             ViewBag.UserId = resolvedUserId;
@@ -173,16 +173,16 @@ namespace AirportApp.Mvc
         }
 
         // GET: FlightTickets/Delete/5
-        public async Task<IActionResult> Delete(int? id, int? userId)
+        public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            ViewBag.UserId = ResolveUserId(userId);
+            ViewBag.UserId = ResolveUserId();
 
-            FlightTicket? flightTicket = await GetCurrentUsersTicketAsync((int)id, userId);
+            FlightTicket? flightTicket = await GetCurrentUsersTicketAsync((int)id);
             if (flightTicket == null)
             {
                 return NotFound();
@@ -194,22 +194,21 @@ namespace AirportApp.Mvc
         // POST: FlightTickets/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id, int? userId)
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            int? resolvedUserId = ResolveUserId(userId);
-            FlightTicket? flightTicket = await GetCurrentUsersTicketAsync(id, resolvedUserId);
+            FlightTicket? flightTicket = await GetCurrentUsersTicketAsync(id);
             if (flightTicket == null)
             {
                 return NotFound();
             }
 
             await this.dashboardService.UpdateTicketStatusAsync(id, "Cancelled");
-            return RedirectToAction(nameof(Index), new { userId = resolvedUserId });
+            return RedirectToAction(nameof(Index));
         }
 
-        private async Task<bool> FlightTicketExists(int id, int? userId)
+        private async Task<bool> FlightTicketExists(int id)
         {
-            return await GetCurrentUsersTicketAsync(id, userId) != null;
+            return await GetCurrentUsersTicketAsync(id) != null;
         }
     }
 }

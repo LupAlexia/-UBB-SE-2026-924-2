@@ -12,16 +12,6 @@
     {
         <a asp-action="Create" asp-route-userId="@userId">Create New Ticket</a>
     }
-    else
-    {
-        <form asp-action="Index" method="get" class="mb-3">
-            <label for="userId" class="form-label">User ID</label>
-            <div class="input-group" style="max-width: 320px;">
-                <input id="userId" name="userId" type="number" class="form-control" placeholder="Enter user id" />
-                <button type="submit" class="btn btn-primary">Load tickets</button>
-            </div>
-        </form>
-    }
 </p>
 @if (userId.HasValue)
 {

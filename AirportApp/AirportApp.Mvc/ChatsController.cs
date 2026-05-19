@@ -46,14 +46,14 @@ namespace AirportApp.Mvc
         }
 
         // GET: Chats/Create
-        public async Task<IActionResult> Create(int? userId)
+        public async Task<IActionResult> Create()
         {
-            int? resolvedUserId = userId ?? UserSession.CurrentUser?.Id;
+            int? resolvedUserId = UserSession.CurrentUser?.Id;
             if (resolvedUserId.HasValue)
             {
                 var user = new User { Id = resolvedUserId.Value };
                 await this.chatService.OpenChatAsync(user);
-                return RedirectToAction(nameof(Index), new { userId = resolvedUserId });
+                return RedirectToAction(nameof(Index));
             }
 
             ViewBag.UserId = null;
@@ -65,9 +65,9 @@ namespace AirportApp.Mvc
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(int? userId, [Bind("Id,Status")] Chat chat)
+        public async Task<IActionResult> Create([Bind("Id,Status")] Chat chat)
         {
-            int? resolvedUserId = userId ?? UserSession.CurrentUser?.Id;
+            int? resolvedUserId = UserSession.CurrentUser?.Id;
             if (!resolvedUserId.HasValue)
             {
                 ModelState.AddModelError(string.Empty, "A user id is required to create a chat.");
@@ -79,7 +79,7 @@ namespace AirportApp.Mvc
             {
                 chat.User = new User { Id = resolvedUserId.Value };
                 var openedChat = await this.chatService.OpenChatAsync(chat.User);
-                return RedirectToAction(nameof(Index), new { userId = resolvedUserId });
+                return RedirectToAction(nameof(Index));
             }
 
             ViewBag.UserId = resolvedUserId;

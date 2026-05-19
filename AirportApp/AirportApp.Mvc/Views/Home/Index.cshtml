@@ -1,8 +1,70 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Dashboard";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="bg-light rounded-4 p-4 p-md-5 shadow-sm">
+    <div class="row align-items-center g-4 mb-4">
+        <div class="col-lg-8">
+            <span class="badge text-bg-primary mb-3">Main page</span>
+            <h1 class="display-5 fw-semibold mb-3">Airport MVC Dashboard</h1>
+            <p class="lead text-body-secondary mb-0">Choose an entity page to manage data.</p>
+        </div>
+    </div>
+
+    <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4">
+        <div class="col">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body p-4 d-flex flex-column">
+                    <h5 class="card-title mb-2">Users</h5>
+                    <p class="card-text text-body-secondary flex-grow-1">Manage application users and their details.</p>
+                    <a asp-controller="Users" asp-action="Index" class="btn btn-primary mt-2">Open Users</a>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body p-4 d-flex flex-column">
+                    <h5 class="card-title mb-2">Employees</h5>
+                    <p class="card-text text-body-secondary flex-grow-1">Review and maintain employee records.</p>
+                    <a asp-controller="Employees" asp-action="Index" class="btn btn-primary mt-2">Open Employees</a>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body p-4 d-flex flex-column">
+                    <h5 class="card-title mb-2">Chats</h5>
+                    <p class="card-text text-body-secondary flex-grow-1">View and manage chat conversations.</p>
+                    <a asp-controller="Chats" asp-action="Index" class="btn btn-primary mt-2">Open Chats</a>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body p-4 d-flex flex-column">
+                    <h5 class="card-title mb-2">Flight Tickets</h5>
+                    <p class="card-text text-body-secondary flex-grow-1">Track and edit flight ticket data.</p>
+                    <a asp-controller="FlightTickets" asp-action="Index" class="btn btn-primary mt-2">Open Flight Tickets</a>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body p-4 d-flex flex-column">
+                    <h5 class="card-title mb-2">Complaint Tickets</h5>
+                    <p class="card-text text-body-secondary flex-grow-1">Handle customer complaints and cases.</p>
+                    <a asp-controller="ComplaintTickets" asp-action="Index" class="btn btn-primary mt-2">Open Complaint Tickets</a>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body p-4 d-flex flex-column">
+                    <h5 class="card-title mb-2">FAQ Nodes</h5>
+                    <p class="card-text text-body-secondary flex-grow-1">Browse frequently asked questions and answers.</p>
+                    <a asp-controller="FAQNodes" asp-action="Index" class="btn btn-primary mt-2">Open FAQ Nodes</a>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
