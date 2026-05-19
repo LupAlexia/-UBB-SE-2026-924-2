@@ -1,13 +1,34 @@
 using AirportApp.ClassLibrary.DataAccess;
 using AirportApp.ClassLibrary.Proxy.ServiceProxies;
 using AirportApp.ClassLibrary.Service.Interfaces;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 var apiBaseUrl = builder.Configuration["ApiBaseUrl"] !;
 
 // Add services to the container.
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews(options =>
+{
+    options.Filters.Add(new AuthorizeFilter());
+});
+
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/Auth/ChooseRole";
+        options.AccessDeniedPath = "/Auth/AccessDenied";
+        options.Cookie.Name = ".AirportApp.Mvc.Auth";
+        options.Cookie.HttpOnly = true;
+        options.Cookie.SameSite = SameSiteMode.Lax;
+        options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
+        options.ExpireTimeSpan = TimeSpan.FromHours(8);
+        options.SlidingExpiration = true;
+    });
+
+builder.Services.AddAuthorization();
 
 builder.Services.AddDbContext<AirportDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -50,7 +71,6 @@ builder.Services.AddHttpClient<IDecisionTreeService, DecisionTreeServiceProxy>(c
     client.BaseAddress = new Uri(apiBaseUrl));
 builder.Services.AddHttpClient<IFlightSearchService, FlightSearchServiceProxy>(client =>
     client.BaseAddress = new Uri(apiBaseUrl));
-builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
@@ -63,6 +83,7 @@ if (!app.Environment.IsDevelopment())
 app.UseStaticFiles();
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.UseStaticFiles();

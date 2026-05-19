@@ -9,6 +9,7 @@ using Microsoft.UI.Xaml.Navigation;
 using AirportApp;
 using AirportApp.ClassLibrary.Entity.Domain;
 using AirportApp.Src.ViewModel;
+using AirportApp.Src.View.General;
 
 namespace AirportApp.Src.View
 {
@@ -68,6 +69,13 @@ namespace AirportApp.Src.View
         protected override async void OnNavigatedTo(NavigationEventArgs eventArguments)
         {
             base.OnNavigatedTo(eventArguments);
+
+            var app = (App)Application.Current;
+            if (app.User == null && app.Employee == null)
+            {
+                Frame.Navigate(typeof(ChoosingPage));
+                return;
+            }
 
             bool initialized = await ViewModel.OnNavigatedToAsync(eventArguments.Parameter);
 

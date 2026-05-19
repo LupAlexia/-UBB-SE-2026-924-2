@@ -8,9 +8,11 @@ using Microsoft.EntityFrameworkCore;
 using AirportApp.ClassLibrary.DataAccess;
 using AirportApp.ClassLibrary.Entity.Domain;
 using AirportApp.ClassLibrary.Service.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AirportApp.Mvc
 {
+    [Authorize]
     public class ReviewsController : Controller
     {
         private readonly IReviewService reviewService;
@@ -54,9 +56,19 @@ namespace AirportApp.Mvc
         }
 
         // GET: Reviews/Create
-        public IActionResult Create(int? userId)
+        public IActionResult Create()
         {
-            ViewBag.UserId = ResolveUserId(userId);
+            var claimUserId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+
+            if (int.TryParse(claimUserId, out int parsedId))
+            {
+                ViewBag.UserId = parsedId;
+            }
+            else
+            {
+                ViewBag.UserId = UserSession.CurrentUser?.Id;
+            }
+
             return View();
         }
 
@@ -67,14 +79,18 @@ namespace AirportApp.Mvc
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(int? userId, [Bind("Id,Message,DutyFreeRating,FlightExperienceRating,StaffFriendlinessRating,CleanlinessRating")] Review review)
         {
+            var claimUserId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
             int? resolvedUserId = ResolveUserId(userId);
             if (!resolvedUserId.HasValue)
             {
                 ModelState.AddModelError(string.Empty, "A user id is required to create a review.");
                 return View(review);
             }
-            ModelState.Remove(nameof(Message.Chat)); // dupa auth sa fie sterse
-            ModelState.Remove(nameof(Message.Sender)); // dupa auth sa fie sterse
+            // ModelState.Remove(nameof(Message.Chat)); // dupa auth sa fie sterse
+            // ModelState.Remove(nameof(Message.Sender)); // dupa auth sa fie sterse
+            ModelState.Remove("User");
+            ModelState.Remove("User.Id");
+
             if (ModelState.IsValid)
             {
                 review.User = new User { Id = resolvedUserId.Value }; // proxy-ul face review.User.Id
@@ -112,10 +128,16 @@ namespace AirportApp.Mvc
                 return NotFound();
             }
 
-            ModelState.Remove(nameof(Message.Chat)); // dupa auth sa fie sterse
-            ModelState.Remove(nameof(Message.Sender)); // dupa auth sa fie sterse
+            ModelState.Remove("User");
+            ModelState.Remove("User.Id");
+
             if (ModelState.IsValid)
             {
+                var originalReview = await reviewService.GetByIdAsync(id);
+                if (originalReview != null)
+                {
+                    review.User = originalReview.User;
+                }
                 await reviewService.UpdateByIdAsync(id, review);
                 return RedirectToAction(nameof(Index));
             }

@@ -1,0 +1,34 @@
+@{
+    ViewData["Title"] = "Choose role";
+}
+
+<div class="row justify-content-center">
+    <div class="col-12 col-lg-10 col-xl-8">
+        <div class="text-center mb-4">
+            <span class="badge text-bg-primary mb-3">Authentication</span>
+            <h1 class="display-6 fw-semibold">Choose your login flow</h1>
+            <p class="text-body-secondary mb-0">Pick the role you want to sign in as.</p>
+        </div>
+
+        <div class="row row-cols-1 row-cols-md-2 g-4">
+            <div class="col">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body p-4 d-flex flex-column">
+                        <h2 class="h4 mb-2">Customer</h2>
+                        <p class="text-body-secondary flex-grow-1">Use your email and password.</p>
+                        <a asp-action="CustomerLogin" class="btn btn-primary">Customer login</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body p-4 d-flex flex-column">
+                        <h2 class="h4 mb-2">Employee</h2>
+                        <p class="text-body-secondary flex-grow-1">Use your employee ID and full name.</p>
+                        <a asp-action="EmployeeLogin" class="btn btn-outline-primary">Employee login</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
