@@ -128,10 +128,16 @@ namespace AirportApp.Mvc
                 return NotFound();
             }
 
-            ModelState.Remove(nameof(Message.Chat)); // dupa auth sa fie sterse
-            ModelState.Remove(nameof(Message.Sender)); // dupa auth sa fie sterse
+            ModelState.Remove("User");
+            ModelState.Remove("User.Id");
+
             if (ModelState.IsValid)
             {
+                var originalReview = await reviewService.GetByIdAsync(id);
+                if (originalReview != null)
+                {
+                    review.User = originalReview.User;
+                }
                 await reviewService.UpdateByIdAsync(id, review);
                 return RedirectToAction(nameof(Index));
             }
