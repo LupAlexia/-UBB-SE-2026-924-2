@@ -48,6 +48,8 @@ builder.Services.AddHttpClient<IMembershipService, MembershipServiceProxy>(clien
     client.BaseAddress = new Uri(apiBaseUrl));
 builder.Services.AddHttpClient<IDecisionTreeService, DecisionTreeServiceProxy>(client =>
     client.BaseAddress = new Uri(apiBaseUrl));
+builder.Services.AddHttpClient<IFlightSearchService, FlightSearchServiceProxy>(client =>
+    client.BaseAddress = new Uri(apiBaseUrl));
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();

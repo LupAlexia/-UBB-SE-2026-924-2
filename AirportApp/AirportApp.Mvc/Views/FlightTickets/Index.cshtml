@@ -11,6 +11,7 @@
     @if (userId.HasValue)
     {
         <a asp-action="Create" asp-route-userId="@userId">Create New Ticket</a>
+        <a asp-action="Search" class="ms-2">Search Flights</a>
     }
 </p>
 @if (userId.HasValue)
