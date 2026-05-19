@@ -10,6 +10,7 @@ using NSubstitute.Core;
 
 namespace AirportApp.Mvc
 {
+    [Authorize]
     public class FAQEntriesController : Controller
     {
         private readonly IFAQService fAQService;

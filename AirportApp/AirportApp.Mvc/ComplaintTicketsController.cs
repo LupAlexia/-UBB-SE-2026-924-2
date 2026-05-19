@@ -9,9 +9,11 @@ using Microsoft.EntityFrameworkCore;
 using AirportApp.ClassLibrary.DataAccess;
 using AirportApp.ClassLibrary.Entity.Domain;
 using AirportApp.ClassLibrary.Service.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AirportApp.Mvc
 {
+    [Authorize]
     public class ComplaintTicketsController : Controller
     {
         private readonly IComplaintTicketService complaintTicketService;
@@ -90,25 +92,39 @@ namespace AirportApp.Mvc
         [Authorize(Roles = "Employee")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Subject,Description,CreationTimestamp,UrgencyLevel,CurrentStatus")] ComplaintTicket complaintTicket)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,UrgencyLevel,CurrentStatus")] ComplaintTicket complaintTicket)
         {
             if (id != complaintTicket.Id)
             {
                 return NotFound();
             }
 
+            ModelState.Remove("Subject");
+            ModelState.Remove("Description");
+            ModelState.Remove("Creator");
+            ModelState.Remove("Category");
+            ModelState.Remove("Subcategory");
+
             if (ModelState.IsValid)
             {
-                if (!await ComplaintTicketExists(complaintTicket.Id))
+                try
                 {
-                    return NotFound();
+                    if (!await ComplaintTicketExists(id))
+                    {
+                        return NotFound();
+                    }
+
+                    await this.complaintTicketService.UpdateUrgencyLevelAsync(id, complaintTicket.UrgencyLevel);
+                    await this.complaintTicketService.UpdateStatusAsync(id, complaintTicket.CurrentStatus);
+
+                    return RedirectToAction(nameof(Index));
                 }
-                else
+                catch (Exception ex)
                 {
-                    await this.complaintTicketService.UpdateTicketByIdAsync(id, complaintTicket);
+                    ModelState.AddModelError(string.Empty, $"Error saving in API: {ex.Message}");
                 }
-                return RedirectToAction(nameof(Index));
             }
+
             return View(complaintTicket);
         }
 

@@ -6,9 +6,11 @@ using Microsoft.AspNetCore.Mvc;
 using AirportApp.ClassLibrary.Entity.Domain;
 using AirportApp.ClassLibrary.Service.Interfaces;
 using AirportApp.Src.Service;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AirportApp.Mvc
 {
+    [Authorize]
     public class FlightTicketsController : Controller
     {
         private readonly IDashboardService dashboardService;

@@ -1,9 +1,10 @@
 using System;
 using System.Linq;
+using AirportApp.Src.View.General;
+using AirportApp.Src.ViewModel;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
-using AirportApp.Src.ViewModel;
 
 namespace AirportApp.Src.View
 {
@@ -42,6 +43,13 @@ namespace AirportApp.Src.View
 
         protected override void OnNavigatedTo(NavigationEventArgs eventArgs)
         {
+            var app = (App)Application.Current;
+            if (app.User == null && app.Employee == null)
+            {
+                Frame.Navigate(typeof(ChoosingPage));
+                return;
+            }
+
             base.OnNavigatedTo(eventArgs);
             ViewModel.OnNavigatedTo(eventArgs.Parameter);
         }

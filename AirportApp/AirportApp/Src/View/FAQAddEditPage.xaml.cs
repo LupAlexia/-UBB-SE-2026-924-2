@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
-using AutoMapper;
+using AirportApp.ClassLibrary.Entity.Domain;
 using AirportApp.ClassLibrary.Entity.Dto;
+using AirportApp.Src.View.General;
+using AirportApp.Src.ViewModel;
+using AutoMapper;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -15,8 +18,6 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
-using AirportApp.Src.ViewModel;
-using AirportApp.ClassLibrary.Entity.Domain;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -40,6 +41,13 @@ namespace AirportApp.Src.View.Faq
         protected override void OnNavigatedTo(NavigationEventArgs arguments)
         {
             base.OnNavigatedTo(arguments);
+
+            var app = (App)Application.Current;
+            if (app.User == null && app.Employee == null)
+            {
+                Frame.Navigate(typeof(ChoosingPage));
+                return;
+            }
 
             if (arguments.Parameter is FAQNavigationData navData)
             {

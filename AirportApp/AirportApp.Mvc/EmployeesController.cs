@@ -9,9 +9,11 @@ using Microsoft.EntityFrameworkCore;
 using AirportApp.ClassLibrary.DataAccess;
 using AirportApp.ClassLibrary.Entity.Domain;
 using AirportApp.ClassLibrary.Service.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AirportApp.Mvc
 {
+    [Authorize]
     public class EmployeesController : Controller
     {
         private readonly IEmployeeService employeeService;
