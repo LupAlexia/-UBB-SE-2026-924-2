@@ -1,0 +1,37 @@
+@model EmployeeLoginViewModel
+@{
+    ViewData["Title"] = "Employee login";
+}
+
+<div class="row justify-content-center">
+    <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body p-4 p-md-5">
+                <div class="mb-4">
+                    <a asp-action="ChooseRole" class="link-secondary text-decoration-none">Back to role selection</a>
+                    <h1 class="h3 fw-semibold mt-2 mb-2">Employee login</h1>
+                    <p class="text-body-secondary mb-0">Enter your employee id and full name.</p>
+                </div>
+
+                <form asp-action="EmployeeLogin" method="post" class="vstack gap-3">
+                    @Html.AntiForgeryToken()
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <div>
+                        <label asp-for="EmployeeId" class="form-label"></label>
+                        <input asp-for="EmployeeId" class="form-control" inputmode="numeric" />
+                        <span asp-validation-for="EmployeeId" class="text-danger"></span>
+                    </div>
+
+                    <div>
+                        <label asp-for="FullName" class="form-label"></label>
+                        <input asp-for="FullName" class="form-control" autocomplete="name" />
+                        <span asp-validation-for="FullName" class="text-danger"></span>
+                    </div>
+
+                    <button type="submit" class="btn btn-outline-primary">Sign in</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
