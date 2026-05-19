@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -56,7 +57,8 @@ namespace AirportApp.Mvc
         }
 
         // GET: Reviews/Create
-        public IActionResult Create()
+        [Authorize(Roles = "Employee,Customer")]
+        public IActionResult Create(int? userId)
         {
             var claimUserId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
 
@@ -75,6 +77,7 @@ namespace AirportApp.Mvc
         // POST: Reviews/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "Employee,Customer")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(int? userId, [Bind("Id,Message,DutyFreeRating,FlightExperienceRating,StaffFriendlinessRating,CleanlinessRating")] Review review)
@@ -101,6 +104,7 @@ namespace AirportApp.Mvc
         }
 
         // GET: Reviews/Edit/5
+        [Authorize(Roles = "Employee")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -119,6 +123,7 @@ namespace AirportApp.Mvc
         // POST: Reviews/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "Employee")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Message,DutyFreeRating,FlightExperienceRating,StaffFriendlinessRating,CleanlinessRating")] Review review)
@@ -145,6 +150,7 @@ namespace AirportApp.Mvc
         }
 
         // GET: Reviews/Delete/5
+        [Authorize(Roles = "Employee")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -162,6 +168,7 @@ namespace AirportApp.Mvc
         }
 
         // POST: Reviews/Delete/5
+        [Authorize(Roles = "Employee")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
