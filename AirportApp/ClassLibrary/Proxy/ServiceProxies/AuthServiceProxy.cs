@@ -6,7 +6,6 @@ using AirportApp.ClassLibrary.Entity.Domain;
 using AirportApp.ClassLibrary.Entity.Dto;
 using AirportApp.ClassLibrary.Service.Interfaces;
 
-
 namespace AirportApp.ClassLibrary.Proxy.ServiceProxies
 {
     public class AuthServiceProxy : IAuthService
@@ -30,7 +29,7 @@ namespace AirportApp.ClassLibrary.Proxy.ServiceProxies
             };
 
             HttpResponseMessage response = await httpClient.PostAsJsonAsync($"{BaseUrl}/login", request);
-            
+
             if (!response.IsSuccessStatusCode)
             {
                 string errorMessage = await response.Content.ReadAsStringAsync();

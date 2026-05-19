@@ -1,0 +1,72 @@
+@model IEnumerable<AirportApp.ClassLibrary.Entity.Domain.Flight>
+
+@{
+    ViewData["Title"] = "Search Results";
+    var userId = ViewBag.UserId as int?;
+    var location = ViewBag.Location as string;
+    var isDeparture = ViewBag.IsDeparture as bool?;
+    var date = ViewBag.Date as string;
+    var passengers = ViewBag.Passengers as string;
+}
+
+<div class="container my-4">
+    <h1>Flight Search Results</h1>
+    
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title">Search Parameters</h5>
+            <p class="mb-1"><strong>Location:</strong> @location</p>
+            <p class="mb-1"><strong>Type:</strong> @(isDeparture.GetValueOrDefault(true) ? "Departure" : "Arrival")</p>
+            @if (!string.IsNullOrEmpty(date))
+            {
+                <p class="mb-1"><strong>Date:</strong> @date</p>
+            }
+            @if (!string.IsNullOrEmpty(passengers))
+            {
+                <p class="mb-0"><strong>Passengers:</strong> @passengers</p>
+            }
+        </div>
+    </div>
+
+    @if (Model.Any())
+    {
+        <div class="row">
+            @foreach (var flight in Model)
+            {
+                <div class="col-md-6 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">Flight @flight.FlightNumber</h5>
+                            <p class="card-text">
+                                <strong>Date:</strong> @flight.Date.ToString("yyyy-MM-dd")<br />
+                                @if (flight.Route != null)
+                                {
+                                    <strong>Route:</strong> @flight.Route.RouteType<br />
+                                    @if (flight.Route.Airport != null)
+                                    {
+                                        <strong>Airport:</strong> @flight.Route.Airport.AirportCode<br />
+                                    }
+                                    @if (flight.Route.Company != null)
+                                    {
+                                        <strong>Company:</strong> @flight.Route.Company.Name<br />
+                                    }
+                                }
+                            </p>
+                        </div>
+                        <div class="card-footer">
+                            <a asp-action="Create" asp-route-flightId="@flight.Id" class="btn btn-primary btn-sm">Book Ticket</a>
+                            <a asp-action="Search" class="btn btn-secondary btn-sm">New Search</a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-info">
+            No flights found matching your search criteria. Please try different search parameters.
+        </div>
+        <a asp-action="Search" class="btn btn-primary">Search Again</a>
+    }
+</div>

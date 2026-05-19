@@ -1,0 +1,47 @@
+﻿@model IEnumerable<AirportApp.ClassLibrary.Entity.Domain.Message>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create" asp-route-chatId="@ViewBag.ChatId" asp-route-userId="@ViewBag.UserId">Create New</a>
+</p>
+
+@if (ViewBag.ChatId != null)
+{
+    <a asp-controller="Chats" asp-action="Index">Back to Chats</a>
+}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Text)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Timestamp)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Text)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Timestamp)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id" asp-route-chatId="@ViewBag.ChatId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id" asp-route-chatId="@ViewBag.ChatId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id" asp-route-chatId="@ViewBag.ChatId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

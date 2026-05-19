@@ -1,0 +1,64 @@
+﻿@model AirportApp.ClassLibrary.Entity.Domain.FlightTicket
+
+@{
+    ViewData["Title"] = "Create Ticket";
+    var userId = ViewBag.UserId as int?;
+}
+
+<h1>Create Ticket</h1>
+
+<h4>Flight ticket for user @userId</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create" asp-route-userId="@userId">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Seat" class="control-label"></label>
+                <input asp-for="Seat" class="form-control" />
+                <span asp-validation-for="Seat" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Price" class="control-label"></label>
+                <input asp-for="Price" class="form-control" />
+                <span asp-validation-for="Price" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Status" class="control-label"></label>
+                <input asp-for="Status" class="form-control" />
+                <span asp-validation-for="Status" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PassengerFirstName" class="control-label"></label>
+                <input asp-for="PassengerFirstName" class="form-control" />
+                <span asp-validation-for="PassengerFirstName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PassengerLastName" class="control-label"></label>
+                <input asp-for="PassengerLastName" class="form-control" />
+                <span asp-validation-for="PassengerLastName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PassengerEmail" class="control-label"></label>
+                <input asp-for="PassengerEmail" class="form-control" />
+                <span asp-validation-for="PassengerEmail" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PassengerPhone" class="control-label"></label>
+                <input asp-for="PassengerPhone" class="form-control" />
+                <span asp-validation-for="PassengerPhone" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index" asp-route-userId="@userId">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -48,7 +48,7 @@ namespace Airport.Web.Controllers
                     }
                 },
                 SelectedAddOns = req.SelectedAddOns?.Select(a => new AddOn { Id = a.Id, BasePrice = a.BasePrice }).ToList() ?? new List<AddOn>()
-            };            
+            };
             float result = await pricingService.CalculateTotalPriceAsync(ticket);
             return Ok(result);
         }

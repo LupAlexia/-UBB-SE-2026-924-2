@@ -44,7 +44,15 @@ namespace Airport.Web.Controllers
             try
             {
                 Message message = await messageService.GetByIdAsync(id);
-                return Ok(message);
+                return Ok(new MessageDTO
+                {
+                    MessageId = message.Id,
+                    MessageText = message.Text,
+                    Timestamp = message.Timestamp,
+                    ChatId = message.Chat.Id,
+                    SenderId = message.Sender.RetrieveUniqueDatabaseIdentifierForBot(),
+                    Sender = message.Sender
+                });
             }
             catch (KeyNotFoundException)
             {
@@ -159,7 +167,11 @@ namespace Airport.Web.Controllers
                 var faqOption = new FAQOption
                 {
                     Label = request.OptionLabel,
-                    NextOption = request.NextNode != null ? MapFAQNodeFromDTO(request.NextNode) : null
+                    NextOption = request.NextNodeId.HasValue ? new FAQNode
+                    {
+                        NodeId = request.NextNodeId.Value
+                    }
+                    : null
                 };
 
                 BotMessage botReply = await messageService.SendMessageAsync(request.ChatId, sender, faqOption);
@@ -184,36 +196,13 @@ namespace Airport.Web.Controllers
             }
         }
 
-        private static FAQNode MapFAQNodeFromDTO(FAQNodeDTO dto)
-        {
-            var node = new FAQNode
-            {
-                NodeId = dto.NodeId,
-                QuestionText = dto.QuestionText,
-                IsFinalAnswer = dto.IsFinalAnswer,
-                Options = dto.Options?.Select(o => new FAQOption
-                {
-                    OptionId = o.OptionId,
-                    Label = o.Label,
-                    NextOption = o.NextOption != null ? MapFAQNodeFromDTO(o.NextOption) : null
-                }).ToList() ?? new List<FAQOption>()
-            };
-            return node;
-        }
-
         private static FAQOptionDTO MapFAQOptionToDTO(FAQOption option)
         {
             return new FAQOptionDTO
             {
                 OptionId = option.OptionId,
                 Label = option.Label,
-                NextOption = option.NextOption != null ? new FAQNodeDTO
-                {
-                    NodeId = option.NextOption.NodeId,
-                    QuestionText = option.NextOption.QuestionText,
-                    IsFinalAnswer = option.NextOption.IsFinalAnswer,
-                    Options = option.NextOption.Options?.Select(o => MapFAQOptionToDTO(o)).ToList() ?? new List<FAQOptionDTO>()
-                } : null
+                NextNodeId = option.NextOption?.NodeId
             };
         }
     }

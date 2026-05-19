@@ -1,0 +1,49 @@
+@{
+    ViewData["Title"] = "Search Flights";
+    var userId = ViewBag.UserId as int?;
+}
+
+<div class="container my-4">
+    <h1>Search Flights</h1>
+    
+    <div class="card mt-4">
+        <div class="card-body">
+            <form method="post" class="row g-3">
+                <div class="col-md-6">
+                    <label for="location" class="form-label">Location</label>
+                    <input type="text" class="form-control" id="location" name="location" placeholder="Enter destination or departure city" required>
+                </div>
+
+                <div class="col-md-6">
+                    <label for="isDeparture" class="form-label">Flight Type</label>
+                    <select class="form-select" id="isDeparture" name="isDeparture">
+                        <option value="true">Departure</option>
+                        <option value="false">Arrival</option>
+                    </select>
+                </div>
+
+                <div class="col-md-6">
+                    <label for="date" class="form-label">Date (Optional)</label>
+                    <input type="date" class="form-control" id="date" name="date">
+                </div>
+
+                <div class="col-md-6">
+                    <label for="passengers" class="form-label">Number of Passengers (Optional)</label>
+                    <input type="number" class="form-control" id="passengers" name="passengers" min="1" placeholder="e.g., 2">
+                </div>
+
+                <div class="col-12">
+                    <button type="submit" class="btn btn-primary">Search</button>
+                    <a asp-action="Index" class="btn btn-secondary">Back to Tickets</a>
+                </div>
+            </form>
+
+            @if (!ViewData.ModelState.IsValid)
+            {
+                <div class="alert alert-danger mt-3">
+                    @Html.ValidationSummary()
+                </div>
+            }
+        </div>
+    </div>
+</div>
