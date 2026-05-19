@@ -2,6 +2,7 @@
 using AirportApp.ClassLibrary.Entity.Domain;
 using AirportApp.ClassLibrary.Service.Interfaces;
 using AirportApp.Src.Service.Implementation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -9,6 +10,7 @@ using NSubstitute.Core;
 
 namespace AirportApp.Mvc
 {
+    [Authorize]
     public class FAQEntriesController : Controller
     {
         private readonly IFAQService fAQService;

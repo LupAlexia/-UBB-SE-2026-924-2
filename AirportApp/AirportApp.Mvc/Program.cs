@@ -1,14 +1,14 @@
 using AirportApp.ClassLibrary.DataAccess;
 using AirportApp.ClassLibrary.Proxy.ServiceProxies;
 using AirportApp.ClassLibrary.Service.Interfaces;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 var apiBaseUrl = builder.Configuration["ApiBaseUrl"] !;
 
 // Add services to the container.
-builder.Services.AddControllersWithViews();
-
+// builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<AirportDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
@@ -50,7 +50,23 @@ builder.Services.AddHttpClient<IDecisionTreeService, DecisionTreeServiceProxy>(c
     client.BaseAddress = new Uri(apiBaseUrl));
 builder.Services.AddHttpClient<IFlightSearchService, FlightSearchServiceProxy>(client =>
     client.BaseAddress = new Uri(apiBaseUrl));
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews(options =>
+{
+    options.Filters.Add(new Microsoft.AspNetCore.Mvc.Authorization.AuthorizeFilter());
+});
+
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/Account/Login";
+        options.AccessDeniedPath = "/Account/AccessDenied";
+        options.ExpireTimeSpan = TimeSpan.FromHours(1);
+        options.SlidingExpiration = true;
+        options.Cookie.HttpOnly = true;
+        options.Cookie.IsEssential = true;
+    });
+
+builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
@@ -62,12 +78,12 @@ if (!app.Environment.IsDevelopment())
 
 app.UseStaticFiles();
 app.UseRouting();
-
+app.UseAuthentication();
 app.UseAuthorization();
 
-app.UseStaticFiles();
+// app.UseStaticFiles();
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
-   // .WithStaticAssets();
+    pattern: "{controller=Account}/{action=Login}/{id?}");
+// .WithStaticAssets();
 app.Run();

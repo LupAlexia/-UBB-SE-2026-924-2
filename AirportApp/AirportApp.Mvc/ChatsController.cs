@@ -2,15 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
 using AirportApp.ClassLibrary.DataAccess;
 using AirportApp.ClassLibrary.Entity.Domain;
 using AirportApp.ClassLibrary.Service.Interfaces;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 
 namespace AirportApp.Mvc
 {
+    [Authorize]
     public class ChatsController : Controller
     {
         private readonly IChatService chatService;
