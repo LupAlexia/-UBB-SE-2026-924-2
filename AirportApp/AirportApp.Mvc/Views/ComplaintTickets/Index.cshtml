@@ -6,7 +6,7 @@
 
 <h1>Index</h1>
 
-@if (User.IsInRole("Employee") || User.IsInRole("Customer"))
+@if (User.IsInRole("Customer"))
 {
     <p>
         <a asp-action="Create">Create New</a>
