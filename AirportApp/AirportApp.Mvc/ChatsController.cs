@@ -50,15 +50,17 @@ namespace AirportApp.Mvc
         // GET: Chats/Create
         public async Task<IActionResult> Create()
         {
-            int? resolvedUserId = UserSession.CurrentUser?.Id;
-            if (resolvedUserId.HasValue)
+            var claimUserId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+
+            if (int.TryParse(claimUserId, out int parsedId))
             {
-                var user = new User { Id = resolvedUserId.Value };
-                await this.chatService.OpenChatAsync(user);
-                return RedirectToAction(nameof(Index));
+                ViewBag.UserId = parsedId;
+            }
+            else
+            {
+                ViewBag.UserId = UserSession.CurrentUser?.Id;
             }
 
-            ViewBag.UserId = null;
             return View();
         }
 
@@ -69,19 +71,32 @@ namespace AirportApp.Mvc
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Status")] Chat chat)
         {
-            int? resolvedUserId = UserSession.CurrentUser?.Id;
+            var claimUserId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+            int? resolvedUserId = int.TryParse(claimUserId, out int parsedId) ? parsedId : UserSession.CurrentUser?.Id;
+
             if (!resolvedUserId.HasValue)
             {
                 ModelState.AddModelError(string.Empty, "A user id is required to create a chat.");
-                ViewBag.UserId = null;
                 return View(chat);
             }
 
+            ModelState.Remove("User");
+            ModelState.Remove("User.Id");
+
             if (ModelState.IsValid)
             {
-                chat.User = new User { Id = resolvedUserId.Value };
-                var openedChat = await this.chatService.OpenChatAsync(chat.User);
-                return RedirectToAction(nameof(Index));
+                try
+                {
+                    var user = new User { Id = resolvedUserId.Value };
+
+                    var openedChat = await this.chatService.OpenChatAsync(user);
+
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError(string.Empty, $"Serverul nu a putut deschide chat-ul. Motiv posibil: Aveți deja o sesiune de chat activă sau ID-ul este invalid. Detalii: {ex.Message}");
+                }
             }
 
             ViewBag.UserId = resolvedUserId;
