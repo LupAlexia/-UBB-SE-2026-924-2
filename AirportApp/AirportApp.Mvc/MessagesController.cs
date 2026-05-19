@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using AirportApp.ClassLibrary.DataAccess;
+using AirportApp.ClassLibrary.Entity.Domain;
+using AirportApp.ClassLibrary.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using AirportApp.ClassLibrary.DataAccess;
-using AirportApp.ClassLibrary.Entity.Domain;
-using AirportApp.ClassLibrary.Service.Interfaces;
+using NSubstitute.Core;
 
 namespace AirportApp.Mvc
 {
@@ -31,14 +28,25 @@ namespace AirportApp.Mvc
         }
 
         // GET: Messages
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? chatId)
         {
-            return View(await messageService.GetAllAsync());
+            IEnumerable<Message> messages;
+            if (chatId.HasValue)
+            {
+                messages = await messageService.GetByChatIdAsync(chatId.Value);
+            }
+            else
+            {
+                messages = await messageService.GetAllAsync();
+            }
+            ViewBag.ChatId = chatId;
+            return View(messages);
         }
 
         // GET: Messages/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(int? id, int? chatId)
         {
+            ViewBag.ChatId = chatId;
             if (id == null)
             {
                 return NotFound();
@@ -54,9 +62,9 @@ namespace AirportApp.Mvc
         }
 
         // GET: Messages/Create
-        public IActionResult Create(int chatId, int userId)
+        public IActionResult Create(int? chatId, int? userId)
         {
-            ViewBag.ChatId = ResolveChatId(chatId);
+            ViewBag.ChatId = chatId;
             ViewBag.UserId = ResolveUserId(userId);
             return View();
         }
@@ -86,14 +94,15 @@ namespace AirportApp.Mvc
                     resolvedUserId.Value,
                     message.Text,
                     DateTimeOffset.UtcNow);
-                return RedirectToAction(nameof(Index));
+                    return RedirectToAction(nameof(Index), new { chatId = resolvedChatId });
             }
             return View(message);
         }
 
         // GET: Messages/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(int? id, int? chatId)
         {
+            ViewBag.ChatId = chatId;
             if (id == null)
             {
                 return NotFound();
@@ -112,28 +121,32 @@ namespace AirportApp.Mvc
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Text,Timestamp")] Message message)
+        public async Task<IActionResult> Edit(int? id, int? chatId, [Bind("Id,Text,Timestamp")] Message message)
         {
             if (id != message.Id)
             {
                 return NotFound();
             }
 
+            ModelState.Remove(nameof(Message.Chat));
+            ModelState.Remove(nameof(Message.Sender));
+
             if (ModelState.IsValid)
             {
-                await messageService.UpdateByIdAsync(id, message);
-                return RedirectToAction(nameof(Index));
+                await messageService.UpdateByIdAsync((int)id, message);
+                return RedirectToAction(nameof(Index), new { chatId = chatId });
             }
             return View(message);
         }
 
         // GET: Messages/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(int? id, int? chatId)
         {
             if (id == null)
             {
                 return NotFound();
             }
+            ViewBag.ChatId = chatId;
 
             var message = await messageService.GetByIdAsync(id.Value);
             if (message == null)
@@ -147,7 +160,7 @@ namespace AirportApp.Mvc
         // POST: Messages/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(int id, int? chatId)
         {
             var message = await messageService.GetByIdAsync(id);
             if (message != null)
@@ -155,7 +168,7 @@ namespace AirportApp.Mvc
                 await messageService.DeleteByIdAsync(id);
             }
 
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Index), new { chatId = chatId });
         }
 
         private async Task<bool> MessageExists(int id)

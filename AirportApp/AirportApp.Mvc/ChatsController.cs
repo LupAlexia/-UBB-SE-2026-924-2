@@ -37,7 +37,7 @@ namespace AirportApp.Mvc
             try
             {
                 var chat = await this.chatService.GetChatByIdAsync((int)id);
-                return View(chat);
+                return RedirectToAction("Index", "Messages", new { chatId = id });
             }
             catch (KeyNotFoundException)
             {
