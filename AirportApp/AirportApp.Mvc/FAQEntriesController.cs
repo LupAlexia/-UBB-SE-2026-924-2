@@ -2,6 +2,7 @@
 using AirportApp.ClassLibrary.Entity.Domain;
 using AirportApp.ClassLibrary.Service.Interfaces;
 using AirportApp.Src.Service.Implementation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -43,6 +44,7 @@ namespace AirportApp.Mvc
         }
 
         // GET: FAQEntries/Create
+        [Authorize(Roles = "Employee")]
         public IActionResult Create()
         {
             return View();
@@ -51,6 +53,7 @@ namespace AirportApp.Mvc
         // POST: FAQEntries/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "Employee")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Question,Answer,Category,ViewCount,HelpfulVotesCount,NotHelpfulVotesCount")] FAQEntry fAQEntry)
@@ -64,6 +67,7 @@ namespace AirportApp.Mvc
         }
 
         // GET: FAQEntries/Edit/5
+        [Authorize(Roles = "Employee")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -84,6 +88,7 @@ namespace AirportApp.Mvc
         // POST: FAQEntries/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "Employee")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Question,Answer,Category,ViewCount,HelpfulVotesCount,NotHelpfulVotesCount")] FAQEntry fAQEntry)
@@ -102,6 +107,7 @@ namespace AirportApp.Mvc
         }
 
         // GET: FAQEntries/Delete/5
+        [Authorize(Roles = "Employee")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -121,6 +127,7 @@ namespace AirportApp.Mvc
         }
 
         // POST: FAQEntries/Delete/5
+        [Authorize(Roles = "Employee")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

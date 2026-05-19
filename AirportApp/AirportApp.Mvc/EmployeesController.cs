@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -44,6 +45,7 @@ namespace AirportApp.Mvc
         }
 
         // GET: Employees/Create
+        [Authorize(Roles = "Employee")]
         public IActionResult Create()
         {
             return View();
@@ -52,6 +54,7 @@ namespace AirportApp.Mvc
         // POST: Employees/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "Employee")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("AssignedDepartment,Id,FullName,EmailAddress,Discriminator")] Employee employee)
@@ -65,6 +68,7 @@ namespace AirportApp.Mvc
         }
 
         // GET: Employees/Edit/5
+        [Authorize(Roles = "Employee")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -83,6 +87,7 @@ namespace AirportApp.Mvc
         // POST: Employees/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "Employee")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("AssignedDepartment,Id,FullName,EmailAddress,Discriminator")] Employee employee)
@@ -106,6 +111,7 @@ namespace AirportApp.Mvc
         }
 
         // GET: Employees/Delete/5
+        [Authorize(Roles = "Employee")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -123,6 +129,7 @@ namespace AirportApp.Mvc
         }
 
         // POST: Employees/Delete/5
+        [Authorize(Roles = "Employee")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
