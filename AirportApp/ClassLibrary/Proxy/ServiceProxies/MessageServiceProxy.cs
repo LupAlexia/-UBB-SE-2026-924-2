@@ -98,8 +98,12 @@ namespace AirportApp.ClassLibrary.Proxy.ServiceProxies
         {
             try
             {
-                IEnumerable<Message> messages = await httpClient.GetFromJsonAsync<IEnumerable<Message>>(BaseUrl);
-                return messages ?? new List<Message>();
+                var dtos = await httpClient.GetFromJsonAsync<IEnumerable<MessageDTO>>(BaseUrl);
+                if (dtos == null)
+                {
+                    return new List<Message>();
+                }
+                return dtos.Select(dto => MapMessageFromDTO(dto)).ToList();
             }
             catch (HttpRequestException httpRequestException)
             {
@@ -111,13 +115,13 @@ namespace AirportApp.ClassLibrary.Proxy.ServiceProxies
         {
             try
             {
-                Message message = await httpClient.GetFromJsonAsync<Message>($"{BaseUrl}/{id}");
-                if (message == null)
+                var dto = await httpClient.GetFromJsonAsync<MessageDTO>($"{BaseUrl}/{id}");
+                if (dto == null)
                 {
                     throw new KeyNotFoundException($"Message with id {id} was not found.");
                 }
 
-                return message;
+                return MapMessageFromDTO(dto);
             }
             catch (HttpRequestException httpRequestException) when (httpRequestException.StatusCode == System.Net.HttpStatusCode.NotFound)
             {

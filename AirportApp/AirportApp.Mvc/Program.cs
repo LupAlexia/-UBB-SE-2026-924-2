@@ -29,6 +29,11 @@ builder.Services.AddHttpClient<IFAQService, FAQServiceProxy>(client =>
     client.BaseAddress = new Uri(apiBaseUrl);
 });
 
+builder.Services.AddHttpClient<IMessageService, MessageServiceProxy>(client =>
+{
+    client.BaseAddress = new Uri(apiBaseUrl);
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -36,6 +41,8 @@ if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
 }
+
+app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthorization();

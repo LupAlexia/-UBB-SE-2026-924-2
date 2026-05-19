@@ -20,6 +20,16 @@ namespace AirportApp.Mvc
             this.reviewService = reviewService;
         }
 
+        private static Customer? GetCurrentUser()
+        {
+            return UserSession.CurrentUser;
+        }
+
+        private static int? ResolveUserId(int? userId)
+        {
+            return userId ?? GetCurrentUser()?.Id;
+        }
+
         // GET: Reviews
         public async Task<IActionResult> Index()
         {
@@ -34,7 +44,7 @@ namespace AirportApp.Mvc
                 return NotFound();
             }
 
-            var review = await reviewService.GetByIdAsync(id.Value);
+            Review? review = await reviewService.GetByIdAsync(id.Value);
             if (review == null)
             {
                 return NotFound();
@@ -44,8 +54,9 @@ namespace AirportApp.Mvc
         }
 
         // GET: Reviews/Create
-        public IActionResult Create()
+        public IActionResult Create(int? userId)
         {
+            ViewBag.UserId = ResolveUserId(userId);
             return View();
         }
 
@@ -54,11 +65,19 @@ namespace AirportApp.Mvc
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Message,DutyFreeRating,FlightExperienceRating,StaffFriendlinessRating,CleanlinessRating")] Review review)
+        public async Task<IActionResult> Create(int? userId, [Bind("Id,Message,DutyFreeRating,FlightExperienceRating,StaffFriendlinessRating,CleanlinessRating")] Review review)
         {
+            int? resolvedUserId = ResolveUserId(userId);
+            if (!resolvedUserId.HasValue)
+            {
+                ModelState.AddModelError(string.Empty, "A user id is required to create a review.");
+                return View(review);
+            }
+            ModelState.Remove(nameof(Message.Chat)); // dupa auth sa fie sterse
+            ModelState.Remove(nameof(Message.Sender)); // dupa auth sa fie sterse
             if (ModelState.IsValid)
             {
-                review.User = null; // temporar, pana introducem autentificarea !!
+                review.User = new User { Id = resolvedUserId.Value }; // proxy-ul face review.User.Id
                 await reviewService.AddAsync(review);
                 return RedirectToAction(nameof(Index));
             }
@@ -93,6 +112,8 @@ namespace AirportApp.Mvc
                 return NotFound();
             }
 
+            ModelState.Remove(nameof(Message.Chat)); // dupa auth sa fie sterse
+            ModelState.Remove(nameof(Message.Sender)); // dupa auth sa fie sterse
             if (ModelState.IsValid)
             {
                 await reviewService.UpdateByIdAsync(id, review);

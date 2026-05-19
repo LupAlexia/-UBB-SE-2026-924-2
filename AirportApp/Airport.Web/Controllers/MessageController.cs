@@ -44,7 +44,15 @@ namespace Airport.Web.Controllers
             try
             {
                 Message message = await messageService.GetByIdAsync(id);
-                return Ok(message);
+                return Ok(new MessageDTO
+                {
+                    MessageId = message.Id,
+                    MessageText = message.Text,
+                    Timestamp = message.Timestamp,
+                    ChatId = message.Chat.Id,
+                    SenderId = message.Sender.RetrieveUniqueDatabaseIdentifierForBot(),
+                    Sender = message.Sender
+                });
             }
             catch (KeyNotFoundException)
             {
