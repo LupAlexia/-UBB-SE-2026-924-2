@@ -12,9 +12,11 @@ namespace AirportApp.Mvc
     public class FlightTicketsController : Controller
     {
         private readonly IDashboardService dashboardService;
-        public FlightTicketsController(IDashboardService dashboard)
+        private readonly IFlightSearchService flightSearchService;
+        public FlightTicketsController(IDashboardService dashboard, IFlightSearchService flightSearch)
         {
             this.dashboardService = dashboard;
+            this.flightSearchService = flightSearch;
         }
 
         private static Customer? GetCurrentUser()
@@ -209,6 +211,53 @@ namespace AirportApp.Mvc
         private async Task<bool> FlightTicketExists(int id)
         {
             return await GetCurrentUsersTicketAsync(id) != null;
+        }
+
+        // GET: FlightTickets/Search
+        public IActionResult Search()
+        {
+            ViewBag.UserId = ResolveUserId();
+            return View();
+        }
+
+        // POST: FlightTickets/Search
+        [HttpPost]
+        public async Task<IActionResult> Search(string location, bool isDeparture, string date, string passengers)
+        {
+            ViewBag.UserId = ResolveUserId();
+            ViewBag.Location = location;
+            ViewBag.IsDeparture = isDeparture;
+            ViewBag.Date = date;
+            ViewBag.Passengers = passengers;
+
+            if (string.IsNullOrEmpty(location))
+            {
+                ModelState.AddModelError(string.Empty, "Please enter a location.");
+                return View();
+            }
+
+            DateTime? parsedDate = null;
+            if (!string.IsNullOrEmpty(date) && DateTime.TryParse(date, out var d))
+            {
+                parsedDate = d;
+            }
+
+            int? parsedPassengers = null;
+            if (!string.IsNullOrEmpty(passengers))
+            {
+                parsedPassengers = flightSearchService.ParsePassengerCount(passengers);
+            }
+
+            try
+            {
+                var flights = await flightSearchService.SearchFlightsAsync(location, isDeparture, parsedDate, parsedPassengers);
+                return View("SearchResults", flights);
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError(string.Empty, $"Error searching flights: {ex.Message}");
+                return View();
+            }
         }
     }
 }
