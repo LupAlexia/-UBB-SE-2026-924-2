@@ -9,6 +9,7 @@ using AirportApp.ClassLibrary.Repository.Interfaces;
 using AirportApp.Src.Service;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
+using AirportApp.ClassLibrary.Service.Interfaces;
 
 namespace AirportApp.Tests.Unit.Src.Service
 {
